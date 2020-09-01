@@ -1,1 +1,273 @@
-Hello, World! :-)
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"  
+  "http://www.w3.org/TR/html4/loose.dtd">  
+<html > 
+<head><title>CS 102 - Section B - Introduction to Computer Science </title> 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 
+<meta name="generator" content="TeX4ht (https://tug.org/tex4ht/)"> 
+<meta name="originator" content="TeX4ht (https://tug.org/tex4ht/)"> 
+<!-- html --> 
+<meta name="src" content="cs102_b_fall_202086145.tex"> 
+<link rel="stylesheet" type="text/css" href="cs102_b_fall_202086145.css"> 
+</head><body 
+>
+   <div class="maketitle">
+
+
+
+<h2 class="titleHead">CS 102 - Section B - Introduction to Computer Science </h2>
+<div class="author" ></div><br />
+<div class="date" ></div>
+   </div>
+   <h3 class="likesectionHead"><a 
+ id="x1-1000"></a>General Course Information</h3>
+<!--l. 48--><p class="noindent" >Instructor: Prof. Rob Marano <br 
+class="newline" />Email: rob@cooper.edu <br 
+class="newline" />Semester of the course: Fall 2020 <br 
+class="newline" />Dates of the course: 1 September 2020 &#8211; 15 December 2020
+<!--l. 56--><p class="noindent" >
+   <h3 class="likesectionHead"><a 
+ id="x1-2000"></a>Course Description</h3>
+<!--l. 57--><p class="noindent" >Concepts in computer science are presented in the context of programming in C, with a brief
+introduction to Python. Topics include variables, selection statements, loops, functions, structures,
+pointers. Multiple programming projects are assigned. 2 credits. 2 hours per week (30 total
+hours).
+<!--l. 60--><p class="noindent" >
+   <h3 class="likesectionHead"><a 
+ id="x1-3000"></a>Course Prerequisites</h3>
+<!--l. 61--><p class="noindent" >Being a Cooper Union freshman engineering student serves as the minimum prerequisite.
+<!--l. 63--><p class="noindent" >
+   <h3 class="likesectionHead"><a 
+ id="x1-4000"></a>Course Structure/Method</h3>
+<!--l. 64--><p class="noindent" >Lecture/Lab. This class meets remotely via Microsoft Teams on 9/1, 9/8, 9/15, 9/22, 9/29,
+10/6, 10/13, 10/20, 10/27, 11/3, 11/10, 11/17, 12/1, 12/8, and 12/15, for a total of 15
+sessions. <span 
+class="cmbx-12">Note </span>that 11/24 we do not meet. The class meets from 6:00 to 8:00 pm on all
+days.
+
+<!--l. 66--><p class="noindent" >
+   <h3 class="likesectionHead"><a 
+ id="x1-5000"></a>Course Learning Outcomes</h3>
+<!--l. 74--><p class="noindent" >Upon successful completion of this course, students will be able to:
+      <ol  class="enumerate1" >
+      <li 
+  class="enumerate" id="x1-5002x1">Set up a working and extensible C development environment using the Linux operating
+      system.
+      </li>
+      <li 
+  class="enumerate" id="x1-5004x2">Be  able  to  demonstrate  working  understanding  of  the  main  C  mechanisms  for
+      in-memory structures, computation, network communication, and external storage.
+      </li>
+      <li 
+  class="enumerate" id="x1-5006x3">Understand and demonstrate basic programming mechanisms of Python 3, including
+      graphing numerical data.
+      </li>
+      <li 
+  class="enumerate" id="x1-5008x4">Collaborative programming using GitHub for source code and project documentation,
+      in addition to Kanban agile management.</li></ol>
+<!--l. 82--><p class="noindent" >
+   <h3 class="likesectionHead"><a 
+ id="x1-6000"></a>Communication Policy</h3>
+<!--l. 84--><p class="noindent" >The best way to contact me is via email then by instant messaging (TBD by end of first class). I
+will do my best to respond within 24 hours. Communication and participation in class is not only
+encouraged, but required.
+<!--l. 87--><p class="noindent" >
+   <h3 class="likesectionHead"><a 
+ id="x1-7000"></a>Course Expectations</h3>
+<!--l. 90--><p class="noindent" >
+   <h4 class="likesubsectionHead"><a 
+ id="x1-8000"></a>Class Preparation</h4>
+<!--l. 91--><p class="noindent" >Each session will consist of two components: discussion and lab. Discussion consists of a mix of
+lectures, programming examples, and question-driven group analysis of one or more large
+programming problems. Lab will consist of either group or individual work on exercises or
+projects. Questions arising during lab may be used to fuel additional discussion as time
+permits.
+
+<!--l. 93--><p class="noindent" >
+   <h4 class="likesubsectionHead"><a 
+ id="x1-9000"></a>Attendance</h4>
+<!--l. 94--><p class="noindent" >Success as a student begins with attendance. Class time is not only for learning new skills, but also
+for practicing what you have learned. Some assignments and demos may be completed in class, but
+practice and study are required outside of class. Students are expected to attend classes regularly,
+arrive on time, and participate.
+<!--l. 96--><p class="indent" >   I take attendance during every session, and it forms part of your grade. Students are
+encouraged to e-mail me when they are absent. Students are responsible for all academic work
+missed as a result of absences. It is at my discretion to work with students outside of class time in
+order to make-up any missed work.
+<!--l. 98--><p class="noindent" >
+   <h3 class="likesectionHead"><a 
+ id="x1-10000"></a>Materials</h3>
+<!--l. 101--><p class="noindent" >
+   <h4 class="likesubsectionHead"><a 
+ id="x1-11000"></a>Reference Books</h4>
+<!--l. 102--><p class="noindent" >Textbooks are not required for the course, but they may be useful to have. These are some we the
+CS102 professors suggest.
+      <ul class="itemize1">
+      <li class="itemize"><span class="underline">The C Programming Language, 2nd Edition</span> by Brian W. Kernighan &amp; Dennis M.
+      Ritchie
+      </li>
+      <li class="itemize"><span class="underline">Python Programming for the Absolute Beginner, 3rd Edition</span> by Mihael Dawson
+      </li>
+      <li class="itemize"><span class="underline">Engineering Problem Solving with C, 4th Edition</span> by Delores M. Etter
+      </li>
+      <li class="itemize"><span class="underline">Computer Science: A Structured Programming Approach Using C, 3rd Edition</span> by
+      Behrouz A. Forouzan and Richard F. Gilberg
+      </li>
+      <li class="itemize"><span class="underline">Practical C Programming, 3rd Edition</span> by Steve Oualline
+      </li>
+      <li class="itemize"><span class="underline">C Programming: A Modern Approach, 2nd Edition</span> by K. N. King</li></ul>
+<!--l. 112--><p class="noindent" >
+   <h4 class="likesubsectionHead"><a 
+ id="x1-12000"></a>Software</h4>
+<!--l. 113--><p class="noindent" >All software will be open source.
+
+<!--l. 116--><p class="noindent" >
+   <h3 class="likesectionHead"><a 
+ id="x1-13000"></a>Course Outline</h3>
+<!--l. 129--><p class="noindent" ><span 
+class="cmbx-12">Session 1: </span>09/01/2020, 6pm-8pm <br 
+class="newline" /><span 
+class="cmbx-12">Description: </span>Course Overview; Intro to Linux plus <span 
+class="cmtt-12">gcc </span>and <span 
+class="cmtt-12">make </span>as your C development
+environment; Get your <span 
+class="cmtt-12">"Hello, World!" </span>mojo going; and collaborating with <span 
+class="cmtt-12">git </span>using GitHub.
+You will become a <span 
+class="cmtt-12">Command Line Master</span>.  <br 
+class="newline" /><span 
+class="cmbx-12">Assignments: </span>No homework, per se. Read, review, research, learn...  <br 
+class="newline" />
+<!--l. 134--><p class="noindent" ><span 
+class="cmbx-12">Session 2: </span>09/08/2020, 6pm-8pm <br 
+class="newline" /><span 
+class="cmbx-12">Description: </span>More Git; Variables; Types; Operators.  <br 
+class="newline" /><span 
+class="cmbx-12">Assignments: </span>Receive HW 1, due on 9/11 at 11:59:59pm; Study for Quiz 1 on 9/15.
+<br 
+class="newline" />
+<!--l. 139--><p class="noindent" ><span 
+class="cmbx-12">Session 3: </span>09/15/2020, 6pm-8pm <br 
+class="newline" /><span 
+class="cmbx-12">Description: </span>More on Operators; Precedence; Conditional Statements; basic input and output
+(I/O); the Switch statement. Quiz 1 during last 20 minutes of class.  <br 
+class="newline" /><span 
+class="cmbx-12">Assignments: </span>No homework, per se. Read, review, research, learn... Form your two-student final
+C project team.  <br 
+class="newline" />
+<!--l. 144--><p class="noindent" ><span 
+class="cmbx-12">Session 4: </span>09/22/2020, 6pm-8pm <br 
+class="newline" /><span 
+class="cmbx-12">Description: </span>Loops; basic Arrays; basic functions.  <br 
+class="newline" /><span 
+class="cmbx-12">Assignments: </span>Receive HW 2, due on 9/25 at 11:59:59pm; Brainstorm ideas for your complex,
+multi-stage final C project with your teammate.  <br 
+class="newline" />
+<!--l. 149--><p class="noindent" ><span 
+class="cmbx-12">Session 5: </span>09/29/2020, 6pm-8pm <br 
+class="newline" /><span 
+class="cmbx-12">Description: </span>More on Arrays; Functions again and again; Intro to Tic-Tac-Toe.  <br 
+class="newline" /><span 
+class="cmbx-12">Assignments: </span>Study for Quiz 2 on 10/6.  <br 
+class="newline" />
+<!--l. 154--><p class="noindent" ><span 
+class="cmbx-12">Session 6: </span>10/06/2020, 6pm-8pm <br 
+class="newline" /><span 
+class="cmbx-12">Description: </span>Mas Tic-Tac-Toe. Quiz 2 during last 20 minutes of class.  <br 
+class="newline" /><span 
+class="cmbx-12">Assignments: </span>No homework, per se. Read, review, research, learn... Begin to design your MVP
+for your final C project with your teammate.  <br 
+class="newline" />
+<!--l. 159--><p class="noindent" ><span 
+class="cmbx-12">Session 7: </span>10/13/2020, 6pm-8pm <br 
+class="newline" /><span 
+class="cmbx-12">Description: </span>Pointers? We don&#8217;t need no stinking pointers. Arrays in a new light...
+<br 
+class="newline" /><span 
+class="cmbx-12">Assignments: </span>Receive HW 3, due on 10/16 at 11:59:59pm.  <br 
+class="newline" />
+<!--l. 164--><p class="noindent" ><span 
+class="cmbx-12">Session 8: </span>10/20/2020, 6pm-8pm <br 
+class="newline" /><span 
+class="cmbx-12">Description: </span>Yes, more on Pointers and Arrays.  <br 
+class="newline" /><span 
+class="cmbx-12">Assignments: </span>Study for Quiz 3 on 10/27.  <br 
+class="newline" />
+<!--l. 169--><p class="noindent" ><span 
+class="cmbx-12">Session 9: </span>10/27/2020, 6pm-8pm <br 
+class="newline" /><span 
+class="cmbx-12">Description: </span>The CLI and Command-line arguments; intro to Data Structures; Quiz 3 during last
+20 minutes of class.  <br 
+class="newline" /><span 
+class="cmbx-12">Assignments: </span>No homework, per se. Read, review, research, learn... Continue designing your
+MVP for your final C project with your teammate; start your project structure with the Makefile,
+file breakdowns, etc.  <br 
+class="newline" />
+<!--l. 174--><p class="noindent" ><span 
+class="cmbx-12">Session 10: </span>11/03/2020, 6pm-8pm <br 
+class="newline" /><span 
+class="cmbx-12">Description: </span>Mas data structures; Mas on <span 
+class="cmtt-12">git </span>and GitHub; Formal discussion on Final C
+Project, whose final presentation are on 12/15 and final code repo due 12/18 11:59:59pm.
+<br 
+class="newline" /><span 
+class="cmbx-12">Assignments: </span>Receive HW 4, due on 11/6 at 11:59:59pm. Study for last quiz, Quiz 4 on 11/10.
+<br 
+class="newline" />
+<!--l. 179--><p class="noindent" ><span 
+class="cmbx-12">Session 11: </span>11/10/2020, 6pm-8pm <br 
+class="newline" /><span 
+class="cmbx-12">Description: </span>And now for something completely different, [Monty] Python introductions, along
+with Jupyter notebooks. Quiz 4 during last 20 minutes of class.  <br 
+class="newline" /><span 
+class="cmbx-12">Assignments: </span>No homework, per se. Read, review, research, learn... Write you (pseudo)code your
+MVP for your final C project with your teammat.  <br 
+class="newline" />
+<!--l. 184--><p class="noindent" ><span 
+class="cmbx-12">Session 12: </span>11/17/2020, 6pm-8pm <br 
+class="newline" /><span 
+class="cmbx-12">Description: </span>Python Functions; Python Modules.  <br 
+class="newline" /><span 
+class="cmbx-12">Assignments: </span>Brainstorm individually and begin your Python final project. Remember it&#8217;s to be
+short, sweet, and to the point. Perhaps usable in other classes. Study ahead to work over break.
+<br 
+class="newline" />
+<!--l. 189--><p class="noindent" ><span 
+class="cmbx-12">Session 13: </span>12/01/2020, 6pm-8pm <br 
+class="newline" /><span 
+class="cmbx-12">Description: </span>Files and Python; the Network and Python.  <br 
+class="newline" /><span 
+class="cmbx-12">Assignments: </span>Python final project due 12/11 11:59:59pm.  <br 
+class="newline" />
+<!--l. 194--><p class="noindent" ><span 
+class="cmbx-12">Session 14: </span>12/08/2020, 6pm-8pm <br 
+class="newline" /><span 
+class="cmbx-12">Description: </span>Data, Pandas, Python, and Matplotlib - taming my data and visualize it.
+<br 
+class="newline" /><span 
+class="cmbx-12">Assignments: </span>Remember, Python final project due 12/11 11:59:59pm.  <br 
+class="newline" />
+<!--l. 199--><p class="noindent" ><span 
+class="cmbx-12">Session 15a: </span>12/15/2020, 6pm-8pm <br 
+class="newline" /><span 
+class="cmbx-12">Description: </span>Final C final project presenatations; you get 10 minutes per group of students to
+present and demonstrate working code.  <br 
+class="newline" /><span 
+class="cmbx-12">Assignments: </span>Final repo for source code and presentations due 12/18 at 11:59:59pm. Feel free to
+record your video presentation again if you want me to renew your grade from class presentation.
+Make video available on YouTube.  <br 
+class="newline" />
+<!--l. 204--><p class="noindent" ><span 
+class="cmbx-12">Session 15b: </span>12/18/2020, 11:59:59pm <br 
+class="newline" /><span 
+class="cmbx-12">Description:  </span><br 
+class="newline" /><span 
+class="cmbx-12">Assignments: </span>Final, working source code due on your team&#8217;s <span 
+class="cmtt-12">main </span>branch. <br 
+class="newline" />See <span 
+class="cmtt-12">https://github.com/github/renaming</span>.  <br 
+class="newline" />
+    
+</body></html> 
+
+
+
