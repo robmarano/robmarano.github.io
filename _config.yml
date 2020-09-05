@@ -1,1 +1,20 @@
-theme: jekyll-theme-hacker
+exclude:
+  - node_modules
+  - script
+
+sass:
+  style: :compressed
+
+theme: jekyll-theme-primer
+
+github:
+  private: false
+  license:
+    name: MIT
+  source:
+    branch: "master"
+    path: "/"
+  repository_url: "https://github.com/robmarano/robmarano.github.io/"
+  
+title: Musings, Courses, & Projects by Rob Marano
+description: The home of Rob's musings on technology, business, art, science, math, and music.
