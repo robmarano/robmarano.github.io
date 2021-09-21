@@ -7,7 +7,7 @@ layout: default
 ## The Cooper Union
 
 ### CS 102 - Section C - Fall 2021
-* [Course Syllabus](./courses/cs102/2021/cs102-syllabus-fall-2021.html).
+* [Course Syllabus](./courses/cs102/2021/cs102-syllabus-fall-2021.md).
 
 ### Past
 
