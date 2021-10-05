@@ -52,7 +52,7 @@ All assignments must be completed by the end of this course in order to receive 
 | :---:  | :---- | :----: |:---- | :--- |
 | 1 | HW 1 | 5 | 09/21/2021 | 10/01/2021 @ 11:59:59pm ET |
 | 2 | Quiz 1 | 10 | - | 09/28/2021 |
-| 3 | HW 2 | 5 | 09/28/2021 | 10/08/2021 @ 11:59:59pm ET |
+| 3 | HW 2 | 5 | 10/05/2021 | 10/15/2021 @ 11:59:59pm ET |
 | 4 | Quiz 2 | 10 | - | 10/12/2021 |
 | 5 | HW 3 | 5 | 10/12/2021 | 10/29/2021 @ 11:59:59pm ET |
 | 6 | Quiz 3 | 10 | - | 11/02/2021 |
@@ -70,7 +70,7 @@ Two final projects, one for C and one for Python, the former will be more comple
 * Design and document in GitHub Wiki the software architecture and source code of your team’s MVP.
 * Breakdown the MVP design in manageable sets of tasks, and track high-level via GitHub Project.
 * Document the design of each Python subsystem for your MVP in its appropriate GitHub Wiki section.
-* Demonstrate the MVP as part of your team’s final presentation during the class on **12/14/2021**.
+* Demonstrate the MVP as part of your team's final presentation during the class on **12/14/2021**.
 
 The following expectations pertain to the final Python project:
 * Completed per student; no group group project
@@ -97,7 +97,7 @@ The following expectations pertain to the final Python project:
 
 ### Session 5: 09/28/2021, 6pm-8pm
 **Description:** More on Arrays; Intro to Functions; Intro to your first "large-scale" program design and implementation: Tic-Tac-Toe. Quiz 1 during last 15 minutes of class.  
-**Assignments:** Receive definition of HW 2 via Assignment on Microsoft Teams and [here](./HW2.md), and it's due by <u>10/08/2021 @ 11:59:59pm ET</u>.
+**Assignments:** Receive definition of HW 2 via Assignment on Microsoft Teams and [here](./HW2.md), and it's due by <u>10/15/2021 @ 11:59:59pm ET</u>.
 
 ### Session 6: 10/05/2021, 6pm-8pm
 **Description:** Deep dive into designing and implementing Tic-Tac-Toe in C. Review topics of Quiz 2 to be held next class.
