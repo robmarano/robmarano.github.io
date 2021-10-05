@@ -1,7 +1,7 @@
 # CS 102 Section C - Fall 2021 - Assignment 1
 
 ## Instructions
-Due by Friday, October 1, 2021 11:59:59pm ET
+Due by Friday, October 15, 2021 11:59:59pm ET
 
 Do not forget to issue command at the top-level of your local GitHub repo:
 ```bash
