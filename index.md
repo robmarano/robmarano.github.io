@@ -6,6 +6,9 @@ layout: default
 
 ## The Cooper Union
 
+### ECE 251 - Computer Architecture
+* [Course Syllabus](./courses/ece251/2022/ece251-syllabus-spring-2022.html)
+
 ### ECE 366 - SW Engineering and Large Scale Design
 * [Course Syllabus](./courses/ece366/2022/ece366-syllabus-spring-2022.html)
 * [Team Project Specifications](./courses/ece366/2022/project-ece366-spring-2022.html)
