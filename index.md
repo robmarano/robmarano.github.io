@@ -9,7 +9,7 @@ Serving as an [adjunct professor of Electrical and Computer Engineering](https:/
 
 ### ECE 251 - Computer Architecture
 * [Course Syllabus](./courses/ece251/2022/ece251-syllabus-spring-2022.html)
-* [Suggested ]
+* [Optional Readings & Subject Information](./courses/ece251/2022/readings.md)
 
 ### ECE 366 - SW Engineering and Large Scale Design
 * [Course Syllabus](./courses/ece366/2022/ece366-syllabus-spring-2022.html)
