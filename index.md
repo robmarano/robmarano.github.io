@@ -14,6 +14,7 @@ Serving as an [adjunct professor of Electrical and Computer Engineering](https:/
 ### ECE 366 - SW Engineering and Large Scale Design
 * [Course Syllabus](./courses/ece366/2022/ece366-syllabus-spring-2022.html)
 * [Team Project Specifications](./courses/ece366/2022/project-ece366-spring-2022.html)
+* [Helpful Readings on Course Topics](./courses/ece366/2022/readings.md)
 
 ### Past
 ---
