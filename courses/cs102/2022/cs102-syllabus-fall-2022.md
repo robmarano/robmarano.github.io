@@ -6,6 +6,8 @@ Semester of the course: Fall 2022
 Dates of the course: 2 SEP 2022 – 16 DEC 2022 (15 sessions)
 Room: 427 in NAB
 
+[Weekly course notes](./cs102-notes.md)
+
 ## Course Description
 Concepts in computer science are presented in the context of programming in C, with an introduction to Python. Topics include data representation, variables, conditional statements, loops, functions, data structures, pointers. Multiple programming projects are assigned, as well as homeworks and quizzes.
 
@@ -80,7 +82,11 @@ Success as a student begins with attendance. Class time serves not only for lear
 
 ## Materials
 ### Reference Books
-Textbooks are not required for the course, but they may be useful to have. These are some we the CS102 professors suggest.
+Required access to these:
+* <u>The C Programming Language, 2nd Edition</u> by Brian W. Kernighan & Dennis M. Ritchie
+* The [official Python 3 Tutorial](https://docs.python.org/3/tutorial)
+
+These are some other resources not required:
 * <u>The C Programming Language, 2nd Edition</u> by Brian W. Kernighan & Dennis M. Ritchie
 * <u>Python Programming for the Absolute Beginner, 3rd Edition</u> by Mihael Dawson
 * <u>Engineering Problem Solving with C, 4th Edition</u> by Delores M. Etter
