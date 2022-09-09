@@ -55,6 +55,7 @@ Working at the command-line interface (CLI) of Linux (on cs102.cooper.edu) and u
 ```bash
 $ cd $HOME
 $ mkdir -p dev/cs102/week1
+$ cd $HOME/dev/cs102/week1
 $ vim hello1.c
 ```
 Write the program above. Then ...
