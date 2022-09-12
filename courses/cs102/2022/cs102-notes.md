@@ -2,40 +2,40 @@
 [<- back to syllabus](./cs102-syllabus-fall-2022.md)
 # Week 1
 
-## 1.0 Course Introduction
+## 1.0 &mdash; Course Introduction
 This course guides you to learn how to use the programming languages of C and of Python 3 as tools to identify, formulate, and solve engineering problems using the priciples of mathematics, science, and engineering. At the end of this course, you will be able to apply engineering principles to produce software that meets specific needs, that is, you will know how to confidently write programs that achieve a certain goal at the necessary level of quality, e.g., program execution speed within the computer's memory constraints as well as tested and documented for other engineers to understand, maintain, and expand functionality. Lastly, you will know how to test your software programs and verify their respective functionality with expected and unexpected inputs. As with all input to software, engineers expect outputs of a certain kind; so you will be able to visualize those outputs using ASCII characters on the console as well as graphs and charts using Python 3 libraries.
 
-## 1.1 Required course resources
+## 1.1 &mdash; Required course resources
 1. <u>The C Programming Language, 2nd Edition</u> by Brian W. Kernighan & Dennis M. Ritchie
 2. The [official Python 3 Tutorial](https://docs.python.org/3/tutorial)
 
-## 1.2 Know Thy Tools & Development Environment
+## 1.2 &mdash; Know Thy Tools & Development Environment
 
-### 1.2.1 The Computer (CPU + Memory <-> data)
+### 1.2.1 &mdash; The Computer (CPU + Memory <-> data)
 The following is the von Neumann computer model that idealizes the modern digital computer and was postulated in the 1940s. Our modern digital computers (not the quantum ones) process logic using the binary number system, that is zero or one. Von Neumann's ***stored-program concept*** states that instructions and the data upon which they operate are represented by binary digits (bits). Therefore, when looking at binary code (bits), one cannot tell if it is instructions or data. The first generation of these computers were programmed manually by humans who set memory locations either zero or one. The second generation generalized the electronic computing circuits into compute commands, e.g., MOVE, LOAD, STORE, ADD, etc. Humans did not have to program in bits but now in what we call assembly language, an imperative language. As computers became more popular, electronics miniaturized further, the computer field (computer science, computer architecture) advanced to ease the effort of programming computers as well as increased the quality of programs, such as, optimization of code to increase speed of execution as well as increase efficieny of using (fast) memory, a limited resource. In summary, machine code was the first generation of programming; assembly language as the second generation; and procedural languages are the third generation, e.g., COBOL, FORTRAN, ALGOL, PL/1, BASIC, C.
 
 ![von Neumann Computer Model](./5_parts_computer.png)
 ![von Neumann Computer Model from blackboard](./board_5_parts_computer.png)
 
-### 1.2.2 The Bash Shell on Linux
+### 1.2.2 &mdash; The Bash Shell on Linux
 The Linux operating system (OS) is the main program that runs on the computer (cs102.cooper.edu) and interfaces between you the user and the computer itself. The terminal (console) provides the command-line interface to the user to run programs. The Bash shell is the program that runs the terminal and provides console access to the user for input and for output. The EE Department's Micro Lab staff have provided this presentation in PDF format to introduce how to use the Bash shell; here is [the link to the document](./shell_slides.pdf), and [this link](./shell-cheat-sheet-v0.1.2.pdf) is a cheat sheet for the Bash shell.
 
-### 1.2.3 Text Editor
+### 1.2.3 &mdash; Text Editor
 Since we will be working in the Linux terminal environment, let's use ```vim```, the text editor that usually ships with almost all Linux OSes. There are many tutorials on how to use ```vim```, but here are two suggested ones:
 * [The OpenVim Tutorial](https://www.openvim.com/)
 * [Classic SysAdmin: Vim 101: A Beginner’s Guide to Vim](https://linuxfoundation.org/blog/classic-sysadmin-vim-101-a-beginners-guide-to-vim/)
 
 When you're developing on your own laptop or desktop computer, feel free to use a text editor like [Sublime Text 3](https://www.sublimetext.com/) or [Microsoft Visual Code](https://code.visualstudio.com/).
 
-### 1.2.4 Programming Paradigms
+### 1.2.4 &mdash; Programming Paradigms
 Computer scientists classify programming languages into many categories, based upon their respective functionality, e.g., how the code is organized, the execution model, style, syntax, or enabling side effects (modifying state variables values outside it local environment). In our course we will learn C and Python. These languages allow the programmer to instruct how the machine (computer) changes the state, i.e., the contents of a memory location. Memory can be a register, a cache location, a RAM address, a file in disk, etc. Computer science classifies C and Python as **imperative** programming paradigm. Subsets of imperative paradigms include but are not limited to **procedural** language and **object oriented** (OO). C is a procedural language, and so is Python 3, but the latter is also OO. C++, a superset of C, is OO. Procedural groups instructions into blocks, functions, or procedures (name depends upon the language history). OO groups instructions and state (memory) into units called classes, that are, in turn, instantiated into individal objects; for example, you can have a class called car, and an object for that class would be a Tesla X SUV. A class is like a cookie cutter template, and the object is the actual cookie you use, or eat. Declarative programming serves as another type of programming paradigm. With this classification, the language allows the programmer to declare the properties of the desired result after computation but not the logic of computation; SQL, HTML, CSS, XML serve as examples of declarative programming.
 
-### 1.2.5 Evaluating Performance of Programs
+### 1.2.5 &mdash; Evaluating Performance of Programs
 In computer architecture and computer science, we evaluate performance of a program for a traditional von Neumann computer by measuring the speed of execution and the consumption of memory &mdash; that which is needed and actually used. The number of instructions running on the CPU and the number of memory loads and stores determine the speed of the program. The efficiency of memory usage determines the consumption of memory used. Note that computers have a hierarchy of memory from fastest to slowest, registers then cache within the circuitry of the CPU to RAM (random access memory) connected to the CPU via a bus then to disk drives (SSD to spinning disks), then to other computers connected via a network. The former are more sparse and limited than the latter; that is, less registers than cache addresses, less cache locations than RAM addresses, less RAM locations than disk drive space, etc. So just remember that compute (logic and time) is one axis of performance, and memory (storage and space) is the other.
 
 *** 
 
-## 2.0 Tutorial Introduction
+## 2.0 &mdash; Tutorial Introduction
 Let's get started with the mainline ...
 
 ### 2.1 &mdash; C
@@ -50,7 +50,7 @@ void main(void) {
 
 The program in C needs to be converted to object code (machine code) then linked to the OS in order to be able to be run.
 
-##### Building (Compiling, Linking) and Executing
+##### 2.1.0 &mdash; Building (Compiling, Linking) and Executing
 Working at the command-line interface (CLI) of Linux (on cs102.cooper.edu) and using the Bash shell environment:
 ```bash
 $ cd $HOME
@@ -158,7 +158,7 @@ $
 
 ***
 
-### 2.2 &mdash;  Python
+### 2.2 &mdash; Python
 
 Python unlike C is an interpreted imperative language. Behind the scenes, the Python source files (```.py```) are compiled to (```.pyc```) binary files after you run the Python interpreter on the file the first time. If you edit the source file, then the next time you run Python on that file, it will be recompiled to an updated ```.pyc``` binary Python file.
 
@@ -217,7 +217,89 @@ if __name__ == '__main__':
 
 # Week 2 &mdash; Types, Operators, Expressions
 
-## Lecture Materials
+## 1 &mdash; Lecture Materials
+
+### 1.1 &mdash; Variable Names
+
+#### In C
+Variable names in C are composed of letters and numerals. The first character must always be a letter, lowercase or uppercase, and the names are case sensitive, that is, ```Variable``` differs from ```variable```. The compiler treats an underscore (```_```) as a letter. Traditional C style guides reserve lowercase for variable names while all uppercase for symbolic constants, that is, those defined with the compiler directive ```#define```.
+
+#### In Python
+According to the official [Python Style Guide](https://peps.python.org/pep-0008/)
+> Never use the characters ‘l’ (lowercase letter el), ‘O’ (uppercase letter oh), or ‘I’ (uppercase letter eye) as single character variable names. In some fonts, these characters are indistinguishable from the numerals one and zero. When tempted to use ‘l’, use ‘L’ instead. **Function names** should be lowercase, with words separated by underscores as necessary to improve readability. **Variable names** follow the same convention as function names. **Constants** are usually defined on a module level and written in all capital letters with underscores separating words. Examples include MAX_OVERFLOW and TOTAL. **mixedCase** is allowed only in contexts where that’s already the prevailing style (e.g. threading.py), to retain backwards compatibility.
+
+### 1.2 &mdash; Data Types & Sizes
+
+#### In C
+C has a few fundamental data types:
+* ```char``` &mdash; a single byte (8 bits), capable of storing one character in the local character set, e.g., ASCII. See [ASCII table](https://asciitable.com). A qualifier can precede ```char``` as either ```unsigned``` or ```signed```, the latter is default when omitted.
+* ```int``` &mdash; an integer, or whole number, typically reflecting the natural size of integers on the host machine, as defined by the instruction set architecture of the CPU, e.g., x86, x86_64, arm, or arm64. A qualifier can precede ```int``` as either ```unsigned``` or ```signed```, the latter is default when omitted. Moreover, ```int``` can further be defined as either ```short``` or ```long```. The instruction set architecture for the CPU determine the actual bit sizes for the combination of ```int```. Check [this table](https://en.wikipedia.org/wiki/C_data_types) for more details.
+* ```float``` &mdash; single-precision floating point (real numbers as represented by the [IEEE-754 standard](https://en.wikipedia.org/wiki/IEEE_754)).
+* ```double``` &mdash; double-precision floating point.
+
+
+#### In Python
+
+### 1.3 &mdash; Constants
+
+#### In C
+
+#### In Python
+
+### 1.4 &mdash; Declarations
+
+#### In C
+
+#### In Python
+
+### 1.5 &mdash; Arithmetic Operators
+
+#### In C
+
+#### In Python
+
+### 1.6 &mdash; Relational & Logical Operators
+
+#### In C
+
+#### In Python
+
+### 1.7 &mdash; Type Conversions
+
+#### In C
+
+#### In Python
+
+### 1.8 &mdash; Increment & Decrement Operators
+
+#### In C
+
+#### In Python
+
+### 1.9 &mdash; Bitwise Operators
+
+#### In C
+
+#### In Python
+
+### 1.10 &mdash; Assignment Operators & Expressions
+
+#### In C
+
+#### In Python
+
+### 1.11 &mdash; Conditional Expressions
+
+#### In C
+
+#### In Python
+
+### 1.12 &mdash; Precedence & Order of Evaluation
+
+#### In C
+
+#### In Python
+
 
 *** 
 
