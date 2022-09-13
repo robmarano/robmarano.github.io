@@ -102,7 +102,7 @@ All assignments must be completed by the end of this course in order to receive 
 
 | Assessment | Title | Points | Given On | Due Date |
 | ---:  | :---- | :----: |:---- | :--- |
-| 1 | HW 1 | 10 | 9/6 | 9/16 @ 11:59:59pm ET |
+| 1 | HW 1 | 10 | 9/12 | 9/19 @ 11:59:59pm ET |
 | 2 | HW 2 | 10 | 9/20 | 9/30 @ 11:59:59pm ET |
 | 3 | HW 3 | 10 | 10/4 | 10/14 @ 11:59:59pm ET |
 | 4 | Quiz 1 | 35 | - | 10/7 |

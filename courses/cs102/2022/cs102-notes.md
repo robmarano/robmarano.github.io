@@ -212,6 +212,8 @@ if __name__ == '__main__':
     print(HELLO_STRING)
 ```
 
+## Read Chapter 1 Sections 1.1 through 1.10 of the C textbook and [the Python 3 tutorial](https://docs.python.org/3/tutorial/) Sections 1 through 3. Both these reading are a light introduction to each imperative programming language, and taken together are a comparative study.
+
 ***
 ***
 
