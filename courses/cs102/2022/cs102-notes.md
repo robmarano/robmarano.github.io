@@ -538,6 +538,35 @@ Common formatting codes for reading and printing integers:
 | hex ```int``` | ```%x``` | ```%x``` |
 | hex ```long``` | ```%lx``` | ```%lx``` |
 
+**Input from the User**
+In C there are several options to have the computer take in the user's input: ```getchar()``` and ```scanf()```.
+
+```getchar()```:
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+    int c;
+
+    printf("Type in characters on your keyboard.\n");
+    printf("Hit RETURN to repeat your typed line on the screen.\n");
+    printf("When you are done, type CTRL-D\n");
+    printf("If you type CTRL-C, the program immediately terminates.\n");
+    c = getchar();
+    /*
+     * On Linux systems and OS X, the character to input to cause an
+     * EOF is Ctrl-D. For Windows, it's Ctrl-Z.
+     * */
+    while (c != EOF) {
+        putchar(c);
+        c = getchar();
+    }
+    printf("You have typed CTRL-D.\nGoodbye!\n");
+
+    return(EXIT_SUCCESS);
+}
+```
 
 ...
 ***
