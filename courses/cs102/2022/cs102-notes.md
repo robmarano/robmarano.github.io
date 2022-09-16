@@ -505,7 +505,7 @@ In order or precedence from top to bottom from the list below:
 | ```not x``` | boolean NOT |
 | ```and``` | boolean AND |
 | ```or``` | boolean OR |
-| ```if`` - ```else``` | Conditional expression |
+| ```if``` - ```else``` | Conditional expression |
 | ```lambda``` | Lambda expression |
 | ```:=``` | Assignment expression |
 
@@ -539,7 +539,7 @@ Common formatting codes for reading and printing integers:
 | hex ```long``` | ```%lx``` | ```%lx``` |
 
 
-
+...
 ***
 # Week 15
 Final projects presentations (Group C project & Individual Python mini-project)
