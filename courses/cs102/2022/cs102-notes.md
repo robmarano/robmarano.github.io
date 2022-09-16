@@ -534,7 +534,7 @@ Common formatting codes for reading and printing integers:
 | octal ```short``` | ```%ho``` | ```%o``` |
 | octal ```int``` | ```%o``` | ```%o``` |
 | octal ```long``` | ```%lo``` | ```%lo``` |
-| hex ```short``` | ```%hx`` | ```%x``` |
+| hex ```short``` | ```%hx``` | ```%x``` |
 | hex ```int``` | ```%x``` | ```%x``` |
 | hex ```long``` | ```%lx``` | ```%lx``` |
 
