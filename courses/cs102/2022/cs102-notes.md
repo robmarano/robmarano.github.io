@@ -233,81 +233,313 @@ According to the official [Python Style Guide](https://peps.python.org/pep-0008/
 ### 1.2 &mdash; Data Types & Sizes
 
 #### In C
-C has a few fundamental data types:
+C has a few, **fundamental** data types:
 * ```char``` &mdash; a single byte (8 bits), capable of storing one character in the local character set, e.g., ASCII. See [ASCII table](https://asciitable.com). A qualifier can precede ```char``` as either ```unsigned``` or ```signed```, the latter is default when omitted.
 * ```int``` &mdash; an integer, or whole number, typically reflecting the natural size of integers on the host machine, as defined by the instruction set architecture of the CPU, e.g., x86, x86_64, arm, or arm64. A qualifier can precede ```int``` as either ```unsigned``` or ```signed```, the latter is default when omitted. Moreover, ```int``` can further be defined as either ```short``` or ```long```. The instruction set architecture for the CPU determine the actual bit sizes for the combination of ```int```. Check [this table](https://en.wikipedia.org/wiki/C_data_types) for more details.
 * ```float``` &mdash; single-precision floating point (real numbers as represented by the [IEEE-754 standard](https://en.wikipedia.org/wiki/IEEE_754)).
 * ```double``` &mdash; double-precision floating point.
 
+See the [Wikipedia entry on C data types](https://en.wikipedia.org/wiki/C_data_types) for more information.
+
 
 #### In Python
+Python has several built-in data types, e.g., scalars (numeric and logical values) and complex structures (lists, dictionaries, and files).
+
+**Python Number Types**
+
+Python's four number types include integers, floats, complex numbers, and Boolean
+* **integer** : signed whole numbers (-15, 4, 29414225, -999999999999)
+* **float** : signed real numbers (-15.2, 4.2, 2e7, -9e12, 6e-4)
+* *complex numbers* : using ```j``` instead of ```i``` (-4+2j, 6.22+94.3j)
+* **Boolean** : logical values (```True```, ```False```)
+
+**Python List Type**
+
+Python also has a built-in list type, unlike C. A list can contain a mixture of other types as its elements, e.g., strings ("character arrays"), tuples, lists, dictionaries, functions, file objects, and any number type. Lists are contained inside brackets, ```[ ]```.
+
+
+For example:
+* ```[]``` &mdash; the empty list (meaning, it's not null)
+* ```[2]```
+* ```[1,2,3,4,5]```
+* ```['one',1,5L,2.2,['c','u'], (12,32)]```
+
+
+List elements can be deferenced (accessed for value) using index values (indices).
+
+
+For example, for the list ```my_list = [1,2,3,4]``` and ```len(my_list)``` (number of elements in ```my_list``) equals 4. Like C, Python deferences from the zeroth element, not the first. Below are examples of ***index*** and ***slice notation***.
+* ```my_list[0]``` = ```my_list[-4]```
+* ```my_list[1]``` = ```my_list[-3]```
+* ```my_list[2]``` = ```my_list[-2]```
+* ```my_list[3]``` = ```my_list[-1]```
+
+Some built-in Python functions (```len```, ```max```, ```min```), some operators (```in```, ```+```, ```*```), the delete operator (```del```), and list methods (```append```, ```count```, ```extend```, ```index```, ```insert```, ```pop```, ```remove```, ```reverse```, and ```sort```) will operate on lists.
+
+For example, using the Python interpreter at the CLI:
+```python
+>>> x = [0,1,2,3,4,5,6,7]
+>>> len(x)
+8
+>>> [-2,-1] + x
+[-2,-1,0,1,2,3,4,5,6,7]
+>>> x.reverse()
+>>> x
+[7,6,5,4,3,2,1,0]
+>>> x = [-2,-1] + x
+>>> x
+[-2,-1,7,6,5,4,3,2,1,0]
+```
+Note, the operators create new lists, leaving the original one intact. You need to remember to assign the new value to a variable name to keep in memory.
+
+**Python Tuple Type**
+
+Tuples are lists in Python but are immutable, that is, they cannot be modified after they are created. The built-in functions (```len```, ```max```, ```min```) and operators (```in```, ```+```, ```*```) function the same on tuples as they do on lists because none of these actions modify the original tuple/list. Tuples are contained inside parentheses, ```( )```. In its definition, the one-element tuple requires a comma, ```my_tuple = (5,)```. A frequent use of tuples is for use as keys in dictionaries. Also for performance reasons, you would use tuples when you want lists that are never modified. You can convert a list into a tuple with the operator ```tuple()```, and a tuple can be converted into a list with the operator ```list()```; for example:
+```python
+>>> x = [0,1,2,3,4,5,6,7]
+>>> y = tuple(x)
+>>> y
+(0,1,2,3,4,5,6,7)
+>>> z = list(y) + [8,9]
+```
+
+**Python String Type**
+
+Strings and strings processing are part of Python's strengths and hence popularity. A string in general is a list of human-readable characters, as in C. Strings are **immutable**, and as with lists, the built-in functions (```len```, ```max```, ```min```) and operators (```in```, ```+```, ```*```) as well as index and slice notation work the same as they do on lists and tuples.
+
+Strings can be delimited by single ```' '``` or double ```" "``` or triple single ```''' '''``` or triple double ```""" """``` quotes.
+
+**Python Dictionary Type**
+Python has a built-in data type for storing associations, that is, a **dictionary**, or a general list of key-value pairs. ```len``` function returns the number of key-value pairs in the dictionary, and ```del``` removes a key-value pair. As for the ```list``` type, the dictionary type has built-in methods, e.g., ```clear()```, ```copy()```, ```get()```, ```has_key()```, ```items()```, ```keys()```, ```update()```, and ```values()``` to name a few popular ones.
+```python
+>>> x = {1:'one', 2:'two'}
+>>> x[1]
+'one'
+>>> list(x.keys())
+[1,2]
+>>> x.get(1, 'does not exist')
+'one'
+>>> x.get(0, 'does not exist')
+'does not exist'
+```
+
+**Python Set Type**
+In Python a set is an unordered collection of values, that is, objects. This type in computer science is used when you seek to know membership and uniqueness of a set of values.
+```python
+>>> x = [2,4,2,6,8,8,8,4]
+>>> y = set(x)
+>>> y
+{8, 2, 4, 6}
+>>> 5 in y
+False
+>>> 4 in y
+True
+```
+
+As you can see, as compared to C, Python has a much deeper and wider collection of data types built-in and native.
 
 ### 1.3 &mdash; Constants
 
 #### In C
+There are several ways to define constants, that is, at compile time (building your program) and at run-time (execution of your program).
+
+When building, you at the very least use compiler directive ```#define```:
+```c
+#include <stdio.h>
+
+#define MY_CONSTANT_NUMBER 4.2
+#define MY_CONSTANT_STRING "Hello, World!"
+
+int main(void) {
+    printf("%f\n", MY_CONSTANT_NUMBER);
+    printf("%s\n", MY_CONSTANT_STRING);
+
+    return(0);
+}
+```
 
 #### In Python
+
+Constants in Python are usually declared and defined/assigned in Python module source code files. According to [PEP8 &mdash; Style Guide for Python Code](https://peps.python.org/pep-0008/#constants):
+```
+Constants are usually defined on a module level and written in all capital letters with underscores separating words. Examples include MAX_OVERFLOW and TOTAL.
+```
+
+We will discuss modules later in the semester.
 
 ### 1.4 &mdash; Declarations
 
+Imperative programming languages require at least the definition of a variable for type. Interpreted languages like Python infer the type by the assigned value. Compiled languages like C require first the declaration of the variable type then its definition, or setting to a value.
+
 #### In C
 
+You must declare a variable's data type, then you must define it.
+```c
+/*
+ * variables_declared.c
+ */
+
+#include <stdio.h>
+int a; /* this variable is global to the program, i.e., it's mainline */
+int b = -2;
+
+int main(void) {
+    int c; /* this variable is local to the code block in this function, the mainline */
+    a = 4;
+    printf("a = %d\n", a);
+    printf("b = %d\n", b);
+    b = b * 2;
+    printf("b = %d\n", b);
+    printf("c = %d\n", c);
+    c = a * b;
+    printf("c = %d\n", c);
+
+    return(0);
+}
+```
+
+Now check at run-time:
+```bash
+$ gcc -o variables_declared.exe variables_declared.c
+$ ./variables_declared.exe
+a = 4
+b = -2
+b = -4
+c = 213561440
+c = -16
+```
+
+Note the first value printed for ```c``` before it was defined but after declared.
+
 #### In Python
+
+Since Python is an interpreted imperative language, running your Python code is always compile-time at run-time, that is, the source code is run everytime, so the interpreter parses the instructions, compiles then executes them. If there is no change to the source code, Python does save intermediate compiled object code to speed up execution. Constants in Python can be global or local (to a code block or function definition), in many ways like C. The ```global``` attribute that would be prepended to the declaration of a variable, making it a global variable to the entire execution of the program. The following is the source code stored in the file ```global_example.py```:
+```python
+#
+# test.py
+#
+a = "one"
+b = "two"
+
+def my_func():
+    global a
+    a = 1
+    b = 2
+    return
+
+# mainline of this Python program
+if __name__ == '__main__':
+    print('a = {}'.format(a))
+    print('b = {}'.format(b))
+    my_func()
+    print('a = {}'.format(a))
+    print('b = {}'.format(b))
+    exit(0)
+```
+
+After executing this program, the output is:
+```bash
+$ python3 ./global_example.py
+a = one
+b = two
+a = 1
+b = two
+$ echo $?
+0
+```
+
+Since Python is interpreted, be attentive to where you declare and define your variables and which ones you truly want ```global```.
 
 ### 1.5 &mdash; Arithmetic Operators
+In both C and Python, you can manipulate each numeric value using arithmetic operators:
+* **addition** : ```+```
+* **subtraction** : ```-```
+* **multiplication** : ```*```
+* **division** : ```/```
+* **exponentiation** : ```**```
+* **modulus** : ```%```
+
+#### In C
+In order or precedence from top to bottom from the list below:
+| Operator | Description | Associates |
+| ---:  | :--- | :--- |
+| ```x[i]```, ```f(x)``` | array subscripting and function call | left to right |
+| ```.```, ```->``` | direct and indirect ```structure``` field selection| left to right |
+| x```++```,x```--``` | postfix increment / decrement operators | right to left |
+| ```++```x, ```--```x | prefix increment / decrement operators | right to left |
+| ```sizeof```,```(```< type >```)``` | size of a variable or type (in bytes), cast to type | right to left | 
+| ```+```,```-```,```!```,```~``` | unary plus, unary minus, logical and bitwise NOT operators | right to left |
+| ```&```,```*``` | address of and dereferencing operators | right to left |
+| ```*```,```/```,```%``` | multiply, divide, modulus | left to right |
+| ```+```,```-``` | addition, subtraction | left to right |
+| ```>>```,```<<``` | right, left bit shift | left to right |
+| ```<```,```>```,```<=```,```>=``` | test for inequality | left to right |
+| ```==```,```!=``` | test for equality, inequality | left to right |
+| ```&``` | bitwise AND | left to right |
+| ```^``` | bitwise XOR (exclusive OR) | left to right |
+| ```\|``` | bitwise OR (inclusive OR) | left to right |
+| ```&&``` | logical AND | left to right |
+| ```\|\|``` | logical OR | left to right |
+| ```? :``` | conditional operator | right to left |
+| ```=``` | variable assignment | right to left |
+| ```+=```,```-=```,```*=```,```/=```,```%=``` | add to, subtract from, multiply to, divide from, assign remainder | right to left |
+| ```<<=```,```>>=```,```^=```,```&=```,```\|=``` | shift right and left, assign bitwise XOR, AND, OR | right to left |
+| ```,``` | sequential expresion evaluation | left to right |
+
+#### In Python
+In order or precedence from top to bottom from the list below:
+| Operator | Description |
+| ---:  | :--- |
+| ```(expressions...)```, ```[expressions...]```, ```{key: value...}```, ```{expressions...}```| Binding or parenthesized expression, list display, dictionary display, set display |
+| ```x[index]```, ```x[index:index]```, ```x(arguments...)```, ```x.attribute``` | Subscription, slicing, call, attribute reference |
+| ```await x``` | [Await expression](https://docs.python.org/3/reference/expressions.html#await) |
+| ```**``` | Exponentiation (the power operator ```**``` binds less tightly than an arithmetic or bitwise unary operator on its right, that is, ```2**-1 is 0.5```.) |
+| ```+x```,```-x```,```~x``` | Positive, negative, bitwise NOT |
+| ```*```,```@```,```/```,```//```,```%``` | Multiplication, matrix multiplication, division, floor division, modulus/remainder | 
+| ```+```,```-``` | addition, subtraction |
+| ```<<```,```>>``` | bitwise shift left, right |
+| ```&``` | bitwise AND |
+| ```^``` | bitwise XOR |
+| ```\|``` | bitwise OR |
+| ```in```,```not in```,```is```,```is not```, ```<```,```<=```,```>```,```>=```,```!=```,```==``` | comparisons, including membership tests and identity tests |
+| ```not x``` | boolean NOT |
+| ```and``` | boolean AND |
+| ```or``` | boolean OR |
+| ```if`` - ```else``` | Conditional expression |
+| ```lambda``` | Lambda expression |
+| ```:=``` | Assignment expression |
+
+
+***
+
+# Week 3 &mdash; Types, Operators, Expressions (continued)
+
+## 1 &mdash; Lecture Materials
+
+### 1.0 &mdash; Inputting / Outputting
 
 #### In C
 
-#### In Python
+Inputting from the user via the CLI terminal/console, one of the system functions to use is ```scanf()```. Outputting, as you have already seen, can be done with one fo the system functions called ```printf()``` which means take the data and output to a file, one of which is ```STDOUT``` &mdash; a Unix/Linux file that prints to the teletypewriter (tty) called the terminal, or console.
 
-### 1.6 &mdash; Relational & Logical Operators
-
-#### In C
-
-#### In Python
-
-### 1.7 &mdash; Type Conversions
-
-#### In C
-
-#### In Python
-
-### 1.8 &mdash; Increment & Decrement Operators
-
-#### In C
-
-#### In Python
-
-### 1.9 &mdash; Bitwise Operators
-
-#### In C
-
-#### In Python
-
-### 1.10 &mdash; Assignment Operators & Expressions
-
-#### In C
-
-#### In Python
-
-### 1.11 &mdash; Conditional Expressions
-
-#### In C
-
-#### In Python
-
-### 1.12 &mdash; Precedence & Order of Evaluation
-
-#### In C
-
-#### In Python
+Common formatting codes for reading and printing integers:
+| Type | Reading with ```scanf()``` | Printing with ```printf()``` |
+| ---:  | :--- | :--- |
+| ```short``` | ```%hd``` or ```%hi``` | ```%d``` or ```%i``` |
+| ```int``` | ```%d``` or ```%i``` | ```%d``` or ```%i``` |
+| ```long``` | ```%ld``` or ```%li``` | ```%ld``` or ```%li``` |
+| ```unsigned short``` | ```%hu``` | ```%u``` |
+| ```unsigned int``` | ```%u``` | ```%u``` |
+| ```unsigned long``` | ```%lu``` | ```%lu``` |
+| octal ```short``` | ```%ho``` | ```%o``` |
+| octal ```int``` | ```%o``` | ```%o``` |
+| octal ```long``` | ```%lo``` | ```%lo``` |
+| hex ```short``` | ```%hx`` | ```%x``` |
+| hex ```int``` | ```%x``` | ```%x``` |
+| hex ```long``` | ```%lx``` | ```%lx``` |
 
 
-*** 
 
-## Hands-On Laboratory Work
-
-*** 
 ***
 # Week 15
 Final projects presentations (Group C project & Individual Python mini-project)
