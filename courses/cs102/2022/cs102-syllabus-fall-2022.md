@@ -100,18 +100,18 @@ All software used during this course will be open source-based.
 ## Assessment Strategy and Grading Policy
 All assignments must be completed by the end of this course in order to receive at least a passing grade. Programming assignments, referred to as "HW{1..6}", will be handed-in individually via your respective GitHub course respository that you will create and share with the professor. Quizzes will be held at the end of class as scheduled. On those days, offices hours will be canceled unless otherwise noted. Final projects will be handed-in via another GitHub respository per project. We will discuss in class how to create each repository.
 
-| Assessment | Title | Points | Given On | Due Date |
-| ---:  | :---- | :----: |:---- | :--- |
-| 1 | HW 1 | 10 | 9/12 | 9/19 @ 11:59:59pm ET |
-| 2 | HW 2 | 10 | 9/20 | 9/30 @ 11:59:59pm ET |
-| 3 | HW 3 | 10 | 10/4 | 10/14 @ 11:59:59pm ET |
-| 4 | Quiz 1 | 35 | - | 10/7 |
-| 5 | HW 4 | 10 | 10/18 | 11/4 @ 11:59:59pm ET |
-| 6 | HW 5 | 10 | 11/8 | 11/18 @ 11:59:59pm ET |
-| 7 | Quiz 2 | 35 | - | 11/22 |
-| 8 | HW 6 | 10 | 11/29 | 12/2 @ 11:59:59pm ET |
-| 9 | Python Final Mini-Project | 10 | - | 12/16 in class |
-| 10 | C Final Project | 60 | - | 12/16 in class |
+| Assessment | Title | Points | Given On | Due Date | Link to Solution
+| ---:  | :---- | :----: |:---- | :--- | :--- |
+| 1 | HW 1 | 10 | 9/12 | 9/19 @ 11:59:59pm ET | [Assignment 1](https://github.com/robmarano/cs102_at_cooper/tree/homeworks-Fall_2022) |
+| 2 | HW 2 | 10 | 9/20 | 9/30 @ 11:59:59pm ET | |
+| 3 | HW 3 | 10 | 10/4 | 10/14 @ 11:59:59pm ET | |
+| 4 | Quiz 1 | 35 | - | 10/7 | |
+| 5 | HW 4 | 10 | 10/18 | 11/4 @ 11:59:59pm ET | |
+| 6 | HW 5 | 10 | 11/8 | 11/18 @ 11:59:59pm ET | |
+| 7 | Quiz 2 | 35 | - | 11/22 | |
+| 8 | HW 6 | 10 | 11/29 | 12/2 @ 11:59:59pm ET | |
+| 9 | Python Final Mini-Project | 10 | - | 12/16 in class | |
+| 10 | C Final Project | 60 | - | 12/16 in class | |
 
 ## Final Projects MVPs
 Two final projects, one for C and one for Python, the former will be more complex in size and scope than the latter. The following items pertain only to the final C project:
