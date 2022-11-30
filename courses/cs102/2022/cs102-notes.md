@@ -947,6 +947,10 @@ NOTE: For this course as discussed in detail in class, each student will individ
 
 TBD
 
+# Week 12 &mdash; Pointers and Data Structures
+
+[Quiz 2 Study Guide](./pointer_study_guide.md)
+
 ***
 # Week 15
 Final projects presentations (Group C project & Individual Python mini-project)
