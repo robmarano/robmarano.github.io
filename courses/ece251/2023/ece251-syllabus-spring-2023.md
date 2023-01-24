@@ -10,15 +10,11 @@ Email: rob@cooper.edu
 
 [Weekly course notes](./ece251-notes.md)
 
----
-
 ## Course Description
 
 Introduction to the design of computers and computer systems. Topics include: integer and floating-point representations and operations: ALU design; von Neumann and Harvard architectures; accumulator, general purpose register and stack-based processor design; RISC and CISC architectures; addressing modes; vector operations; microprogrammed and hard-wired controllers; machine language and assembly language programming; static and dynamics memory operation, timing and interfacing; cache; virtual memory; I/O systems: bus design and data transfer, DMA; interrupts and interrupt handling, polling; disk operation and organization; pipelined processor design. The course has a substantial project component that includes assembly language programming and the design and construction of systems that contain microcontrollers, programmable logic, and a variety of I/O devices.
 
 3 credits. 4 hours per week (45 total hours). Link to [course catalog](https://cooper.edu/engineering/courses/electrical-and-computer-engineering-undergraduate/ece-251)
-
----
 
 ## Course Prerequisites
 
@@ -37,8 +33,6 @@ The course will use expand your knowledge of digital logic design to understand 
 5. The Processor &mdash; Data Path and Control
 6. Memory Hierarchies
 
----
-
 ## Anticipated Schedule (at class pace)
 
 |      Dates | Topic                                                   |
@@ -54,8 +48,6 @@ The course will use expand your knowledge of digital logic design to understand 
 
 Weekend lab sessions will be scheduled throughout the semester in order to work on your final project designs.
 
----
-
 ## Course Learning Outcomes
 
 Upon successful completion of this course, each student will be able to:
@@ -66,13 +58,9 @@ Upon successful completion of this course, each student will be able to:
 4. Write a simple assembler using a programming language of their choice (preferably Python for coding ease) to translate the ISA-based assembly code into machine code for the designed RISC-based processor;
 5. By understanding the key interactions and dependencies between the processor and the hierarchy of memory, one would be able to include this knowledge to designing and implementing software code that demonstrates improved performance on the platform for which it's written.
 
---
-
 ## Communication Policy
 
 The best way to contact me is via chat on Microsoft Teams then email. I will do my best to respond within 24 hours. Communication and participation in class is not only encouraged, but required. I seek to understand your individual understanding of the material each class. Advocate for yourself, early and often. Make time to meet with me should you need more explanation and assistance.
-
----
 
 ## Course Expectations
 
@@ -82,13 +70,9 @@ Depending upon the week's topic, each session will consist of two components: cl
 
 Each class discussion consists of a mix of lectures, programming/simulations, and question-driven group analysis of one or more large programming problems. Lab will consist of either group or individual work on exercises or projects. Questions arising during lab time in class may be used to prompt additional discussion as time permits.
 
----
-
 ### Attendance
 
 Success as a student begins with attendance. Class time serves not only for learning new concepts and skills but also for practicing what you have learned with active feedback. Some assignments and demos may be completed in class, but practice and study are required outside of class. Students are expected to attend classes regularly, arrive on time, and participate. I take attendance during every session, and it forms part of your grade. Students are encouraged to e-mail me when they are absent. Students are responsible for all academic work missed as a result of absences. It is at my discretion to work with students outside of class time in order to make-up any missed work.
-
----
 
 ## Materials
 
@@ -96,7 +80,7 @@ Success as a student begins with attendance. Class time serves not only for lear
 
 Required access to these:
 
-- <u>[Computer Organization and Design &mdash; The Hardware/Software Interface MIPS, 6th Edition](https://www.elsevier.com/books/computer-organization-and-design-mips-edition/patterson/978-0-12-820109-1)</u> by David Patterson & John Hennessy, ISBN 9780128201091
+- [Computer Organization and Design &mdash; The Hardware/Software Interface MIPS, 6th Edition](https://www.elsevier.com/books/computer-organization-and-design-mips-edition/patterson/978-0-12-820109-1) by David Patterson & John Hennessy, ISBN 9780128201091
 
 ### Software
 
