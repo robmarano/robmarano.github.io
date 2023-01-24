@@ -3,7 +3,7 @@
 ## General Course Information
 
 **Professor:** Prof. Rob Marano  
-Email: rob@cooper.edu  
+**Email:** rob@cooper.edu  
 **Semester of the course:** Spring 2023  
 **Dates of the course:** 24 JAN to 9 MAY (15 sessions, no class 14 MAR)
 **Room:** 101 in NAB
