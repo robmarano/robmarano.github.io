@@ -152,7 +152,7 @@ You will choose a partner with whom to jointly design a processor and simple mem
 - Breakdown the MLP design in manageable sets of tasks and track these tasks &mdash; who does what by when, how long did it take.
 - Demonstrate the MLP as part of your team's final presentation that you will record and post to YouTube. Your README.md file MUST include the link to the YouTube presentation, which will not be more than 5 minutes.
 
-# Course Meetings, Virtual (if announced)
+# Attending Class
 
 Occassionally, class may be held virtualy for a variety of unforeseen reaons, including, if required by the School or to deliver course material by a more effective delivery method, for example certain video presentations or certain online interaction. If announced in advance, class will meet virtually at the assigned times via the class MS Teams portal or via a Zoom meeting. If a class meeting is to be held via Microsoft Teams, a calendar invitation from Microsoft Teams will be sent to students via email in advance of the class. Students are expected to maintain appropriate technology (microphone, camera, speakers) to support online class delivery, should it be announced.
 
