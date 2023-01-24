@@ -2,7 +2,7 @@
 
 ## General Course Information
 
-**Instructor:** Prof. Rob Marano  
+**Professor:** Prof. Rob Marano  
 Email: rob@cooper.edu  
 **Semester of the course:** Spring 2023  
 **Dates of the course:** 24 JAN to 9 MAY (15 sessions, no class 14 MAR)
@@ -58,6 +58,21 @@ Upon successful completion of this course, each student will be able to:
 4. Write a simple assembler using a programming language of their choice (preferably Python for coding ease) to translate the ISA-based assembly code into machine code for the designed RISC-based processor;
 5. By understanding the key interactions and dependencies between the processor and the hierarchy of memory, one would be able to include this knowledge to designing and implementing software code that demonstrates improved performance on the platform for which it's written.
 
+## ABET Student Outcomes:
+
+This course supports student achievement of outcomes 1, 5, and 7:
+
+- (1) an ability to identify, formulate, and solve complex engineering problems by applying
+  principles of engineering, science, and mathematics
+- (5) an ability to function effectively on a team whose members together provide leadership, create a collaborative and inclusive environment, establish goals, plan tasks, and meet objectives.
+- (7) an ability to acquire and apply new knowledge as needed, using appropriate learning strategies
+
+Also, this course supports ABET's Criteria for Accrediting Computing Programs, 2021 – 2022, specifically items 3, 4, and 5:
+
+- (3) Exposure to computer architecture and organization, information management, networking and communication, operating systems, and parallel and distributed computing.
+- (4) The study of computing-based systems at varying levels of abstraction.
+- (5) A major project that requires integration and application of knowledge and skills acquired in earlier course work.­
+
 ## Communication Policy
 
 The best way to contact me is via chat on Microsoft Teams then email. I will do my best to respond within 24 hours. Communication and participation in class is not only encouraged, but required. I seek to understand your individual understanding of the material each class. Advocate for yourself, early and often. Make time to meet with me should you need more explanation and assistance.
@@ -76,13 +91,11 @@ Success as a student begins with attendance. Class time serves not only for lear
 
 ## Materials
 
-### Reference Books
-
-Required access to these:
+### Required Textbook
 
 - [Computer Organization and Design &mdash; The Hardware/Software Interface MIPS, 6th Edition](https://www.elsevier.com/books/computer-organization-and-design-mips-edition/patterson/978-0-12-820109-1) by David Patterson & John Hennessy, ISBN 9780128201091
 
-### Software
+### Required Software
 
 All software used during this course will be open source-based. We will be using various tools during our class, including but not limited to:
 
@@ -90,9 +103,11 @@ All software used during this course will be open source-based. We will be using
 - MIPS emulator (assembly programming)
 - Python 3 (to write your CPU's assembler)
 
+We will detail access and usage in class during the semester.
+
 ## Assessment Strategy and Grading Policy
 
-All assignments must be completed by the end of this course in order to receive at least a passing grade. _Individual_ homework ssignments, referred to as "HW{1..5}", will be handed-in electronically (scanned) via Microsoft Teams Assignments for this course. Quizzes will be held at the end of class as scheduled. On those days, offices hours will be canceled unless otherwise noted. Final group-based projects will be handed-in via your team's GitHub respository per project. We will discuss in class how to create each repository.
+All assignments must be completed by the end of this course in order to receive at least a passing grade. _Individual_ homework ssignments, referred to as "HW{1..14}", will be handed-in electronically (scanned) via Microsoft Teams Assignments for this course. Quizzes will be held at the end of class as scheduled. On those days, offices hours will be canceled unless otherwise noted. Final group-based projects will be handed-in via your team's GitHub respository per project. We will discuss in class how to create each repository.
 
 | Assessment | Title               | Points | Given On | Due Date             |
 | ---------: | :------------------ | :----: | :------- | :------------------- |
@@ -118,6 +133,15 @@ All assignments must be completed by the end of this course in order to receive 
 |         20 | Quiz 6              |   20   | -        | 5/9 quiz in class    |
 |         21 | Final Group Project |  100   | -        | 5/12 @ 11:59:59pm ET |
 
+### Grading Distribution
+
+|                  Assessment Type | Total Points | % of Final Grade |
+| -------------------------------: | :----------: | :--------------: |
+|                        Homeworks |     140      |       25%        |
+|                          Quizzes |     120      |       30%        |
+|                    Final Project |     100      |       40%        |
+| Demonstrated Class Participation |      30      |        5%        |
+
 ## Final Projects as Minimal Lovable Product (MLP)
 
 You will choose a partner with whom to jointly design a processor and simple memory that work together to run programs. These programs will be written in assembly language using your newly designed instruction set architecture (ISA). You will also write a simple assembler that will convert the assembly code to your CPU's machine code. Your computer (CPU plus memory) will only run one program at a time. Hence, since you do not have an operating system, you will not need to link your code.
@@ -127,6 +151,42 @@ You will choose a partner with whom to jointly design a processor and simple mem
 - Design files and documentation files (in markdown) will be stored in the repo; include images and photos, link them to your markdown documentation.
 - Breakdown the MLP design in manageable sets of tasks and track these tasks &mdash; who does what by when, how long did it take.
 - Demonstrate the MLP as part of your team's final presentation that you will record and post to YouTube. Your README.md file MUST include the link to the YouTube presentation, which will not be more than 5 minutes.
+
+# Course Meetings, Virtual (if announced)
+
+Occassionally, class may be held virtualy for a variety of unforeseen reaons, including, if required by the School or to deliver course material by a more effective delivery method, for example certain video presentations or certain online interaction. If announced in advance, class will meet virtually at the assigned times via the class MS Teams portal or via a Zoom meeting. If a class meeting is to be held via Microsoft Teams, a calendar invitation from Microsoft Teams will be sent to students via email in advance of the class. Students are expected to maintain appropriate technology (microphone, camera, speakers) to support online class delivery, should it be announced.
+
+It is understood that having a class meeting entirely via a virtual environment may be challenging, especially to those not accustomed to virtual collaboration and learning. Reasonable efforts may be made to adjust to these circumstances. Students are to log on using identifiable names. It is the student’s responsibility to log on and remain online, engaged, and actively participating for the duration of the class. Come on camera.
+
+# Class Policies
+
+1. Course policies are developed to support fair and equitable treatment in the classroom and to set high performance standards. If you are having any issues related to me, the course, or your fellow students, please make an appointment to speak with me for discussion toward resolution. The ealier any issue or concern is brought to my attention, the better the opportunity for successful resolution.
+2. Students are expected to be present in class for the entire scheduled meeting time. Attendance in class is important for student success and for the classroom environment.
+3. For any virtual class meeting, students are expected to sign on and remain online and engaged with the class for the entire scheduled meeting time. Students are requested to keep their video on during class times, and their audio muted unless participating in class discussion.
+4. Class lectures may not not always be recorded, and lecture aides, slides and/or materials supplementary to the textbook may not always be be available following the conclusion of each class session. Students are expected to take appropriate notes and pose relevant questions during class sessions. Lecture material can be discussed during an office consultation.
+5. All Health protocols of The Cooper Union shall be followed at all times.
+6. All School policies shall be followed at all times.
+7. Students are expected to be prepared for each class prior to beginning the class session. Preparation should include prior review of the text sections planned for discussion. All asignments must be completed on time to maintain preparation for subsequent discussions.
+8. Students are expected to check their Cooper Union email **and** their Microsoft Teams Chat daily for any announcements or other relevant course communications. Any changes to the planned course outline, course schedule, or other course components will be announced via the School email. Updates may subsequently be posted to Microsoft Teams, depending on the magnitude of the change.
+9. Microsoft Teams will be used for course communications and assignments. Documents relevant to the course will be posted to Microsoft Teams and/or to the course syllabus [online here](https://robmarano.github.io/courses/ece251/2023/ece251-syllabus-spring-2023.md).
+10. Assignments are due according to the dates in the Course Outline, and at the time of the scheduled beginning of the class session. Once class starts, any assignments due that day will be considered late. Late assignments are not guaranteed to be accepted and may be automatically assigned a zero grade. Any accepted late assignment will be subject to a reduction in grade for lateness. Any assignment not received prior to beginning the associated exam review according to the Course Outline will be recorded as zero credit. There will be no make-up or extra credit work associated with this class.
+11. Any issue concerning a deadline is to be brought to the attention of the Professor at least 48 hours prior to the due date and time, for potential discussion or review. However, as the course progression is already determined, there may not be any opportunity for flexibility. Students are encouraged to plan accordingly.
+12. Homework, assignments, and any Project material for submission must be turned in individually via the class Microsoft Teams Assignments portal for this course and must be complete and fully legible to receive credit. Paper or hard-copy submissions will not be accepted.
+13. It is recommended to include the student’s name and the assignment number within the filename of the assignment being turned in for proper credit allocation. Students are encouraged to review their uploaded files for legibility. Accepted formats of electronic files submissions are Microsoft Word (preferred) or PDF, only. Other file formats will not be accepted.
+14. Make-up Exams are not planned or given. In the event of extreme extenuating circumstances, and only with prior notification and agreement, an alternate plan may be discussed; however, there may not be an opportunity to obtain full credit. Once an Exam is given, unless the student is present to take the Exam, any opportunity to obtain credit for that Exam shall expire. Please plan accordingly.
+15. Exams are taken individually and graded out of 20 points, each, and the raw point score earned will count toward the final class grade according to the distribution, above. The raw point score total for the class will be used for assignment of the final class letter grade. Typically, a minimum class score of 90 is necessary for an A, a minimum class score of an 80 is necessary for a B, a minimum class score of a 70 is necessary for a C, and a minimum class score of a 60 is necessary for a D, with any lower score assigned an F. Borderline grades may be rounded up, for example when a student has demonstrated substantial effort by completing fully all assignments and submitting all of them on time.
+16. There is no extra-credit work associated with this class.
+17. During class sessions background noise should be eliminated to avoid disrupting the class.
+18. Electronic devices for note taking are permitted during class. Photographic or video recording of lectures in whole or in part is prohibited. Use of headphones, mobile phones, tablets, laptop computers or any other devices posessing communication capability are prohibited during exams, and any such use will result in a zero grade being assigned for that exam. Electronic calculators or calculation devices are permitted during exams, provided the device doeas not posess any communication capability. Students are expected to come to class and to exams fully prepared and with all materials for that class or exam.
+19. Any special needs or special accomodations requirements are to be reported to the School according to School policy, and students with disabilities or who need special accommodations for this class are required to notify the Dean of Students and meet with the Professor, in person or virtually, so that arrangements can be made. The Cooper Union has limited resources and extra lead time is required for such arrangements to be feasible. In order to receive accommodations for an exam, you must notify the Professor yourself in writing at least two weeks before the accommodations are needed for each event and you must also be registered with the Dean of Students. Students will not be afforded any special accommodations retroactively, e.g., for academic work completed prior to disclosure to the Professor.
+20. The Cooper Union School of Engineering Policy on Academic Integrity will always be followed.
+
+# Special Notes
+
+It is a goal of Cooper Union that learning experiences be as accessible as possible. If you anticipate or experience physical or academic barriers based on disability, please let me know immediately so that we can discuss options. Students with disabilities are to contact the Director of Student Care and Support to formally establish accommodations. Students with accommodation letters must provide me with a copy of your letter and make an appointment to meet with me as soon as possible to discuss your needs.
+
+While I want you to feel comfortable coming to me with issues you may be struggling with or concerns you have, please be aware that I have reporting requirements that are part of my responsibilities as a member of the faculty. If you inform me of an issue of sexual harassment, sexual assault, or discrimination, I will keep the information as private as I can, but I am required to report the basic facts of the incident to Cooper’s Title IX Coordinator.
+Counseling Services at The Cooper Union are coordinated through the Office of Student Affairs.
 
 # Your Comp Arch Portfolio
 
