@@ -2,41 +2,9 @@
 
 [<- back to syllabus](./ece251-syllabus-spring-2023.md)
 
-# Week 1
-
----
-
-# Week 2
-
----
-
-# Week 3
-
----
-
-# Week 4
-
----
-
-# Week 5
-
----
-
-# Week 6
-
----
-
-# Week 7
-
----
-
-# SPRING BREAK 14 MAR 2023
-
----
-
 # Week 8
 
----
+[Modern Computer Programming in Assembly](../modern_computer_programming/README.md)
 
 # Week 9
 
