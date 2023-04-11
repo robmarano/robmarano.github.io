@@ -22,7 +22,7 @@ ECE 150 &mdash; [Digital Logic Design](https://cooper.edu/engineering/courses/el
 
 ### Course Structure/Method
 
-**Lectures and SW-based Labs:** This class meets in person on 1/24, 1/31, 2/7, 2/14, 2/28, 3/7, 3/21, 3/28, 4/4, 4/11, 4/18, 4/25, 5/2, and 5/9, for a total of 15 sessions. **Note:** 3/14 we do not meet due to spring break. The class meets from 6:00-8:50pm on class days. Office hours are held Tuesdays 5:00-6:00pm in the Engineering Adjunct's Office on the 2nd floor of the NAB at 41 Cooper Square. Appointments held remotely will be scheduled upon request in increments of 20 minutes. Please contact me on Microsoft Teams chat via rob.marano@cooper.edu.
+**Lectures and SW-based Labs:** This class meets in person on 1/24, 1/31, 2/7, 2/14, 2/21, 2/28, 3/7, 3/21, 3/28, 4/4, 4/11, 4/18, 4/25, 5/2, and 5/9, for a total of 15 sessions. **Note:** 3/14 we do not meet due to spring break. The class meets from 6:00-8:50pm on class days. Office hours are held Tuesdays 5:00-6:00pm in the Engineering Adjunct's Office on the 2nd floor of the NAB at 41 Cooper Square. Appointments held remotely will be scheduled upon request in increments of 20 minutes. Please contact me on Microsoft Teams chat via rob.marano@cooper.edu.
 
 The course will use expand your knowledge of digital logic design to understand the design of computers systems down to the fundamental internals of a processor, that is, a central processing unit (CPU), and its associated memory systems. The following topic areas will be covered:
 
