@@ -22,11 +22,11 @@ From the catalog: <br>
 _Note: We will update course catalog description to focus on topic vs software implementation._
 
 From the instructor: <br>
-You will dive deep, with hands-on, to study and implement critical, foundational technology components that enable distributed (cloud) computing, and the engineering advancements that have led to today’s thriving cloud computing ecosystem. Students will understand, design, build and test representational software units that implement different distributed components, e.g., concurrently logic execution that uses software-defined communications, compute, storage, and security. Distributed computing topics include multi-threaded programming; architecture designs; communication designs; coordination; naming; consistency & replication; fault tolerance; and security.
+You will dive deep, with hands-on approach, to study and implement critical, foundational technology components that enable distributed (cloud) computing, and the engineering advancements that have led to today’s thriving cloud computing ecosystem. Students will understand, design, build and test representational software units that implement different distributed components, e.g., concurrent logic execution that uses software-defined communications, compute, storage, and security. Distributed computing topics include multi-threaded programming; architecture designs; communication designs; coordination; naming; consistency & replication; fault tolerance; and security.
 
 You will be introduced to many of the system design tenets used in the operation of large-scale distributed systems operated by modern commercial cloud computing providers (hyperscalers), e.g., Amazon Web Services, Microsoft Azure, and Google Cloud Platform. These tenets include reliability; scalability; availability; fault tolerance; data replication; caching; consistency; partition tolerance; load balancing; asynchronous communications; instrumentation; and monitoring.
 
-This course prepares the student with foundational knowledge and experience to prepare for modern cloud computing software development and product management professions and academic research.
+This course prepares the student with foundational knowledge and experience to prepare for modern cloud computing software design and development professions and academic research.
 
 3 credits. 3 hours per week (45 total hours).
 
