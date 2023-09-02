@@ -1,4 +1,4 @@
-# ECE 465 - Cloud Computing (Ind Study)
+# ECE 465 - Cloud Computing
 
 ## General Course Information
 
@@ -7,8 +7,6 @@ Email: rob@cooper.edu
 Semester of the course: Fall 2023  
 Dates of the course: 28 Aug 2023 – 15 Dec 2023 (15 sessions)
 Room: NAB 306 @ 6:00-8:50pm ET
-
-_Note for Fall 2023, this course runs as an independent study._
 
 "**Cloud computing** &mdash; the phenomenon by which services are provided by huge collections of remote servers." <br>
 &mdash; Andrew Tanenbaum & Maarten van Steen
@@ -19,7 +17,7 @@ _Note for Fall 2023, this course runs as an independent study._
 
 From the catalog: <br>
 "Critical, foundational technology components that enable cloud computing, and the engineering advancements that have led to today’s ecosystem. Students design, build and test representational software units that implement different distributed computing components. Multi-threaded programming in Java. Functional programming (MapReduce). Hadoop: a programmer’s perspective; building and configuring clusters; Flume as an input engine to collect data; Mahout as a machine learning system to perform categorization, classification and recommendation; Zookeeper for systems coordination." <br>
-_Note: We will update course catalog description to focus on topic vs software implementation._
+_Note: We will update course catalog description to focus on topic vs software implementation. We may or may not use MapReduce, Hadoop, Zookeeper, and ML._
 
 From the instructor: <br>
 You will dive deep, with hands-on approach, to study and implement critical, foundational technology components that enable distributed (cloud) computing, and the engineering advancements that have led to today’s thriving cloud computing ecosystem. Students will understand, design, build and test representational software units that implement different distributed components, e.g., concurrent logic execution that uses software-defined communications, compute, storage, and security. Distributed computing topics include multi-threaded programming; architecture designs; communication designs; coordination; naming; consistency & replication; fault tolerance; and security.
