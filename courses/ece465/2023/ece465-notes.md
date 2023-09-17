@@ -91,6 +91,14 @@ From our textbook:
 
 An open distributed system is essentially a system that offers components that can easily be used by, or integrated into other systems. At the same time, an open distributed system itself will often consist of components that originate from elsewhere.
 
+Openness involves _interoperability_, _composability_, and _extensibility_.
+
+Interoperability characterizes the extent by which two implementations of systems or components from different software providers can co-exist and work together by merely relying on each other's services as specified by the interface definition's common standard.
+
+Portability means to what extent an application developed for a distributed system A can be executed, without modification, on a different distributed system B; both A and B implement the same interfaces.
+
+Extensibility characterizes an open distributed system that would allow for relative ease to add additional functionality and replace functionality with other implementations that satisfy its respective interface definitions. Another important goal for an open distributed system is that is should be easy to build and configure the system out of different components, or parts, even from different software providers or vendors. Moreover, it should be easy to add new components or replace existing ones that adhere to its respective interface definitions without affecting those components that stay in place. T
+
 To be open means that components should adhere to standard rules that describe the syntax and semantics of what those components have to offer (i.e., which service they provide). A general approach is to define services through interfaces using an **Interface Definition Language** (**IDL**).
 
 See Wikipedia's definition [link](https://en.wikipedia.org/wiki/Interface_description_language):
@@ -99,7 +107,60 @@ See Wikipedia's definition [link](https://en.wikipedia.org/wiki/Interface_descri
 >
 > IDLs are commonly used in remote procedure call software. In these cases the machines at either end of the link may be using different operating systems and computer languages. IDLs offer a bridge between the two different systems.
 
+If properly specified, an _interface definition_ allows any process that needs a certain functionality provided by the published interface to communicate to another process (on same computer or over the network to another one running on a different computer node) that provides that interface. At the interface definition level, all process which supply the interface may have differing implementations, thus possibly different performance profiles.
+
+Proper specifications of interface definitions are complete and neutral, but many of these interface definitions may not be complete, leaving decisions on implementation and "filling in the blanks" are left to the software engineers building the process.
+
+#### Separating policy from mechanism
+
+Open distributed systems become flexible when the system is designed and organized as a set of relatively small, easily replaceable/adaptable components, in other words, small, loosely coupled components. The interface definitions provide the coupling. Many older and even some contemporary systems have been constructed using a monolithic approach in which components are logically separated but implemented as one, large program. This approach increases difficulty to replace or to adapt a component without affecting the entire system. Therefore, monolithic systems tend to be closed instead of open.
+
+What is needed is a separation of _policy_ and of _mechanism_. As the old adage goes, the only constant is change. The need for changing a distributed system often results from a component requiring an update or replacement in order to provide the optimal policy for a specific application use case. Policy updates should be loosely coupled to the system. However, there is an important trade-off to consider. The stricter the separation, the more a distributed systems designer and developer needs to ensure they offer appropriate collection of mechanisms. Strict separation of policies and mechanisms my lead to highly complex configuration problems.
+
+One option to ease these configuration problems is to provide reasonable defaults. This is the usual situation in practice. An alternative, more complex approach is to have the system observe usage and dynamically change parameter settings, resulting in a _self-configurable system_. Note, hard-coding policies into a distributed system may reduce complexity considerably but at the price of less flexibility.
+
 ### Dependability
+
+From our textbook:
+
+Dependability refers to the degree that a computer system can be relied upon to operate as expected. Dependability in distributed systems can be rather intricate as compared to single-computer systems due to **partial failure**. A partial failure means a part of the distributed system does not operate as designed even though the whole system seems to be operating as expected up to a certain point. The issue with partial failures across a distributed system is that these anomalies' impact add up, like small holes in a large boat; left unmanaged, the boat will sink. One should assume that at any time in a distributed system, there are always partial failures occurring. An **important goal** of distributed systems is to make these failures and mask the recovery from those failures. This masking is the essence of being able to tolerate failures, referred as "fault tolerance."
+
+#### Baseic concepts of dependendability
+
+Dependability covers many useful requirements in distributed systems design, including the following:
+
+1. availability
+2. reliability
+3. safety
+4. maintainability
+
+**Availability** is the property that a system is ready to be used immediately, right now. A highly available is one that will most likely be working at any given **instant time**, not necessarily in a range of time. Availability is usually specificed as a percentage; for example, if a distributed system has an availability of 99.999% then is has a maximum downtime of 5 minutes and 15.6 seconds considered over any given entire year. Availability, as a measure of the amount of time the system has been up (aka uptime), can be calculated as follows:
+
+```
+Percentage of availability = (total elapsed time – sum of downtime)/total elapsed time
+```
+
+See [availability table](https://sre.google/sre-book/availability-table/) in [Google's Site Reliability](https://sre.google/) web site.
+
+**Reliability** is the property that a system can run **continuously** without failure. In contrast with a system's property of availability, reliability is defined in terms of a **time interval** instead of an _instant in time_. A highly reliable system is one that will most likely continue to work without interruption during a relatively **long** period of time. This is a subtle but important difference when compared to availability; for example, for an availability of 99.999%, the system may or not be reliable. Covered below, metrics such as "mean time to failure" and "mean time between failures" define reliability in numerical terms.
+
+[Helpful discussion on Availability and Reliability for distributed applications.](https://www.pagerduty.com/resources/learn/reliability/)
+
+**Safety** is the property that when a system temporarily fails to operate as expected no catastrophic event happens. This property is very important for distributed systems that deal with human and property safety, e.g., medical devices, nuclear power plants, air travel, space travel, and many more. Read the story of the [Therac-25 as one of the most infamous examples of how software faults may harm human life](https://hackaday.com/2015/10/26/killed-by-a-machine-the-therac-25/).
+
+**Maintainability** is the property of how easily a fault in a system can be repaired. A highly maintainable system may also exhibit a high degree of availability, especially if failures can be detected and repaired automatically. However, automatic recovery is easier said than done. Traditionally, the ability of a system to tolerate faults (fault tolerant) has been related to the following statistical metrics:
+
+1. **Mean Time To Failure** (MTTF) &mdash; the avereage time until a component fails
+2. **Mean Time To Repair** (MTTR) &mdash; the average time needed to repair a component
+3. **Mean Time Between Failures** (MTBF) &mdash; MTTF + MTTR
+
+These metrics make sense only if we have an accurate notion of what a failure actually is. as seen in our textbook's Chapter 8, identifying the occurrence of a failure may actually not be so obvious.
+
+#### Faults, errors, failures
+
+A system is said to **fail** when it cannot meet its promises (expected behavior). An **error** is a part of a system's overall state, and it may lead to a **failure**. The cause of an error is called a **fault**. Building dependable systems closely relates to controlling faults. A distinction can be made between preventing, tolerating, removing, and forecasting faults. For distributed systems design, the most important issue is **fault tolerance**, meaning the system can provide its services even in the presence of faults. For example, consider a system that depends upon a network connection that experiences errors in transmission for whatever reason. By comparmentalizing the design of the network connection service, one can implement error-correcting codes for transmitting packets. At the lower level, which is loosely coupled to the higher-level functionality, the system can tolerate, to a certain extent, relatively poor transmission lines, thus reducing the probability that an error (a damaged packet) may lead to a failure.
+
+A distributed system by design provides its users with several services. The distributed system fails when one or more of those services cannot be (completely) provided.
 
 ### Security
 
