@@ -162,7 +162,31 @@ A system is said to **fail** when it cannot meet its promises (expected behavior
 
 A distributed system by design provides its users with several services. The distributed system fails when one or more of those services cannot be (completely) provided.
 
+Faults are generally categorized as follows:
+
+1. transient fault
+2. intermittent fault
+3. permanent fault
+
+\*_Transient_ faults are those that occur once and then disappear; for example, if a tranmission between two nodes times out and is retried, it will probably work the second time.
+
+**Intermittent** fault are those that occur, then vanishes on its own, then reappears, continuing in this manner; for example, a loose contact on a connector will often cause an intermittent fault. This type of faults usually are very hard to diagnose.
+
+**Permanent** faults are those that continue until the component causing the root cause is replaced; for example, software bugs and burnt-out ICs.
+
 ### Security
+
+From our textbook:
+
+Dependable systems provide security, especially in terms of confidentiality and integrity.
+
+**Confidentiality** is the property that only authorized parties (human, machine/process) have access to the protected information assets and protected resources.
+
+**Integrity** is the property that only authorized parties (human, machine/process) can change the protected information and protected resources.
+
+The fundamental components of the security of any system are **authentication** of requesting entities (users or processes); **authorization** of such requests on the protected information and protected resources; and **audit** of the records of each authentication and authorization request and response.
+
+> > Review Chapter 1's section 1.2.5 on the key elements of security, e.g., cryptography etc.
 
 ### Scalability
 
