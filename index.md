@@ -10,15 +10,19 @@ layout: default
 
 Serving as an [adjunct professor of Electrical and Computer Engineering](https://cooper.edu/academics/people/robert-marano)
 
-### ECE 465 - Cloud Computing - Fall 2023 (ind study)
+### ECE 251 - Computer Architecture - Spring 2023
 
-- [Course Syllabus](./courses/ece465/2023/ece465-syllabus-fall-2023.html) ([pdf](./courses/ece465/2023/ece465-syllabus-fall-2023.pdf))
+- [Course Syllabus](./courses/ece251/2024/ece251-syllabus-spring-2024.md)
 
 <br>
 
 ## Past Courses
 
 ---
+
+### ECE 465 - Cloud Computing - Fall 2023
+
+- [Course Syllabus](./courses/ece465/2023/ece465-syllabus-fall-2023.html) ([pdf](./courses/ece465/2023/ece465-syllabus-fall-2023.pdf))
 
 ### ECE 251 - Computer Architecture - Spring 2023
 
