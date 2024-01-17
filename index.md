@@ -12,7 +12,7 @@ Serving as an [adjunct professor of Electrical and Computer Engineering](https:/
 
 ### ECE 251 - Computer Architecture - Spring 2024
 
-- [Course Syllabus](./courses/ece251/2024/ece251-syllabus-spring-2024.md) [pdf](./courses/ece251/2024/ece251_comp_arch_syllabus_spring_2024.pdf)
+- [Course Syllabus](./courses/ece251/2024/ece251-syllabus-spring-2024.md) ([pdf](./courses/ece251/2024/ece251_comp_arch_syllabus_spring_2024.pdf))
 
 <br>
 
