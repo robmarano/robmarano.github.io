@@ -5,8 +5,15 @@
 **Professor:** Prof. Rob Marano  
 **Email:** rob@cooper.edu  
 **Semester of the course:** Spring 2024  
-**Dates of the course:** 17 JAN to 8 MAY (15 sessions, no class MAR 20 nor MAY 1)
-**Room:** 427 in NAB (41 Cooper Square)
+**Sections** 
+* Section 1 
+ * Room: 427 in NAB (41 Cooper Square)
+ * Times: Wednesdays, 6:00 to 8:50pm ET
+ * Dates: This class meets in person on 1/17, 1/24, 1/31, 2/7, 2/14, 2/21, 2/28, 3/6, 3/13, 3/27, 4/3, 4/10, 4/17, 4/24, and 5/8 &mdash; 15 sessions, no class MAR 20 nor MAY 1 
+* Section 2 
+ * Room: 305 in NAB (41 Cooper Square) 
+ * Times: Tuesdays, 6:00 to 8:50pm ET
+ * Dates: This class meets in person on 1/17, 1/23, 1/30, 2/6, 2/13, 2/20, 2/27, 3/5, 3/12, 3/26, 4/2, 4/9, 4/16, 4/23, and 5/7 &mdash; 15 sessions, no class MAR 19 
 
 [Weekly course notes](./ece251-notes.md)
 
@@ -23,7 +30,7 @@ Most specifically combinational and sequential logic theory and implementation.
 
 ### Course Structure/Method
 
-**Lectures and SW-based Labs:** This class meets in person on 1/17, 1/24, 1/31, 2/7, 2/14, 2/21, 2/28, 3/6, 3/13, 3/27, 4/3, 4/10, 4/17, 4/24, and 5/8, for a total of 15 sessions. **Note:** 3/20 and 5/1 we do NOT meet. The class meets from 6:00-8:50pm on class days. Office hours are held Wednesdays 5:00-6:00pm in the Engineering Adjunct's Office on the 2nd floor of the NAB at 41 Cooper Square. Appointments held remotely will be scheduled upon request in increments of 20 minutes. Please contact me on Microsoft Teams chat via rob.marano@cooper.edu. Once scheduled, you will receive a meeting invite that you must accept to confirm the appointment. I can meet any day, including weekends, should that work for us both.
+**Lectures and SW-based Labs:** The class meets in person from 6:00-8:50pm on class days, for a total of 15 sessions. Office hours are held Wednesdays 5:00-6:00pm in the Engineering Adjunct's Office on the 2nd floor of the NAB at 41 Cooper Square. Appointments held remotely will be scheduled upon request in increments of 20 minutes. Please contact me on Microsoft Teams chat via rob.marano@cooper.edu. Once scheduled, you will receive a meeting invite that you must accept to confirm the appointment. I can meet any day, including weekends, should that work for us both.
 
 The course will use expand your knowledge of digital logic design to understand the design of computers systems down to the fundamental internals of a processor, that is, a central processing unit (CPU), and its associated memory systems. The following topic areas will be covered:
 
@@ -36,16 +43,16 @@ The course will use expand your knowledge of digital logic design to understand 
 
 ## Anticipated Schedule (at class pace)
 
-|           Dates | Topic                                                                            |
+|           Class | Topic                                                                            |
 | --------------: | :------------------------------------------------------------------------------- |
-|            1/17 | Computer Abstraction, and Software Modeling                                      |
-| 1/24, 1/31, 2/7 | Software Modeling Using Verilog                                                  |
-|      2/14, 2/21 | Instructions &mdash;The Language & Grammar of Computers                          |
-|       2/28, 3/6 | Intro to Assembly Language Programming &mdash; MIPS CPU                          |
-|      3/13, 3/27 | Arithmetic for Computers &mdash; Adders, Multipliers, Dividers; **Midterm Exam** |
-|       4/3, 4/10 | The Processor &mdash; Data Path and Control                                      |
-|      4/17, 4/24 | Memory Hierarchies                                                               |
-|             5/8 | **Final Exam**; Group CPU Final Project due                                      |
+|            1 | Computer Abstraction, and Software Modeling                                      |
+| 2, 3, 4 | Software Modeling Using Verilog                                                  |
+|      5, 6 | Instructions &mdash;The Language & Grammar of Computers                          |
+|       7, 8 | Intro to Assembly Language Programming &mdash; MIPS CPU                          |
+|      9, 10 | Arithmetic for Computers &mdash; Adders, Multipliers, Dividers; **Midterm Exam** |
+|       11, 12 | The Processor &mdash; Data Path and Control                                      |
+|      13, 14 | Memory Hierarchies                                                               |
+|             15 | **Final Exam**; Group CPU Final Project due                                      |
 
 Weekend lab sessions will be scheduled throughout the semester in order to work on your final project designs.
 
