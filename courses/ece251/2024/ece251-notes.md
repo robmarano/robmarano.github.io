@@ -20,30 +20,46 @@ Follow the link above to the respective week's materials below.
 # <a id="week1">Week 1 &mdash; 1/17 &mdash; Computer Abstraction, and Software Modeling</a>
 
 ## Presentations
-
-- Patterson-Hennessey: [Chapter 1](../books/patterson-hennessey/Patterson6e_MIPS_Ch01_PPT.ppt)
+- Patterson-Hennessy: [Chapter 1](../books/patterson-hennessey/Patterson6e_MIPS_Ch01_PPT.ppt)
 
 ## Topics
+- intro to computers and the architectures which drive their designs
+- the mental model for a computer and its five core parts
 
-## Optional Readings & Subject Information
+## Readings & Subject Information
+- Chapter 1 of our textbook (Patterson-Hennessy)
+- none this week
 
 # <a id="week2">Week 2 &mdash; 1/24 &mdash; Software Modeling Using Verilog</a>
 
 ## Topics
+- chip wafer process technology and its economics (yield); some examples
+- computer performance definition and its metrics; some examples
+- intro to Verilog as a hardware description language
+ - data types
+ - timescale
 
-## Optional Readings & Subject Information
+##  Readings & Subject Information
+- [The Free Lunch Is Over: A Fundamental Turn Toward Concurreny in Software](./No%20Free%20Lunch%20-%20Computer%20Architecture%20Progress%20and%20Constraints.pdf)
 
 # <a id="week3">Week 3&mdash; 1/31 &mdash; Software Modeling Using Verilog</a>
 
 ## Topics
+- Verilog
+ - file format (testbench and module files)
+ - data types
+ - defining and running simulations
 
-## Optional Readings & Subject Information
-
+## Readings & Subject Information
+- [SystemVerilog Tutorial from IBM](./system_verilog_overview-ibm-symposium-johny_srouji.pdf)
+- [SystemVerilog Overview](./SysVerilog_Tutorial.pdf)
+- [Intro to SystemVerilog from SUNY Stonybrook](./03-systemverilog.pdfs
+)
 # <a id="week4">Week 4 &mdash; 2/7 &mdash; Software Modeling Using Verilog</a>
 
 ## Topics
 
-## Optional Readings & Subject Information
+##  Readings & Subject Information
 
 # <a id="week5">Week 5 &mdash; 2/14 &mdash; Instructions &mdash;The Language & Grammar of Computers</a>
 
@@ -55,7 +71,7 @@ Follow the link above to the respective week's materials below.
 
 - [MIPS Green Sheet](../books/patterson-hennessey/MIPS_Green_Sheet.pdf)
 
-## Optional Readings & Subject Information
+##  Readings & Subject Information
 
 # <a id="week6">Week 6 &mdash; 2/21 &mdash; Instructions &mdash;The Language & Grammar of Computers</a>
 
@@ -67,7 +83,7 @@ Follow the link above to the respective week's materials below.
 
 - [MIPS Green Sheet](../books/patterson-hennessey/MIPS_Green_Sheet.pdf)
 
-## Optional Readings & Subject Information
+##  Readings & Subject Information
 
 # <a id="week7">Week 7 &mdash; 2/28 &mdash; Intro to Assembly Language Programming &mdash; MIPS CPU</a>
 
@@ -75,7 +91,7 @@ Follow the link above to the respective week's materials below.
 
 - [MIPS Green Sheet](../books/patterson-hennessey/MIPS_Green_Sheet.pdf)
 
-## Optional Readings & Subject Information
+##  Readings & Subject Information
 
 # <a id="week8">Week 8 &mdash; 3/6 &mdash; Intro to Assembly Language Programming &mdash; MIPS CPU</a>
 
@@ -83,7 +99,7 @@ Follow the link above to the respective week's materials below.
 
 - [MIPS Green Sheet](../books/patterson-hennessey/MIPS_Green_Sheet.pdf)
 
-## Optional Readings & Subject Information
+##  Readings & Subject Information
 
 # <a id="week9">Week 9 &mdash; 3/13 &mdash; Arithmetic for Computers &mdash; Adders, Multipliers, Dividers</a>
 
@@ -93,7 +109,7 @@ Follow the link above to the respective week's materials below.
 
 ## Topics
 
-## Optional Readings & Subject Information
+##  Readings & Subject Information
 
 # <a id="week10">Week 10 &mdash; 3/27 &mdash; **Midterm Exam** &mdash; Arithmetic for Computers &mdash; Adders, Multipliers, Dividers</a>
 
@@ -103,7 +119,7 @@ Follow the link above to the respective week's materials below.
 
 ## Topics
 
-## Optional Readings & Subject Information
+##  Readings & Subject Information
 
 # <a id="week11">Week 11&mdash; 4/3 &mdash; The Processor &mdash; Data Path and Control</a>
 
@@ -113,7 +129,7 @@ Follow the link above to the respective week's materials below.
 
 ## Topics
 
-## Optional Readings & Subject Information
+##  Readings & Subject Information
 
 # <a id="week12">Week 12 &mdash; 4/10 &mdash; The Processor &mdash; Data Path and Control</a>
 
@@ -123,7 +139,7 @@ Follow the link above to the respective week's materials below.
 
 ## Topics
 
-## Optional Readings & Subject Information
+##  Readings & Subject Information
 
 # <a id="week13">Week 13 &mdash; 4/17 &mdash; Memory Hierarchies</a>
 
@@ -133,7 +149,7 @@ Follow the link above to the respective week's materials below.
 
 ## Topics
 
-## Optional Readings & Subject Information
+##  Readings & Subject Information
 
 # <a id="week14">Week 14 &mdash; 4/24 &mdash; Memory Hierarchies</a>
 
@@ -143,10 +159,10 @@ Follow the link above to the respective week's materials below.
 
 ## Topics
 
-## Optional Readings & Subject Information
+##  Readings & Subject Information
 
 # <a id="week15">Week 15 &mdash; 5/8 &mdash; **Final Exam**; Submit MVP project</a>
 
 ## Topics
 
-## Optional Readings & Subject Information
+##  Readings & Subject Information

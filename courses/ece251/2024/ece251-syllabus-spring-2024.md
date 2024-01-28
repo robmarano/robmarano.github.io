@@ -4,18 +4,11 @@
 
 **Professor:** Prof. Rob Marano  
 **Email:** rob@cooper.edu  
-**Semester of the course:** Spring 2024  
-**Sections** 
-* Section 1 
-    * 15 sessions, no class MAR 20 nor MAY 1 
-    * Room: 427 in NAB (41 Cooper Square) 
-    * Times: Wednesdays, 6:00 to 8:50pm ET 
-    * Dates: This class meets in person on 1/17, 1/24, 1/31, 2/7, 2/14, 2/21, 2/28, 3/6, 3/13, 3/27, 4/3, 4/10, 4/17, 4/24, and 5/8
-* Section 2
-    * 15 sessions, no class MAR 19 
-    * Room: 305 in NAB (41 Cooper Square) 
-    * Times: Tuesdays, 6:00 to 8:50pm ET 
-    * Dates: This class meets in person on 1/17, 1/23, 1/30, 2/6, 2/13, 2/20, 2/27, 3/5, 3/12, 3/26, 4/2, 4/9, 4/16, 4/23, and 5/7
+**Semester:** Spring 2024  
+  * Times: Wednesdays, 6:00 to 8:50pm ET plus ad hoc scheduled times 
+  * Dates: This class meets in person on 1/17, 1/24, 1/31, 2/7, 2/14, 2/21, 2/28, 3/6, 3/13, 3/27, 4/3, 4/10, 4/17, 4/24, and 5/8
+  * 15 sessions, no class MAR 20 nor MAY 1 
+  * Room: 427 in NAB (41 Cooper Square) 
 
 [Weekly course notes](./ece251-notes.md)
 
