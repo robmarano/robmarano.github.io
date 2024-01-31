@@ -59,6 +59,7 @@ Follow the link above to the respective week's materials below.
 
 ## Readings & Subject Information
 
+- [Verilog & SystemVerilog](./verilog.md)
 - [David Harris' Structural Design with Verilog](./Structural%20Design%20with%20Verilog%20--%20David%20Harris.pdf)
 - [Mentor Graphics Verilog Training Manual](./Comprehensive%20Verilog%20Training%20Manual.pdf)
 - [SystemVerilog Tutorial from IBM](./system_verilog_overview-ibm-symposium-johny_srouji.pdf)
