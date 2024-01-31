@@ -505,3 +505,186 @@ endmodule
 
 `endif // AND2
 ```
+
+# Built-in Primitives
+
+Logic primitives such as and, nand, or, nor, and not gates, as well as xor (exclusive- OR), and xnor (exclusive_NOR) functions are part of the Verilog language and are classified as multiple-input gates. These are built-in primitives that can be instantiated into a module using **Gate Level Modeling**.
+
+These are built-in primitive gates used to describe a net and have one or more scalar inputs, but only one scalar output. The output signal is listed first, followed by the inputs in any order. The outputs are declared as wire; the inputs can be declared as either wire or reg. The gates represent a combinational logic function and can be instantiated into a module, as follows, where the instance name is optional.
+
+**NOTE:** For built-in primitives, the **first** parameter is the output, followed by the input(s).
+
+```verilog
+// single instance construct
+primitive_gate <instatiated_name> (output, input1, ..., input_n);
+
+// multiple instances construct of the same gate type
+primitive_gate <instatiated_name> (output1, input11, ..., input_1n),
+               <instatiated_name> (output2, input21, ..., input_2n),
+               ...
+               <instatiated_name> (output_m, inputm1, ..., input_mn);
+
+```
+
+| Primitive | Notes                                                                                                                                                                                                                                                                                                                     |
+| --------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+|     `and` | This is a multiple-input built-in primitive gate that performs the AND function for a multiple-input AND gate. If any input is an x, then this represents an unknown logic value. If an entry is a z, then this represents a high impedance state, which indicates that the driver of a net is disabled or not connected. |
+|     `buf` | A buf gate is a noninverting primitive with one scalar input and one or more scalar outputs.                                                                                                                                                                                                                              |
+|    `nand` | This is a multiple-input built-in primitive gate that operates as an AND func- tion with a negative output.                                                                                                                                                                                                               |
+|     `nor` | This is a multiple-input built-in primitive gate that operates as an OR function with a negative output.                                                                                                                                                                                                                  |
+|     `not` | A not gate is an inverting built-in primitive with one scalar input and one or more scalar outputs. The output terminals are listed first when instantiated; the input is listed last.                                                                                                                                    |
+|      `or` | This is a multiple-input built-in primitive gate that operates as an OR function.                                                                                                                                                                                                                                         |
+|    `xnor` | This is a built-in primitive gate that functions as an exclusive-OR gate with a negative output. An exclusive-NOR gate is also called an **equality function** because the output is a logical 1 whenever the two inputs are equal.                                                                                       |
+|     `xor` | This is a built-in primitive gate that functions as an exclusive-OR circuit.                                                                                                                                                                                                                                              |
+
+## Let's work through an example for a module that would be testing using map-entered variables
+
+For this example, the digital circuit created has four inputs, so all 16 combinations of the four logic variables must be applied to the circuit. This is accomplished by a `for` loop statement.
+
+```verilog
+///////////////////////////////////////////////////////////////////////////////
+//
+// Module: Testbench for module mev
+//
+// Testbanch for a minimized sum-of-products equation
+//  z1 = x1'x3'x4 + x1'x2 + x1x2'
+//
+// module: tb_and2
+// hdl: SystemVerilog
+//
+// author: Prof. Rob Marano <rob@cooper.edu>
+//
+///////////////////////////////////////////////////////////////////////////////
+`timescale 1ns/100ps
+
+`include "mev.sv"
+
+module tb_mev;
+    //
+    // ---------------- DECLARATIONS OF DATA TYPES ----------------
+    //
+    //inputs are reg for test bench - or use logic
+    reg X1, X2, X3, X4; // In SystemVerilog reg -> logic
+    //outputs are wire for test bench - or use logic
+    wire Z1;    // In SystemVerilog wire -> logic
+
+    //
+    // ---------------- INITIALIZE TEST BENCH ----------------
+    //
+    initial begin : initialize_variable
+    X1 = 1'b0;
+    X2 = 1'b0;
+    X3 = 1'b0;
+    X4 = 1'b0;
+    end
+
+    initial begin
+        $dumpfile("mev.vcd"); // for Makefile, make dump file same as module name
+        $dumpvars(0, dut);
+    end
+
+    /*
+    * display variables
+    */
+//    initial begin
+        // note: currently only simple signals or constant expressions may be passed to $monitor.
+//        $monitor ("X1-X2-X4-X4 = %b, Z1 = %b", {X1,X2,X3,X4}, Z1);
+//    end
+
+    //
+    // ---------------- APPLY INPUT VECTORS ----------------
+    //
+    // note: following the keyword begin is the name of the block: apply_stimulus
+    initial begin : apply_stimulus
+        reg[4:0] invect; // 5-bit input vector
+        for (invect=0; invect < 16; invect=invect+1) begin
+            {X1,X2,X3,X4} = invect[4:0];
+            #10
+            $display ("X1X2X3X4 = %b, Z1 = %b", {X1, X2, X3, X4}, Z1);
+        end
+    end
+    // note: do not need $finish, since the simulation runs for the set increments and ends.
+
+    //
+    // ---------------- INSTANTIATE UNIT UNDER TEST (UUT) ----------------
+    //
+    mev dut(
+        .x1(X1), .x2(X2), .x3(X3), .x4(X4), .z1(Z1)
+    );
+
+endmodule
+```
+
+```verilog
+//////////////////////////////////////////////////////////////////////////////
+//
+// Module: mev
+//
+// A minimized sum-of-products equation
+//  z1 = x1'x3'x4 + x1'x2 + x1x2'
+//
+// module: mev
+// hdl: SystemVerilog
+// modeling: Gate Level Modeling
+//
+// author: Prof. Rob Marano <rob@cooper.edu>
+//
+///////////////////////////////////////////////////////////////////////////////
+`ifndef MEV
+`define MEV
+
+module mev (x1, x2, x3, x4, z1);
+    //
+    // ---------------- DECLARATIONS OF PORT IN/OUT & DATA TYPES ----------------
+    //
+    input logic x1, x2, x3, x4;
+    output logic z1;
+
+    // recall in SV, logic is either a wire or a reg
+    // and in SV, data type always default to "logic"
+    logic net1, net2, net3;
+
+
+    //
+    // ---------------- MODULE DESIGN IMPLEMENTATION ----------------
+    //
+    and inst1 (net1, ~x1, ~x3, x4);
+    and inst2 (net2, ~x1, x2);
+    and inst3 (net3, x1, ~x2);
+    or inst4 (z1, net1, net2, net3);
+
+endmodule
+
+`endif // MEV
+```
+
+# SystemVerilog built-in tasks
+
+A quick review of a selected few, so far:
+
+|  Primitive | Notes                                                                                                                                                                                                           |
+| ---------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|    `$stop` | Pauses simulation, does not end it                                                                                                                                                                              |
+|  `$finish` | Halts the simulation immediately when it is executed. It can be called from anywhere in the testbench. Best way to halt your simulation, especially if you have free-running circuits (e.g., a clock generator) |
+| `$display` | Like `printf()` in C, prints text to the console terminal formatted as defined.                                                                                                                                 |
+
+---
+
+# Verilog Debugging Suggestions
+
+Use $write() statements
+Use lots of $write, $display, or $monitor statements to print out wires, registers, and other variables.
+
+Start from the inputs and work towards the outputs
+Verify the inputs are as you expect and then work a stage/level at a time until you get to the outputs. When you find an error, focus 100% on fixing the first one you find before moving on.
+
+---
+
+# Common Mistakes
+
+See [Common Mistakes handout](./Handout.verilog4.mistakes.pdf)
+
+- There is no `assign` in an `always` block. The purpose of an ` always` block is to define a `reg`
+- There are no module instantiations in `always` blocks
+- Do not set the same `reg` in multiple `always` blocks
+- see handout
