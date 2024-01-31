@@ -396,62 +396,112 @@ A Verilog module defines the information that describes the relationship between
 Using a two-port and module as an example; see below.
 
 ```verilog
-/*
- * filename: tb_and2.sv
- */
+///////////////////////////////////////////////////////////////////////////////
+//
+// Module: Testbench for module and2
+//
+// An example module for your Computer Architecture Elements Catalog
+//
+// module: tb_and2
+// hdl: SystemVerilog
+//
+// author: Prof. Rob Marano <rob@cooper.edu>
+//
+///////////////////////////////////////////////////////////////////////////////
 `timescale 1ns/100ps
 
+`include "and2.sv"
+
 module tb_and2;
+    //
+    // ---------------- DECLARATIONS OF DATA TYPES ----------------
+    //
+    //inputs are reg for test bench - or use logic
+    reg X1, X2; // In SystemVerilog reg -> logic
+    //outputs are wire for test bench - or use logic
+    wire Z1;    // In SystemVerilog wire -> logic
 
-reg X1, X2; // In SystemVerilog reg -> logic
-wire Z1;    // In SystemVerilog wire -> logic
+    //
+    // ---------------- INITIALIZE TEST BENCH ----------------
+    //
+    initial begin
+        $dumpfile("and2.vcd"); // for Makefile, make dump file same as module name
+        $dumpvars(0, dut);
+    end
 
-/*
- * display variables
- */
-initial begin
-  $monitor ("X1 = %b, X2 = %b, Z1 = %b", X1, X2, Z1);
-end
+    /*
+    * display variables
+    */
+    initial begin
+    $monitor ("X1 = %b, X2 = %b, Z1 = %b", X1, X2, Z1);
+    end
 
-/*
- * apply input vectors
- */
-initial begin
-#0
-    X1 = 1'b0;
-    X2 = 1'b0;
-#10
-    X1 = 1'b0;
-    X2 = 1'b1;
-#10
-    X1 = 1'b1;
-    X2 = 1'b0;
-#10
-    X1 = 1'b1;
-    X2 = 1'b1;
-#10
-    $stop;
-end
+    //
+    // ---------------- APPLY INPUT VECTORS ----------------
+    //
+    initial begin
+    #0
+        X1 = 1'b0;
+        X2 = 1'b0;
+    #10
+        X1 = 1'b0;
+        X2 = 1'b1;
+    #10
+        X1 = 1'b1;
+        X2 = 1'b0;
+    #10
+        X1 = 1'b1;
+        X2 = 1'b1;
+    #10
+        $finish;
+    end
 
-/*
- * instantiate the module into the test bench
- */
-and2 dut(
-    .X1(x1), .X2(x2), .Z1(z1)
-);
+    //
+    // ---------------- INSTANTIATE UNIT UNDER TEST (UUT) ----------------
+    //
+    and2 dut(
+        .x1(X1), .x2(X2), .z1(Z1)
+    );
 
-endmodule //tb_and2
+endmodule
 ```
 
 ```verilog
-/*
- * filename: and2.sv
- */
-`timescale 1ns/100ps
+//////////////////////////////////////////////////////////////////////////////
+//
+// Module: and2
+//
+// An example module for your Computer Architecture Elements Catalog
+//
+// module: and2
+// hdl: SystemVerilog
+// modeling: Gate Level Modeling
+//
+// author: Prof. Rob Marano <rob@cooper.edu>
+//
+///////////////////////////////////////////////////////////////////////////////
+`ifndef AND2
+`define AND2
 
 module and2 (x1, x2, z1);
-    input x1, x2; output z1;
-    wire x1, x2; wire z1;
+    //
+    // ---------------- DECLARATIONS OF PORT IN/OUT & DATA TYPES ----------------
+    //
+    input x1, x2;
+    output z1;
+
+    // recall in SV, logic is either a wire or a reg
+    // and in SV, data type always default to "logic"
+    logic x1, x2;
+    logic z1;
+
+
+    //
+    // ---------------- MODULE DESIGN IMPLEMENTATION ----------------
+    //
     assign z1 = x1 & x2;
-endmodule // and2
+
+endmodule
+
+`endif // AND2
 ```
