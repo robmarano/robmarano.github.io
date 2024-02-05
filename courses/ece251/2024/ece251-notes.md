@@ -59,7 +59,7 @@ Follow the link above to the respective week's materials below.
 
 ## Readings & Subject Information
 
-- [Verilog & SystemVerilog](./verilog.md)
+- [Prof Marano's notes on Verilog & SystemVerilog](./verilog.md)
 - [David Harris' Structural Design with Verilog](./Structural%20Design%20with%20Verilog%20--%20David%20Harris.pdf)
 - [Mentor Graphics Verilog Training Manual](./Comprehensive%20Verilog%20Training%20Manual.pdf)
 - [SystemVerilog Tutorial from IBM](./system_verilog_overview-ibm-symposium-johny_srouji.pdf)
@@ -69,7 +69,7 @@ Follow the link above to the respective week's materials below.
 # <a id="week4">Week 4 &mdash; 2/7 &mdash; Software Modeling Using Verilog</a>
 
 ## Topics
-* Review of basic digital logic modules modeled in Verilog
+* Review of basic digital logic modules modeled in Verilog.
   * templates
     * [Verilog template file for `module.sv`](./catalog/templates/module.sv)
     * [Verilog template file for `module.sv` test bench](./catalog/templates/tb_module.sv)
@@ -84,6 +84,7 @@ Follow the link above to the respective week's materials below.
   * 
 
 ## Readings & Subject Information
+* [Prof Marano's notes on Verilog & SystemVerilog](./verilog.md)
 * [Icarus Verilog Documentation link](https://steveicarus.github.io/iverilog/index.html)
 * [Directions to install Icarus Verilog and GTKwave on Windows, MacOS, or Linux](./using_verilog_locally.md)
 
