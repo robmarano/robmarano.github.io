@@ -81,10 +81,11 @@ Follow the link above to the respective week's materials below.
       * for 8-bit input / output
       * for parameterized n-bit input / output
 * A selection of combinational logic modules to build your computer architecture components catalog
-  * 
+  * [parameterized counter (up/down)](./catalog/counter.md)
 
 ## Readings & Subject Information
 * [Prof Marano's notes on Verilog & SystemVerilog](./verilog.md)
+* [ChipVerify's SystemVerilog Tutorial](https://www.chipverify.com/tutorials/systemverilog)
 * [Icarus Verilog Documentation link](https://steveicarus.github.io/iverilog/index.html)
 * [Directions to install Icarus Verilog and GTKwave on Windows, MacOS, or Linux](./using_verilog_locally.md)
 

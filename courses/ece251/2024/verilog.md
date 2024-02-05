@@ -401,6 +401,28 @@ A parameter is similar to a constant and is declared by the keyword pa- rameter.
 | `parameter` width = 16, depth = 512 | Used to define a memory with two bytes per word and 512 words |
 |            `parameter` out_port = 8 | Used to define an output port with an address of 8            |
 
+### Specify Parameters
+These are primarily used for providing timing and delay values. They are declared using the `specparam` keyword. It is allowed to be used both within the `specify` block and the main module body.
+
+```verilog
+// use of specify block
+specify
+  specparam t_rise = 200, t_fall = 150; // units? check `timescale
+  specparam clk_to_q = 70, d_to_q = 100;
+endspecify
+
+// use within main module
+module my_block ( ... );
+  specparam dhold = 2.0;
+  specparam ddly = 1.5;
+
+  parameter WIDTH = 32;
+...
+endmodule
+```
+
+See [ChipVerify's Verilog Parameters page](https://www.chipverify.com/verilog/verilog-parameters) for more details.
+
 ## Operators
 
 Verilog has a set of operators that perform various operations on different types of data to yield results on nets and registers. Some operators are similar to those used in the C programming language.
@@ -495,6 +517,32 @@ A module consists of declarative text which specifies the function of the module
 Verilog has predefined logical elements called **primitives**. These built-in primitives are structural elements that can be instantiated into a larger design to form a more complex structure. Examples are: `and`, `or`, `xor`, and `not`.
 
 # Designing a Test Bench for Simulation
+
+A test bench allows the computer architect or systems designer to verify the functionality of a logic design through simulations. As a work bench, it lays out the design and drives the circuit with input stimuli.
+
+1. Generate different types of input stimulus
+2. Drive the design inputs with the generated stimulus
+3. Allow the design to process input and provide an output
+4. Check the output with expected behavior to find functional defects
+5. If a functional bug is found, then change the design to fix the bug
+6. Perform the above steps until there are no more functional defects
+
+The various components that setup and facilitate the data transfer from the stimuli to the device under test (DUT), i.e, the module you would like to test and verify.
+
+![simple-testbench image](./simple-testbench.png)
+
+See [ChipVerify's Intro to SystemVerilog TestBench](https://www.chipverify.com/systemverilog/systemverilog-simple-testbench)
+ for further details on each of the components.
+
+|Component|Description|
+|--:|:--|
+|Generator	|Generates different input stimulus to be driven to DUT|
+|Interface|	Contains design signals that can be driven or monitored|
+|Driver	|Drives the generated stimulus to the design|
+|Monitor|	Monitor the design input-output ports to capture design activity|
+|Scoreboard|	Checks output from the design with expected behavior|
+|Environment	|Contains all the verification components mentioned above|
+|Test|	Contains the environment that can be tweaked with different configuration settings|
 
 This section describes the techniques for writing test benches in Verilog HDL. When a Verilog module is finished, it must be tested to ensure that it operates according to the machine specifications. The functionality of the module can be tested by applying stimulus to the inputs and checking the outputs. The test bench will display the inputs and outputs in a radix (binary, octal, hexadecimal, or decimal).
 
@@ -845,6 +893,34 @@ endmodule
 
 `endif // MEV
 ```
+
+# SystemVerilog Display Tasks in Test Bench
+Display system tasks are mainly used to display informational and debug messages to track the flow of simulation from log files and also helps to debug faster. There are different groups of display tasks and formats in which they can print values.
+
+These tasks include `$display` and `$write`. Both display arguments in the order they appear in the argument list. `$write` does not append the newline character to the end of its string, while `$display` does.
+
+`$strobe` prints the final values of variables at the end of the current delta time-step and has a similar format like `$display`.
+
+`$monitor` helps to automatically print out variable or expression values whenever the variable or expression in its argument list changes. It achieves a similar effect of calling `$display` after every time any of its arguments get updated.
+
+**NOTE**: `$monitor` is like a task that is spawned to run in the background of the main thread which monitors and displays value changes of its argument variables. A new `$monitor` task can be issued any number of times during simulation.
+
+## Verilog Format Specifiers
+
+In order to print variables inside display functions, appropriate *format specifiers* have to be given for each variable.
+
+|Argument|Description|
+|--:|:--|
+|%h, %H|Display in hexadecimal format|
+|%d, %D|Display in decimal format|
+|%b, %B|Display in binary format|
+|%m, %M|Display hierarchical name|
+|%s, %S|Display as a string|
+|%t, %T|Display in time format|
+|%r, %R|Display "real" in a decimal format|
+|%e, %E|Display "real" in an exponential format|
+
+See [ChipVerify's Verilog Display Tasks page](https://www.chipverify.com/verilog/verilog-display-tasks) for more information.
 
 # SystemVerilog built-in tasks
 
