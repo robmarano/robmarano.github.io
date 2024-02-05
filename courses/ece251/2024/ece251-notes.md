@@ -69,8 +69,23 @@ Follow the link above to the respective week's materials below.
 # <a id="week4">Week 4 &mdash; 2/7 &mdash; Software Modeling Using Verilog</a>
 
 ## Topics
+* Review of basic digital logic modules modeled in Verilog
+  * templates
+    * [Verilog template file for `module.sv`](./catalog/templates/module.sv)
+    * [Verilog template file for `module.sv` test bench](./catalog/templates/tb_module.sv)
+    * [Unix Makefile for compiling and testing test bench](./catalog/templates/Makefile)
+    * [Windows PowerShell script for compiling and testing test bench](./catalog/templates/makefile.ps1)
+  * modules
+    * 4-to-1 multiplexer
+      * for 1-bit input / output
+      * for 8-bit input / output
+      * for parameterized n-bit input / output
+* A selection of combinational logic modules to build your computer architecture components catalog
+  * 
 
 ## Readings & Subject Information
+* [Icarus Verilog Documentation link](https://steveicarus.github.io/iverilog/index.html)
+* [Directions to install Icarus Verilog and GTKwave on Windows, MacOS, or Linux](./using_verilog_locally.md)
 
 # <a id="week5">Week 5 &mdash; 2/14 &mdash; Instructions &mdash;The Language & Grammar of Computers</a>
 

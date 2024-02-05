@@ -16,6 +16,10 @@
 
 ```
 
+## Assignment Operators
+
+`=` is **blocking statement**. In an `always` block, the line of code will be executed **only after** its previous line has executed. Hence, they execute one after the other. `<=` is a **non-blocking statement**. This means that in an `always` block, every line will be executed in parallel.
+
 ## Logic Gates
 
 - and
@@ -110,7 +114,7 @@ The activity can occur in sequential blocks or in parallel blocks.
 
 ## `begin ... end` code block
 
-group multiple statements into sequential blocks
+This creates a group of multiple statements into a sequential block.
 
 ## `disable` keyword
 
@@ -174,6 +178,24 @@ else
   end
 ```
 
+## `case` Statements
+	
+`Case` statements are used where we have one variable which needs to be checked for multiple values, like an address decoder, where the input is an address and needs to be checked for all the values that it can take. Instead of using multiple nested `if-else` statements, one for each value we're looking for, we use a single `case` statement. This is similar to switch statements in languages like C/C++. Here is a simple example,
+
+```verilog
+case(address)
+  0 : $display ("value = 0");
+  1 : $display ("value = 1");
+  2 : $display  ("value = 2");
+  default : $display  ("unknown");
+endcase
+```
+
+`Case` statements begin with the reserved word `case` and end with the reserved word `endcase`. The cases, followed with a colon and the statements to be conditionally executed, are listed within these two delimiters. It's recommended to have a `default` case. Just like with a finite state machine (FSM), if the Verilog machine enters into a non-covered statement, the machine hangs, looping for infinity. Defaulting the statement with a return to idle would avoid that indeterminate state.
+
+**NOTE**: One thing that is common to `if-else` and `case` statements is that, if you don't cover all the cases (don't have `else` in `if-else` or `default` in `case`), and you are trying to write a combinational statement, the synthesis tool will infer `latch`.
+
+
 ## `repeat` keyword
 
 execute a loop a fixed number of times as specified by a constant contained within parentheses following the repeat keyword. The loop can be a single statement or a block of statements contained within `begin ... end` keywords. When the activity flow reaches the repeat construct, the expression in parentheses is evaluated to determine the number of times that the loop is to be executed. The expression can be a constant, a variable, or a signal value. If the expression evaluates to x or z, then the value is treated as 0 and the loop is not executed.
@@ -186,13 +208,102 @@ end
 
 ## `while` loop
 
-executes a statement or a block of statements while an expression is true. he expression is evaluated and a Boolean value, either true (a logical 1) or false (a logical 0) is returned. If the expression is true, then the procedural statement or block of statements is executed. The while loop executes until the expression be- comes false, at which time the loop is exited and the next sequential statement is ex- ecuted. If the expression is false when the loop is entered, then the procedural statement is not executed. If the value returned is "x" (don't care) or "z" (unknown/floating), then the value is treated as false.
+A `while` statement executes the code within it repeatedly if the condition it is assigned to check returns true. `While` loops are not normally used for models in real life, but they are used in test benches. As with other statement blocks, they are delimited by begin and end.
+
+A `while` loop executes a statement or a block of statements while an expression is true. The expression is evaluated and a Boolean value, either true (a logical 1) or false (a logical 0) is returned. If the expression is true, then the procedural statement or block of statements is executed. The while loop executes until the expression be- comes false, at which time the loop is exited and the next sequential statement is ex- ecuted. If the expression is false when the loop is entered, then the procedural statement is not executed. If the value returned is `x` (don't care) or `z` (unknown/floating), then the value is treated as false.
 
 ```verilog
 while (<expression>) begin
   <statement(s)>
 end
 ```
+
+## `disable` keyword
+
+One can disable a block of code by using the reserve word disable. For example,
+### `counter.sv`
+```verilog
+module counter (clk,rst,enable,count);
+  input clk, rst, enable;
+  output [3:0] count;
+  reg [3:0] count;
+
+  always @ (posedge clk or posedge rst)
+    if (rst) begin
+      count <= 0;
+    end
+    else begin : COUNT // this creates a code block named "COUNT" from begin to end
+      while (enable) begin
+        count <= count + 1;
+        disable COUNT; // when enable = 1, the count is incremented and the block is disabled
+      end
+    end
+endmodule
+```
+
+### `tb_counter.sv`
+```verilog
+module tb_counter;
+  //
+  // ---------------- DECLARATIONS OF DATA TYPES ----------------
+  //
+  //inputs are reg for test bench - or use logic
+  reg CLK;
+  reg RST;
+  reg EN;
+  //outputs are wire for test bench - or use logic
+  wire [3:0] Z1;
+
+  //
+  // ---------------- INITIALIZE TEST BENCH ----------------
+  //
+  initial begin : initialize_signals
+    CLK = 1'b0;
+    RST = 1'b0;
+    EN = 1'b0;
+  end
+
+  initial begin
+    $monitor ($time,"\tCLK=%b EN=%b RST=%b Z1=%b", CLK, RST, EN, Z1);
+  end
+
+  initial begin
+    $dumpfile("tb_counter.vcd"); // for Makefile, make dump file same as module name
+    $dumpvars(0, dut);
+  end
+  
+  // a simple clock with 50% duty cycle
+  always begin: clock
+    #10 CLK = ~CLK;
+  end
+
+
+  //
+  // ---------------- APPLY INPUT VECTORS ----------------
+  //
+
+  initial begin: prog_apply_stimuli
+    #0
+    #10	RST = 1'b1;
+    #10 RST = 1'b0;
+    #10 EN = 1'b1;
+    #5
+    #100 EN = 1'b0;
+    #30
+    $finish;
+  end
+
+  //
+  // ---------------- INSTANTIATE UNIT UNDER TEST (UUT) ----------------
+  //
+  counter dut(
+    .clk(CLK), .rst(RST), .enable(EN), .count(Z1)
+  );
+endmodule
+```
+In the example above the `always` block will run when either `rst` or `clk` reaches a positive edge, that is, when their value has risen from `0` to `1` - for positive logic. You can have two or more `always` blocks in a program going at the same time (not shown yet here, but commonly used).
+
+We can disable a block of code, by using the reserve word `disable`. In the above example, after each counter increment, the COUNT block of code (not shown here) is disabled.
 
 ## Net Data Types
 
@@ -504,6 +615,83 @@ module and2 (x1, x2, z1);
 endmodule
 
 `endif // AND2
+```
+
+# `always` Blocks
+
+As the name suggests, an `always` block executes always, unlike `initial` blocks which execute **only once** (at the beginning of simulation). A second difference is that an `always` block should have a _sensitivity list_ **or** a delay associated with it.
+
+Most software languages execute sequentially, that is, statement by statement, one after another. Verilog programs, on the other hand, often have many statements executing in parallel, or concurrently. All blocks marked `always` will run simultaneously when one or more of the conditions listed in the sensitivity list is fulfilled.
+
+The sensitivity list is the one which tells the `always` block when to execute the block of code, as shown below. The `@` symbol after `always`, indicates that the block will be triggered "at" the condition in parenthesis after symbol `@`.
+
+**NOTE**: One important note about `always` block: it can *not* drive wire data type, but can drive reg and integer data types.
+
+
+```verilog
+always  @ (a or b or sel)
+begin
+  y = 0;
+  if (sel == 0) begin
+    y = a; // notice blocking statement
+  end else begin
+    y = b; // notice blocking statement
+  end
+end
+```
+
+The above example is a 2:1 mux (behavioral model), with input a and b; sel is the select input and y is the mux output. In any combinational logic, output changes whenever input changes. This theory when applied to `always` blocks means that the code inside `always` blocks needs to be executed whenever the input variables (or output controlling variables) change. These variables are the ones included in the sensitive list, namely a, b and sel.
+
+There are two types of sensitivity lists: **level sensitive** (for combinational circuits) and **edge sensitive** (for sequential circuits like flip-flops). The code below is the same 2:1 mux but the output y is now a flip-flop output.
+
+```verilog
+always  @ (posedge clk )
+if (reset == 0) begin
+  y <= 0; // notice non-blocking statement
+end else if (sel == 0) begin
+  y <= a; // notice non-blocking statement
+end else begin
+  y <= b;
+end
+```
+
+We normally have to reset flip-flops, thus every time the clock makes the transition from 0 to 1 (`posedge`), we check if reset is asserted (synchronous reset), then we go on with normal logic. If we look closely we see that in the case of combinational logic we had `=` for assignment, and for the sequential block we had the `<=` operator. Recall, `=` is blocking assignment and `<=` is nonblocking assignment. `=` executes code sequentially inside a code block (delimited with `begin` then `end`, whereas nonblocking `<=` executes in parallel.
+
+We can have an `always` block without sensitive list, in this case we need to have a delay as shown in the code below.
+
+```verilog
+// a simple clock with 50% duty cycle
+always  begin
+  #5 clk = ~clk;
+end
+```
+
+# `assign` Statement
+
+An assign statement is used for modeling only combinational logic, and it is executed continuously. So the assign statement is called **"continuous assignment statement"** as there is no sensitivity list.
+
+```verilog
+assign out = (enable) ? data : 1'bz; // tri-state buffer
+```
+
+The above example is a **tri-state buffer**. When `enable` is `1`, `data` is driven to `out`, else `out` is pulled to high-impedance. We can have nested conditional operators to construct multiplexers, decoders, and encoders.
+
+# Task and Functions
+
+When repeating the same clde again and again, Verilog, like any other programming languages, provides mechanisms to address repeatedly used code, these are called `Tasks` and `Functions`. Functions and tasks have the same syntax but two distinct differences. Firstly, a task can have delays, whereas functions can not have any delay. This means that functions can be used for modeling combinational logic. Secondly, functions can return a value, whereas tasks can not.
+
+Here's an example of a function that calculates even parity:
+```verilog
+function parity;
+  input [31:0] data;
+  integer i;
+    begin
+      parity = 0;
+        for (i= 0; i < 32; i = i + 1) begin
+          parity = parity ^ data[i];
+        end
+    end
+endfunction
 ```
 
 # Built-in Primitives
