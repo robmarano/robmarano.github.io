@@ -155,7 +155,7 @@ clean:
 ## For Windows
 `config.ps1`
 ```ps
-$COMPONENT = "clock"
+$COMPONENT = "counter"
 #
 $SRC = "$COMPONENT.sv"
 $TESTBENCH = "tb_$COMPONENT.sv"
