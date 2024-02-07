@@ -76,10 +76,11 @@ Follow the link above to the respective week's materials below.
     * [Unix Makefile for compiling and testing test bench](./catalog/templates/Makefile)
     * [Windows PowerShell script for compiling and testing test bench](./catalog/templates/makefile.ps1)
   * modules
-    * 4-to-1 multiplexer
-      * for 1-bit input / output
-      * for 8-bit input / output
-      * for parameterized n-bit input / output
+    * combinational logic
+      * [multiplexer](./catalog/mux.md)
+        * for parameterized n-bit input / output
+    * sequential logic
+      * [D Flip Flop](./catalog/dff.md)
 * A selection of combinational logic modules to build your computer architecture components catalog
   * [parameterized counter (up/down)](./catalog/counter.md)
 

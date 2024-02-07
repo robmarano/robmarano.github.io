@@ -1,109 +1,104 @@
-# Parameterized D Flip Flop
+# Clock
 
-`dff.sv`
+## Simple Clock
+
+`clock.sv`
 ```verilog
-module dff
+`ifndef CLOCK
+`define CLOCK
+
+module clock
     # (
-        parameter n = 32;
+        parameter period = 10
     )(
-  input  logic [n-1:0] d, clk, rst,
-  output logic [n-1:0] q, [n-1:0] qn
+        output logic clk
 );
-  always_ff @(posedge clk, posedge rst) begin
-    if (rst) begin
-      q  <= 0;
-      qn <= 1;
-    end else begin
-      q  <= d;
-      qn <= ~d;
-    end
-  end
-endmodule
-```
-
-`tb_dff.sv`
-```verilog
-module tb_dff;
     //
     // ---------------- DECLARATIONS OF PARAMETERS ----------------
     //
-    parameter N = 32;
+    localparam half_period = period/2;
+
+    //
+    // ---------------- DECLARATIONS OF DATA TYPES ----------------
+    //
+
+    initial begin : initialize_signals
+        clk = 1'b0;
+    end
+
+    // a simple clock with 50% duty cycle
+    always begin: clock
+        #half_period clk = ~clk;
+    end
+
+endmodule
+
+`endif // CLOCK
+
+```
+
+`tb_clock.sv`
+```verilog
+`timescale 1ns/100ps
+
+module tb_clock;
+    //
+    // ---------------- DECLARATIONS OF PARAMETERS ----------------
+    //
+    localparam P = 10;
+
     //
     // ---------------- DECLARATIONS OF DATA TYPES ----------------
     //
     //inputs are reg for test bench - or use logic
-    reg CLK;
-    reg RST;
-    reg EN;
+
     //outputs are wire for test bench - or use logic
-    logic [N-1:0] D;
-    logic [N-1:0] Q;
-    logic [N-1:0] Qn;
+    reg CLK;
 
     //
     // ---------------- INITIALIZE TEST BENCH ----------------
     //
-    initial begin : initialize_signals
-        CLK = 1'b0;
-        RST = 1'b0;
-        EN = 1'b0;
-        INP = 0;
+    
+    initial begin
+        $monitor ($time,"\tCLK=%b", CLK);
     end
 
     initial begin
-//        $monitor ($time,"\tCLK=%b EN=%b RST=%b Z1=%b", CLK, RST, EN, Z1);
-        $monitor (
-            $time,
-            "\tCLK=%b EN=%b RST=%b \n\tD=%04b_%04b_%04b_%04b_%04b_%04b_%04b_%04b\n\tQ==%04b_%04b_%04b_%04b_%04b_%04b_%04b_%04b\n\tQn=%04b_%04b_%04b_%04b_%04b_%04b_%04b_%04b",
-            CLK, RST, EN,
-            D[31:28], D[27:24], D[23:20], D[19:16], D[15:12], D[11:8], D[7:4], D[3:0],
-            Q[31:28], Q[27:24], Q[23:20], Q[19:16], Q[15:12], Q[11:8], Q[7:4], Q[3:0],
-            Qn[31:28], Qn[27:24], Qn[23:20], Qn[19:16], Qn[15:12], Qn[11:8], Qn[7:4], Qn[3:0]
-        );
-//        $display("0x%04h_%04h_%04h_%04h", d[63:48], d[47:32], d[31:16], d[15:0]);
-    end
-
-    initial begin
-        $dumpfile("tb_dff.vcd"); // for Makefile, make dump file same as module name
+        $dumpfile("tb_clock.vcd"); // for Makefile, make dump file same as module name
         $dumpvars(0, dut);
     end
   
-    // a simple clock with 50% duty cycle
-    always begin: clock
-        #10 CLK = ~CLK;
-    end
-
     //
     // ---------------- APPLY INPUT VECTORS ----------------
     //
 
     initial begin: prog_apply_stimuli
     #0
-    #10	RST = 1'b1;
-    #10 RST = 1'b0;
-    #10 EN = 1'b1;
+    #10	
+    #10 
+    #10 
     #10
-    #10 INP = 32'b0000_0000_0000_0000_0000_0000_0000_0001;
+    #10 
     #10 
     #10
     #10
-    #100 EN = 1'b0;
+    #10
     #10
     #10
     #10
     $finish;
     end
 
-
     //
     // ---------------- INSTANTIATE UNIT UNDER TEST (UUT) ----------------
     //
-    dff #(.n(N)) dut(
-        .d(D), .clk(CLK), .rst(RST), .q(Q), .qn(Qn)
+    clock #(.period(P)) dut(
+        .clk(CLK)
     );
 
 endmodule
 ```
+### For Unix (Linux, MacOS)
 `Makefile`
 ```bash
 #
@@ -120,7 +115,7 @@ endmodule
 # CHANGE THESE THREE LINES FOR YOUR DESIGN
 #
 #TOOL INPUT
-COMPONENT = dff
+COMPONENT = clock
 SRC = $(COMPONENT).sv
 SIM_ARGS=
 TESTBENCH = tb_$(COMPONENT).sv
@@ -155,16 +150,12 @@ clean:
 	/bin/rm -f $(COMPONENT) $(TBOUTPUT) a.out compiler.out
 ```
 
-`makefile.ps1`
-```ps
-<#
- # File: 	makefile.ps1
- # Author: 	Prof. Rob Marano
- # Build and test file for Verilog on Windows using PowerShell
- # Note: icarus verilog and gtkwave must be installed
- #>
+### For Windows PowerShell
 
-$COMPONENT = "dff"
+`config.ps1`
+```ps
+$COMPONENT = "clock"
+#
 $SRC = "$COMPONENT.sv"
 $TESTBENCH = "tb_$COMPONENT.sv"
 $TBOUTPUT = "tb_$COMPONENT.vcd"
@@ -177,6 +168,27 @@ $VIEWER = "C:\ProgramData\chocolatey\bin\gtkwave.exe" # GUI app
 $COFLAGS = "-g2012"
 $SFLAGS = "-lx2"		#SIMULATOR FLAGS
 $SOUTPUT = "-lxt2"		#SIMULATOR OUTPUT TYPE
+```
+
+`makefile.ps1`
+```ps
+<#
+ # File: 	makefile.ps1
+ # Author: 	Prof. Rob Marano
+ # Build and test file for Verilog on Windows using PowerShell
+ # Note: icarus verilog and gtkwave must be installed
+ #>
+
+# $COMPONENT is named in config.ps1
+# Do not forget to add that file in the same directory as this file and set the variable
+$ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+try {
+    . ("$ScriptDirectory\config.ps1")
+}
+catch {
+    Write-Host "Error while loading supporting PowerShell Scripts"
+    [Environment]::Exit(1)
+}
 
 # Clean up from last run
 $filesToRemove = @("$COMPONENT", "$COMPONENT.vcd")
@@ -210,23 +222,22 @@ Start-Process @simulateProcessOptions -NoNewWindow -Wait
 `display.ps1`
 ```ps
 <#
- # File: 	makefile.ps1
+ # File: 	display.ps1
  # Author: 	Prof. Rob Marano
  # Build and test file for Verilog on Windows using PowerShell
  # Note: icarus verilog and gtkwave must be installed
  #>
 
- $COMPONENT = "dff"
-$SRC = "$COMPONENT.sv"
-$TESTBENCH = "tb_$COMPONENT.sv"
-$TBOUTPUT = "tb_$COMPONENT.vcd"
-
-# TOOLS
-$VIEWER = "C:\ProgramData\chocolatey\bin\gtkwave.exe" # GUI app
-# TOOL OPTIONS
-$COFLAGS = "-g2012"
-$SFLAGS = "-lx2"		#SIMULATOR FLAGS
-$SOUTPUT = "-lxt2"		#SIMULATOR OUTPUT TYPE
+# $COMPONENT is named in config.ps1
+# Do not forget to add that file in the same directory as this file and set the variable
+$ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+try {
+    . ("$ScriptDirectory\config.ps1")
+}
+catch {
+    Write-Host "Error while loading supporting PowerShell Scripts"
+    [Environment]::Exit(1)
+}
 
 #
 # Display Verilog module with testbench
@@ -236,5 +247,4 @@ $displayProcessOptions = @{
     ArgumentList = @("$TBOUTPUT")
     UseNewEnvironment = $true
 }
-Start-Process @displayProcessOptions -NoNewWindow -Wait
-```
+Start-Process @displayProcessOptions -NoNewWindow -Wait```

@@ -1,0 +1,1 @@
+$COMPONENT = "you_module_name" # RENAME THE MODULE
