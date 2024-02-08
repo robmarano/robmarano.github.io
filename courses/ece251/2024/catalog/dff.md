@@ -135,9 +135,14 @@ module tb_dff;
     //
     // ---------------- INSTANTIATE UNIT UNDER TEST (UUT) ----------------
     //
+    // WITHOUT ENABLE
     dff #(.n(N)) dut(
         .d(D), .clk(CLK), .rst(RST), .q(Q), .qn(Qn)
     );
+    // WITH ENABLE
+    // dff #(.n(N)) dut(
+    //    .d(D), .clk(CLK), .rst(RST), .en(EN), .q(Q), .qn(Qn)
+    //);
 
 endmodule
 ```
