@@ -23,6 +23,8 @@ endmodule
 
 `tb_dff.sv`
 ```verilog
+`timescale 1ns/100ps
+
 module tb_dff;
     //
     // ---------------- DECLARATIONS OF PARAMETERS ----------------
@@ -44,10 +46,10 @@ module tb_dff;
     // ---------------- INITIALIZE TEST BENCH ----------------
     //
     initial begin : initialize_signals
-        CLK = 1'b0;
-        RST = 1'b0;
-        EN = 1'b0;
-        INP = 0;
+        CLK <= 1'b0;
+        RST <= 1'b0;
+        EN <= 1'b0;
+        D <= 0;
     end
 
     initial begin
@@ -104,6 +106,20 @@ module tb_dff;
 
 endmodule
 ```
+## For MacOS or Linux
+Use the following `Makefile` AND run the following command:
+To compile
+```bash
+make compile
+```
+To simulate
+```bash
+make simulate
+```
+To display the timing waveform using GTKWave
+```base
+make display
+```
 `Makefile`
 ```bash
 #
@@ -154,6 +170,19 @@ display: $(TBOUTPUT)
 clean:
 	/bin/rm -f $(COMPONENT) $(TBOUTPUT) a.out compiler.out
 ```
+
+## For Windows
+
+Use the following files AND run the following command:
+To compile and simulate
+```ps
+.\makefile.ps1
+```
+To display the timing waveform using GTKWave
+```ps
+.\display.ps1
+```
+
 
 `makefile.ps1`
 ```ps
