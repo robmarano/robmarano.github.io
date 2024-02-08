@@ -120,7 +120,7 @@ module tb_dff;
     #10 RST = 1'b0;
     #10 EN = 1'b1;
     #10
-    #10 INP = 32'b0000_0000_0000_0000_0000_0000_0000_0001;
+    #10 D = 32'b0000_0000_0000_0000_0000_0000_0000_0001;
     #10 
     #10
     #10
@@ -222,17 +222,8 @@ To display the timing waveform using GTKWave
 ```powershell
 .\display.ps1
 ```
-
-
-`makefile.ps1`
+`config.ps1`
 ```powershell
-<#
- # File: 	makefile.ps1
- # Author: 	Prof. Rob Marano
- # Build and test file for Verilog on Windows using PowerShell
- # Note: icarus verilog and gtkwave must be installed
- #>
-
 $COMPONENT = "dff"
 $SRC = "$COMPONENT.sv"
 $TESTBENCH = "tb_$COMPONENT.sv"
@@ -246,6 +237,27 @@ $VIEWER = "C:\ProgramData\chocolatey\bin\gtkwave.exe" # GUI app
 $COFLAGS = "-g2012"
 $SFLAGS = "-lx2"		#SIMULATOR FLAGS
 $SOUTPUT = "-lxt2"		#SIMULATOR OUTPUT TYPE
+```
+
+`makefile.ps1`
+```powershell
+<#
+ # File: 	makefile.ps1
+ # Author: 	Prof. Rob Marano
+ # Build and test file for Verilog on Windows using PowerShell
+ # Note: icarus verilog and gtkwave must be installed
+ #>
+
+# $COMPONENT is named in config.ps1
+# Do not forget to add that file in the same directory as this file and set the variable
+$ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+try {
+    . ("$ScriptDirectory\config.ps1")
+}
+catch {
+    Write-Host "Error while loading supporting PowerShell Scripts"
+    [Environment]::Exit(1)
+}
 
 # Clean up from last run
 $filesToRemove = @("$COMPONENT", "$COMPONENT.vcd")
@@ -272,7 +284,6 @@ $simulateProcessOptions = @{
     ArgumentList = @("$SFLAGS", "$COMPONENT", "$SOUTPUT")
     UseNewEnvironment = $true
 }
-Write-Output @simulateProcessOptions
 Start-Process @simulateProcessOptions -NoNewWindow -Wait
 ```
 
@@ -285,17 +296,16 @@ Start-Process @simulateProcessOptions -NoNewWindow -Wait
  # Note: icarus verilog and gtkwave must be installed
  #>
 
- $COMPONENT = "dff"
-$SRC = "$COMPONENT.sv"
-$TESTBENCH = "tb_$COMPONENT.sv"
-$TBOUTPUT = "tb_$COMPONENT.vcd"
-
-# TOOLS
-$VIEWER = "C:\ProgramData\chocolatey\bin\gtkwave.exe" # GUI app
-# TOOL OPTIONS
-$COFLAGS = "-g2012"
-$SFLAGS = "-lx2"		#SIMULATOR FLAGS
-$SOUTPUT = "-lxt2"		#SIMULATOR OUTPUT TYPE
+# $COMPONENT is named in config.ps1
+# Do not forget to add that file in the same directory as this file and set the variable
+$ScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+try {
+    . ("$ScriptDirectory\config.ps1")
+}
+catch {
+    Write-Host "Error while loading supporting PowerShell Scripts"
+    [Environment]::Exit(1)
+}
 
 #
 # Display Verilog module with testbench
