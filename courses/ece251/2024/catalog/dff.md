@@ -4,15 +4,17 @@
 ```verilog
 module dff
     # (
-        parameter n = 32;
+        parameter n = 32
     )(
-  input  logic [n-1:0] d, clk, rst,
-  output logic [n-1:0] q, [n-1:0] qn
+  input  logic [n-1:0] d,
+  input clk, rst,
+  output logic [n-1:0] q,
+  output logic [n-1:0] qn
 );
   always_ff @(posedge clk, posedge rst) begin
     if (rst) begin
-      q  <= 0;
-      qn <= 1;
+      q  = 0;
+      qn = ~q;
     end else begin
       q  <= d;
       qn <= ~d;
@@ -140,7 +142,7 @@ COMPONENT = dff
 SRC = $(COMPONENT).sv
 SIM_ARGS=
 TESTBENCH = tb_$(COMPONENT).sv
-TBOUTPUT = $(COMPONENT).vcd	#THIS NEEDS TO MATCH THE OUTPUT FILE
+TBOUTPUT = tb_$(COMPONENT).vcd	#THIS NEEDS TO MATCH THE OUTPUT FILE
 							#FROM YOUR TESTBENCH
 ###############################################################################
 # BE CAREFUL WHEN CHANGING ITEMS BELOW THIS LINE
