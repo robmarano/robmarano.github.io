@@ -1,6 +1,6 @@
 # Parameterized D Flip Flop
 
-`dff.sv`
+`dff.sv` &mdash; DFF without ENABLE
 ```verilog
 module dff
     # (
@@ -20,6 +20,39 @@ module dff
       qn <= ~d;
     end
   end
+endmodule
+```
+`dff.sv` &mdash; DFF with ENABLE
+```verilog
+module dff
+    # (
+        parameter n = 32
+    )(
+  input  logic [n-1:0] d,
+  input clk, rst, en,
+  output logic [n-1:0] q,
+  output logic [n-1:0] qn
+);
+    always_ff @(posedge clk, posedge rst) begin
+        if (en)
+            begin
+                if (rst)
+                    begin
+                        q  = 0;
+                        qn = ~q;
+                    end
+                else // rst
+                    begin
+                        q  <= d;
+                        qn <= ~d;
+                    end
+            end
+        else
+            begin
+                q = 'bz;
+                qn ='bz;
+            end
+    end
 endmodule
 ```
 
