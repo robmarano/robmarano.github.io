@@ -81,6 +81,8 @@ Follow the link above to the respective week's materials below.
         * for parameterized n-bit input / output
     * sequential logic
       * [D Flip Flop](./catalog/dff.md)
+      * [Clock](./catalog/clock.md)
+      * [Clock Dividers](./catalog/clock_dividers.md)
 * A selection of combinational logic modules to build your computer architecture components catalog
   * [parameterized counter (up/down)](./catalog/counter.md)
 
