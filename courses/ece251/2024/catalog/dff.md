@@ -177,17 +177,17 @@ clean:
 
 Use the following files AND run the following command:
 To compile and simulate
-```ps
+```powershell
 .\makefile.ps1
 ```
 To display the timing waveform using GTKWave
-```ps
+```powershell
 .\display.ps1
 ```
 
 
 `makefile.ps1`
-```ps
+```powershell
 <#
  # File: 	makefile.ps1
  # Author: 	Prof. Rob Marano
@@ -239,7 +239,7 @@ Start-Process @simulateProcessOptions -NoNewWindow -Wait
 ```
 
 `display.ps1`
-```ps
+```powershell
 <#
  # File: 	makefile.ps1
  # Author: 	Prof. Rob Marano

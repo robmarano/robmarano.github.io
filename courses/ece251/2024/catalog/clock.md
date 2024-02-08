@@ -153,7 +153,7 @@ clean:
 ### For Windows PowerShell
 
 `config.ps1`
-```ps
+```powershell
 $COMPONENT = "clock"
 #
 $SRC = "$COMPONENT.sv"
@@ -171,7 +171,7 @@ $SOUTPUT = "-lxt2"		#SIMULATOR OUTPUT TYPE
 ```
 
 `makefile.ps1`
-```ps
+```powershell
 <#
  # File: 	makefile.ps1
  # Author: 	Prof. Rob Marano
@@ -220,7 +220,7 @@ Start-Process @simulateProcessOptions -NoNewWindow -Wait
 ```
 
 `display.ps1`
-```ps
+```powershell
 <#
  # File: 	display.ps1
  # Author: 	Prof. Rob Marano
