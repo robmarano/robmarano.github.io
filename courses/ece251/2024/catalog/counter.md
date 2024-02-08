@@ -101,6 +101,20 @@ module tb_counter;
 
 endmodule
 ```
+## For MacOS or Linux
+Use the following `Makefile` AND run the following command:
+To compile
+```bash
+make compile
+```
+To simulate
+```bash
+make simulate
+```
+To display the timing waveform using GTKWave
+```base
+make display
+```
 `Makefile`
 ```bash
 #
@@ -117,7 +131,7 @@ endmodule
 # CHANGE THESE THREE LINES FOR YOUR DESIGN
 #
 #TOOL INPUT
-COMPONENT = clock
+COMPONENT = counter
 SRC = $(COMPONENT).sv
 SIM_ARGS=
 TESTBENCH = tb_$(COMPONENT).sv
@@ -153,6 +167,17 @@ clean:
 ```
 
 ## For Windows
+
+Use the following files AND run the following command:
+To compile and simulate
+```ps
+.\makefile.ps1
+```
+To display the timing waveform using GTKWave
+```ps
+.\display.ps1
+```
+
 `config.ps1`
 ```ps
 $COMPONENT = "counter"

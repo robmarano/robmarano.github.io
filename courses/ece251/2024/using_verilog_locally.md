@@ -27,7 +27,13 @@ This is the easiest and quickest.
 * following these [directions](https://steveicarus.github.io/iverilog/usage/installation.html)
 
 # MacOS and Icarus Verilog
-If you're on Mac, just install it using [Homebrew](https://brew.sh/). That seems to be the least painful. macOS people will probably have the easiest time installing from homebrew with `brew install --cask gtkwave`. You might need to go the General tab under your `Security and Privacy` settings and manually allow GTKWave to run.
+If you're on Mac, just install it using [Homebrew](https://brew.sh/).
+
+```bash
+brew install icarus-verilog
+```
+
+That seems to be the least painful. macOS people will probably have the easiest time installing from homebrew with `brew install --cask gtkwave`. You might need to go the General tab under your `Security and Privacy` settings and manually allow GTKWave to run.
 
 
 # Linux and Icarus Verilog & GTKwave
