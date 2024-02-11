@@ -99,7 +99,12 @@ Follow the link above to the respective week's materials below.
 - Patterson-Hennessey: [Chapter 2](../books/patterson-hennessey/Patterson6e_MIPS_Ch02_PPT.ppt)
 
 ## Topics
-
+- Textbook sections
+  - 2.2 &mdash; Operations of Computer Hardware
+  - 2.3 &mdash; Operands of Computer Hardware
+  - 2.4 &mdash; Signed and Unsigned Numbers
+  - 2.5 &mdash; Representing Instructions in the Computer (ISA)
+  - 2.6 &mdash; Logical Operations
 - [MIPS Green Sheet](../books/patterson-hennessey/MIPS_Green_Sheet.pdf)
 
 ## Readings & Subject Information
@@ -111,7 +116,14 @@ Follow the link above to the respective week's materials below.
 - Patterson-Hennessey: [Chapter 2](../books/patterson-hennessey/Patterson6e_MIPS_Ch02_PPT.ppt)
 
 ## Topics
-
+- Textbook sections
+  - 2.7 &mdash; Instructions for Making Decisions
+  - 2.8 &mdash; Supporting Procedures in Computer Hardware
+  - 2.9 &mdash; Communicating with People
+  - 2.10 &mdash; MIPS Addressing for 32-bit Immediates and Addresses
+  - 2.12 &mdash; Translating and Starting a Program
+  - 2.13 &mdash; A C Sort Example to Put It All Together
+  - 2.14 &mdash; Arrays versus Pointers 
 - [MIPS Green Sheet](../books/patterson-hennessey/MIPS_Green_Sheet.pdf)
 
 ## Readings & Subject Information
