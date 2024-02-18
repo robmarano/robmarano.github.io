@@ -584,7 +584,7 @@ module tb_and2;
     // ---------------- INITIALIZE TEST BENCH ----------------
     //
     initial begin
-        $dumpfile("and2.vcd"); // for Makefile, make dump file same as module name
+        $dumpfile("tb_and2.vcd"); // for Makefile, make dump file same as module name
         $dumpvars(0, dut);
     end
 
@@ -640,20 +640,15 @@ endmodule
 //
 ///////////////////////////////////////////////////////////////////////////////
 `ifndef AND2
-`define AND2
+`define AND2 
 
-module and2 (x1, x2, z1);
+module and2(
     //
-    // ---------------- DECLARATIONS OF PORT IN/OUT & DATA TYPES ----------------
-    //
-    input x1, x2;
-    output z1;
-
-    // recall in SV, logic is either a wire or a reg
-    // and in SV, data type always default to "logic"
-    logic x1, x2;
-    logic z1;
-
+    // ---------------- DECLARATIONS OF PORT IN/OUT & DATA TYPES -------------
+  	//
+  input logic x1, x2,
+  output logic z1
+);
 
     //
     // ---------------- MODULE DESIGN IMPLEMENTATION ----------------
