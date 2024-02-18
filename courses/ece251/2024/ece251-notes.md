@@ -70,11 +70,11 @@ Follow the link above to the respective week's materials below.
 
 ## Topics
 * Review of basic digital logic modules modeled in Verilog.
-  * templates
-    * [Verilog template file for `module.sv`](./catalog/templates/module.sv)
-    * [Verilog template file for `module.sv` test bench](./catalog/templates/tb_module.sv)
-    * [Unix Makefile for compiling and testing test bench](./catalog/templates/Makefile)
-    * [Windows PowerShell script for compiling and testing test bench](./catalog/templates/makefile.ps1)
+  * [templates for working with Verilog on Windows and Linux/MacOS](./using_verilog_locally.md)
+    * [Verilog template file for `module.sv`](./using_verilog_locally.md?#module-template)
+    * [Verilog template file for `module.sv` test bench](./using_verilog_locally.md?#test-bench-template)
+    * [Windows PowerShell script for compiling and testing test bench](./using_verilog_locally.md?#building-and-running-on-windows)
+    * [Unix Makefile for compiling and testing test bench](./using_verilog_locally.md?#on-linuxmacos)
   * modules
     * combinational logic
       * [multiplexer](./catalog/mux.md)
