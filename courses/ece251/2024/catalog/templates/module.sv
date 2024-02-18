@@ -15,12 +15,13 @@
 `define MODULE_NAME
 // DO NOT FORGET TO RENAME MODULE_NAME to match your module_name
 
-module module_name (i1, z1);
+module module_name(
     //
     // ---------------- DECLARATIONS OF PORT IN/OUT & DATA TYPES ----------------
     //
-    input i1;
-    output z1;
+    input logic i1,
+    output logic z1
+);
 
     //
     // ---------------- MODULE DESIGN IMPLEMENTATION ----------------

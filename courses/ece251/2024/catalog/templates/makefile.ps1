@@ -16,22 +16,8 @@ catch {
     [Environment]::Exit(1)
 }
 
-$SRC = "$COMPONENT.sv"
-$TESTBENCH = "tb_$COMPONENT.sv"
-$TBOUTPUT = "$COMPONENT.vcd"
-
-# TOOLS
-$COMPILER = "C:\ProgramData\chocolatey\bin\iverilog.exe"
-$SIMULATOR = "C:\ProgramData\chocolatey\bin\vvp.exe"
-$VIEWER = "C:\ProgramData\chocolatey\bin\gtkwave.exe" # GUI app
-# TOOL OPTIONS
-$COFLAGS = "-g2012"
-$SFLAGS = "-lx2"		#SIMULATOR FLAGS
-$SOUTPUT = "-lxt2"		#SIMULATOR OUTPUT TYPE
-
 # Clean up from last run
-$filesToRemove = @("$COMPONENT", "$COMPONENT.vcd")
-Write-Output "Removing files: $filesToRemove"s
+Write-Output "Removing files: $filesToRemove"
 #Remove-Item -Path $filesToRemove -ErrorAction SilentlyContinue -Confirm
 $filesToRemove | ForEach-Object { Remove-Item -Path $_ -Force -ErrorAction SilentlyContinue -Confirm:$false}
 
@@ -56,19 +42,3 @@ $simulateProcessOptions = @{
 }
 Write-Output @simulateProcessOptions
 Start-Process @simulateProcessOptions -NoNewWindow -Wait
-
-
-
-#
-# Template for running process in PowerShell
-#
-<#
-$processOptions = @{
-    FilePath = "sort.exe"
-    RedirectStandardInput = "TestSort.txt"
-    RedirectStandardOutput = "Sorted.txt"
-    RedirectStandardError = "SortError.txt"
-    UseNewEnvironment = $true
-}
-Start-Process @processOptions
-#>

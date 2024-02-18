@@ -90,7 +90,7 @@ Follow the link above to the respective week's materials below.
 * [Prof Marano's notes on Verilog & SystemVerilog](./verilog.md)
 * [ChipVerify's SystemVerilog Tutorial](https://www.chipverify.com/tutorials/systemverilog)
 * [Icarus Verilog Documentation link](https://steveicarus.github.io/iverilog/index.html)
-* [Directions to install Icarus Verilog and GTKwave on Windows, MacOS, or Linux](./using_verilog_locally.md)
+* [Directions to install Icarus Verilog and GTKwave on Windows, MacOS, or Linux](./installing_verilog_locally.md)
 
 # <a id="week5">Week 5 &mdash; 2/14 &mdash; Instructions &mdash;The Language & Grammar of Computers</a>
 

@@ -1,7 +1,7 @@
 <#
- # File: 	display.ps1
+ # File: 	clean.ps1
  # Author: 	Prof. Rob Marano
- # Build and test file for Verilog on Windows using PowerShell
+ # Clean files for Verilog on Windows using PowerShell
  # Note: icarus verilog and gtkwave must be installed
  #>
 
@@ -16,12 +16,8 @@ catch {
     [Environment]::Exit(1)
 }
 
-#
-# Display Verilog module with testbench
-# $(SIMULATOR) $(SFLAGS) $(COMPONENT) $(TESTBENCH) $(SOUTPUT)
-$displayProcessOptions = @{
-    FilePath = "$VIEWER"
-    ArgumentList = @("$TBOUTPUT")
-    UseNewEnvironment = $true
-}
-Start-Process @displayProcessOptions -NoNewWindow -Wait
+# Clean up from last run
+Write-Output "Removing files: $filesToRemove"
+$filesToRemove | ForEach-Object { Remove-Item -Path $_ -Force -ErrorAction SilentlyContinue -Confirm:$false}
+
+Write-Output "Finished cleaning up files."
