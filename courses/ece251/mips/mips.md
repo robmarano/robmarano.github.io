@@ -367,4 +367,4 @@ Note: The `Load Address` (`la`) macro instruction initializes the pointer `$a0` 
 
 1. [MIPS Converter (instruction &rarr; hex &rarr; instruction)](https://www.eg.bucknell.edu/~csci320/mips_web/)
 2. [Hex to Binary Converter](https://www.rapidtables.com/convert/number/hex-to-binary.html)
-3.
+
