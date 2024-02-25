@@ -114,12 +114,6 @@ Follow the link above to the respective week's materials below.
 ## Topics
 - Textbook sections
   - 2.7 &mdash; Instructions for Making Decisions
-  - 2.8 &mdash; Supporting Procedures in Computer Hardware
-  - 2.9 &mdash; Communicating with People
-  - 2.10 &mdash; MIPS Addressing for 32-bit Immediates and Addresses
-  - 2.12 &mdash; Translating and Starting a Program
-  - 2.13 &mdash; A C Sort Example to Put It All Together
-  - 2.14 &mdash; Arrays versus Pointers 
 - [MIPS Green Sheet](../books/patterson-hennessey/MIPS_Green_Sheet.pdf)
 
 ## Readings & Subject Information
@@ -127,7 +121,14 @@ Follow the link above to the respective week's materials below.
 # <a id="week7">Week 7 &mdash; 2/28 &mdash; Intro to Assembly Language Programming &mdash; MIPS CPU</a>
 
 ## Topics
-
+- [Intro to MIPS Assembly Programming](../mips/mips.md) and programming on a MIPS emulator.
+- Textbook sections
+  - 2.8 &mdash; Supporting Procedures in Computer Hardware
+  - 2.9 &mdash; Communicating with People
+  - 2.10 &mdash; MIPS Addressing for 32-bit Immediates and Addresses
+  - 2.12 &mdash; Translating and Starting a Program
+  - 2.13 &mdash; A C Sort Example to Put It All Together
+  - 2.14 &mdash; Arrays versus Pointers 
 - [MIPS Green Sheet](../books/patterson-hennessey/MIPS_Green_Sheet.pdf)
 
 ## Readings & Subject Information
