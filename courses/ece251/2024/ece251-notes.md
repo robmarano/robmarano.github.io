@@ -69,24 +69,26 @@ Follow the link above to the respective week's materials below.
 # <a id="week4">Week 4 &mdash; 2/7 &mdash; Software Modeling Using Verilog</a>
 
 ## Topics
-* Review of basic digital logic modules modeled in Verilog.
-  * [templates for working with Verilog on Windows and Linux/MacOS](./using_verilog_locally.md)
-  * modules
-    * combinational logic
-      * [multiplexer](./catalog/mux.md)
-        * for parameterized n-bit input / output
-    * sequential logic
-      * [D Flip Flop](./catalog/dff.md)
-      * [Clock](./catalog/clock.md)
-      * [Clock Dividers](./catalog/clock_dividers.md)
-* A selection of combinational logic modules to build your computer architecture components catalog
-  * [parameterized counter (up/down)](./catalog/counter.md)
+
+- Review of basic digital logic modules modeled in Verilog.
+  - [templates for working with Verilog on Windows and Linux/MacOS](./using_verilog_locally.md)
+  - modules
+    - combinational logic
+      - [multiplexer](./catalog/mux.md)
+        - for parameterized n-bit input / output
+    - sequential logic
+      - [D Flip Flop](./catalog/dff.md)
+      - [Clock](./catalog/clock.md)
+      - [Clock Dividers](./catalog/clock_dividers.md)
+- A selection of combinational logic modules to build your computer architecture components catalog
+  - [parameterized counter (up/down)](./catalog/counter.md)
 
 ## Readings & Subject Information
-* [Prof Marano's notes on Verilog & SystemVerilog](./verilog.md)
-* [ChipVerify's SystemVerilog Tutorial](https://www.chipverify.com/tutorials/systemverilog)
-* [Icarus Verilog Documentation link](https://steveicarus.github.io/iverilog/index.html)
-* [Directions to install Icarus Verilog and GTKwave on Windows, MacOS, or Linux](./installing_verilog_locally.md)
+
+- [Prof Marano's notes on Verilog & SystemVerilog](./verilog.md)
+- [ChipVerify's SystemVerilog Tutorial](https://www.chipverify.com/tutorials/systemverilog)
+- [Icarus Verilog Documentation link](https://steveicarus.github.io/iverilog/index.html)
+- [Directions to install Icarus Verilog and GTKwave on Windows, MacOS, or Linux](./installing_verilog_locally.md)
 
 # <a id="week5">Week 5 &mdash; 2/14 &mdash; Instructions &mdash;The Language & Grammar of Computers</a>
 
@@ -95,6 +97,7 @@ Follow the link above to the respective week's materials below.
 - Patterson-Hennessey: [Chapter 2](../books/patterson-hennessey/Patterson6e_MIPS_Ch02_PPT.ppt)
 
 ## Topics
+
 - Textbook sections
   - 2.2 &mdash; Operations of Computer Hardware
   - 2.3 &mdash; Operands of Computer Hardware
@@ -112,6 +115,7 @@ Follow the link above to the respective week's materials below.
 - Patterson-Hennessey: [Chapter 2](../books/patterson-hennessey/Patterson6e_MIPS_Ch02_PPT.ppt)
 
 ## Topics
+
 - Textbook sections
   - 2.7 &mdash; Instructions for Making Decisions
 - [MIPS Green Sheet](../books/patterson-hennessey/MIPS_Green_Sheet.pdf)
@@ -121,14 +125,16 @@ Follow the link above to the respective week's materials below.
 # <a id="week7">Week 7 &mdash; 2/28 &mdash; Intro to Assembly Language Programming &mdash; MIPS CPU</a>
 
 ## Topics
+
 - [Intro to MIPS Assembly Programming](../mips/mips.md) and programming on a MIPS emulator.
+- [Working with `spim` &mdash; the MIPS32 emulator](./spim.md)
 - Textbook sections
   - 2.8 &mdash; Supporting Procedures in Computer Hardware
   - 2.9 &mdash; Communicating with People
   - 2.10 &mdash; MIPS Addressing for 32-bit Immediates and Addresses
   - 2.12 &mdash; Translating and Starting a Program
   - 2.13 &mdash; A C Sort Example to Put It All Together
-  - 2.14 &mdash; Arrays versus Pointers 
+  - 2.14 &mdash; Arrays versus Pointers
 - [MIPS Green Sheet](../books/patterson-hennessey/MIPS_Green_Sheet.pdf)
 
 ## Readings & Subject Information
