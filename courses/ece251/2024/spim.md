@@ -39,6 +39,242 @@ GUI-based `Qtspim`:
 brew install --cask qtspim
 ```
 
+# Working with `spim`
+
+## At the command line
+
+Working in a Unix-like environment, like `Linux` or `MacOS`
+
+# Template Assembly Program File
+
+```mips
+################################################################################
+#
+# file:    program.s
+# author:  Your Name <your.name@cooper.edu>
+# date:    2024-02-24
+# purpose: This program is a simple example of an assembly language program
+#          that can be assembled and run on a MIPS32 simulator, like spim.
+#
+#2345678901234567890123456789012345678901234567890123456789012345678901234567890
+################################################################################
+
+    #------------{ global data section } ------------#
+    # declare all global variables and string        #
+    # constants in this section.                     #
+    # The .data section contains the program's data. #
+    #------------------------------------------------#
+    .data
+
+    # The .asciiz directive creates a null-terminated string.
+    # The string "Hello, world!" is stored in memory.
+hello:  .asciiz "Hello, world!"
+
+    #------------{ code section }----------------------------#
+    # place all main code ("mainline") and procedure code in #
+    # this section of the file                               #
+    #--------------------------------------------------------#
+    .text
+
+    # The .globl directive makes the main label visible to the linker.
+    .globl main
+
+    # The main label marks the beginning of the program.
+    # This is mostly a formality, but it will be very
+    # important later when we start writing programs with more than one function.
+    # In between the initialization and exit of the function there is space
+    # to actually write a program.
+main:
+
+    # initialize the program stack pointer
+    subu $sp, $sp, 4
+
+    # save the return address on the stack
+    sw $ra, 4($sp)
+
+    # The la (load address) pseudo instruction loads the address of the string
+    # into register $a0.
+    la $a0, hello
+
+    # The li (load immediate) pseudo instruction loads the system call number
+    # for printing a string into register $v0.
+    li $v0, 4
+
+    # The syscall instruction makes a system call (OS-provided).
+    syscall
+
+    #
+    # exit the program
+    #
+
+    # restore the return address from the stack
+    lw $ra, 4($sp)
+    addu $sp, $sp, 4
+
+    # return to the address in the $ra register
+    j $ra
+
+    #
+    # OR, use the following code to exit the program
+    #
+
+    # The li (load immediate) pseudo instruction loads the system call number
+    # for exiting the program into register $v0.
+    # li $v0, 10
+
+    # The syscall instruction makes a system call.
+    # syscall
+.end main
+```
+
+# Working with `.data`, `.text`, and procedures
+
+C: `mips-1.c`
+
+```c
+#include <stdio.h>
+
+char *prompt = "> ";
+char *newline = "\n";
+char *msg1 = "Hello, World!";
+char *msg2 = "Integer =";
+char *msg3 = "Pi =";
+
+int foobar = 4;
+float pi = 3.14159265;
+
+void main(void)
+{
+    printf("%s", prompt);
+    printf("%s", msg1);
+    printf("%s", newline);
+    printf("%s", prompt);
+    printf("%s", msg2);
+    printf("%d", foobar);
+    printf("%s", newline);
+    printf("%s", prompt);
+    printf("%s", msg3);
+    printf("%f", pi);
+    printf("%s", newline);
+}
+```
+
+Assembly: `mips-1.s`
+
+```mips
+# mips-1.s
+#
+        .data
+foobar: .word 0x00000004
+prompt: .asciiz "> " # a NUL-terminated string
+newline:.asciiz "\n"
+msg1:   .asciiz "Hello, World!"
+msg2:   .asciiz "Integer = "
+msg3:   .asciiz "Pi = "
+#pi:     .word   01000000010010010000111111011011 # 3.14159265
+pi:     .float   3.14159265
+#	    .extern foobar 4
+
+        .text
+        .globl main
+main:
+        # print prompt
+        la $a0, prompt
+        jal print_str # jump to target and save position to $ra
+
+        # print msg1
+        la $a0, msg1
+        jal print_str # jump to target and save position to $ra
+
+        # print newline
+        la $a0, newline # argument: string
+        jal print_str # jump to target and save position to $ra
+
+        # print prompt
+        la $a0, prompt
+        jal print_str # jump to target and save position to $ra
+
+        # print msg2
+        la $a0, msg2
+        jal print_str # jump to target and save position to $ra
+
+        # print foobar
+        la $t0, foobar
+        lw $a0, 0($t0)
+
+        jal print_int # jump to target and save position to $ra
+
+        # print newline
+        la $a0, newline # argument: string
+        jal print_str # jump to target and save position to $ra
+
+        # print prompt
+        la $a0, prompt
+        jal print_str # jump to target and save position to $ra
+
+        # print msg3
+        la $a0, msg3
+        jal print_str # jump to target and save position to $ra
+
+        # print pi
+        la $t0, pi      # load addr of float
+        lwc1 $f12, 0($t0) # load into fpr
+        jal print_float # jump to target and save position to $ra
+
+        # print newline
+        la $a0, newline # argument: string
+        jal print_str # jump to target and save position to $ra
+
+        # exit main
+        # The li (load immediate) pseudo instruction loads the system call number
+        # for exiting the program into register $v0.
+        li $v0, 10
+
+        # The syscall instruction makes a system call.
+        syscall
+
+# procedure
+print_str:
+    # $v0/1 and $a0-3 NOT preserved
+    # fix $sp for procedures
+    addi $sp,$sp,-4     # Moving Stack pointer
+
+    # print string
+    li $v0, 4       # syscall 4 (print_str)
+    syscall         # print the string
+
+    # put back $sp and return
+    addi $sp,$sp,4      # Moving Stack pointer
+    jr $ra              # return (Copy $ra to PC)
+
+print_int:
+    # $v0/1 and $a0-3 NOT preserved
+    # fix $sp for procedures
+    addi $sp,$sp,-4     # Moving Stack pointer
+
+    # print int
+    li $v0, 1       # syscall 1 (print_int)
+    syscall         # print the string
+
+    # put back $sp and return
+    addi $sp,$sp,4      # Moving Stack pointer
+    jr $ra              # return (Copy $ra to PC)
+
+print_float:
+    # $v0/1 and $a0-3 NOT preserved
+    # fix $sp for procedures
+    addi $sp,$sp,-4     # Moving Stack pointer
+
+    # print float
+    li $v0, 2       # syscall 2 (print_float)
+    syscall         # print the string
+
+    # put back $sp and return
+    addi $sp,$sp,4      # Moving Stack pointer
+    jr $ra              # return (Copy $ra to PC)
+
+```
+
 # `Qtspim` Tutorial
 
 See https://www.lri.fr/~de/QtSpim-Tutorial.pdf
