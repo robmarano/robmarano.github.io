@@ -57,8 +57,8 @@ A `mips32` assembly program has the following basic structure. Let's start with 
 ```assembly
         .data
 msg:    .asciiz "Hello, World!" # a NUL-terminated string
-pi:     .word   314159
-	    .extern foobar 4
+pi:     .float   3.14159
+        .extern foobar 4
 
         .text
         .globl main
