@@ -148,9 +148,9 @@ When writing simple programs for a `mips32` computer, you should only use the fo
 
 When you're writing more complex programs, you should follow the conventions of register usage conventions that specify how main programs and subroutines must coordinate their use of registers. If not, then logic will not be deterministic.
 
-| Register     | Name                   | Use                                             | Preserved Across Calls |
-| ------------ | ---------------------- | ----------------------------------------------- | ---------------------- |
-| `$zero`      | `$0`                   | constant integer value `0`                      | -                      |
+| Register     | Name                   | Use | Preserved Across Calls |
+| ------------ | ---------------------- | - | ---------------------- |
+| `$zero` | `$0` | constant integer value `0` | - |
 | `$s0`-`$s8`  | `$16`-`$23`, `$30`     | saved values                                    | yes                    |
 | `$sp`        | `$29`                  | stack pointer                                   | yes                    |
 | `$ra`        | `$31`                  | return address                                  | no                     |
@@ -171,17 +171,17 @@ In our programming of `mips32`, we will be writing and running programs that wil
 Some basic `syscall` functions usually used in our coursework:
 |Service|Code in `$v0`|Arguments|Results|
 |-|-|-|-|
-|Print an integer|1|`$a0` = value to print|Print value in Console|
-|Print an float|2|`$a0` = value to print|Print value in Console|
-|Print an double|3|`$a0` = value to print|Print value in Console|
-|Print a string|4|`$a0` = address of string to print|Print string in Console|
-|Read an integer from input|5|`$a0` = value to print|Integer Returned in `$v0`|
-|Read a float from input|6|`$a0` = value to print|Float Returned in `$v0`|
-|Read a double from input|7|`$a0` = value to print|Double Returned in `$v0`|
-|Read a string from input|8|`$a0` = address of input buffer in memory; `$a1` = length of buffer|String now in input buffer starting at address|
-|Allocate `heap` memory; aka `sbrk`|9|`$a0` = number of bytes to allocate|`$v0` contains address of allocated memory|
-|Exit|10||Program execution ends|
-|Exit-s|17|`$a0` = termination result|Program execution ends, return value|
+| Print an integer | 1 | `$a0` = value to print | Print value in Console |
+| Print an float | 2 | `$a0` = value to print | Print value in Console |
+| Print an double | 3 | `$a0` = value to print | Print value in Console |
+| Print a string | 4 | `$a0` = address of string to print | Print string in Console |
+| Read an integer from input | 5 | `$a0` = value to print | Integer Returned in `$v0` |
+| Read a float from input | 6 | `$a0` = value to print | Float Returned in `$v0` |
+| Read a double from input | 7 | `$a0` = value to print | Double Returned in `$v0` |
+| Read a string from input | 8 | `$a0` = address of input buffer in memory; `$a1` = length of buffer | String now in input buffer starting at address in `$a0` |
+| Allocate `heap` memory; aka `sbrk` | 9 | `$a0` = number of bytes to allocate | `$v0` contains address of allocated memory |
+| Exit | 10 | - | Program execution ends |
+| Exit-s | 17 | `$a0` = termination result | Program execution ends, return value |
 
 The syscall `Read Integer` reads an entire line of input from the keyboard up to and including the `newline` character. Characters following the last digit in the decimal number are ignored. The syscall `Read String` has the same semantics as the Unix library routine `fgets`. It reads up to `n – 1` characters into a buffer and terminates the string with a `NULL` byte. If fewer than `n – 1` characters are on the current line, the syscall `Read String` reads up to and including the `newline` character and again NULL-terminates the string. The syscall `Print String` will display on the console the string of characters found in memory starting with the location pointed to by the address stored in `$a0`. Printing will stop when a `NULL` character is located in the string. This is why you should be careful printing a string defined with `.ascii`. What `NULL` character will it use? The syscall `sbrk` returns a pointer to a block of memory containing `n` additional bytes. The syscall `Exit` terminates the user program execution and returns control to the operating system, and `Exit-2` does same as `Exit` but returns the value stored in `$a0` which can then be accessed by the OS in a Bash shell with command `echo $?`. The C equivalent code is as follows for `Exit-2`:
 
