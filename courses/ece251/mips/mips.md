@@ -169,8 +169,9 @@ If a register is designated as "DO NOT USE", it means that the register is used 
 In our programming of `mips32`, we will be writing and running programs that will run on software engines that emulate the `mips32` computer, that is, it's CPU, memory, data path, input, and output. Modern computers run operating systems (OS) which serve as the orchestrator of all programs, sharing computer resources across these programs. The user seems to run many programs simultaneously, easing the use of the computer to perform many tasks. In reality, the OS coordinates the computer resources to ensure the deterministic execution of each program. Since this course is an introductory course in computer archicture, we assume the CPU is a uniprocessor, that is, there is only one core processor, not many as is the case in modern CPUs like Intel Core, AMD Ryzen, Apple M1/M2, and others.
 
 Some basic `syscall` functions usually used in our coursework:
-|Service|Code in `$v0`|Arguments|Results|
-|-|-|-|-|
+
+| Service | Code in `$v0` | Arguments | Results |
+| :--- | :---: | :--- | :--- |
 | Print an integer | 1 | `$a0` = value to print | Print value in Console |
 | Print an float | 2 | `$a0` = value to print | Print value in Console |
 | Print an double | 3 | `$a0` = value to print | Print value in Console |
