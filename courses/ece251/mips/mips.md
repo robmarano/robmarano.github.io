@@ -1,7 +1,7 @@
 # Modern Computer Programming
 
-[<- back to notes](./ece251-notes.md) ; 
-[<- back to syllabus](./ece251-syllabus-spring-2024.md)
+[<- back to notes](/courses/ece251/2024/ece251-notes.md) ; 
+[<- back to syllabus](/courses/ece251/2024/ece251-syllabus-spring-2024.md)
 
 ---
 
