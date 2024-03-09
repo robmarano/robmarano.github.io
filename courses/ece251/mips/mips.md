@@ -1,5 +1,10 @@
 # Modern Computer Programming
 
+[<- back to notes](./ece251-notes.md) ; 
+[<- back to syllabus](./ece251-syllabus-spring-2024.md)
+
+---
+
 [computer_abstraction]: ./Modern_Computer_Programming_with_steps.png
 [mips32_qtspim]: ./qtspim_example.png
 [endianness]: ./Endianness.png
