@@ -1,6 +1,8 @@
 # ECE 251 Spring 2024 Weekly Course Notes
 
-[<- back to syllabus](./ece251-syllabus-spring-2024.md)
+[<- back to syllabus](/courses/ece251/2024/ece251-syllabus-spring-2024.html)
+
+---
 
 |                               Weeks |                                         Dates | Topic                                                                            |
 | ----------------------------------: | --------------------------------------------: | :------------------------------------------------------------------------------- |
