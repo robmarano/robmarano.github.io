@@ -1,4 +1,9 @@
 # Using Verilog Locally On Your Computer
+[<- back to notes](./ece251-notes.md) ; 
+[<- back to syllabus](./ece251-syllabus-spring-2024.md)
+
+---
+
 Instead of using [EDA Playground]() or [8bitWorkshop IDE](https://8bitworkshop.com/v3.11.0/?file=racing_game_cpu.v&platform=verilog)
 
 *from MIT [course site](https://fpga.mit.edu/6205/F22/documentation/iVerilog)*

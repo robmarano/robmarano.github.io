@@ -1,5 +1,10 @@
 # Meet SPIM
 
+[<- back to notes](./ece251-notes.md) ; 
+[<- back to syllabus](./ece251-syllabus-spring-2024.md)
+
+---
+
 _Source:_ [SPIM &mdash; A MIPS32 Simulator](https://pages.cs.wisc.edu/~larus/spim.html)
 
 > `spim` is a self-contained simulator that runs `MIPS32` programs. It reads and executes assembly language programs written for this processor. `spim` also provides a simple debugger and minimal set of operating system services. `spim` does not execute binary (compiled) programs. So provide only MIP32 assembly program files.

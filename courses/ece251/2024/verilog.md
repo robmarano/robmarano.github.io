@@ -1,5 +1,10 @@
 # Verilog & SystemVerilog
 
+[<- back to notes](./ece251-notes.md) ; 
+[<- back to syllabus](./ece251-syllabus-spring-2024.md)
+
+---
+
 # References
 
 - [Verilog HDL Design Examples](https://www.taylorfrancis.com/books/mono/10.1201/b22315/verilog-hdl-design-examples-joseph-cavanagh) by Joseph Cavanagh, ISBN 978-1-138-09995-1
