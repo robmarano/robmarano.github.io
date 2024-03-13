@@ -145,6 +145,7 @@ Follow the link above to the respective week's materials below.
 
 ## Topics
 
+- Programming arrays, conditional loops, conditional statements, leaf procedures in MIPS32.
 - [MIPS Green Sheet](../books/patterson-hennessey/MIPS_Green_Sheet.pdf)
 
 ## Readings & Subject Information
@@ -154,6 +155,7 @@ Follow the link above to the respective week's materials below.
 ## Presentations
 
 - Patterson-Hennessey: [Chapter 3](../books/patterson-hennessey/Patterson6e_MIPS_Ch03_PPT.ppt)
+- Patterson-Hennessey: [Chapter 4](../books/patterson-hennessey/Patterson6e_MIPS_Ch04_PPT.ppt)
 
 ## Topics
 
