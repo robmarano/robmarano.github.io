@@ -13,7 +13,8 @@
 |           [9](#week9),[10](#week10) |               [3/13](#week9), [3/27](#week10) | Arithmetic for Computers &mdash; Adders, Multipliers, Dividers; **Midterm Exam** |
 |         [11](#week11),[12](#week12) |               [4/3](#week11), [4/10](#week12) | The Processor &mdash; Data Path and Control                                      |
 |         [13](#week13),[14](#week14) |              [4/17](#week13), [4/24](#week14) | Memory Hierarchies                                                               |
-|                       [15](#week15) |                                [5/8](#week15) | **Final Exam**; Group CPU Final Project due                                      |
+|                       [15](#week15) |                                [5/8](#week15) | **Final Exam** &mdash; in class. ALSO, extra 20pts given if Group CPU Final Project handed in no later than 11:59pm ET|
+|                       [15](#week15) |                                [5/10](#week15) | Group CPU Final Project due no later than 11:59pm ET|
 
 Follow the link above to the respective week's materials below.
 
@@ -168,6 +169,9 @@ Follow the link above to the respective week's materials below.
 - Patterson-Hennessey: [Chapter 3](../books/patterson-hennessey/Patterson6e_MIPS_Ch03_PPT.ppt)
 
 ## Topics
+- Logic Design Conventions
+- Building the Datapath
+- A Simple Implementation of a Processor
 
 ## Readings & Subject Information
 
@@ -178,6 +182,11 @@ Follow the link above to the respective week's materials below.
 - Patterson-Hennessey: [Chapter 4](../books/patterson-hennessey/Patterson6e_MIPS_Ch04_PPT.ppt)
 
 ## Topics
+- A Multi-Cycle Implementation of a Processor
+- Overview of Pipelining
+- Pipelined Datapath &mdash; Control
+- Data Hazards: Forwarding vs Stalling
+- Control Hazards
 
 ## Readings & Subject Information
 
@@ -188,6 +197,9 @@ Follow the link above to the respective week's materials below.
 - Patterson-Hennessey: [Chapter 4](../books/patterson-hennessey/Patterson6e_MIPS_Ch04_PPT.ppt)
 
 ## Topics
+- Pipelined Datapath &mdash; Control
+- Data Hazards: Forwarding vs Stalling
+- Control Hazards
 
 ## Readings & Subject Information
 
@@ -198,6 +210,12 @@ Follow the link above to the respective week's materials below.
 - Patterson-Hennessey: [Chapter 5](../books/patterson-hennessey/Patterson6e_MIPS_Ch05_PPT.ppt)
 
 ## Topics
+- The principle of locality
+- Memory Technologies
+- Basics of a Cache Memory
+  - `cache` = "a safe place to store things that we need to examine"
+  - A Simple Cache
+- Measuring and Improving Cache Performance
 
 ## Readings & Subject Information
 
@@ -208,11 +226,14 @@ Follow the link above to the respective week's materials below.
 - Patterson-Hennessey: [Chapter 5](../books/patterson-hennessey/Patterson6e_MIPS_Ch05_PPT.ppt)
 
 ## Topics
+- The Basics of Virtual Memory
+- Basics of a simple cache (direct-mapped vs associative cache)
+- A Common Framework for Memory Hierarchy
 
 ## Readings & Subject Information
 
-# <a id="week15">Week 15 &mdash; 5/8 &mdash; **Final Exam**; Submit MVP project</a>
+# <a id="week15">Week 15 &mdash; 5/8 &mdash; **Final Exam**; 5/10 Submit project</a>
 
 ## Topics
-
+- Final Exam (1hr; see [final exam study guide](./final-exam-study-guide.md)
 ## Readings & Subject Information
