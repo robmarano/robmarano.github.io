@@ -10,15 +10,16 @@ layout: default
 
 Serving as an [adjunct professor of Electrical and Computer Engineering](https://cooper.edu/academics/people/robert-marano)
 
-### ECE 251 - Computer Architecture - Spring 2024
-
-- [Course Syllabus](./courses/ece251/2024/ece251-syllabus-spring-2024.md) ([pdf](./courses/ece251/2024/ece251_comp_arch_syllabus_spring_2024.pdf))
 
 <br>
 
 ## Past Courses
 
 ---
+### ECE 251 - Computer Architecture - Spring 2024
+
+- [Course Syllabus](./courses/ece251/2024/ece251-syllabus-spring-2024.md) ([pdf](./courses/ece251/2024/ece251_comp_arch_syllabus_spring_2024.pdf))
+
 
 ### ECE 465 - Cloud Computing - Fall 2023
 

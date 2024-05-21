@@ -133,9 +133,9 @@ All assignments must be completed by the end of this course in order to receive 
 |                   Assessment Type | Total Points | % of Final Grade |
 | --------------------------------: | :----------: | :--------------: |
 |                         Homeworks |      50      |       25%        |
-|                         Exams (2) |     100      |       35%        |
-|                     Final Project |     100      |       35%        |
-| Demonstrated Active Participation |      30      |        5%        |
+|                         Exams (2) |     180      |       35%        |
+|                     Final Project |     200      |       35%        |
+|               Class Participation |      30      |        5%        |
 
 ## Final Projects as Minimal Viable Product (MVP)
 
