@@ -4,6 +4,10 @@ layout: default
 
 # Courses
 
+### ECE 465 - Cloud Computing - Spring 2025 (Indepedent Study)
+
+- [Course Syllabus](./courses/ece465/2025/ece465-ind-study-syllabus-spring-2025.md)([pdf](./courses/ece465/2025/ece465-ind-study-syllabus-spring-2025.pdf))
+
 ---
 
 ## The Cooper Union

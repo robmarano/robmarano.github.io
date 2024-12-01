@@ -9,6 +9,7 @@
   "author": "Ben Balter",
   "license": "MIT",
   "dependencies": {
+    "jekyll-theme-primer": "file:",
     "primer-base": "^1.9.2",
     "primer-layout": "^1.6.2",
     "primer-markdown": "^3.7.13",
