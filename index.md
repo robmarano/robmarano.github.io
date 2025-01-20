@@ -8,7 +8,7 @@ layout: default
 
 - [Course Syllabus](./courses/ece251/2025/ece251-syllabus-spring-2025.md) ([pdf](./courses/ece251/2025/ece251_comp_arch_syllabus_spring_2025.pdf))
 
-### ECE 465 - Cloud Computing - Spring 2025 (Indepedent Study)
+### ECE 465 - Cloud Computing - Spring 2025 (Independent Study)
 
 - [Course Syllabus](./courses/ece465/2025/ece465-ind-study-syllabus-spring-2025.md)([pdf](./courses/ece465/2025/ece465-ind-study-syllabus-spring-2025.pdf))
 
