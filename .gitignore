@@ -8,3 +8,4 @@ Gemfile.lock
 *.gem
 assets/**/*.html
 assets/**/*.md
+*.code-workspace
