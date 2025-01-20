@@ -105,11 +105,13 @@ Success as a student begins with attendance. Class time serves not only for lear
 
 We will be using my notes and handouts curated from the following textbooks and resources. I will post the handouts by the respective week's lecture on the topic as we progress through the semester.
 
-- [The Elements of Computing Systems Building a Modern Computer from First Principles, 2nd Edition ```````````````````````````````````````````````````](https://mitpress.mit.edu/9780262539807/the-elements-of-computing-systems/) by Noam Nisan and Shimon Schocken, ISBN 9780262539807
-
-- [Computer Organization and Design &mdash; The Hardware/Software Interface MIPS, 6th Edition](https://www.elsevier.com/books/computer-organization-and-design-mips-edition/patterson/978-0-12-820109-1) by David Patterson & John Hennessy, ISBN 9780128201091
+- [The Elements of Computing Systems Building a Modern Computer from First Principles, 2nd Edition](https://mitpress.mit.edu/9780262539807/the-elements-of-computing-systems/) by Noam Nisan and Shimon Schocken, ISBN 9780262539807
 
 - [Digital Design and Computer Architecture](https://shop.elsevier.com/books/digital-design-and-computer-architecture/harris/978-0-12-394424-5) by David Harris and Sarah Harris, paperback ISBN 9780123944245, eBook ISBN 9780123978165
+
+- [Computer Organization and Embedded Systems, 6th Edition](https://www.mheducation.com/highered/product/Computer-Organization-and-Embedded-Systems-Hamacher.html) by Carl Hamacher, Zvonko Vranesic, Safwat Zaky, and Maraig Manjikian, ISBN 9780073380650
+
+- [Computer Organization and Design &mdash; The Hardware/Software Interface MIPS, 6th Edition](https://www.elsevier.com/books/computer-organization-and-design-mips-edition/patterson/978-0-12-820109-1) by David Patterson & John Hennessy, ISBN 9780128201091
 
 - [Designing Video Game Hardware in Verilog](https://www.amazon.com/Designing-Video-Game-Hardware-Verilog/dp/B0B6XRPZ3S) by Steven Hugg, ISBN 9781728619446
 
@@ -161,13 +163,14 @@ You have the opportunity to earn 500 total points for this class. The final lett
 | Class Participation |     35     |          7%          |
 
 The grading for the **final project** follows this rubric:
-| **Project Assessment Category** | **Points** |
-| ----: | :--- |
-| ISA Design | 34 |
-| Memory Design & Implementation | 16 |
-| Processor Design & Implementation | 120 |
-| Project & Design Documentation | 30 |
-| Extra Credit | 70 |
+
+|   **Project Assessment Category** | **Points** |
+| --------------------------------: | :--------- |
+|                        ISA Design | 34         |
+|    Memory Design & Implementation | 16         |
+| Processor Design & Implementation | 120        |
+|    Project & Design Documentation | 30         |
+|                      Extra Credit | 70         |
 
 The full rubric can be found [at this link](./assignments/grading_rubric_final_project.md).
 
@@ -226,4 +229,5 @@ Before you leave for break, ensure that you clean up your personal GitHub respos
 ## Research, tinker, automate so you have more time for the fun stuff in life!
 
 Enjoy the course. <br>
+
 /prof.marano

@@ -30,14 +30,21 @@ Follow the link above to the respective week's materials below.
 ## Topics
 
 1. Intro to logic design using Verilog HDL
-   a. Logic elements
-   b. Expressions
-   c. Modules and ports
-   d. Built-in primitives
-   e. User-defined primitives
-   f. Dataflow modeling
+1. Logic elements
+1. Expressions
+1. Modules and ports
+1. Built-in primitives
+1. User-defined primitives
+1. Dataflow modeling
+
+## Software Installation
+
+- Verilog
+  - Follow instructions [here](../installing_verilog_locally.md)
 
 ## Homework Assignment
+
+See [hw-01.md](./assignments/hw-01.md)
 
 # <a id="week2">Week 2 &mdash; 1/28 &mdash; Hardware Modeling &mdash; Part 2</a>
 
