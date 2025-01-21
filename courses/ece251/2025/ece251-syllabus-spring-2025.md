@@ -44,19 +44,18 @@ The following topic areas will be covered:
 
 ## Schedule
 
-|  Class | Topic                                                   |
-| -----: | :------------------------------------------------------ |
-|   1, 2 | Hardware Modeling with Software (Verilog HDL)           |
-|      3 | Computer Abstraction & Stored Program Concept           |
-|    3,4 | Instructions &mdash;The Language & Grammar of Computers |
-|   5, 6 | Assembly Language Programming &mdash; MIPS CPU          |
-|   7, 8 | Assembly Language Programming &mdash; MIPS CPU          |
-|      9 | Arithmetic for Computers                                |
-|     10 | **Midterm Exam**                                        |
-| 11, 12 | The Processor &mdash; Data Path & Control               |
-| 13, 14 | Interrupts; Memory Hierarchies (Caching)                |
-|     15 | **Final Exam**                                          |
-|     15 | Group **Final Project** due at 5pm ET                   |
+|      Class | Topic                                                   |
+| ---------: | :------------------------------------------------------ |
+|       1, 2 | Hardware Modeling with Software (Verilog HDL)           |
+|          3 | Computer Abstraction & Stored Program Concept           |
+|       4, 5 | Instructions &mdash;The Language & Grammar of Computers |
+|       6, 7 | Assembly Language Programming &mdash; MIPS CPU          |
+|          8 | **Midterm Exam**                                        |
+|          9 | Arithmetic for Computers                                |
+| 10, 11, 12 | The Processor &mdash; Data Path & Control               |
+|     13, 14 | Interrupts; Memory Hierarchies (Caching)                |
+|         15 | **Final Exam**                                          |
+|         15 | Group **Final Project** due at 5pm ET                   |
 
 Optional weekend lab sessions will be offered throughout the semester to work on your final project designs or for review sessions.
 
@@ -129,6 +128,19 @@ We will detail access and usage in class during the semester. Become familiar wi
 
 All assignments must be completed by the end of this course in order to receive at least a passing grade. _Individual_ homework assignments and the final project will be handed-in electronically via GitHub Classroom. Also, please hand in the URL for each assignment's repository via Microsoft Teams Assignments for this course. On exam days, offices hours will be canceled unless otherwise noted. Final group-based projects will be handed-in via your team's GitHub respository per project. We will discuss in class how to create each repository.
 
+### Homework Pointing Scheme
+
+| Total points | Explanation                                                                                                                                                                       |
+| -----------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|            0 | Not handed in                                                                                                                                                                     |
+|            1 | Handed in late                                                                                                                                                                    |
+|            2 | Handed in on time, not every problem fully worked through and clearly identifying the solution                                                                                    |
+|            3 | Handed in on time, each problem answered a boxed answer, each problems answered with a clearly worked through solution, and **less than majority** of problems answered correctly |
+|            4 | Handed in on time, **majority** of problems answered correctly, each solution boxed clearly, and each problem fully worked through                                                |
+|            5 | Handed in on time, every problem answered correctly, every solution boxed clearly, and every problem fully worked through.                                                        |
+
+### Assignments Schedule
+
 | Assignment | Title                           | Points | Given On | Due Date _(by time class begins)_       |
 | ---------: | :------------------------------ | :----: | :------- | :-------------------------------------- |
 |          1 | [HW 1](./assignments/hw-01.md)  |   5    | 1/21     | 1/28                                    |
@@ -138,9 +150,9 @@ All assignments must be completed by the end of this course in order to receive 
 |          5 | [HW 5](./assignments/hw-05.md)  |   5    | 2/18     | 2/25                                    |
 |          6 | [HW 6](./assignments/hw-06.md)  |   5    | 2/25     | 3/4                                     |
 |          7 | [HW 7](./assignments/hw-07.md)  |   5    | 3/4      | 3/11                                    |
-|          8 | [HW 8](./assignments/hw-08.md)  |   5    | 3/11     | 3/18                                    |
-|          9 | [HW 9](./assignments/hw-09.md)  |   5    | 3/18     | 3/25                                    |
-|         10 | **Midterm Exam**                |  100   | 3/25     | [Study Guide](./study_guide_midterm.md) |
+|          8 | **Midterm Exam**                |  100   | 3/11     | [Study Guide](./study_guide_midterm.md) |
+|          9 | [HW 8](./assignments/hw-08.md)  |   5    | 3/18     | 3/18                                    |
+|         10 | [HW 9](./assignments/hw-09.md)  |   5    | 3/25     | 3/25                                    |
 |         11 | [HW 10](./assignments/hw-10.md) |   5    | 4/1      | 4/22                                    |
 |         12 | [HW 11](./assignments/hw-11.md) |   5    | 4/22     | 4/29                                    |
 |         13 | [HW 12](./assignments/hw-12.md) |   5    | 4/29     | 5/6                                     |
@@ -152,7 +164,7 @@ All assignments must be completed by the end of this course in order to receive 
 
 ### Grading Distribution
 
-You have the opportunity to earn 500 total points for this class. The final letter grade (no +/-) will be based upon applying the normal distribution to the following assessment categories. Note the weighting of each type.
+This course follows the rubric of **criterion-referenced grading**. You have the opportunity to earn 500 total points for this class. The final letter grade (no +/-) will be based upon applying the normal distribution to the following assessment categories. Note the weighting of each type. The variance to your calculations of your points earned throught the semester may vary by 7% for points given for class participation.
 
 | **Assessment Type** | **Points** | **% of Final Grade** |
 | ------------------: | :--------: | :------------------: |
