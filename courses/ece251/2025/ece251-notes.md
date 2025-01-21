@@ -31,6 +31,17 @@ Follow the link above to the respective week's materials below.
 1. Expressions
 1. Modules and ports
 
+## Software Installation
+
+- Verilog
+  - Follow instructions [here](./installing_verilog_locally.md)
+
+## Homework Assignment
+
+See [hw-01.md](./assignments/hw-01.md)
+
+## Topic Deep Dive
+
 ### Gate-Level Modeling
 
 **Introduction:**
@@ -124,15 +135,6 @@ Bit swizzling is a fundamental technique in computer architecture and digital de
 - Delays in gate-level modeling (#delay).
 - Introduction to always blocks for procedural assignments.
 - Hands-on lab: Design a sequential circuit with custom gate delays and verify its behavior.
-
-## Software Installation
-
-- Verilog
-  - Follow instructions [here](../installing_verilog_locally.md)
-
-## Homework Assignment
-
-See [hw-01.md](./assignments/hw-01.md)
 
 # <a id="week2">Week 2 &mdash; 1/28 &mdash; Hardware Modeling &mdash; Part 2</a>
 
