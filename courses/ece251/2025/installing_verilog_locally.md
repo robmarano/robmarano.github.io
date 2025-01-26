@@ -30,6 +30,25 @@ This is the easiest and quickest.
 - to install GTKwave run this at the command prompt `choco install gtkwave`
   - https://community.chocolatey.org/packages/gtkwave
 
+**In case you're seeing messages that state the script (makefile.ps1) cannot run, try the following:**
+
+1. Using "Search" on your task bar at the bottom, type in powershell then "Run as Administrator"
+2. Type the following command to allow scripts to run and press Enter: Set-ExecutionPolicy RemoteSigned
+3. Type "A" and press Enter (if applicable).
+4. Type in the name of your script, e.g., .\makefile.ps1
+
+You can check if the script execution policy was applied by typing `Get-ExecutionPolicy -List`. An example output would be as follows:
+
+```powershell
+        Scope ExecutionPolicy
+        ----- ---------------
+MachinePolicy       Undefined
+   UserPolicy       Undefined
+      Process       Undefined
+  CurrentUser    RemoteSigned
+ LocalMachine    RemoteSigned
+```
+
 ## Get source code, compile and install on your Windows PC
 
 - if you're bold and have time on your hands (read this as doing this after the course)
