@@ -12,7 +12,10 @@
 # CHANGE THESE THREE LINES FOR YOUR DESIGN
 #
 #TOOL INPUT
-COMPONENT = module_name	#THIS NEEDS TO MATCH THE NAME OF YOUR MODULE
+#THIS NEEDS TO MATCH THE NAME OF YOUR MODULE
+# just type on command line: make COMPONENT=module_name {compile, simulate, display, clean}
+COMPONENT = module_name
+
 #SRC = $(shell ls *.sv)
 SRC = $(wildcard *.sv)
 SIM_ARGS=+a=3 +b=2 +s=0
