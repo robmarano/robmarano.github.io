@@ -1,4 +1,5 @@
 # ECE 465 - Cloud Computing
+
 ## Spring 2025 Independent Study
 
 ## General Course Information
@@ -11,7 +12,7 @@ Dates: 21 Jan 2025 – 16 May 2025
 "**Cloud computing** &mdash; the phenomenon by which services are provided by huge collections of remote servers." <br>
 &mdash; Andrew Tanenbaum & Maarten van Steen
 
-<!-- [Weekly course notes](./ece465-notes.md) -->
+[Weekly course notes](./ece465-notes.md)
 
 ## Course Catalog Description
 
@@ -38,22 +39,23 @@ Minimum ECE 251 and ECE 264, or approval of EE Department Chair.
 
 _Anticipated Schedule_
 
-|            Dates | Topic                                                       |
-| ---------------: | :---------------------------------------------------------- |
-|          Class 1 | Introduction & development environment setup                |
-|    Class 2, 3, 4 | Multi-processing & network programming                      |
-|          Class 5 | Containerization: Docker and Kubernetes                     |
-|          Class 6 | Distributed Architectures                                   |
-|          Class 7 | Communication and Coordination                              |
-|          Class 8 | Consistency & Replication                                   |
-|          Class 9 | Fault Tolerance                                             |
-|         Class 10 | Security                                                    |
-|         Class 11 | DevOps and CI/CD                                            |
-|         Class 12 | Integrate application to infrastructure - Part 1            |
-|         Class 13 | Deploying on a hyperscaler; Integrate designs - (Virtual Bare Metal)         |
-|         Class 14 | Deploying on a hyperscaler; Integrate designs - GCP, AWS, Azure  |
-|         Class 15 | Last tidbits and guidance; Integrate designs                |
-|         Class 15 | Final individual projects due                               |
+|    Dates | Topic                                                                    |
+| -------: | :----------------------------------------------------------------------- |
+|  Class 1 | Intro; centralized vs distributed systems; development environment setup |
+|  Class 2 | Multi-processing & network programming &mdash; Part 1                    |
+|  Class 3 | Multi-processing & network programming &mdash; Part 2                    |
+|  Class 4 | Multi-processing & network programming &mdash; Part 3                    |
+|  Class 5 | Containerization: Docker and Kubernetes                                  |
+|  Class 6 | DevOps and CI/CD                                                         |
+|  Class 7 | Integrate application to infrastructure                                  |
+|  Class 8 | Distributed Architectures                                                |
+|  Class 9 | Communication and Coordination                                           |
+| Class 10 | Consistency & Replication                                                |
+| Class 11 | Fault Tolerance                                                          |
+| Class 12 | Security                                                                 |
+| Class 13 | Deploying on k8s on cloud-based virtual bare metal nodes                 |
+| Class 14 | Deploying on k8s on cloud-based k8s                                      |
+| Class 15 | Final individual projects due                                            |
 
 ## Course Learning Outcomes
 
@@ -121,21 +123,21 @@ All software used during this course will be open source-based. We will also be 
 
 All assignments and the individual final project per student must be completed by the end of this course. Programming assignments and the projects will be handed-in individually via GitHub.
 
-| Assignment | Title         | Points | Given On | Due Date | Link to Solution |
-| ---------: | :------------ | :----: | :------- | :------- | :--------------- |
-|          1 | Program 1     |   10   | Class 1     | Class 2     | TBD              |
-|          2 | Program 2     |   10   | Class 2     | Class 3     | TBD              |
-|          3 | Program 3     |   10   | Class 3     | Class 4     | TBD              |
-|          4 | Program 4     |   10   | Class 4     | Class 5     | TBD              |
-|          5 | Program 5     |   10   | Class 5     | Class 6     | TBD              |
-|          6 | Program 6     |   10   | Class 6     | Class 7     | TBD              |
-|          7 | Program 7     |   10   | Class 7     | Class 8     | TBD              |
-|          8 | Program 8     |   10   | Class 8     | Class 9     | TBD              |
-|          9 | Program 9     |   10   | Class 9     | Class 10    | TBD              |
-|         10 | Program 10    |   10   | Class 10    | Class 11    | TBD              |
-|         11 | Program 11    |   10   | Class 11    | Class 12    | TBD              |
-|         12 | Program 12    |   10   | Class 12    | Class 13    | TBD              |
-|         13 | Final Project |  180   | Class 6     | Last Class  | TBD              |
+| Assignment | Title         | Points | Given On | Due Date   | Link to Solution |
+| ---------: | :------------ | :----: | :------- | :--------- | :--------------- |
+|          1 | Program 1     |   10   | Class 1  | Class 2    | TBD              |
+|          2 | Program 2     |   10   | Class 2  | Class 3    | TBD              |
+|          3 | Program 3     |   10   | Class 3  | Class 4    | TBD              |
+|          4 | Program 4     |   10   | Class 4  | Class 5    | TBD              |
+|          5 | Program 5     |   10   | Class 5  | Class 6    | TBD              |
+|          6 | Program 6     |   10   | Class 6  | Class 7    | TBD              |
+|          7 | Program 7     |   10   | Class 7  | Class 8    | TBD              |
+|          8 | Program 8     |   10   | Class 8  | Class 9    | TBD              |
+|          9 | Program 9     |   10   | Class 9  | Class 10   | TBD              |
+|         10 | Program 10    |   10   | Class 10 | Class 11   | TBD              |
+|         11 | Program 11    |   10   | Class 11 | Class 12   | TBD              |
+|         12 | Program 12    |   10   | Class 12 | Class 13   | TBD              |
+|         13 | Final Project |  180   | Class 6  | Last Class | TBD              |
 
 ## Final Projects MVP
 
