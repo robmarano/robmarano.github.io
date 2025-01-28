@@ -1,6 +1,6 @@
 # ECE 465 Spring 2025 Weekly Course Notes
 
-[<- back to syllabus](../ece465-ind-study-syllabus-spring-2025.html)
+[<- back to syllabus](./ece465-ind-study-syllabus-spring-2025.html)
 
 ---
 
@@ -27,7 +27,7 @@ Classes will be decided week-to-week.
 Follow the link above to the respective week's materials below.
 <br>
 
-# <a id="week01">Week 01 &mdash; Centralized vs distributed</a>
+# <a id="week01">Week 01 &mdash; Intro; Centralized vs distributed</a>
 
 ## Topics
 

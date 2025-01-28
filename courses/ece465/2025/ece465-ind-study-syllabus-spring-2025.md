@@ -113,31 +113,9 @@ With that said, the following books provide helpful and historical background fo
 
 - Stevens, W. Richard, and Stephen Rago. <u>Advanced Programming in the UNIX Environment. 2nd ed</u>. Reading, MA: Addison-Wesley Professional, 2005. ISBN: 9780201433074.
 
-### Software
-
-You run your distributed systems development environment in Linux, which can be operated natively or within a virtual machine using VirtualBox, Vagrant, or Docker, for example. At a minimum, you'll need a terminal emulator running the Bash shell, Java 18 or higher with Maven, and git installed.
-
-All software used during this course will be open source-based. We will also be using Amazon Web Services through the AWS Academy site of which Cooper Union has been given access. For many of our programming assignments, the Java programming language will be used, especially since this language is one of the most used ones for implementing modern cloud services given its portability across CPU instruction set architectures.
-
 ## Assessment Strategy and Grading Policy
 
-All assignments and the individual final project per student must be completed by the end of this course. Programming assignments and the projects will be handed-in individually via GitHub.
-
-| Assignment | Title         | Points | Given On | Due Date   | Link to Solution |
-| ---------: | :------------ | :----: | :------- | :--------- | :--------------- |
-|          1 | Program 1     |   10   | Class 1  | Class 2    | TBD              |
-|          2 | Program 2     |   10   | Class 2  | Class 3    | TBD              |
-|          3 | Program 3     |   10   | Class 3  | Class 4    | TBD              |
-|          4 | Program 4     |   10   | Class 4  | Class 5    | TBD              |
-|          5 | Program 5     |   10   | Class 5  | Class 6    | TBD              |
-|          6 | Program 6     |   10   | Class 6  | Class 7    | TBD              |
-|          7 | Program 7     |   10   | Class 7  | Class 8    | TBD              |
-|          8 | Program 8     |   10   | Class 8  | Class 9    | TBD              |
-|          9 | Program 9     |   10   | Class 9  | Class 10   | TBD              |
-|         10 | Program 10    |   10   | Class 10 | Class 11   | TBD              |
-|         11 | Program 11    |   10   | Class 11 | Class 12   | TBD              |
-|         12 | Program 12    |   10   | Class 12 | Class 13   | TBD              |
-|         13 | Final Project |  180   | Class 6  | Last Class | TBD              |
+The grade for this course will be based upon the individual final project per student will be worth 180 points and must be completed by the end of this course.
 
 ## Final Projects MVP
 
