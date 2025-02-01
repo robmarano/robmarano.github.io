@@ -1,5 +1,11 @@
 # Notes for Week 2
 
+## Topics
+
+1. Built-in primitives
+1. User-defined primitives
+1. Dataflow modeling
+
 ## Topics Deep Dive
 
 ### Behavioral Modeling

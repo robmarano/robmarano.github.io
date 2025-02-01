@@ -31,6 +31,9 @@ Follow the link above to the respective week's materials below.
 1. Expressions
 1. Modules and ports
 
+## Topic Deep Dive
+See [notes_week_01.md](./notes_week_01.md)
+
 ## Software Installation
 
 - Verilog
@@ -45,9 +48,6 @@ Follow the link above to the respective week's materials below.
 
 See [hw-01.md](./assignments/hw-01.md)
 
-## Topic Deep Dive
-See [notes_week_01.md](./notes_week_01.md)
-
 # <a id="week2">Week 2 &mdash; 1/28 &mdash; Hardware Modeling &mdash; Part 2</a>
 
 ## Topics
@@ -56,6 +56,25 @@ See [notes_week_01.md](./notes_week_01.md)
 1. User-defined primitives
 1. Dataflow modeling
 
+## Topic Deep Dive
+See [notes_week_02.md](./notes_week_02.md)
+
 ## Homework Assignment
 
+See [hw-02.md](./assignments/hw-02.md)
+
+# <a id="week3">Week 3 &mdash; 2/4 &mdash; Verilog; Computer Abstraction & Stored Program Concept</a>
+
+## Topics
+
+1. Verilog: Parameterization; Built-in primitives; User-defined primitives; Dataflow modeling
+2. Stored Program Concept
+3. History of computer architecture and modern advancements
+
+## Topic Deep Dive
+See [notes_week_03.md](./notes_week_03.md)
+
+## Homework Assignment
+
+See [hw-03.md](./assignments/hw-03.md)
 

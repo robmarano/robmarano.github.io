@@ -1,5 +1,12 @@
 # Notes for Week 1
 
+## Topics
+
+1. Intro to logic design using Verilog HDL
+1. Logic elements
+1. Expressions
+1. Modules and ports
+
 ## Topics Deep Dive
 
 ### Gate-Level Modeling
