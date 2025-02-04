@@ -46,7 +46,9 @@ Once declared, you can use parameters anywhere within the module where a constan
 * Case Statements: Using parameters in case expressions.
 * Expressions: Including parameters in arithmetic and logical operations.
 
-For example, a parameterized adder using behavioral modeling:
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>, For example, a parameterized `adder` using behavioral modeling:</summary>
+
 ```verilog
 module adder #(parameter WIDTH = 8) (
   input logic [WIDTH-1:0] a,
@@ -79,6 +81,7 @@ adder adder8 ( // Using the default WIDTH = 8
   .cout(carry_out2)
 );
 ```
+</details>
 
 #### 3. Overriding Parameters:
 
@@ -197,6 +200,9 @@ endgenerate
 * **No Assignments to `genvar`s**: You **cannot** assign values to a `genvar` inside the `generate` block. They are automatically incremented in `for` loops.
 
 ### For example, Parameterized Memory Array:
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span></summary>
+
 ```verilog
 module memory_array #(
   parameter DEPTH = 256,
@@ -216,6 +222,7 @@ module memory_array #(
 
 endmodule
 ```
+</details>
 This example creates an array of `DEPTH` memory cells, each of `WIDTH` bits.
 
 ### Conclusion Using `genvar` and `generate`
@@ -224,7 +231,9 @@ By mastering `generate` blocks and `genvars`, you can create highly parameterize
 
 ## Let's create a variable bit length Register File
 ### Step 1 &mdash; The D flip-flop with reset and enable signals:
-The `dff` module:
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: The <code>dff</code> module:</summary>
+
 ```verilog
 module dff (
   input logic clk,
@@ -245,7 +254,11 @@ module dff (
 endmodule
 ```
 
-The test bench for the `dff`
+</details>
+
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the <code>dff</code> module:</summary>
+
 ```verilog
 // Testbench to demonstrate the d_flip_flop
 module d_flip_flop_tb;
@@ -299,8 +312,13 @@ module d_flip_flop_tb;
 endmodule
 ```
 
+</details>
+
 ### Step 2 &mdash; The Register
-The `register` module:
+
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: The <code>register</code> module:</summary>
+
 ```verilog
 module register #(
   parameter WIDTH = 8 // Default width of 8 bits
@@ -332,8 +350,11 @@ module register #(
 
 endmodule
 ```
+</details>
 
-The test bench for `register`
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the <code>register</code> module:</summary>
+
 ```verilog
 // Testbench for the parameterized register
 module register_tb;
@@ -396,8 +417,12 @@ module register_tb;
 endmodule
 ```
 
+</details>
+
 ### Step 3 &mdash; The Register File
-The `register_file` module:
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: The <code>registe_file</code> module:</summary>
+
 ```verilog
 module register_file #(
   parameter DEPTH = 8,  // Number of registers (default 8)
@@ -440,8 +465,11 @@ module register_file #(
 
 endmodule
 ```
+</details>
 
-The test bench for `register_file`:
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the <code>register_file</code> module:</summary>
+
 ```verilog
 // Testbench for the parameterized register file
 module register_file_tb;
@@ -511,10 +539,14 @@ module register_file_tb;
 endmodule
 ```
 
+</details>
+
 ## How about counters?
 
 ## Simple Counter
-The `counter` module:
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: The <code>counter</code> module:</summary>
+
 ```verilog
 module counter #(
   parameter WIDTH = 8 // Default width of 8 bits
@@ -540,7 +572,11 @@ module counter #(
 endmodule
 ```
 
-The test bench for `counter`:
+</details>
+
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the <code>counter</code> module:</summary>
+
 ```verilog
 // Testbench for the counter
 module counter_tb;
@@ -608,8 +644,12 @@ module counter_tb;
 endmodule
 ```
 
+</details>
+
 ### Program Counter
-The `program_counter` module:
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: The <code>program_counter</code> module:</summary>
+
 ```verilog
 module program_counter #(
   parameter WIDTH = 8 // Default width of 8 bits
@@ -708,10 +748,14 @@ module program_counter_tb;
   end
 
 endmodule
+```
+
+</details>
 
 ## Sign Extender
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: The <code>sign_extender</code> module:</summary>
 
-The `sign_extender` module:
 ```verilog
 module sign_extender #(
   parameter IN_WIDTH = 16, // Input width (default 16 bits)
@@ -728,7 +772,11 @@ module sign_extender #(
 endmodule
 ```
 
-The test bench for `sign_extender`:
+</details>
+
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the <code>sign_extender</code> module:</summary>
+
 ```verilog
 // Testbench for sign extender
 module sign_extender_tb;
@@ -777,10 +825,14 @@ module sign_extender_tb;
 endmodule
 ```
 
-## Shift Logical Left or Right
+</details>
 
-### Shift Logical Left
-The `shift_left` module:
+## Shift Logical Left (`sll`) or Right (`slr`)
+
+### Shift Logical Left `sll`
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: The <code>shift_left</code> module:</summary>
+
 ```verilog
 module shift_left #(
   parameter WIDTH = 8, // Default width of 8 bits
@@ -795,7 +847,12 @@ module shift_left #(
 
 endmodule
 ```
-The test bench for `shift_left`:
+
+</details>
+
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the <code>shift_left</code> module:</summary>
+
 ```verilog
 // Testbench for shift left module
 module shift_left_tb;
@@ -845,6 +902,380 @@ module shift_left_tb;
 
 endmodule
 ```
+
+</details>
+
+### Shift Logical Right `slr`
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: The <code>shift_right</code> module:</summary>
+
+```verilog
+module shift_right #(
+  parameter WIDTH = 8, // Default width of 8 bits
+  parameter SHIFT_AMOUNT = 1 // Default shift amount of 1
+) (
+  input logic [WIDTH-1:0] data_in,
+  output logic [WIDTH-1:0] data_out
+);
+
+  // Logical shift right by SHIFT_AMOUNT
+  assign data_out = data_in >> SHIFT_AMOUNT;
+
+endmodule
+```
+
+</details>
+
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the <code>shift_right</code> module:</summary>
+
+```verilog
+// Testbench for shift right logical module
+module shift_right_tb;
+  logic [7:0] data_in;
+  logic [7:0] data_out;
+
+  // Instantiate the shift right logical module (default parameters)
+  shift_right srl_8bit (
+  .data_in(data_in),
+  .data_out(data_out)
+  );
+
+  // Instantiate a shift right logical module with different parameters
+  logic [15:0] data_in_16bit;
+  logic [15:0] data_out_16bit;
+  shift_right #(16, 2) srl_16bit ( // 16-bit width, shift by 2
+  .data_in(data_in_16bit),
+  .data_out(data_out_16bit)
+  );
+
+  initial begin
+    // Test cases for 8-bit shift
+    data_in = 8'h01; // 0000 0001
+    #10;
+    $display("8-bit input: %h, output: %h", data_in, data_out); // Expected: 0000 0000 (shift by 1)
+
+    data_in = 8'h80; // 1000 0000
+    #10;
+    $display("8-bit input: %h, output: %h", data_in, data_out); // Expected: 0100 0000 (shift by 1 - logical)
+
+    data_in = 8'hFF; // 1111 1111
+    #10;
+    $display("8-bit input: %h, output: %h", data_in, data_out); // Expected: 0111 1111 (shift by 1)
+
+        data_in = 8'h0F; // 0000 1111
+    #10;
+    $display("8-bit input: %h, output: %h", data_in, data_out); // Expected: 0000 0111 (shift by 1)
+
+
+    // Test cases for 16-bit shift
+    data_in_16bit = 16'h0001; // 0000 0000 0000 0001
+    #10;
+    $display("16-bit input: %h, output: %h", data_in_16bit, data_out_16bit); // Expected: 0000 0000 0000 0000 (shift by 2)
+
+    data_in_16bit = 16'h8000; // 1000 0000 0000 0000
+    #10;
+    $display("16-bit input: %h, output: %h", data_in_16bit, data_out_16bit); // Expected: 0010 0000 0000 0000 (shift by 2 - logical)
+
+        data_in_16bit = 16'hFFFF; // 1111 1111 1111 1111
+    #10;
+    $display("16-bit input: %h, output: %h", data_in_16bit, data_out_16bit); // Expected: 0011 1111 1111 1111 (shift by 2)
+
+    $finish;
+  end
+
+endmodule
+
+```
+
+</details>
+
+### Difference between Shift Logical & Shift Arithmetic
+A crucial difference between logical and arithmetic shift operations exists, particularly when dealing with **signed numbers**.
+
+ Let's break it down:
+
+#### Logical Shift:
+* **Left Logical Shift**:  Shifts all bits to the left.  Zeros are filled in on the right (least significant bit) side.  It's equivalent to multiplying by a power of 2 (if you don't shift off any significant bits).  It works the same for both signed and unsigned numbers.   
+* **Right Logical Shift**: Shifts all bits to the right. Zeros are filled in on the left (most significant bit) side.  It's used for unsigned numbers or when you don't care about preserving the sign.
+
+#### Arithmetic Shift:
+
+* **Left Arithmetic Shift**:  Behaves exactly the same as a left logical shift. Zeros are filled in from the right. It's equivalent to multiplying by a power of 2.  Works the same for signed and unsigned numbers.   
+* **Right Arithmetic Shift**:  The sign bit (most significant bit) is copied and filled in on the left. This preserves the sign of the number.  It's equivalent to dividing by a power of 2 while maintaining the sign.  **Crucially, this is different from the logical right shift.**
+
+#### Why the Difference Matters (Signed Numbers):
+
+The key difference arises **with right shifts of signed numbers**.
+
+* **Logical Right Shift**: If you have a negative number (MSb is 1) and you do a logical right shift, you'll be shifting in zeros from the left. This changes the number from negative to positive, which is usually not what you want if you're working with signed data.
+* **Arithmetic Right Shift**: The arithmetic right shift preserves the sign.  If the number is negative (MSb is 1), it fills in ones from the left, ensuring that the number remains negative after the shift. This is **essential for operations where you want to maintain the sign of the number**.
+
+| Shift Type | Left Shift |	Right Shift |
+| ---: | ---: | :--- |
+| Logical |	Zeros in from the right	| Zeros in from the left |
+| Arithmetic |	Zeros in from the right (same as logical) |	Sign bit (MSB) is copied and filled in from left |
+
+## Finite State Machines (FSM) in SystemVerilog
+
+### Mealy
+
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: A simple Mealy FSM <code>mealy_fsm</code> module:</summary>
+
+```verilog
+module mealy_fsm #(
+  parameter NUM_STATES = 4 // Example: 4 states
+) (
+  input logic clk,
+  input logic rst,
+  input logic in,
+  output logic out
+);
+
+  // Define the states (using an enum is good practice)
+  typedef enum logic [1:0] { S0 = 2'b00, S1 = 2'b01, S2 = 2'b10, S3 = 2'b11 } state_type;
+
+  state_type current_state, next_state;
+
+  // State register (sequential logic)
+  always_ff @(posedge clk) begin
+    if (rst) begin
+      current_state <= S0; // Reset to initial state (S0)
+    end else begin
+      current_state <= next_state;
+    end
+  end
+
+  // Next state logic (combinational)
+  always_comb begin
+    next_state = current_state; // Default: stay in the current state
+
+    case (current_state)
+      S0: begin
+        if (in) next_state = S1;
+      end
+      S1: begin
+        if (in) next_state = S2;
+      end
+      S2: begin
+        if (in) next_state = S3;
+      end
+      S3: begin
+        if (in) next_state = S0;
+      end
+    endcase
+  end
+
+  // Output logic (combinational - Mealy output depends on current state *and* input)
+  always_comb begin
+    out = 0; // Default output
+
+    case (current_state)
+      S0: begin
+        if (in) out = 1;
+      end
+      S1: begin
+        if (in) out = 0;
+      end
+      S2: begin
+        if (in) out = 1;
+      end
+      S3: begin
+        if (in) out = 0;
+      end
+    endcase
+  end
+
+endmodule
+```
+</details>
+
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the simple Mealy FSM <code>mealy_fsm</code> module:</summary>
+
+```verilog
+// Testbench for Mealy FSM
+module mealy_fsm_tb;
+  logic clk;
+  logic rst;
+  logic in;
+  logic out;
+
+  mealy_fsm fsm (
+  .clk(clk),
+  .rst(rst),
+  .in(in),
+  .out(out)
+  );
+
+  // Clock generation
+  initial begin
+    clk = 0;
+    forever #5 clk = ~clk;
+  end
+
+  // Test sequence
+  initial begin
+    rst = 1;
+    in = 0;
+
+    #10 rst = 0; // Release reset
+
+    in = 1; // Input 1
+    #10;
+    $display("State: %s, Input: %b, Output: %b", fsm.current_state, in, out); // Expected: S1, 1, 1
+
+    in = 1; // Input 1
+    #10;
+    $display("State: %s, Input: %b, Output: %b", fsm.current_state, in, out); // Expected: S2, 1, 0
+
+    in = 1; // Input 1
+    #10;
+    $display("State: %s, Input: %b, Output: %b", fsm.current_state, in, out); // Expected: S3, 1, 1
+
+    in = 1; // Input 1
+    #10;
+    $display("State: %s, Input: %b, Output: %b", fsm.current_state, in, out); // Expected: S0, 1, 0
+
+
+    in = 0; // Input 0
+    #10;
+    $display("State: %s, Input: %b, Output: %b", fsm.current_state, in, out); // Expected: S0, 0, 0 (No state change because input is 0)
+
+    $finish;
+  end
+
+endmodule
+```
+
+</details>
+
+### Moore
+
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: A simple Moore FSM <code>moore_fsm</code> module:</summary>
+
+```verilog
+module moore_fsm #(
+  parameter NUM_STATES = 4 // Example: 4 states
+) (
+  input logic clk,
+  input logic rst,
+  input logic in,
+  output logic out
+);
+
+  // Define the states (using an enum is good practice)
+  typedef enum logic [1:0] { S0 = 2'b00, S1 = 2'b01, S2 = 2'b10, S3 = 2'b11 } state_type;
+
+  state_type current_state, next_state;
+
+  // State register (sequential logic)
+  always_ff @(posedge clk) begin
+    if (rst) begin
+      current_state <= S0; // Reset to initial state (S0)
+    end else begin
+      current_state <= next_state;
+    end
+  end
+
+  // Next state logic (combinational)
+  always_comb begin
+    next_state = current_state; // Default: stay in the current state
+
+    case (current_state)
+      S0: begin
+        if (in) next_state = S1;
+      end
+      S1: begin
+        if (in) next_state = S2;
+      end
+      S2: begin
+        if (in) next_state = S3;
+      end
+      S3: begin
+        if (in) next_state = S0;
+      end
+    endcase
+  end
+
+  // Output logic (combinational - Moore output depends *only* on current state)
+  always_comb begin
+    out = 0; // Default output
+
+    case (current_state)
+      S0: out = 0;
+      S1: out = 1;
+      S2: out = 0;
+      S3: out = 1;
+    endcase
+  end
+
+endmodule
+```
+
+</details>
+
+<details>
+<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the simple Moore FSM <code>moore_fsm</code> module:</summary>
+
+```verilog
+// Testbench for Moore FSM
+module moore_fsm_tb;
+  logic clk;
+  logic rst;
+  logic in;
+  logic out;
+
+  moore_fsm fsm (
+  .clk(clk),
+  .rst(rst),
+  .in(in),
+  .out(out)
+  );
+
+  // Clock generation
+  initial begin
+    clk = 0;
+    forever #5 clk = ~clk;
+  end
+
+  // Test sequence
+  initial begin
+    rst = 1;
+    in = 0;
+
+    #10 rst = 0; // Release reset
+
+    in = 1; // Input 1
+    #10;
+    $display("State: %s, Input: %b, Output: %b", fsm.current_state, in, out); // Expected: S1, 1, 1
+
+    in = 1; // Input 1
+    #10;
+    $display("State: %s, Input: %b, Output: %b", fsm.current_state, in, out); // Expected: S2, 1, 0
+
+    in = 1; // Input 1
+    #10;
+    $display("State: %s, Input: %b, Output: %b", fsm.current_state, in, out); // Expected: S3, 1, 1
+
+    in = 1; // Input 1
+    #10;
+    $display("State: %s, Input: %b, Output: %b", fsm.current_state, in, out); // Expected: S0, 1, 0
+
+
+    in = 0; // Input 0
+    #10;
+    $display("State: %s, Input: %b, Output: %b", fsm.current_state, in, out); // Expected: S0, 0, 0 (No state change because input is 0)
+
+    $finish;
+  end
+
+endmodule
+```
+
+</details>
 
 ## What is Computer Architecture?
 
