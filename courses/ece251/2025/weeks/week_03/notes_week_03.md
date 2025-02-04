@@ -1,4 +1,6 @@
 # Notes for Week 3
+[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.md)
+
 # Topics
 
 1. Verilog: Parameterization; Built-in primitives; User-defined primitives; Dataflow modeling
@@ -793,7 +795,6 @@ module shift_left #(
 
 endmodule
 ```
-
 The test bench for `shift_left`:
 ```verilog
 // Testbench for shift left module
@@ -843,6 +844,7 @@ module shift_left_tb;
   end
 
 endmodule
+```
 
 ## What is Computer Architecture?
 
@@ -879,7 +881,7 @@ Every computer, from your smartphone to a supercomputer, can be conceptually bro
 
 These five components are interconnected by buses, which are sets of wires that carry data and control signals.
 
-![Five Components](./images/computer_5_parts.jpg)
+![Five Components](/courses/ece251/2025/images/computer_5_parts.jpg)
 
 
 ## The Stored Program Concept
@@ -1035,6 +1037,4 @@ The ISA defines the set of instructions that a particular processor can understa
 
 Understanding the ISA is crucial for writing efficient code, optimizing compiler design, and designing new processors.  It's the bridge between the high-level world of programming and the low-level world of hardware.
 
-
-
----
+[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.md)

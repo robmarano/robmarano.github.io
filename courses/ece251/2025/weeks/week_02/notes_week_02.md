@@ -1,5 +1,7 @@
 # Notes for Week 2
 
+[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.md)
+
 ## Topics
 
 1. Built-in primitives
@@ -17,7 +19,7 @@
 - Conditional statements (`if`, `else`, `case`).
 - Looping statements (`for`, `while`).
 - Hands-on lab
-  - Implement a simple combinational circuit using behavioral modeling. [example](./catalog/)
+  - Implement a simple combinational circuit using behavioral modeling. [example](/courses/ece251/2025/catalog/)
 
 **Advanced behavioral modeling:**
 
@@ -35,10 +37,10 @@
 
 ## Create a `2 to 1 decoder` with behavioral model
 ### Compiling, simulating, displaying
-Use [Makefile](./catalog/decoder_2to1/Makefile) for Unix building <br>
-Use [makefile.ps1](./catalog/decoder_2to1/makefile.ps1) for Windows building. <br>
+Use [Makefile](/courses/ece251/2025/catalog/decoder_2to1/Makefile) for Unix building <br>
+Use [makefile.ps1](/courses/ece251/2025/catalog/decoder_2to1/makefile.ps1) for Windows building. <br>
 ### The `2 to 1 decoder` model
-See [decoder_2to1.sv](./catalog/decoder_2to1/decoder_2to1.sv) <br>
+See [decoder_2to1.sv](/courses/ece251/2025/catalog/decoder_2to1/decoder_2to1.sv) <br>
 Notes on this circuit:
 1. Uses always_comb for combinational logic, which is more efficient than always @* in modern SystemVerilog.
 2. Includes an enable signal (en). This is crucial for practical decoders. When en is 0, both outputs are 0.
@@ -92,7 +94,7 @@ endmodule
 `endif // decoder_2to1
 ```
 ### The `2 to 1 decoder` test bench
-See [tb_decoder_2to1.sv](./catalog/decoder_2to1/tb_decoder_2to1.sv) <br>
+See [tb_decoder_2to1.sv](/courses/ece251/2025/catalog/decoder_2to1/tb_decoder_2to1.sv) <br>
 ```verilog
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -228,4 +230,6 @@ Test Case 4: en=1, sel changing, y0=1, y1=0
 tb_decoder_2to1.sv:114: $finish called at 600 (100ps)
 Opening GTKwave for component: decoder_2to1
 ```
-![decoder_2to1.png](./images/decoder_2to1.png)
+![decoder_2to1.png](/courses/ece251/2025/images/decoder_2to1.png)
+
+[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.md)
