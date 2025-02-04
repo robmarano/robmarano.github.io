@@ -57,7 +57,7 @@ See [hw-01](/courses/ece251/2025/assignments/hw-01.html)
 1. Dataflow modeling
 
 ## Topic Deep Dive
-See [notes_week_02](/courses/ece251/2025/weeks/week_01/notes_week_02.html)
+See [notes_week_02](/courses/ece251/2025/weeks/week_02/notes_week_02.html)
 
 ## Homework Assignment
 
@@ -72,7 +72,7 @@ See [hw-02.md](/courses/ece251/2025/assignments/hw-02.md)
 3. History of computer architecture and modern advancements
 
 ## Topic Deep Dive
-See [notes_week_03](/courses/ece251/2025/weeks/week_01/notes_week_03.html)
+See [notes_week_03](/courses/ece251/2025/weeks/week_03/notes_week_03.html)
 
 ## Homework Assignment
 
