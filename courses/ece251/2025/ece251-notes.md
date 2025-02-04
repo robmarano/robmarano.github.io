@@ -32,12 +32,12 @@ Follow the link above to the respective week's materials below.
 1. Modules and ports
 
 ## Topic Deep Dive
-See [notes_week_01.md](/courses/ece251/2025/weeks/week_01/notes_week_01.md)
+See [notes_week_01](/courses/ece251/2025/weeks/week_01/notes_week_01.html)
 
 ## Software Installation
 
 - Verilog
-  - Follow instructions [here](/courses/ece251/2025/installing_verilog_locally.md)
+  - Follow instructions [here](/courses/ece251/2025/installing_verilog_locally.html)
 - Build files <br>
   - Unix (MacOS, Linux)
     - [Makefile](/courses/ece251/2025/catalog/templates/Makefile)
@@ -46,7 +46,7 @@ See [notes_week_01.md](/courses/ece251/2025/weeks/week_01/notes_week_01.md)
 
 ## Homework Assignment
 
-See [hw-01.md](/courses/ece251/2025/assignments/hw-01.md)
+See [hw-01](/courses/ece251/2025/assignments/hw-01.html)
 
 # <a id="week2">Week 2 &mdash; 1/28 &mdash; Hardware Modeling &mdash; Part 2</a>
 
@@ -57,7 +57,7 @@ See [hw-01.md](/courses/ece251/2025/assignments/hw-01.md)
 1. Dataflow modeling
 
 ## Topic Deep Dive
-See [notes_week_02.md](/courses/ece251/2025/weeks/week_01/notes_week_02.md)
+See [notes_week_02](/courses/ece251/2025/weeks/week_01/notes_week_02.html)
 
 ## Homework Assignment
 
@@ -72,9 +72,9 @@ See [hw-02.md](/courses/ece251/2025/assignments/hw-02.md)
 3. History of computer architecture and modern advancements
 
 ## Topic Deep Dive
-See [notes_week_03.md](/courses/ece251/2025/weeks/week_01/notes_week_03.md)
+See [notes_week_03](/courses/ece251/2025/weeks/week_01/notes_week_03.html)
 
 ## Homework Assignment
 
-See [hw-03.md](/courses/ece251/2025/assignments/hw-03.md)
+See [hw-03](/courses/ece251/2025/assignments/hw-03.html)
 
