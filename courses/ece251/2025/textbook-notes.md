@@ -1,5 +1,5 @@
 # Course Notes
-
+[<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html)
 ## Prologue
 
 "What I hear, I forget; What I see I remember; What I do, I understand." &mdash; Confucius (551-479 B.C.)

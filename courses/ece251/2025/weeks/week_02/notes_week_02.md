@@ -1,6 +1,6 @@
 # Notes for Week 2
 
-[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.md)
+[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.html)
 
 ## Topics
 
@@ -232,4 +232,4 @@ Opening GTKwave for component: decoder_2to1
 ```
 ![decoder_2to1.png](/courses/ece251/2025/images/decoder_2to1.png)
 
-[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.md)
+[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.html)

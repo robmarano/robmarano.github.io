@@ -1,5 +1,5 @@
 # Notes for Week 1
-[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.md)
+[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.html)
 
 ## Topics
 
@@ -103,3 +103,5 @@ Bit swizzling is a fundamental technique in computer architecture and digital de
 - Delays in gate-level modeling (#delay).
 - Introduction to always blocks for procedural assignments.
 - Hands-on lab: Design a sequential circuit with custom gate delays and verify its behavior.
+
+[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.html)

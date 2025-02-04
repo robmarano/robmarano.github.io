@@ -78,3 +78,4 @@ See [notes_week_03](/courses/ece251/2025/weeks/week_01/notes_week_03.html)
 
 See [hw-03](/courses/ece251/2025/assignments/hw-03.html)
 
+[<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html)
