@@ -1,0 +1,78 @@
+`include "dff.sv"
+`timescale 1ns/100ps
+
+// Testbench to demonstrate the d_flip_flop
+module tb_dff;
+  logic clk;
+  logic rst;
+  logic enable;
+  logic d;
+  logic q;
+
+  dff dut (
+    .clk(clk),
+    .rst(rst),
+    .enable(enable),
+    .d(d),
+    .q(q)
+  );
+
+  // Clock generation
+  initial begin
+    clk = 0;
+    forever #5 clk = ~clk; // 10ns period
+  end
+
+    //
+    // ---------------- INITIALIZE TEST BENCH ----------------
+    //
+
+    initial begin : dump_variables
+        // Create a VCD file for waveform viewing
+        // for Makefile, make dump file same as module name
+        $dumpfile("dff.vcd");
+
+        // Dump all signals in the testbench and DUT
+        $dumpvars(1, dut);
+    end
+
+    /*
+    * display variables
+    */
+    initial begin: display_variables
+        // note: currently only simple signals or constant expressions may be passed to $monitor.
+        $monitor("Time=%0t, D=%0b, CLK=%0b, Q=%0b, ENABLE = %0b, RESET=%0b", $time, d, clk, q, rst, enable);
+    end
+
+    initial begin : initialize_variables
+        clk = 0;
+
+    end
+
+  // Test sequence
+  initial begin
+    d = 0;  
+    rst = 1;
+    enable = 0;
+    #10 rst = 0; // Release reset
+
+    d = 1;
+    enable = 1;
+    #10; // q should now be 1
+
+    d = 0;
+    enable = 1;
+    #10; // q should now be 0
+
+    enable = 0; // Disable the flip-flop
+    d = 1;      // Change d, but q should remain unchanged
+    #10;       // q should still be 0
+
+    enable = 1; // Enable again
+    #10;       // q should now be 1
+
+    $display("Final value of q: %b", q);
+    $finish;
+  end
+
+endmodule

@@ -1,0 +1,81 @@
+`include "register.sv"
+`timescale 1ns/100ps
+
+// Testbench for the parameterized register
+module register_tb;
+  logic clk;
+  logic rst;
+  logic enable;
+  logic [7:0] d; // 8-bit data for default instantiation
+  logic [7:0] q;
+
+  // Instantiating the register with the default width (8 bits)
+  register reg8 (
+    .clk(clk),
+    .rst(rst),
+    .enable(enable),
+    .d(d),
+    .q(q)
+  );
+
+  // Instantiating the register with a different width (16 bits)
+  logic [15:0] d16;
+  logic [15:0] q16;
+  register #( .WIDTH(16) ) reg16 ( // Parameter override
+    .clk(clk),
+    .rst(rst),
+    .enable(enable),
+    .d(d16),
+    .q(q16)
+  );
+
+
+  // Clock generation
+  initial begin
+    clk = 0;
+    forever #5 clk = ~clk;
+  end
+
+    initial begin : dump_variables
+        // Create a VCD file for waveform viewing
+        // for Makefile, make dump file same as module name
+        $dumpfile("register.vcd");
+
+        // Dump all signals in the testbench and DUT
+        $dumpvars(1, reg16,reg8);
+    end
+
+    /*
+    * display variables
+    */
+    //initial begin: display_variables
+        // note: currently only simple signals or constant expressions may be passed to $monitor.
+        //$monitor("Time=%0t, D=%0b, CLK=%0b, Q=%0b, ENABLE = %0b, RESET=%0b", $time, d, clk, q, rst, enable);
+    //end
+
+
+
+  // Test sequence
+  initial begin
+    rst = 1;
+    enable = 0;
+    d = 8'hAA; // Example data for 8-bit register
+    d16 = 16'hBEEF; // Example data for 16-bit register
+
+    #10 rst = 0;  // Release reset
+    enable = 1;
+
+    #10 d = 8'h55; // Change data for 8-bit register
+    #10 d16 = 16'hDEAD; // Change data for 16-bit register
+
+    #10 enable = 0; // Disable
+
+    #10 enable = 1; // Enable again
+
+    #10 $display("8-bit Register q: %h", q); // Should be 55
+    #10 $display("16-bit Register q16: %h", q16); // Should be DEAD
+
+    $finish;
+  end
+
+endmodule

@@ -7,6 +7,10 @@ sass:
 
 theme: jekyll-theme-primer
 
+kramdown:
+  input: GFM
+
+
 github:
   private: false
   license:

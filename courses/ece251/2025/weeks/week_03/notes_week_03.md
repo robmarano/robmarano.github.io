@@ -245,7 +245,7 @@ module dff (
 
   always_ff @(posedge clk) begin
     if (rst) begin
-      q <= 0; // Asynchronous reset
+      q <= 0; // Synchronous reset
     end else if (enable) begin
       q <= d; // Data is loaded only when enable is high
     end
