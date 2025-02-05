@@ -46,8 +46,7 @@ Once declared, you can use parameters anywhere within the module where a constan
 * Case Statements: Using parameters in case expressions.
 * Expressions: Including parameters in arithmetic and logical operations.
 
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>, For example, a parameterized `adder` using behavioral modeling:</summary>
+For example, a parameterized `adder` using behavioral modeling
 
 ```verilog
 module adder #(parameter WIDTH = 8) (
@@ -62,6 +61,9 @@ module adder #(parameter WIDTH = 8) (
 
 endmodule
 ```
+
+Using the `adder` in other modules, like a test bench.
+
 ```verilog
 // code below would be in a test bench or another module's definition.
 // Instantiating the adder with different widths:
@@ -81,7 +83,6 @@ adder adder8 ( // Using the default WIDTH = 8
   .cout(carry_out2)
 );
 ```
-</details>
 
 #### 3. Overriding Parameters:
 
@@ -200,9 +201,6 @@ endgenerate
 * **No Assignments to `genvar`s**: You **cannot** assign values to a `genvar` inside the `generate` block. They are automatically incremented in `for` loops.
 
 ### For example, Parameterized Memory Array:
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span></summary>
-
 ```verilog
 module memory_array #(
   parameter DEPTH = 256,
@@ -222,7 +220,6 @@ module memory_array #(
 
 endmodule
 ```
-</details>
 This example creates an array of `DEPTH` memory cells, each of `WIDTH` bits.
 
 ### Conclusion Using `genvar` and `generate`
@@ -231,8 +228,7 @@ By mastering `generate` blocks and `genvars`, you can create highly parameterize
 
 ## Let's create a variable bit length Register File
 ### Step 1 &mdash; The D flip-flop with reset and enable signals:
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: The <code>dff</code> module:</summary>
+The <code>dff</code> module:
 
 ```verilog
 module dff (
@@ -253,11 +249,7 @@ module dff (
 
 endmodule
 ```
-
-</details>
-
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the <code>dff</code> module:</summary>
+The test bench for the <code>dff</code> module:
 
 ```verilog
 // Testbench to demonstrate the d_flip_flop
@@ -312,12 +304,9 @@ module d_flip_flop_tb;
 endmodule
 ```
 
-</details>
-
 ### Step 2 &mdash; The Register
 
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: The <code>register</code> module:</summary>
+The <code>register</code> module:
 
 ```verilog
 module register #(
@@ -350,10 +339,7 @@ module register #(
 
 endmodule
 ```
-</details>
-
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the <code>register</code> module:</summary>
+The test bench for the <code>register</code> module:
 
 ```verilog
 // Testbench for the parameterized register
@@ -417,11 +403,9 @@ module register_tb;
 endmodule
 ```
 
-</details>
-
 ### Step 3 &mdash; The Register File
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: The <code>registe_file</code> module:</summary>
+
+The <code>register_file</code> module:
 
 ```verilog
 module register_file #(
@@ -465,10 +449,7 @@ module register_file #(
 
 endmodule
 ```
-</details>
-
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the <code>register_file</code> module:</summary>
+The test bench for the <code>register_file</code> module:
 
 ```verilog
 // Testbench for the parameterized register file
@@ -539,13 +520,10 @@ module register_file_tb;
 endmodule
 ```
 
-</details>
-
 ## How about counters?
 
 ## Simple Counter
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: The <code>counter</code> module:</summary>
+The <code>counter</code> module:
 
 ```verilog
 module counter #(
@@ -571,11 +549,7 @@ module counter #(
 
 endmodule
 ```
-
-</details>
-
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the <code>counter</code> module:</summary>
+The test bench for the <code>counter</code> module:
 
 ```verilog
 // Testbench for the counter
@@ -644,11 +618,8 @@ module counter_tb;
 endmodule
 ```
 
-</details>
-
 ### Program Counter
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: The <code>program_counter</code> module:</summary>
+The <code>program_counter</code> module:
 
 ```verilog
 module program_counter #(
@@ -750,11 +721,9 @@ module program_counter_tb;
 endmodule
 ```
 
-</details>
 
 ## Sign Extender
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: The <code>sign_extender</code> module:</summary>
+The <code>sign_extender</code> module:
 
 ```verilog
 module sign_extender #(
@@ -771,11 +740,7 @@ module sign_extender #(
 
 endmodule
 ```
-
-</details>
-
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the <code>sign_extender</code> module:</summary>
+The test bench for the <code>sign_extender</code> module:
 
 ```verilog
 // Testbench for sign extender
@@ -825,13 +790,11 @@ module sign_extender_tb;
 endmodule
 ```
 
-</details>
 
 ## Shift Logical Left (`sll`) or Right (`slr`)
 
 ### Shift Logical Left `sll`
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: The <code>shift_left</code> module:</summary>
+The <code>shift_left</code> module:
 
 ```verilog
 module shift_left #(
@@ -847,11 +810,7 @@ module shift_left #(
 
 endmodule
 ```
-
-</details>
-
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the <code>shift_left</code> module:</summary>
+The test bench for the <code>shift_left</code> module:
 
 ```verilog
 // Testbench for shift left module
@@ -903,11 +862,9 @@ module shift_left_tb;
 endmodule
 ```
 
-</details>
 
 ### Shift Logical Right `slr`
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: The <code>shift_right</code> module:</summary>
+The <code>shift_right</code> module:
 
 ```verilog
 module shift_right #(
@@ -923,11 +880,7 @@ module shift_right #(
 
 endmodule
 ```
-
-</details>
-
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the <code>shift_right</code> module:</summary>
+The test bench for the <code>shift_right</code> module:
 
 ```verilog
 // Testbench for shift right logical module
@@ -985,10 +938,9 @@ module shift_right_tb;
   end
 
 endmodule
-
 ```
 
-</details>
+
 
 ### Difference between Shift Logical & Shift Arithmetic
 A crucial difference between logical and arithmetic shift operations exists, particularly when dealing with **signed numbers**.
@@ -1018,10 +970,9 @@ The key difference arises **with right shifts of signed numbers**.
 
 ## Finite State Machines (FSM) in SystemVerilog
 
-### Mealy
+### Mealy FSM
 
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: A simple Mealy FSM <code>mealy_fsm</code> module:</summary>
+A simple Mealy FSM <code>mealy_fsm</code> module:
 
 ```verilog
 module mealy_fsm #(
@@ -1089,10 +1040,7 @@ module mealy_fsm #(
 
 endmodule
 ```
-</details>
-
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the simple Mealy FSM <code>mealy_fsm</code> module:</summary>
+The test bench for the simple Mealy FSM <code>mealy_fsm</code> module:
 
 ```verilog
 // Testbench for Mealy FSM
@@ -1149,12 +1097,9 @@ module mealy_fsm_tb;
 endmodule
 ```
 
-</details>
+### Moore FSM
 
-### Moore
-
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: A simple Moore FSM <code>moore_fsm</code> module:</summary>
+A simple Moore FSM <code>moore_fsm</code> module:</summary>
 
 ```verilog
 module moore_fsm #(
@@ -1214,11 +1159,7 @@ module moore_fsm #(
 
 endmodule
 ```
-
-</details>
-
-<details>
-<summary> <span style="color: red;"><b>click to open</b></span>: The test bench for the simple Moore FSM <code>moore_fsm</code> module:</summary>
+The test bench for the simple Moore FSM <code>moore_fsm</code> module:
 
 ```verilog
 // Testbench for Moore FSM
@@ -1274,8 +1215,6 @@ module moore_fsm_tb;
 
 endmodule
 ```
-
-</details>
 
 ## What is Computer Architecture?
 
