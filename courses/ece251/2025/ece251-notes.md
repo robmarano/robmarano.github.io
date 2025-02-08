@@ -61,7 +61,7 @@ See [notes_week_02](/courses/ece251/2025/weeks/week_02/notes_week_02.html)
 
 ## Homework Assignment
 
-See [hw-02.md](/courses/ece251/2025/assignments/hw-02.md)
+See [hw-02.md](/courses/ece251/2025/assignments/hw-02.html)
 
 # <a id="week3">Week 3 &mdash; 2/4 &mdash; Verilog; Computer Abstraction & Stored Program Concept</a>
 
