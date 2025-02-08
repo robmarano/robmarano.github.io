@@ -122,6 +122,9 @@ genvar i; // Declaring a genvar
 ```
 
 #### 2. The `generate` Block:
+[Reference-1](https://www.chipverify.com/verilog/verilog-generate-block)
+
+[Reference-2](https://fpgatutorial.com/verilog-generate/)
 
 The `generate` block encloses the code that you want to replicate or conditionally instantiate.  There are three main types of generate constructs:
 

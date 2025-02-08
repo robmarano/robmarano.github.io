@@ -13,9 +13,6 @@ module register #(
   output logic [WIDTH-1:0] q // Data output, parameterized width
 );
 
-  // Array of D flip-flops to form the register
-  logic [WIDTH-1:0] q_internal; // Internal storage for the register
-
   genvar i;
   generate
     for (i = 0; i < WIDTH; i++) begin : flip_flops
@@ -24,12 +21,10 @@ module register #(
         .rst(rst),
         .enable(enable),
         .d(d[i]),      // Connecting individual bits of d
-        .q(q_internal[i]) // Connecting individual bits of q_internal
+        .q(q[i]) // Connecting individual bits of q_internal
       );
     end
   endgenerate
-
-  assign q = q_internal; // Assign the internal storage to the output
 
 endmodule
 

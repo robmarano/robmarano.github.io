@@ -63,6 +63,9 @@ module register_file_tb;
     $display("Read Data 1 (addr 3): %h", read_data1); // Should be AA
     $display("Read Data 2 (addr 5): %h", read_data2); // Should be 55
 
+    assert (read_data1 == 8'hAA) else $error("Read data 1 mismatch!");
+    assert (read_data2 == 8'h55) else $error("Read data 2 mismatch!");
+
     $finish;
   end
 
