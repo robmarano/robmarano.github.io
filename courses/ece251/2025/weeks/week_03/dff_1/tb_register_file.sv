@@ -11,11 +11,8 @@ module register_file_tb;
   logic [7:0] write_data;
   logic write_en;
 
-  logic [2:0] read_addr1;
-  logic [7:0] read_data1;
-
-  logic [2:0] read_addr2;
-  logic [7:0] read_data2;
+  logic [2:0] read_addr;
+  logic [7:0] read_data;
 
   register_file rf (
     .clk(clk),
@@ -24,10 +21,8 @@ module register_file_tb;
     .write_addr(write_addr),
     .write_data(write_data),
     .write_en(write_en),
-    .read_addr1(read_addr1),
-    .read_data1(read_data1),
-    .read_addr2(read_addr2),
-    .read_data2(read_data2)
+    .read_addr(read_addr),
+    .read_data(read_data)
   );
 
   // Clock generation
@@ -55,16 +50,16 @@ module register_file_tb;
     write_en = 1;
     #10 write_en = 0;
 
-    read_addr1 = 3'h3;
-    read_addr2 = 3'h5;
+    #10 read_addr = 3'h3;
+    $display("Read Data 1 (addr 3): %h", read_data); // Should be AA
+    assert (read_data == 8'hAA) else $error("Read data 1 mismatch!");
 
+    #10 read_addr = 3'h5;
+    $display("Read Data 2 (addr 5): %h", read_data); // Should be 55
+    assert (read_data == 8'h55) else $error("Read data 2 mismatch!");
     #10;
 
-    $display("Read Data 1 (addr 3): %h", read_data1); // Should be AA
-    $display("Read Data 2 (addr 5): %h", read_data2); // Should be 55
 
-    assert (read_data1 == 8'hAA) else $error("Read data 1 mismatch!");
-    assert (read_data2 == 8'h55) else $error("Read data 2 mismatch!");
 
     $finish;
   end

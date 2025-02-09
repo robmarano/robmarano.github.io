@@ -13,18 +13,22 @@ module register #(
   output logic [WIDTH-1:0] q // Data output, parameterized width
 );
 
-  genvar i;
-  generate
-    for (i = 0; i < WIDTH; i++) begin : flip_flops
-      dff flip_flop_inst (
-        .clk(clk),
-        .rst(rst),
-        .enable(enable),
-        .d(d[i]),      // Connecting individual bits of d
-        .q(q[i]) // Connecting individual bits of q_internal
-      );
-    end
-  endgenerate
+    logic [WIDTH-1:0] q_internal; // Internal signal for dff outputs
+
+    generate
+        genvar i;
+        for (i = 0; i < WIDTH; i++) begin : flip_flops
+            dff flip_flops (
+            .clk(clk),
+            .rst(rst),
+            .enable(enable),
+            .d(d[i]),      // Connecting individual bits of d
+            .q(q_internal[i]) // Connecting individual bits of q_internal
+            );
+        end
+    endgenerate
+
+    assign q = q_internal; // Assign internal signal to output q
 
 endmodule
 

@@ -4,23 +4,19 @@
 `include "register.sv"
 
 module register_file
-#(
+    #(
     parameter DEPTH = 8,  // Number of registers (default 8)
     parameter WIDTH = 8   // Width of each register (inherited or specified)
-) (
+    ) (
     input logic clk,
     input logic rst,
     input logic enable,
 
-    input logic [$log2(DEPTH)-1:0] write_addr, // Write address
+    input logic [$clog2(DEPTH)-1:0] write_addr, // Write address
     input logic [WIDTH-1:0] write_data,      // Write data
     input logic write_en,                  // Write enable
-
-    input logic [$log2(DEPTH)-1:0] read_addr1, // Read address 1
-    output logic [WIDTH-1:0] read_data1,     // Read data 1
-
-    input logic [$log2(DEPTH)-1:0] read_addr2, // Read address 2
-    output logic [WIDTH-1:0] read_data2      // Read data 2
+    input logic [$clog2(DEPTH)-1:0] read_addr, // Read address
+    output logic [WIDTH-1:0] read_data     // Read data
 );
 
     // Array of registers
@@ -30,21 +26,23 @@ module register_file
 
     genvar i;
     generate
-        for (i = 0; i < DEPTH; i++) begin : register_instances
-            register_instances.registers[i] (
+        for (i = 0; i < DEPTH; i++) begin
+            register #( .WIDTH(WIDTH) ) registers (
                 .clk(clk),
                 .rst(rst),
-                .enable(enable && write_en && (write_addr == i)), // Enable only when write is enabled and address matches
-                .d(write_data), // Conditional write
+                .enable(enable && write_en && (write_addr == i)), // Simplified enable logic
+                .d(write_data),
                 .q() // Output not directly connected within the array
             );  
         end
     endgenerate
+                // .enable(enable),
+                // .d( (write_en && (write_addr == i)) ? write_data : ZERO ), // Conditional write
 
-    // Read logic (combinational) - Two independent read ports
-    assign read_data1 = registers[read_addr1].q; // Hierarchical access to register output
-    assign read_data2 = registers[read_addr2].q; // Hierarchical access to register output
-
+    logic [WIDTH-1:0] read_data_internal; // Intermediate signal
+    always_ff @(posedge clk) begin
+        read_data_internal <= registers[read_addr].q; // Indexing with read_addr
+    end
 endmodule
 
 `endif
