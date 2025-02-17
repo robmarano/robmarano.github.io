@@ -75,7 +75,22 @@ See [hw-02.md](/courses/ece251/2025/assignments/hw-02.html)
 See [notes_week_03](/courses/ece251/2025/weeks/week_03/notes_week_03.html)
 
 ## Homework Assignment
+* Read sections Chap 2.1-2.7 in the [textbook handout for chapter 2](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/Ed8wNobvQCVPozj701I4bOABAZtXH7rlL6rjFgUkqp_0Vg?e=BPbInD), along with my summary notes handout [Prof's Notes on Comp Arch](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EaFcET5zxcBHsS529aI4YmEBnUJnbvjWv2R6XsQfFwzC5w?e=2BFfUf)
 
-See [hw-03](/courses/ece251/2025/assignments/hw-03.html)
+# <a id="week4">Week 4 &mdash; 2/11 &mdash; Instructions &mdash;The Language & Grammar of Computers</a>
+
+## Topics
+
+1. Recap: Stored Program Concept
+2. Recap: History of computer architecture and modern advancements
+3. The alphabet, vocabulary, grammar of computers
+4. Introducing the instructions of a computer delivered by the architecture
+
+## Topic Deep Dive
+See [notes_week_04](/courses/ece251/2025/weeks/week_04/notes_week_04.html)
+
+## Homework Assignment
+* Read sections Chap 2.1-2.7 in my notes handout [Prof's Notes on Comp Arch](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EaFcET5zxcBHsS529aI4YmEBnUJnbvjWv2R6XsQfFwzC5w?e=2BFfUf)
+
 
 [<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html)

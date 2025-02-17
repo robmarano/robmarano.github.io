@@ -98,8 +98,8 @@ module tb_register_file;
     * display variables
     */
     initial begin: display_variables
-        // $monitor($time,"ns clk=%b rst=%b enable=%b write_addr=%h write_data=%h write_en=%b read_addr=%h read_data=%h",
-        //     clk, rst, enable, write_addr, write_data, write_en, read_addr, read_data);
+        $monitor($time,"ms clk=%b rst=%b enable=%b write_addr=%h write_data=%h write_en=%b read_addr=%h read_data=%h",
+            clk, rst, enable, write_addr, write_data, write_en, read_addr, read_data);
     end
 
     // // Correct way to probe registers: use a procedural block with a loop and generate block
