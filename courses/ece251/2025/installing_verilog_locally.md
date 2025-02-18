@@ -1,7 +1,7 @@
 # Using Verilog Locally On Your Computer
 
-[<- back to notes](/courses/ece251/2025/ece251-notes.html) ;
-[<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html)
+[<- back to notes](/courses/ece251/2025/ece251-notes.md) ;
+[<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.md)
 
 ---
 
@@ -52,7 +52,7 @@ MachinePolicy       Undefined
 ## Get source code, compile and install on your Windows PC
 
 - if you're bold and have time on your hands (read this as doing this after the course)
-- following these [directions](https://steveicarus.github.io/iverilog/usage/installation.html)
+- following these [directions](https://steveicarus.github.io/iverilog/usage/installation.md)
 
 # MacOS and Icarus Verilog
 
