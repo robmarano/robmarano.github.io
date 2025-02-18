@@ -21,8 +21,7 @@ endif
 #SRC = $(shell ls *.sv)
 SRC = $(wildcard *.sv)
 SIM_ARGS=+a=3 +b=2 +s=0
-TBOUTPUT = tb_$(COMPONENT).vcd	# THIS NEEDS TO MATCH THE OUTPUT FILE
-									# FROM YOUR TESTBENCH
+TBOUTPUT = $(COMPONENT).vcd	# THIS NEEDS TO MATCH THE OUTPUT FILE FROM YOUR TESTBENCH
 ###############################################################################
 # BE CAREFUL WHEN CHANGING ITEMS BELOW THIS LINE
 ###############################################################################
@@ -47,7 +46,7 @@ simulate: $(COMPONENT).vvp
 	@echo "Simulating component: $(COMPONENT)"
 	$(SIMULATOR) $(SFLAGS) $(COMPONENT).vvp $(SOUTPUT)
 
-display: $(TBOUTPUT)
+display:
 	@echo "Opening GTKwave for component: $(COMPONENT)"
 	$(VIEWER) $(TBOUTPUT) &
 

@@ -74,23 +74,36 @@ See [hw-02.md](/courses/ece251/2025/assignments/hw-02.html)
 ## Topic Deep Dive
 See [notes_week_03](/courses/ece251/2025/weeks/week_03/notes_week_03.html)
 
-## Homework Assignment
+## Reading Assignment
 * Read sections Chap 2.1-2.7 in the [textbook handout for chapter 2](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/Ed8wNobvQCVPozj701I4bOABAZtXH7rlL6rjFgUkqp_0Vg?e=BPbInD), along with my summary notes handout [Prof's Notes on Comp Arch](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EaFcET5zxcBHsS529aI4YmEBnUJnbvjWv2R6XsQfFwzC5w?e=2BFfUf)
 
-# <a id="week4">Week 4 &mdash; 2/11 &mdash; Instructions &mdash;The Language & Grammar of Computers</a>
+# <a id="week4">Week 4 &mdash; 2/11 &mdash; Instructions &mdash;The Language & Grammar of Computers &mdash; Part 1</a>
 
 ## Topics
 
-1. Recap: Stored Program Concept
-2. Recap: History of computer architecture and modern advancements
+1. Recap: Stored Program Concept, and the history of computer architecture and modern advancements
 3. The alphabet, vocabulary, grammar of computers
-4. Introducing the instructions of a computer delivered by the architecture
+   1. `1`s and `0`s as the **alphabet**
+   2. compute and memory **instructions** as the **vocabulary**
+   3. **implementation** of compute and memory instructions as the **grammar**
+4. Introducing the **instructions** of a computer delivered by the architecture
+   1. Operations of the computer hardware
+   2. Operands of the computer hardware
+   3. Signed and unsigned numbers
+   4. Representing instructions in the computer
+   5. Logical operations 
 
 ## Topic Deep Dive
 See [notes_week_04](/courses/ece251/2025/weeks/week_04/notes_week_04.html)
 
-## Homework Assignment
-* Read sections Chap 2.1-2.7 in my notes handout [Prof's Notes on Comp Arch](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EaFcET5zxcBHsS529aI4YmEBnUJnbvjWv2R6XsQfFwzC5w?e=2BFfUf)
+## Reading Assignment
+* Read sections Chap 2.1-2.7 in my notes handout [Prof's Notes on Comp Arch](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EaFcET5zxcBHsS529aI4YmEBnUJnbvjWv2R6XsQfFwzC5w?e=2BFfUf), and these notes follow exactly from the [MIPS textbook's](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EfW8ouRjnFNNn7E7K5rvkWoBPWU0tDLednaJ95eaJWXx8Q?e=Ar9Pmf) Chapter 2 and its 22 sections. I suggest reading the textbook sections too.
+
+# <a id="week5">Week 5 &mdash; 2/18 &mdash; Instructions &mdash;The Language & Grammar of Computers &mdash; Part 2</a>
+
+## Topics
+1. Instructions for making decisions
+2. Supporting procedures (aka functions) in computer hardware
 
 
 [<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html)
