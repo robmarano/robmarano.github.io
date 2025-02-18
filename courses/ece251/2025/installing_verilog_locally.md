@@ -67,3 +67,7 @@ That seems to be the least painful. macOS people will probably have the easiest 
 # Linux and Icarus Verilog & GTKwave
 
 If you're using Debian/Ubuntu Linux, run `sudo apt update && sudo apt install -y iverilog`. To install GTKWave, `apt install gtkwave`.
+
+
+[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.md) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.md)
+

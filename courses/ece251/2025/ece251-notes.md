@@ -106,4 +106,4 @@ See [notes_week_04](/courses/ece251/2025/weeks/week_04/notes_week_04.html)
 2. Supporting procedures (aka functions) in computer hardware
 
 
-[<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html)
+[<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.md)

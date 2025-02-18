@@ -49,3 +49,5 @@ These advancements help to improve the performance of modern computers, but the 
 ### In Conclusion
 The stored-program concept, a brainchild of John von Neumann, revolutionized computing by allowing both data and instructions to reside in the same memory. This innovation enabled computers to become programmable, flexible, and capable of performing a wide range of tasks. By treating instructions as data, it paved the way for the development of software, operating systems, and ultimately, the digital world we have today. Modern computers, from smartphones to supercomputers, owe their versatility and power to this fundamental principle.
 
+
+[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.md) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.md)

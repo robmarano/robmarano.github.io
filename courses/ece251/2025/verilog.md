@@ -2,7 +2,7 @@
 
 [<- back to notes](/courses/ece251/2025/
 ece251-notes.html) ;
-[<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html)
+[<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.md)
 
 ---
 
@@ -1240,3 +1240,7 @@ See [Common Mistakes handout](./Handout.verilog4.mistakes.pdf)
 - There are no module instantiations in `always` blocks
 - Do not set the same `reg` in multiple `always` blocks
 - see handout
+
+
+[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.md) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.md)
+

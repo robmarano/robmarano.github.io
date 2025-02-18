@@ -42,3 +42,7 @@ Do your work on your specific GitHub Classroom repo. Remember to just add the Gi
 
 ### Problem 6
 #### n-bit register built from DFF, with inputs clock, reset, enable
+
+
+
+[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.md) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.md)
