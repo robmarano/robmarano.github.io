@@ -1,6 +1,6 @@
 # ECE 251 Spring 2025 Weekly Course Notes
 
-[<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html)
+[<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.md)
 
 ---
 

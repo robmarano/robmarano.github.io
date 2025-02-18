@@ -1,5 +1,5 @@
 # Notes for Week 4
-[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.html)
+[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.md) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.md)
 
 # Topics
 
