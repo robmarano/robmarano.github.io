@@ -8,8 +8,8 @@ exclude:
 sass:
   style: :compressed
 
-#theme: jekyll-theme-primer
-theme: jekyll-theme-cayman
+theme: jekyll-theme-primer
+#theme: jekyll-theme-cayman
 
 # kramdown:
 #   input: GFM
