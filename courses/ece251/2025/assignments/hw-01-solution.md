@@ -1,8 +1,9 @@
 # Assignment 1
 
-<5 points>
-### Homework Pointing Scheme
-
+< 5 points >
+<details>
+<summary>Homework Pointing Scheme</summary>
+{% highlight markdown %}
 | Total points | Explanation                                                                                                                                                                       |
 | -----------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |            0 | Not handed in                                                                                                                                                                     |
@@ -11,6 +12,9 @@
 |            3 | Handed in on time, each problem answered a boxed answer, each problems answered with a clearly worked through solution, and **less than majority** of problems answered correctly |
 |            4 | Handed in on time, **majority** of problems answered correctly, each solution boxed clearly, and each problem fully worked through                                                |
 |            5 | Handed in on time, every problem answered correctly, every solution boxed clearly, and every problem fully worked through.    
+{% endhighlight %}
+</details>
+
 
 ## Problem Set
 

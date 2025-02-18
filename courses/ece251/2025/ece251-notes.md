@@ -46,7 +46,7 @@ See [notes_week_01](/courses/ece251/2025/weeks/week_01/notes_week_01.html)
 
 ## Homework Assignment
 
-See [hw-01](/courses/ece251/2025/assignments/hw-01.html)
+See [hw-01](/courses/ece251/2025/assignments/hw-01.html); [solution](/courses/ece251/2025/assignments/hw-01-solution.html)
 
 # <a id="week2">Week 2 &mdash; 1/28 &mdash; Hardware Modeling &mdash; Part 2</a>
 
@@ -61,7 +61,7 @@ See [notes_week_02](/courses/ece251/2025/weeks/week_02/notes_week_02.html)
 
 ## Homework Assignment
 
-See [hw-02.md](/courses/ece251/2025/assignments/hw-02.html)
+See [hw-02.md](/courses/ece251/2025/assignments/hw-02.html); [solution](/courses/ece251/2025/assignments/hw-02-solution.html)
 
 # <a id="week3">Week 3 &mdash; 2/4 &mdash; Verilog; Computer Abstraction & Stored Program Concept</a>
 
@@ -98,12 +98,29 @@ See [notes_week_04](/courses/ece251/2025/weeks/week_04/notes_week_04.html)
 
 ## Reading Assignment
 * Read sections Chap 2.1-2.7 in my notes handout [Prof's Notes on Comp Arch](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EaFcET5zxcBHsS529aI4YmEBnUJnbvjWv2R6XsQfFwzC5w?e=2BFfUf), and these notes follow exactly from the [MIPS textbook's](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EfW8ouRjnFNNn7E7K5rvkWoBPWU0tDLednaJ95eaJWXx8Q?e=Ar9Pmf) Chapter 2 and its 22 sections. I suggest reading the textbook sections too.
+* Follow along with our [textbook's Chapter 2 slide deck](/courses/ece251/2025/weeks/week_05/Patterson6e_MIPS_Ch02_PPT.ppt)
+
 
 # <a id="week5">Week 5 &mdash; 2/18 &mdash; Instructions &mdash;The Language & Grammar of Computers &mdash; Part 2</a>
 
 ## Topics
 1. Instructions for making decisions
 2. Supporting procedures (aka functions) in computer hardware
+3. Begin converting our instructions to control logic for computation and memory storage.
+
+## Topic Deep Dive
+See [notes_week_05](/courses/ece251/2025/weeks/week_05/notes_week_05.html)
+
+## Software Installation
+* Install the MIPS emulator [SPIM](https://spimsimulator.sourceforge.net/) on your computer, either the SPIM GUI called "QtSPIM" or the CLI program `spim`. Here is the installation [for the GUI program](/courses/ece251/2025/weeks/week_05/Installing%20the%20SPIM%20Simulator%20on%20Your%20Laptop.pdf) and [for the CLI program](/courses/ece251/2025/weeks/week_05/SPIM_command-line.pdf)
+
+## Reading Assignment
+* Read [Prof's CPU Design Guide](/courses/ece251/2025/weeks/week_05/CPU%20Design%20Guide.pdf)
+* Read sections Chap 2.7 through Chap 2.10 in my notes handout [Prof's Notes on Comp Arch](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EaFcET5zxcBHsS529aI4YmEBnUJnbvjWv2R6XsQfFwzC5w?e=2BFfUf), and these notes follow exactly from the [MIPS textbook's](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EfW8ouRjnFNNn7E7K5rvkWoBPWU0tDLednaJ95eaJWXx8Q?e=Ar9Pmf) Chapter 2 and its 22 sections. I suggest reading the textbook sections too.
+* Read Chapters 3 and 4 in [Introduction to MIPS Assembly Language Programming](/courses/ece251/2025/weeks/week_05/Introduction%20To%20MIPS%20Assembly%20Language%20Programming.pdf)
+* Continue to follow along with our [textbook's Chapter 2 slide deck](/courses/ece251/2025/weeks/week_05/Patterson6e_MIPS_Ch02_PPT.ppt)
 
 
-[<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.md)
+NOTE: Check our [shared Teams drive](https://cooperunion.sharepoint.com/:f:/s/Section_ECE-251-A-2025SP/EujI9o0hInpGmHtZhWVN_PIBCw4GRYTWunYcmy94tx3LrA?e=BVZ9Uy) for these files too as well as the installation for our software.
+
+[<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html)
