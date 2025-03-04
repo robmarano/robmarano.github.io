@@ -27,46 +27,23 @@ Classes will be decided week-to-week.
 Follow the link above to the respective week's materials below.
 <br>
 
-# <a id="week01">Week 01 &mdash; Intro; Centralized vs distributed</a>
+# <a id="week05">Week 05 &mdash; Multi-processing & network programming</a>
 
 ## Topics
 
-- Centralized computing and storage systems
-- Distributed computing and storage systems
-- Assessing centralized vs distributed systems along key feature characteristics
-  - Architecture
-  - Scalability
-  - Fault tolerance
-  - Complexity
-  - Cost
-  - Data Management
-  - Security
+1. Network Programming
 
-### Table contrasting between centralized and distributed systems.
+## Deep Dive into Topics
 
-|             Feature | Centralized Systems           | Distributed Systems                                       |
-| ------------------: | :---------------------------- | :-------------------------------------------------------- |
-|    **Architecture** | Single process or machine     | Multiple processes or interconnected machines             |
-|     **Scalability** | Limited                       | High                                                      |
-| **Fault tolerance** | Low                           | High                                                      |
-|      **Complexity** | Low                           | High                                                      |
-|            **Cost** | Can be lower initially        | Can be higher initially, but more cost-effective at scale |
-| **Data Management** | Simpler                       | More complex                                              |
-|        **Security** | Single point of vulnerability | Multiple points of vulnerability                          |
+### Network Programming
 
-## Software Installation
+Chapter 4 of "Distributed Systems" addresses communication protocols and models crucial for distributed systems [1]. It emphasizes structuring protocols into layers and explores communication models such as Remote Procedure Call (RPC) and Message-Oriented Middleware (MOM). The chapter also discusses multicasting [1].
 
-Setup your computer for this class
+Key areas covered include:
 
-1. Install Java 21 Development Kit (JDK); I prefer [Amazon's Corretto](https://docs.aws.amazon.com/corretto/latest/corretto-21-ug/downloads-list.html)
-2. Install [Apache Maven](https://maven.apache.org/download.cgi)
-3. Install the following integrated development environment ([Jetbrains IntelliJ](https://www.jetbrains.com/community/education/#students) - get full version with your student email; Visual Code)
-4. Install the following systems: [Docker Desktop](https://www.docker.com/get-started/); [Minikube (Kubernetes cluster for your computer)](https://minikube.sigs.k8s.io/docs/); [Helm](https://helm.sh/)
-
-## Homework Assignment
-
-1. Review our independent study [our course's syllabus](./ece465-ind-study-syllabus-spring-2025.html). This course is to learn theory and immediately put it into practice building a distributed application (cloud service).
-2. Read ["Basic Concepts You Need to Know about Building Large-Scale Distributed Systems"](https://archive.is/6rS63)
-3. Read ["The Free Lunch Is Over: A Fundamental Turn Toward Concurrency in Software"](https://archive.is/oI2g0)
-4. Sign up for the [free electronic copy of the textbook "Distributed Systems - 4th Edition"](https://www.distributed-systems.net/index.php/books/ds4/ds4-ebook/) by van Steen and Tanenbaum
-5. Read Chapter 1 of the textbook, pay close attention to the design goals.
+Foundations of Communication: The chapter explains the importance of communication in distributed systems, highlighting the need for processes to adhere to protocols [1, 2]. It references the OSI model, which divides communication into seven layers, each offering specific services to the layer above [3]. The physical layer focuses on transmitting bits, while the data link layer deals with error-free transmission [4]. The network layer handles routing, and the transport layer provides reliable data transfer [4].
+Types of Communication: It distinguishes between connection-oriented and connectionless services [3]. The chapter also categorizes communication based on synchronization (synchronous vs. asynchronous) and persistence (persistent vs. transient) [5].
+Remote Procedure Call (RPC): RPC aims to hide the intricacies of message passing and is suited for client-server applications [1]. The steps involved in RPC execution include client stub activation, message construction, message transmission, server stub activation, procedure execution, and result return [6]. The chapter also mentions asynchronous RPCs, where the client continues processing without waiting for immediate results, using callbacks for later notification [7]. Multicast RPC is introduced as sending an RPC request to a group of servers [8].
+Message-Oriented Communication: This section discusses sockets as communication endpoints for applications [9]. It explains message-queuing systems, including the Advanced Message Queuing Protocol (AMQP), emphasizing loose coupling where senders and receivers don't need to be active simultaneously [10].
+Multicast Communication: The chapter covers sending data to multiple receivers [1]. It discusses application-level tree-based multicasting, flooding-based multicasting, and gossip-based data dissemination [11]. Application-level multicasting involves constructing an overlay network for efficient data distribution, but the selection of participating nodes might not consider performance metrics [12]. Gossip-based dissemination relies on epidemic behavior for information propagation, lacking a central coordination component [13].
+Gossip-based data dissemination: This approach uses epidemic behavior to rapidly spread information among a large collection of nodes using only local information [13].
