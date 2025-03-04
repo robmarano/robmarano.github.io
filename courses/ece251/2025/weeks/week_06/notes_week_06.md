@@ -1,4 +1,4 @@
-# Notes for Week 6
+# Notes for Week 6 &mdash; Intro to Assembly Language Programming — MIPS CPU; Part 1
 
 [ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.html)
 
@@ -14,14 +14,14 @@ These [class notes focus on on MIPS assembly programming](/courses/ece251/mips/m
 
 Your best friend here, [MIPS Green Card reference card](/courses/ece251/books/patterson-hennessey/MIPS_Green_Sheet.pdf).
 
-## The building blocks of a programming language
+# The building blocks of a programming language
 
 1. Variables
 2. Data types
 3. Operators
 4. Control flow (if/else statements, loops)
 
-### Variables
+## Variables
 
 In assembly language, general purpose registers (GPRs) serve as variables.
 
@@ -40,7 +40,7 @@ In assembly language, general purpose registers (GPRs) serve as variables.
 |   $fp    |     30     | Frame Pointer                                         |                Yes                 |
 |   Sra    |     31     | Return Address                                        |                 No                 |
 
-### Data Types
+## Data Types
 
 On the MIPS processor, you can program in bytes, halfwords, or words, where a word is 32 bits. Check the [MIPS Green Card reference card](/courses/ece251/books/patterson-hennessey/MIPS_Green_Sheet.pdf) for loading and saving these data types from and to memory, respectively.
 
@@ -57,7 +57,7 @@ The MIPS CPU supports the following key memory operations:
 
 Note: `SignExtImm= { 16{immediate[15]}, immediate }`, `ZeroExtImm = { 16{1b'0}, immediate }`
 
-### Operators
+## Operators
 
 The MIPS CPU supports the following key operators for compute operations:
 
@@ -83,7 +83,7 @@ The MIPS CPU supports the following key operators for compute operations:
 |            |       Move        | Move from Hi                           |  `mfhi`  |           `R[rd] = Hi`           |
 |            |                   | Move from Lo                           |  `mflo`  |           `R[rd] = Lo`           |
 
-### Control flow (if/else statements, loops)
+## Control flow (if/else statements, loops)
 
 | Control Flow |         Instruction Name         | Mnemonic |                Operation                |
 | :----------: | :------------------------------: | :------: | :-------------------------------------: |

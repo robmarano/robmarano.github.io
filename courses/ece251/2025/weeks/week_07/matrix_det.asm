@@ -1,7 +1,7 @@
 .data
- matrix: .word 1, 2, 3, 4, 5, 6, 7, 8, 9 # Example matrix
+#matrix: .word 1, 2, 3, 4, 5, 6, 7, 8, 9 # Example matrix
 #matrix: .word 1, 5, 9, 2, 6, 10, 3, 7, 11
-#matrix: .word 1, 0, 0, 0, 1, 0, 0, 0, 1
+matrix: .word 1, 0, 0, 0, 1, 0, 0, 0, 1
 #matrix: .word 1, 5, 9, 2, 6, 10, 3, 7, 11
 #matrix: .word 4, 2, 7, 6, 9, 1, 3, 5, 8
 determinant_str: .asciiz "Determinant: "
@@ -79,7 +79,7 @@ determinant_calculation:
     # Calculate (dh - eg)
     mul $s6, $t4, $t8 # dh
     mul $s7, $t5, $t7 # eg
-    sub $s8, $s6, $s7 # dh - eg
+    sub $t8, $s6, $s7 # dh - eg
 
     # Calculate a(ei - fh)
     mul $t0, $t1, $s2
@@ -89,7 +89,7 @@ determinant_calculation:
     sub $t1, $zero, $t1
 
     # Calculate c(dh - eg)
-    mul $t2, $t3, $s8
+    mul $t2, $t3, $t8
 
     # Calculate determinant
     add $v1, $t0, $t1
