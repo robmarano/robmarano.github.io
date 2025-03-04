@@ -61,27 +61,27 @@ Note: `SignExtImm= { 16{immediate[15]}, immediate }`, `ZeroExtImm = { 16{1b'0}, 
 
 The MIPS CPU supports the following key operators for compute operations:
 
-| Processor  | General Operation | Instruction Name                       | Mnemonic |             Operation             |
-| :--------: | :---------------: | :------------------------------------- | :------: | :-------------------------------: |
-|    Core    |      Logical      | And                                    |  `and`   |      `R[rd] = R[rs] & R[rt]`      |
-|            |                   | And immediate                          |  `andi`  |   `R[rt] = R[rs] & ZeroExtImm`    |
-|            |                   | Nor                                    |  `nor`   |      `R[rd] =~(R[rs] R[rt])`      |
-|            |                   | Or                                     |   `or`   |       `R[rd] = R[rs] R[rt]`       |
-|            |                   | Or immediate                           |  `ori`   |   `R[rt] = R[rs] \| ZeroExtImm`   |
-|            |                   | Shift left logical                     |  `sll`   |     ` R[rd] = R[rt] << shamt`     |
-|            |                   | Shift right logical                    |  `srl`   |     `R[rd] = R[rt] >> shamt`      |
-|            |        Add        | Add signed words                       |  `add`   |      `R[rd] = R[rs] + R[rt]`      |
-|            |                   | Add signed word and halfword immediate |  `addi`  |   `R[rt] = R[rs] + SignExtImm`    |
-|            |                   | Add immediate unsigned                 | `addiu`  |   `R[rt] = R[rs] + SignExtImm`    |
-|            |                   | Add unsigned words                     |  `addu`  |      `R[rd] = R[rs] + R[rt]`      |
-|            |     Subtract      | Subtract signed words                  |  `sub`   |      `R[rd] = R[rs] - R[rt]`      |
-|            |                   | Subtract unsigned words                |  `subu`  |      `R[rd] = R[rs] - R[rt]`      |
-| Arithmetic |     Multiply      | Multiply signed words                  |  `mult`  |     `{Hi,Lo} = R[rs]* R[rt]`      |
-|            |                   | Multiply unsigned words                | `multu`  |     `{Hi,Lo} = R[rs]* R[rt]`      |
-|            |      Divide       | Divide signed words                    |  `div`   | ` Lo=R[rs]/R[rt]; Hi=R[rs]%R[rt]` |
-|            |                   | Divide unsigned words                  |  `divu`  | ` Lo=R[rs]/R[rt]; Hi=R[rs]%R[rt]` |
-|            |       Move        | Move from Hi                           |  `mfhi`  |           ` R[rd] = Hi`           |
-|            |                   | Move from Lo                           |  `mflo`  |        `R[rd] = Lo      `         |
+| Processor  | General Operation | Instruction Name                       | Mnemonic |            Operation             |
+| :--------: | :---------------: | :------------------------------------- | :------: | :------------------------------: |
+|    Core    |      Logical      | And                                    |  `and`   |     `R[rd] = R[rs] & R[rt]`      |
+|            |                   | And immediate                          |  `andi`  |   `R[rt] = R[rs] & ZeroExtImm`   |
+|            |                   | Nor                                    |  `nor`   |     `R[rd] =~(R[rs] R[rt])`      |
+|            |                   | Or                                     |   `or`   |      `R[rd] = R[rs] R[rt]`       |
+|            |                   | Or immediate                           |  `ori`   |  `R[rt] = R[rs] \| ZeroExtImm`   |
+|            |                   | Shift left logical                     |  `sll`   |     `R[rd] = R[rt] << shamt`     |
+|            |                   | Shift right logical                    |  `srl`   |     `R[rd] = R[rt] >> shamt`     |
+|            |        Add        | Add signed words                       |  `add`   |     `R[rd] = R[rs] + R[rt]`      |
+|            |                   | Add signed word and halfword immediate |  `addi`  |   `R[rt] = R[rs] + SignExtImm`   |
+|            |                   | Add immediate unsigned                 | `addiu`  |   `R[rt] = R[rs] + SignExtImm`   |
+|            |                   | Add unsigned words                     |  `addu`  |     `R[rd] = R[rs] + R[rt]`      |
+|            |     Subtract      | Subtract signed words                  |  `sub`   |     `R[rd] = R[rs] - R[rt]`      |
+|            |                   | Subtract unsigned words                |  `subu`  |     `R[rd] = R[rs] - R[rt]`      |
+| Arithmetic |     Multiply      | Multiply signed words                  |  `mult`  |     `{Hi,Lo} = R[rs]* R[rt]`     |
+|            |                   | Multiply unsigned words                | `multu`  |     `{Hi,Lo} = R[rs]* R[rt]`     |
+|            |      Divide       | Divide signed words                    |  `div`   | `Lo=R[rs]/R[rt]; Hi=R[rs]%R[rt]` |
+|            |                   | Divide unsigned words                  |  `divu`  | `Lo=R[rs]/R[rt]; Hi=R[rs]%R[rt]` |
+|            |       Move        | Move from Hi                           |  `mfhi`  |           `R[rd] = Hi`           |
+|            |                   | Move from Lo                           |  `mflo`  |           `R[rd] = Lo`           |
 
 ### Control flow (if/else statements, loops)
 
