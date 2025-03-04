@@ -154,7 +154,7 @@ See [notes_week_06](/courses/ece251/2025/weeks/week_06/notes_week_06.html)
 
 ## Topic Deep Dive
 
-See [notes_week_07](/courses/ece251/2025/weeks/week_06/notes_week_07.html)
+See [notes_week_07](/courses/ece251/2025/weeks/week_07/notes_week_07.html)
 
 ## Reading Assignment
 
