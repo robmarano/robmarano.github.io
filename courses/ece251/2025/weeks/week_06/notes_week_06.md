@@ -24,20 +24,21 @@ Your best friend here, [MIPS Green Card reference card](/courses/ece251/books/pa
 ### Variables
 
 In assembly language, general purpose registers (GPRs) serve as variables.
-| GPR Name | GPR Number | Use | Preserved Across a Procedure Call? |
-| :---: | :---: | :--- | :---: |
-|$zero | 0 | The Constant Value 0 | n/a |
-|$at | 1 | Assembler Temporary | No |
-|$v0-$v1 | 2-3 | No |
-|$a0-$a3 | 4-7 | Arguments | No |
-|$t0-$t7 | 8-15 | Temporaries | No |
-|$s0-$s7 | 16-23 | Saved Temporaries | Yes |
-|$t8-$t9 | 24-25 | Temporaries | No |
-|$k0-$k1 | 26-27 | Reserved for OS Kernel | No |
-|$gp | 28 | Global Pointer | Yes| 
-|$sp | 29 | Stack Pointer | Yes |
-|$fp | 30 | Frame Pointer | Yes |
-|Sra |31 | Return Address | No |
+
+| GPR Name | GPR Number | Use                                                   | Preserved Across a Procedure Call? |
+| :------: | :--------: | :---------------------------------------------------- | :--------------------------------: |
+|  $zero   |     0      | The Constant Value 0                                  |                n/a                 |
+|   $at    |     1      | Assembler Temporary                                   |                 No                 |
+| $v0-$v1  |    2-3     | Values for Function Results and Expression Evaluation |                 No                 |
+| $a0-$a3  |    4-7     | Arguments                                             |                 No                 |
+| $t0-$t7  |    8-15    | Temporaries                                           |                 No                 |
+| $s0-$s7  |   16-23    | Saved Temporaries                                     |                Yes                 |
+| $t8-$t9  |   24-25    | Temporaries                                           |                 No                 |
+| $k0-$k1  |   26-27    | Reserved for OS Kernel                                |                 No                 |
+|   $gp    |     28     | Global Pointer                                        |                Yes                 |
+|   $sp    |     29     | Stack Pointer                                         |                Yes                 |
+|   $fp    |     30     | Frame Pointer                                         |                Yes                 |
+|   Sra    |     31     | Return Address                                        |                 No                 |
 
 ### Data Types
 
@@ -80,8 +81,7 @@ The MIPS CPU supports the following key operators for compute operations:
 |            |      Divide       | Divide signed words                    |  `div`   | ` Lo=R[rs]/R[rt]; Hi=R[rs]%R[rt]` |
 |            |                   | Divide unsigned words                  |  `divu`  | ` Lo=R[rs]/R[rt]; Hi=R[rs]%R[rt]` |
 |            |       Move        | Move from Hi                           |  `mfhi`  |           ` R[rd] = Hi`           |
-|            |                   | Move from Lo                           |  `mflo`  |            `R[rd] = Lo            |
-|     `      |
+|            |                   | Move from Lo                           |  `mflo`  |        `R[rd] = Lo      `         |
 
 ### Control flow (if/else statements, loops)
 
