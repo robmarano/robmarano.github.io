@@ -80,7 +80,7 @@ The MIPS CPU supports the following key operators for compute operations:
 |            |                   | Multiply unsigned words                | `multu`  |     `{Hi,Lo} = R[rs]* R[rt]`     |
 |            |      Divide       | Divide signed words                    |  `div`   | `Lo=R[rs]/R[rt]; Hi=R[rs]%R[rt]` |
 |            |                   | Divide unsigned words                  |  `divu`  | `Lo=R[rs]/R[rt]; Hi=R[rs]%R[rt]` |
-|            |       Move        | Move from Hi                           |  `mfhi`  |           `R[rd] = Hi`           |
+|   Pseudo   |       Move        | Move from Hi                           |  `mfhi`  |           `R[rd] = Hi`           |
 |            |                   | Move from Lo                           |  `mflo`  |           `R[rd] = Lo`           |
 
 ## Control flow (if/else statements, loops)
