@@ -279,3 +279,22 @@ base_case:
 ```
 
 Left as an exercise, write the `main` and test the program with input values.
+
+## Some More Examples Worked In Class
+
+### Leaf procedure example:
+
+[`add_two_numbers.c`](/courses/ece251/2025/weeks/week_07/add_two_numbers.c)
+[`add_two_numbers.asm` as a leaf procedure](/courses/ece251/2025/weeks/week_07/add_two_numbers-leaf_proc.asm)
+
+### Nested procedure example:
+
+[`matrix_det.c`](/courses/ece251/2025/weeks/week_07/matrix_det.c)
+[`matrix_det.asm`](/courses/ece251/2025/weeks/week_07/matrix_det.asm)
+
+[`nested_proc.asm`](/courses/ece251/2025/weeks/week_07/nested_1.asm)
+[`square_root.asm`](/courses/ece251/2025/weeks/week_07/square_root.asm)
+
+#### Recursive procedure example:
+
+[`factorial.asm`](/courses/ece251/2025/weeks/week_07/fact.asm)
