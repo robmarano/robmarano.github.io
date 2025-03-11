@@ -177,7 +177,6 @@ See [notes_week_08](/courses/ece251/2025/weeks/week_08/notes_week_08.html)
 
 ## Reading Assignment
 
-- Read sections Chap 2.12 through Chap 2.14 in my notes handout [Prof's Notes on Comp Arch](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EaFcET5zxcBHsS529aI4YmEBnUJnbvjWv2R6XsQfFwzC5w?e=2BFfUf)
-- Read [class notes on MIPS assembly programming](/courses/ece251/mips/mips.html)
+- Read sections [Chap 3.1 through Chap 3.5 of CODmips textbook](TBD)
 
 1.  [<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html)
