@@ -141,24 +141,24 @@ All assignments must be completed by the end of this course in order to receive 
 
 ### Assignments Schedule
 
-| Assignment | Title                           | Points | Given On | Due Date _(by time class begins)_       |
-| ---------: | :------------------------------ | :----: | :------- | :-------------------------------------- |
-|          1 | [HW 1](./assignments/hw-01.md)  |   5    | 1/21     | 1/28                                    |
-|          2 | [HW 2](./assignments/hw-02.md)  |   5    | 1/28     | 2/4                                     |
-|          3 | [HW 3](./assignments/hw-03.md)  |   5    | 2/4      | 2/11                                    |
-|          4 | [HW 4](./assignments/hw-04.md)  |   5    | 2/11     | 2/18                                    |
-|          5 | [HW 5](./assignments/hw-05.md)  |   5    | 2/18     | 2/25                                    |
-|          6 | [HW 6](./assignments/hw-06.md)  |   5    | 2/25     | 3/4                                     |
-|          7 | [HW 7](./assignments/hw-07.md)  |   5    | 3/4      | 3/11                                    |
-|          8 | **Midterm Exam**                |  100   | 3/11     | [Study Guide](./study_guide_midterm.md) |
-|          9 | [HW 8](./assignments/hw-08.md)  |   5    | 3/18     | 3/18                                    |
-|         10 | [HW 9](./assignments/hw-09.md)  |   5    | 3/25     | 3/25                                    |
-|         11 | [HW 10](./assignments/hw-10.md) |   5    | 4/1      | 4/22                                    |
-|         12 | [HW 11](./assignments/hw-11.md) |   5    | 4/22     | 4/29                                    |
-|         13 | [HW 12](./assignments/hw-12.md) |   5    | 4/29     | 5/6                                     |
-|         14 | [HW 13](./assignments/hw-13.md) |   5    | 5/6      | 5/13                                    |
-|         15 | **Final Exam**                  |  100   | 5/13     | [Study Guide](./study_guide_final.md)   |
-|          8 | Final Group Project             |  200   | 3/4      | 5/16, due no later than 5pm ET          |
+| Assignment | Title                           | Points | Given On | Due Date _(by time class begins)_        |
+| ---------: | :------------------------------ | :----: | :------- | :--------------------------------------- |
+|          1 | [HW 1](./assignments/hw-01.md)  |   5    | 1/21     | 1/28                                     |
+|          2 | [HW 2](./assignments/hw-02.md)  |   5    | 1/28     | 2/4                                      |
+|          3 | [HW 3](./assignments/hw-03.md)  |   5    | 2/4      | 2/11                                     |
+|          4 | [HW 4](./assignments/hw-04.md)  |   5    | 2/11     | 2/18                                     |
+|          5 | [HW 5](./assignments/hw-05.md)  |   5    | 2/18     | 2/25                                     |
+|          6 | [HW 6](./assignments/hw-06.md)  |   5    | 2/25     | 3/4                                      |
+|          7 | [HW 7](./assignments/hw-07.md)  |   5    | 3/4      | 3/11                                     |
+|          8 | **Midterm Exam**                |  100   | 3/11     | [Study Guide](./mid_term_study_guide.md) |
+|          9 | [HW 8](./assignments/hw-08.md)  |   5    | 3/18     | 3/18                                     |
+|         10 | [HW 9](./assignments/hw-09.md)  |   5    | 3/25     | 3/25                                     |
+|         11 | [HW 10](./assignments/hw-10.md) |   5    | 4/1      | 4/22                                     |
+|         12 | [HW 11](./assignments/hw-11.md) |   5    | 4/22     | 4/29                                     |
+|         13 | [HW 12](./assignments/hw-12.md) |   5    | 4/29     | 5/6                                      |
+|         14 | [HW 13](./assignments/hw-13.md) |   5    | 5/6      | 5/13                                     |
+|         15 | **Final Exam**                  |  100   | 5/13     | [Study Guide](./study_guide_final.md)    |
+|          8 | Final Group Project             |  200   | 3/4      | 5/16, due no later than 5pm ET           |
 
 **Note**: From time to time I may offer optinoal, extra credit homework assignments. Any points earned from these assignments will be added to the total points under the homework category. Also, I highly recommend that you focus on your final project during the two weeks we have no class from 4/2 through 4/21.
 
