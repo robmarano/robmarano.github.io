@@ -161,4 +161,23 @@ See [notes_week_07](/courses/ece251/2025/weeks/week_07/notes_week_07.html)
 - Read sections Chap 2.12 through Chap 2.14 in my notes handout [Prof's Notes on Comp Arch](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EaFcET5zxcBHsS529aI4YmEBnUJnbvjWv2R6XsQfFwzC5w?e=2BFfUf)
 - Read [class notes on MIPS assembly programming](/courses/ece251/mips/mips.html)
 
+# <a id="week8">Week 8 &mdash; 3/11 &mdash; Arithmetic for Computers</a>
+
+## Topics
+
+1. Reviewing what it means for a computer to perform arithmetic
+2. Addition and Subtraction
+3. Multiplication
+4. Division
+5. Floating Point
+
+## Topic Deep Dive
+
+See [notes_week_08](/courses/ece251/2025/weeks/week_08/notes_week_08.html)
+
+## Reading Assignment
+
+- Read sections Chap 2.12 through Chap 2.14 in my notes handout [Prof's Notes on Comp Arch](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EaFcET5zxcBHsS529aI4YmEBnUJnbvjWv2R6XsQfFwzC5w?e=2BFfUf)
+- Read [class notes on MIPS assembly programming](/courses/ece251/mips/mips.html)
+
 1.  [<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html)

@@ -158,7 +158,7 @@ All assignments must be completed by the end of this course in order to receive 
 |         13 | [HW 12](./assignments/hw-12.md) |   5    | 4/29     | 5/6                                      |
 |         14 | [HW 13](./assignments/hw-13.md) |   5    | 5/6      | 5/13                                     |
 |         15 | **Final Exam**                  |  100   | 5/13     | [Study Guide](./study_guide_final.md)    |
-|          8 | Final Group Project             |  200   | 3/4      | 5/16, due no later than 5pm ET           |
+|         15 | Final Group Project             |  200   | 3/4      | 5/16, due no later than 5pm ET           |
 
 **Note**: From time to time I may offer optinoal, extra credit homework assignments. Any points earned from these assignments will be added to the total points under the homework category. Also, I highly recommend that you focus on your final project during the two weeks we have no class from 4/2 through 4/21.
 
