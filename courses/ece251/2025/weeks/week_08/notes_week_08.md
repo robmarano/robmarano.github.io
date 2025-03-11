@@ -47,3 +47,5 @@ We will cover:
 1. The more complex algorithms for performing addition, subtraction, multiplication, and division on floating-point numbers according to the IEEE 754 standard
 2. The steps involved, such as aligning exponents, performing the operation on the significands, and normalizing the result.
 3. Guard bits, rounding techniques, overflow, and underflow, would also be covered. Understanding these is crucial for appreciating the limitations and potential sources of error in floating-point computations.
+
+Let's cover these in the [CODmips textbook's Chapter 3 presentation deck](./Patterson6e_MIPS_Ch03_PPT.ppt)
