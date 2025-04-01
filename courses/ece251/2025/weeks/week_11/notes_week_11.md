@@ -52,7 +52,7 @@ The section introduces the fundamental equation that relates CPU execution time 
 This equation shows that performance is affected by the number of instructions in a program, the average number of clock cycles required for each instruction (CPI), and the duration of each clock cycle. Figure 1.15 summarizes these basic components of performance.
 
 <center>
- <img src="./fig-1-15.png" alt="figure-1.15" style="height: 30%; width: 30%;" />
+ <img src="./fig-1-15.png" alt="figure-1.15" style="height: 70%; width: 70%;" />
 </center>
 
 ### Factors Affecting Performance Equation

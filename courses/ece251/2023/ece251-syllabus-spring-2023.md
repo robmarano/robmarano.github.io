@@ -138,7 +138,7 @@ All assignments must be completed by the end of this course in order to receive 
 |                  Assessment Type | Total Points | % of Final Grade |
 | -------------------------------: | :----------: | :--------------: |
 |                        Homeworks |     140      |       25%        |
-|                          Quizzes |     120      |       30%        |
+|                          Quizzes |     120      |       70%        |
 |                    Final Project |     100      |       40%        |
 | Demonstrated Class Participation |      30      |        5%        |
 

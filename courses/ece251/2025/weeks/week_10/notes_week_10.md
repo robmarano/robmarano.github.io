@@ -29,7 +29,7 @@ Starting with a **highly abstract and simplified overview**, we will explain the
 Figure 4.1 shows a **high-level view of a MIPS implementation**, focusing on functional units and their interconnections. However, this figure omits the selection (control) logic for multiple data sources (multiplexors) and the control signals needed for different instruction types.
 
 <center>
- <img src="./004fe001.jpg" alt="figure-4.1" style="height: 50%; width: 50%;" />
+ <img src="./004fe001.jpg" alt="figure-4.1" style="height: 70%; width: 70%;" />
 </center>
 
 An abstract view of the implementation of the MIPS subset showing the major functional units and the major connections between them. All instructions start by using the program counter to supply the instruction address to the instruction memory. After the instruction is fetched, the register operands used by an instruction are specified by fields of that instruction. Once the register operands have been fetched, they can be operated on to compute a memory address (for a load or store), to compute an arithmetic result (for an integer arithmetic-logical instruction), or a compare (for a branch). If the instruction is an arithmetic-logical instruction, the result from the ALU must be written to a register. If the operation is a load or store, the ALU result is used as an address to either load a value from memory into the registers or store a value from the registers. The result from the ALU or memory is written back into the register file. Branches require the use of the ALU output to determine the next instruction address, which comes either from the ALU (where the PC and branch offset are summed) or from an adder that increments the current PC by 4. The thick lines interconnecting the functional units represent buses, which consist of multiple signals. The arrows are used to guide the reader in knowing how information flows. Since signal lines may cross, we explicitly show when crossing lines are connected by the presence of a dot where the lines cross.
@@ -69,7 +69,7 @@ The section introduces the fundamental datapath elements that are required in a 
 The section describes how the instruction memory, PC, and adder are combined to form the initial part of the datapath responsible for fetching instructions and incrementing the PC. Figure 4.6 illustrates this portion.
 
 <center>
- <img src="./fig-4-6.png" alt="figure-4.6" style="height: 30%; width: 30%;" />
+ <img src="./fig-4-6.png" alt="figure-4.6" style="height: 70%; width: 70%;" />
 </center>
 
 ### R-type Instruction Datapath
@@ -77,7 +77,7 @@ The section describes how the instruction memory, PC, and adder are combined to 
 It explains the datapath elements needed for R-format ALU operations (like add, subtract, AND, OR, slt), which primarily involve the register file and the ALU. Figure 4.7 shows these elements.
 
 <center>
- <img src="./fig-4-7.png" alt="figure-4.7" style="height: 30%; width: 30%;" />
+ <img src="./fig-4-7.png" alt="figure-4.7" style="height: 70%; width: 70%;" />
 </center>
 
 ### Load and Store Instruction Datapath
@@ -85,7 +85,7 @@ It explains the datapath elements needed for R-format ALU operations (like add, 
 The section outlines the additional units required for load (`lw`) and store (`sw`) instructions, which include the data memory and the sign extension unit, in addition to the register file and ALU. Figure 4.8 depicts these elements.
 
 <center>
- <img src="./fig-4-8.png" alt="figure-4.8" style="height: 30%; width: 30%;" />
+ <img src="./fig-4-8.png" alt="figure-4.8" style="height: 70%; width: 70%;" />
 </center>
 
 ### Branch Instruction Datapath
@@ -93,7 +93,7 @@ The section outlines the additional units required for load (`lw`) and store (`s
 It discusses the elements needed for branch equal (beq) instructions, which involve comparing two registers for equality using the ALU and calculating the branch target address by adding the sign-extended offset to the PC. Figure 4.9 depicts these elements.
 
 <center>
- <img src="./fig-4-9.png" alt="figure-4.9" style="height: 30%; width: 30%;" />
+ <img src="./fig-4-9.png" alt="figure-4.9" style="height: 70%; width: 70%;" />
 </center>
 
 ### Single Datapath
@@ -101,7 +101,7 @@ It discusses the elements needed for branch equal (beq) instructions, which invo
 The section then shows how these individual datapath components are integrated into a single, unified datapath capable of executing the basic instruction classes (load-store word, ALU operations, and branches) in a single clock cycle. This integrated datapath requires the addition of multiplexors to select the appropriate data sources for different instructions. Figure 4.11 illustrates this combined datapath.
 
 <center>
- <img src="./fig-4-11.png" alt="figure-4.11" style="height: 30%; width: 30%;" />
+ <img src="./fig-4-11.png" alt="figure-4.11" style="height: 70%; width: 70%;" />
 </center>
 
 ### Conclusion
@@ -125,13 +125,13 @@ With the datapath constructed, the section moves on to discuss the control unit.
 To design the control unit, it's necessary to understand the formats of the different instruction classes (R-type, load-store, and branch) and the control lines needed for the datapath. Figure 4.14 shows these instruction formats.
 
 <center>
- <img src="./fig-4-14.png" alt="figure-4.14" style="height: 30%; width: 30%;" />
+ <img src="./fig-4-14.png" alt="figure-4.14" style="height: 70%; width: 70%;" />
 </center>
 
 Figure 4.15 illustrates the simple datapath with all necessary multiplexors and identified control lines.
 
 <center>
- <img src="./fig-4-15.png" alt="figure-4.15" style="height: 30%; width: 30%;" />
+ <img src="./fig-4-15.png" alt="figure-4.15" style="height: 70%; width: 70%;" />
 </center>
 
 ### ALU Control
@@ -139,7 +139,7 @@ Figure 4.15 illustrates the simple datapath with all necessary multiplexors and 
 The design of the ALU control is addressed first. The ALU control unit takes as input the ALU operation (ALUOp) control signals from the main control unit and the function code (funct field) from R-type instructions to determine the specific operation the ALU should perform. Figure 4.12 (referenced in Figure 4.47) shows how the ALU control bits are set based on ALUOp and the function code.
 
 <center>
- <img src="./fig-4-12.png" alt="figure-4.12" style="height: 30%; width: 30%;" />
+ <img src="./fig-4-12.png" alt="figure-4.12" style="height: 70%; width: 70%;" />
 </center>
 
 ### Main Control Unit
@@ -149,13 +149,13 @@ The section then explains how to design the main control unit which generates th
 Figure 4.16 describes the function of the seven main control lines (RegDst, ALUSrc, MemtoReg, RegWrite, MemRead, MemWrite, Branch).
 
 <center>
- <img src="./fig-4-16.png" alt="figure-4.16" style="height: 30%; width: 30%;" />
+ <img src="./fig-4-16.png" alt="figure-4.16" style="height: 70%; width: 70%;" />
 </center>
 
 Figure 4.17 shows the datapath with the control unit and its input (opcode) and outputs (control signals).
 
 <center>
- <img src="./fig-4-17.png" alt="figure-4.17" style="height: 30%; width: 30%;" />
+ <img src="./fig-4-17.png" alt="figure-4.17" style="height: 70%; width: 70%;" />
 </center>
 
 ### Instruction Execution Flow
@@ -165,7 +165,7 @@ The section likely walks through the execution of different instruction types (l
 Figure 4.20 illustrates the datapath in operation for a load instruction.
 
 <center>
- <img src="./fig-4-20.png" alt="figure-4.20" style="height: 30%; width: 30%;" />
+ <img src="./fig-4-20.png" alt="figure-4.20" style="height: 70%; width: 70%;" />
 </center>
 
 ### Control Logic Implementation
@@ -175,7 +175,7 @@ The control function can be precisely defined using a truth table that maps the 
 Figure 4.22 shows such a truth table for the simple single-cycle implementation. This truth table can then be implemented using logic gates.
 
 <center>
- <img src="./fig-4-22.png" alt="figure-4.22" style="height: 30%; width: 30%;" />
+ <img src="./fig-4-22.png" alt="figure-4.22" style="height: 70%; width: 70%;" />
 </center>
 
 ### Limitations
