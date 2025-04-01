@@ -77,16 +77,20 @@ Write down the binary representation of the decimal number 63.25 assuming the IE
 
 Steps:
 
-1. Convert the integer part to binary:$`63_{10} = 32 + 16 + 8 + 4 + 2 + 1 = 111111_2`$
+1. Convert the integer part to binary:$63_{10} = 32 + 16 + 8 + 4 + 2 + 1 = 111111_2$
 
 2. Convert the fractional part to binary: $0.25_{10} = 1/4 = 2^{-2} = 0.01_2$
 3. Combine the integer and fractional parts: $63.25_{10} = 111111.01_2$
 4. Normalize the binary number: Move the binary point to the left until there is only one '1' to its left. Count the number of places moved; this is the exponent. $111111.01_2 = 1.1111101 \times 2^5$ The fraction part (after the leading '1') is $1111101$.
 5. Determine the sign bit: Since 63.25 is positive, the sign bit (S) is 0.
-6. Calculate the biased exponent: For single precision, the bias is 127. The actual exponent is 5. Biased exponent = $5 + 127 = 132_{10}$ Convert the biased exponent to binary: $132_{10} = 128 + 4 = 10000100_2$
+6. Calculate the biased exponent: For single precision, the bias is 127. The actual exponent is 5.
+   - Biased exponent = $5 + 127 = 132_{10}$.
+   - Convert the biased exponent to binary: $132_{10} = 128 + 4 = 10000100_2$
 7. Write down the fraction: The fraction part is $1111101$. Since the fraction field is 23 bits long, we need to pad it with zeros on the right: $11111010000000000000000_2$
-8. Combine the sign bit, biased exponent, and fraction: Sign (1 bit) | Biased Exponent (8 bits) | Fraction (23 bits) ------- | -------- | -------- 0 | 10000100 | 11111010000000000000000
-   Therefore, the IEEE 754 single-precision binary representation of 63.25 is: 0 10000100 11111010000000000000000.
+8. Combine the sign bit, biased exponent, and fraction:
+   - | Sign (1 bit) | Biased Exponent (8 bits) | Fraction (23 bits) |
+   - | 0 | 10000100 | 11111010000000000000000|
+   - Therefore, the IEEE 754 single-precision binary representation of 63.25 is: 0 10000100 11111010000000000000000.
 
 ## Worked Example (based on Exercise 3.29):
 
