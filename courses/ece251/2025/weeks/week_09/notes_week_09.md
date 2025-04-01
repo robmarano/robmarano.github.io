@@ -2,6 +2,12 @@
 
 [ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.html)
 
+# Reading Assignment
+
+1.
+
+These topics are covered in our [CODmips textbook's Chapter 3 presentation deck](./Patterson6e_MIPS_Ch03_PPT.ppt)
+
 # Topics
 
 Section 3.5 of CODmips textbook focuses on floating-point arithmetic, addressing the representation and manipulation of fractions and real numbers in computers. It explains why integers alone are insufficient for many calculations and introduces the IEEE 754 standard as the dominant format for representing floating-point numbers.
@@ -59,3 +65,5 @@ Steps:
     Worked Example (based on Exercise 3.29):
     Question: Calculate the sum of $2.6125 \times 10^1$ and $4.150390625 \times 10^{-1}$ by hand, assuming A and B are stored in the 16-bit half precision described in Exercise 3.27 (1 sign bit, 5 exponent bits with an excess-16 bias, and 10 mantissa bits with a hidden 1). Assume 1 guard, 1 round bit, and 1 sticky bit, and round to the nearest even. Show all the steps.
     While the full steps for this example are lengthy and involve detailed binary conversions and arithmetic with guard, round, and sticky bits, the exercise demonstrates the complexities involved in floating-point addition, particularly regarding exponent alignment, fraction addition, normalization, and rounding. The text emphasizes that such detailed understanding helps explain potential quirks encountered with computer arithmetic.
+
+[ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.html)
