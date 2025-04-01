@@ -1,5 +1,5 @@
-title: "Musings, Courses, & Projects by Rob Marano"
-description: The home of Rob's musings on technology, business, art, science, math, and music.
+title: "Courses & Projects by Rob Marano"
+description: The home of Rob's college courses.
 
 exclude:
   - node_modules
@@ -13,6 +13,10 @@ theme: jekyll-theme-primer
 
 # kramdown:
 #   input: GFM
+
+kramdown:
+  input: GFM
+  math_engine: mathjax
 
 github:
   private: false
