@@ -44,18 +44,16 @@ The following topic areas will be covered:
 
 ## Schedule
 
-|      Class | Topic                                                   |
-| ---------: | :------------------------------------------------------ |
-|       1, 2 | Hardware Modeling with Software (Verilog HDL)           |
-|          3 | Computer Abstraction & Stored Program Concept           |
-|       4, 5 | Instructions &mdash;The Language & Grammar of Computers |
-|       6, 7 | Assembly Language Programming &mdash; MIPS CPU          |
-|          8 | **Midterm Exam**                                        |
-|          9 | Arithmetic for Computers                                |
-| 10, 11, 12 | The Processor &mdash; Data Path & Control               |
-|     13, 14 | Interrupts; Memory Hierarchies (Caching)                |
-|         15 | **Final Exam**                                          |
-|         15 | Group **Final Project** due at 5pm ET                   |
+|         Class | Topic                                                   |
+| ------------: | :------------------------------------------------------ |
+|          1, 2 | Hardware Modeling with Software (Verilog HDL)           |
+|             3 | Computer Abstraction & Stored Program Concept           |
+|          4, 5 | Instructions &mdash;The Language & Grammar of Computers |
+|          6, 7 | Assembly Language Programming &mdash; MIPS CPU          |
+|             8 | Arithmetic for Computers; **Midterm Exam**              |
+| 9, 10, 11, 12 |                                                         |
+|    12, 13, 14 | Interrupts; Memory Hierarchies (Caching)                |
+|            15 | **Final Exam**; Group **Final Project** due at 5pm ET   |
 
 Optional weekend lab sessions will be offered throughout the semester to work on your final project designs or for review sessions.
 
