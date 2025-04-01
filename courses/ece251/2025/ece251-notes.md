@@ -11,7 +11,7 @@
 |                    [4](#week4), [5](#week5) |                   [2/11](#week4), [2/18](#week5) | Instructions &mdash;The Language & Grammar of Computers        |
 |                    [6](#week6), [7](#week7) |                    [2/25](#week6), [3/4](#week7) | Intro to Assembly Language Programming &mdash; MIPS CPU        |
 |                                 [8](#week8) |                                   [3/11](#week8) | Arithmetic for Computers; **Midterm Exam**                     |
-|                                [9](#week9), |                                   [3/18](#week9) | Floating Point Numbers & Arithmetic                            |
+|                                 [9](#week9) |                                   [3/18](#week9) | Floating Point Numbers & Arithmetic                            |
 | [10](#week10), [11](#week11), [12](#week12) | [3/25](#week10), [4/1](#week11), [4/22](#week12) | The Processor &mdash; Data Path & Control                      |
 |                [13](#week13), [14](#week14) |                  [4/29](#week13), [5/6](#week14) | Interrupts; Memory Hierarchies (Caching)                       |
 |                               [15](#week15) |                                  [5/13](#week15) | **Final Exam**                                                 |
