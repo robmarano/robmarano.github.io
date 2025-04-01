@@ -187,33 +187,30 @@ See [notes_week_08](/courses/ece251/2025/weeks/week_08/notes_week_08.html)
 
 ## Topic Deep Dive
 
-1.
-2.
-3.
+1. Floating point number to represent the very large and the very small of numbers.
+2. Arithmetic of floating point numbers.
 
 See [notes_week_09](/courses/ece251/2025/weeks/week_09/notes_week_09.html)
 
-# <a id="week10">Week 10 &mdash; 3/25 &mdash; The Processor &mdash; Data Path & Control (Part 1 of 3)</a>
+# <a id="week10">Week 10 &mdash; 3/25 &mdash; The Processor &mdash; Datapath & Control (Part 1 of 3)</a>
 
 ## Topics
 
 1. How to create the digital architecture from ISA instructions, component by component
-2.
-3.
+2. High level, abstract view of the processor
+3. Review of logic design conventions
+4. Building a datapath
+5. A simple implementation scheme for a subset of MIPS instructions
 
 See [notes_week_10](/courses/ece251/2025/weeks/week_10/notes_week_10.html)
 
-# <a id="week11">Week 11 &mdash; 4/1 &mdash; The Processor &mdash; Data Path & Control (Part 2 of 3)</a>
+# <a id="week11">Week 11 &mdash; 4/1 &mdash; The Processor &mdash; Datapath & Control (Part 2 of 3)</a>
 
 ## Topics
 
-1.
-2.
-3.
-
 See [notes_week_11](/courses/ece251/2025/weeks/week_11/notes_week_11.html)
 
-# <a id="week12">Week 12 &mdash; 4/22 &mdash; The Processor &mdash; Data Path & Control (Part 3 of 3)">
+# <a id="week12">Week 12 &mdash; 4/22 &mdash; The Processor &mdash; Datapath & Control (Part 3 of 3)">
 
 ## Topics
 
