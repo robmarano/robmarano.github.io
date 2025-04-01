@@ -2,13 +2,17 @@
 
 [ &larr; back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html) [ &larr; back to notes](/courses/ece251/2025/ece251-notes.html)
 
+# Reading Assignment for these topics
+
+1. Read sections 3.1, 3.2, 3.3, and 3.4 from [CODmips textbook's Chapter 3](./textbook_CODmips_Chapter_3%20-%20Arithmetic%20for%20Computers.pdf).
+
 # Topics
 
 1. Reviewing what it means for a computer to perform arithmetic
 2. Addition and Subtraction
 3. Multiplication
 4. Division
-5. Floating Point
+5. Introducing "Floating Point" to represent the very small and the very large.
 
 # Topic Deep Dive
 
