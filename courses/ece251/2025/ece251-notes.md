@@ -10,8 +10,8 @@
 |                                 [3](#week3) |                                    [2/4](#week3) | Wrap-up Verilog; Computer Abstraction & Stored Program Concept |
 |                    [4](#week4), [5](#week5) |                   [2/11](#week4), [2/18](#week5) | Instructions &mdash;The Language & Grammar of Computers        |
 |                    [6](#week6), [7](#week7) |                    [2/25](#week6), [3/4](#week7) | Intro to Assembly Language Programming &mdash; MIPS CPU        |
-|                                 [8](#week8) |                                   [3/11](#week8) | **Midterm Exam**                                               |
-|                                [9](#week9), |                                   [3/18](#week9) | Arithmetic for Computers                                       |
+|                                 [8](#week8) |                                   [3/11](#week8) | Arithmetic for Computers; **Midterm Exam**                     |
+|                                [9](#week9), |                                   [3/18](#week9) | Floating Point Numbers & Arithmetic                            |
 | [10](#week10), [11](#week11), [12](#week12) | [3/25](#week10), [4/1](#week11), [4/22](#week12) | The Processor &mdash; Data Path & Control                      |
 |                [13](#week13), [14](#week14) |                  [4/29](#week13), [5/6](#week14) | Interrupts; Memory Hierarchies (Caching)                       |
 |                               [15](#week15) |                                  [5/13](#week15) | **Final Exam**                                                 |
@@ -179,4 +179,48 @@ See [notes_week_08](/courses/ece251/2025/weeks/week_08/notes_week_08.html)
 
 - Read sections [Chap 3.1 through Chap 3.5 of CODmips textbook](TBD)
 
-1.  [<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html)
+# <a id="week9">Week 9 &mdash; 3/18 &mdash; Floating Point Numbers & Artihmetic">
+
+## Topics
+
+1. A better system to handle very small and very large numbers &mdash floating point numbers through the IEEE 754 standard.
+
+## Topic Deep Dive
+
+1.
+2.
+3.
+
+See [notes_week_09](/courses/ece251/2025/weeks/week_09/notes_week_09.html)
+
+# <a id="week10">Week 10 &mdash; 3/25 &mdash; The Processor &mdash; Data Path & Control (Part 1 of 3)">
+
+## Topics
+
+1. How to create the digital architecture from ISA instructions, component by component
+2.
+3.
+
+See [notes_week_10](/courses/ece251/2025/weeks/week_10/notes_week_10.html)
+
+# <a id="week11">Week 11 &mdash; 4/1 &mdash; The Processor &mdash; Data Path & Control (Part 2 of 3)">
+
+## Topics
+
+1.
+2.
+3.
+
+See [notes_week_11](/courses/ece251/2025/weeks/week_11/notes_week_11.html)
+
+# <a id="week12">Week 12 &mdash; 4/22 &mdash; The Processor &mdash; Data Path & Control (Part 3 of 3)">
+
+## Topics
+
+1.
+2.
+3.
+
+See [notes_week_12](/courses/ece251/2025/weeks/week_12/notes_week_12.html)
+
+[<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html)
