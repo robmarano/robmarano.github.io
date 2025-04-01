@@ -179,7 +179,7 @@ See [notes_week_08](/courses/ece251/2025/weeks/week_08/notes_week_08.html)
 
 - Read sections [Chap 3.1 through Chap 3.5 of CODmips textbook](TBD)
 
-# <a id="week9">Week 9 &mdash; 3/18 &mdash; Floating Point Numbers & Artihmetic">
+# <a id="week9">Week 9 &mdash; 3/18 &mdash; Floating Point Numbers & Artihmetic</a>
 
 ## Topics
 
@@ -193,7 +193,7 @@ See [notes_week_08](/courses/ece251/2025/weeks/week_08/notes_week_08.html)
 
 See [notes_week_09](/courses/ece251/2025/weeks/week_09/notes_week_09.html)
 
-# <a id="week10">Week 10 &mdash; 3/25 &mdash; The Processor &mdash; Data Path & Control (Part 1 of 3)">
+# <a id="week10">Week 10 &mdash; 3/25 &mdash; The Processor &mdash; Data Path & Control (Part 1 of 3)</a>
 
 ## Topics
 
@@ -203,7 +203,7 @@ See [notes_week_09](/courses/ece251/2025/weeks/week_09/notes_week_09.html)
 
 See [notes_week_10](/courses/ece251/2025/weeks/week_10/notes_week_10.html)
 
-# <a id="week11">Week 11 &mdash; 4/1 &mdash; The Processor &mdash; Data Path & Control (Part 2 of 3)">
+# <a id="week11">Week 11 &mdash; 4/1 &mdash; The Processor &mdash; Data Path & Control (Part 2 of 3)</a>
 
 ## Topics
 
