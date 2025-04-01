@@ -14,9 +14,9 @@ theme: jekyll-theme-primer
 # kramdown:
 #   input: GFM
 
-kramdown:
+#kramdown:
 #  input: GFM
-  math_engine: mathjax
+#  math_engine: mathjax
 
 github:
   private: false
