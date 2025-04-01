@@ -18,6 +18,8 @@ These topics are covered in our [CODmips textbook's Chapter 4 presentation deck]
 
 ## Kickstarting your processor design
 
+Refer to [Notes on Designing a von Neuman computer](./ECE%20251%20-%20Prof%20Marano's%20Notes%20on%20Designing%20a%20von%20Neumann%20Computer.pdf)
+
 The first steps in designing a processor and its instruction set architecture (ISA) involve a comprehensive understanding of the requirements and goals for the new computer. This includes considering the following aspects:
 
 ### Determining Functional Requirements
