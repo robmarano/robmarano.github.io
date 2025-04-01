@@ -77,7 +77,7 @@ Write down the binary representation of the decimal number 63.25 assuming the IE
 
 Steps:
 
-1.  Convert the integer part to binary: $`63_{10} = 32 + 16 + 8 + 4 + 2 + 1 = 111111_2`$
+1.  Convert the integer part to binary: $$63_{10} = 32 + 16 + 8 + 4 + 2 + 1 = 111111_2$$
 2.  Convert the fractional part to binary: $0.25_{10} = 1/4 = 2^{-2} = 0.01_2$
 3.  Combine the integer and fractional parts: $63.25_{10} = 111111.01_2$
 4.  Normalize the binary number: Move the binary point to the left until there is only one '1' to its left. Count the number of places moved; this is the exponent. $111111.01_2 = 1.1111101 \times 2^5$ The fraction part (after the leading '1') is $1111101$.
