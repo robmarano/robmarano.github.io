@@ -206,18 +206,22 @@ See [notes_week_10](/courses/ece251/2025/weeks/week_10/notes_week_10.html)
 
 # <a id="week11">Week 11 &mdash; 4/1 &mdash; The Processor &mdash; Datapath & Control (Part 2 of 3)</a>
 
-## Topics
 
 See [notes_week_11](/courses/ece251/2025/weeks/week_11/notes_week_11.html)
 
 # <a id="week12">Week 12 &mdash; 4/22 &mdash; The Processor &mdash; Datapath & Control (Part 3 of 3)">
 
-## Topics
-
-1.
-2.
-3.
 
 See [notes_week_12](/courses/ece251/2025/weeks/week_12/notes_week_12.html)
+
+# <a id="week13">Week 13 &mdash; 4/29 &mdash; Interrupts; Memory Hierarchies (Caching) Part 1">
+
+
+See [notes_week_13](/courses/ece251/2025/weeks/week_12/notes_week_13.html)
+
+# <a id="week14">Week 14 &mdash; 5/6 &mdash;Interrupts; Memory Hierarchies (Caching) Part 2">
+
+
+See [notes_week_14](/courses/ece251/2025/weeks/week_12/notes_week_14.html)
 
 [<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html)
