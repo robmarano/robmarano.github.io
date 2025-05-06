@@ -217,11 +217,11 @@ See [notes_week_12](/courses/ece251/2025/weeks/week_12/notes_week_12.html)
 # <a id="week13">Week 13 &mdash; 4/29 &mdash; Interrupts; Memory Hierarchies (Caching) Part 1">
 
 
-See [notes_week_13](/courses/ece251/2025/weeks/week_12/notes_week_13.html)
+See [notes_week_13](/courses/ece251/2025/weeks/week_13/notes_week_13.html)
 
 # <a id="week14">Week 14 &mdash; 5/6 &mdash;Interrupts; Memory Hierarchies (Caching) Part 2">
 
 
-See [notes_week_14](/courses/ece251/2025/weeks/week_12/notes_week_14.html)
+See [notes_week_14](/courses/ece251/2025/weeks/week_14/notes_week_14.html)
 
 [<- back to syllabus](/courses/ece251/2025/ece251-syllabus-spring-2025.html)
