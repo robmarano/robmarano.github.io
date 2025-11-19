@@ -4,8 +4,9 @@
 ## Topics
 1. CPU interrupts and exceptions
 2. Basics of memory caching for CPUs
+3. Intro to virtual memory
 
-## Introduction to Exceptions and Interrupts
+# Introduction to Exceptions and Interrupts
 
 *   Exceptions and interrupts are **unexpected events that require a change in the flow of control** during program execution.
 *   While different instruction set architectures (ISAs) may use the terms differently, in MIPS terminology:
@@ -125,7 +126,7 @@ Assume the processor is executing these instructions concurrently in its pipelin
 
 This sequence allows the processor to handle unexpected events, transition to a privileged handler routine to manage the event, and potentially resume the original program execution.
 
-## Basics of Memory Caching for CPUs
+# Basics of Memory Caching for CPUs
 
 **1. Why Memory Hierarchies and Caches?**
 
@@ -953,3 +954,70 @@ Each set has two ways. Each way has a Valid bit, a Tag field. We also track the 
 * **Balance:** It offers a balance between the hardware cost of fully associative (fewer comparators needed than fully associative, only N comparators) and the performance (better hit rates than direct-mapped due to reduced conflict misses).
 
 This example illustrates how a memory address targets a specific set, and then a limited associative search is performed within that set. It also shows how LRU works on a per-set basis when replacements are necessary.
+
+# Basics of virtual memory
+
+**1. What is Virtual Memory and Why Use It?**
+
+*   **Virtual memory** is a facility that allows programs to address memory from a logical point of view, **without regard** to the amount of main memory physically available.
+*   It allows programs to use more address space than the machine has physical memory.
+*   Programmers prepare programs using the entire address space of the processor, relieved of the burden of manually managing memory segments or overlays. This responsibility previously eroded programmer productivity.
+*   Virtual memory automatically manages the two levels of the memory hierarchy represented by **main memory** (sometimes called **physical memory**) and secondary storage (like magnetic disk or solid-state storage).
+*   It enables **multiprogramming** by allowing multiple programs to reside in physical memory concurrently.
+*   It provides **protection** by restricting a process to the memory blocks belonging only to that process. Different tasks can share parts of their virtual address spaces but need protection against errant access, which requires OS assistance and hardware support.
+*   It simplifies program loading (relocation) because the same program can run in any location in physical memory.
+*   Virtual memory can also provide a consistent and flexible mechanism for memory protection and sharing.
+
+**2. Virtual Memory and the Memory Hierarchy**
+
+*   Extending the concept of memory hierarchy from caching to main (physical) memory, **virtual memory** allows the physical memory to be treated as a **cache** of secondary storage (disk or solid state).
+*   Just as caches move **blocks**, virtual memory moves **pages** between main memory and secondary storage.
+*   The concepts at work in virtual memory and caches are the same, although different terminology is used.
+
+**3. Virtual vs. Physical Addresses**
+
+*   When virtual memory is used, the address fields of machine instructions contain **virtual addresses**.
+*   A processor produces a virtual address.
+*   A **Memory Management Unit (MMU)**, which may be on the CPU chip or a separate chip, translates each virtual address into a **physical address** in main memory.
+*   The physical address is then used to access main memory.
+*   This process is called **address mapping** or **address translation**.
+*   The virtual memory architecture is specified either via **page tables** (as in IBM VM/370 and x86) or via the **TLB structure** (as in MIPS).
+
+**4. Pages and Page Tables**
+
+*   Virtual memory systems with fixed-size blocks use **pages**. Pages are typically fixed at sizes like 4096–8192 bytes. A virtual memory block is called a **page**.
+*   Memory is divided into pages. Physical main memory is divided into equal-sized blocks called **frames**. Each frame can hold a page of virtual memory.
+*   A **page table** is the basic mechanism for translating a virtual address into a physical address.
+*   The virtual address consists of a page number and an offset within the page. The physical address consists of a frame number and the same offset.
+*   The page table is a table that maps virtual pages to physical page frames.
+*   Memory management routines, part of the operating system, use a **page table base register** to determine the address of the current process's page table.
+*   When a program tries to reference a word in its virtual address space, the MMU uses the page table to find the corresponding physical address.
+*   If a virtual page is not currently in main memory, accessing it causes a **page fault**. This is analogous to a **cache miss**. The operating system must then fetch the required page from secondary storage and load it into a page frame in main memory.
+
+**5. Segmentation**
+
+*   Virtual memory systems can also use variable-size blocks, called **segments**. Segment size varies, from 1 byte up to 2<sup>32</sup> bytes on some processors.
+*   A segmented address requires 1 word for a segment number and 1 word for an offset within a segment, for a total of 2 words.
+*   Paged addressing is simpler for the compiler than segmented addressing because it uses a single fixed-size address analogous to cache addressing.
+*   The UNIX memory model, for example, used by Linux variants on OMAP4430 ARM CPUs, has three segments per process: code, data, and stack. While segment sizes can vary, this is a high-level view.
+
+**6. Translation Lookaside Buffer (TLB) used in MIPS-based computers**
+
+*   Accessing the page table typically requires a memory access. To speed up address translation, a cache for page table entries is used.
+*   This cache is called a **Translation Lookaside Buffer (TLB)**.
+*   TLBs act as caches on the page table, **eliminating the need** to do a memory access every time an address is translated if the entry is found in the TLB.
+*   The MIPS virtual memory architecture is specified via the TLB structure.
+
+**7. Virtual Memory and MIPS**
+
+*   MIPS is a **RISC-style processor** architecture.
+*   MIPS implements a **32-bit flat memory model** from the programmer's perspective.
+*   A MIPS computer can address up to **4 Gigabytes (4G) of data** (2<sup>32</sup> bytes) with 32-bit addresses.
+*   This address space is divided into segments, including program text, static data, dynamic data (heap), and stack.
+*   MIPS uses a **byte-addressable memory**. Words are 32 bits and must be word aligned (addresses are a multiple of 4).
+*   The MIPS processor fetches instructions from memory. MIPS instructions are typically 32 bits long.
+*   The single instruction length of MIPS simplifies instruction fetch and decode and also simplifies the interaction of instruction fetch with the virtual memory management unit (MMU) because **instructions do not cross word or page boundaries**.
+*   MIPS processors, especially in pipelined implementations, benefit from quick memory access, which is facilitated by the memory hierarchy including caches and virtual memory. As you already know, a Verilog model of a MIPS CPU (single-cycle or five-stage pipeline) uses separate instruction and data memories, implemented using separate caches.
+*   The MIPS architecture includes MMU support for virtual memory and paging.
+*   The evolution of MIPS caches shows trends towards larger capacity and multiple levels. While distinct from virtual memory, both are critical parts of the memory hierarchy.
+

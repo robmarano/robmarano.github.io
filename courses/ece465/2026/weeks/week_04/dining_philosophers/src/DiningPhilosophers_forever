@@ -1,0 +1,94 @@
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+class Chopstick {
+    private Lock lock = new ReentrantLock();
+
+    public boolean pickUp() {
+        return lock.tryLock();
+    }
+
+    public void putDown() {
+        lock.unlock();
+    }
+}
+
+class Philosopher extends Thread {
+    private int id;
+    private Chopstick leftChopstick;
+    private Chopstick rightChopstick;
+
+    public Philosopher(int id, Chopstick leftChopstick, Chopstick rightChopstick) {
+        this.id = id;
+        this.leftChopstick = leftChopstick;
+        this.rightChopstick = rightChopstick;
+    }
+
+    @Override
+    public void run() {
+        try {
+            while (true) {
+                think();
+                eat();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    private void think() throws InterruptedException {
+        System.out.println("Philosopher " + id + " is thinking.");
+        Thread.sleep((long) (Math.random() * 100)); // Simulate thinking time
+    }
+
+    private void eat() throws InterruptedException {
+
+        boolean leftPicked = false;
+        boolean rightPicked = false;
+
+        if (id == 4){ //to prevent deadlock
+            leftPicked = rightChopstick.pickUp();
+            if (leftPicked){
+                rightPicked = leftChopstick.pickUp();
+                if(rightPicked == false){
+                    rightChopstick.putDown();
+                    leftPicked = false;
+                }
+            }
+        } else {
+            leftPicked = leftChopstick.pickUp();
+            if (leftPicked) {
+                rightPicked = rightChopstick.pickUp();
+                if (rightPicked == false) {
+                    leftChopstick.putDown();
+                    leftPicked = false;
+                }
+            }
+        }
+
+        if (leftPicked && rightPicked) {
+            System.out.println("Philosopher " + id + " is eating.");
+            Thread.sleep((long) (Math.random() * 100)); // Simulate eating time
+            leftChopstick.putDown();
+            rightChopstick.putDown();
+        }
+
+    }
+}
+
+public class DiningPhilosophers {
+    public static void main(String[] args) {
+        int numberOfPhilosophers = 5;
+        Chopstick[] chopsticks = new Chopstick[numberOfPhilosophers];
+        Philosopher[] philosophers = new Philosopher[numberOfPhilosophers];
+
+        for (int i = 0; i < numberOfPhilosophers; i++) {
+            chopsticks[i] = new Chopstick();
+        }
+
+        for (int i = 0; i < numberOfPhilosophers; i++) {
+            philosophers[i] = new Philosopher(i, chopsticks[i], chopsticks[(i + 1) % numberOfPhilosophers]);
+            philosophers[i].start();
+        }
+    }
+}

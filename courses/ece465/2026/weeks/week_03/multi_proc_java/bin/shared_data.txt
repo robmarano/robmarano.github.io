@@ -1,0 +1,2 @@
+SubProcess1 wrote: Hello from process 1!
+SubProcess2 wrote: Hello from process 2!
