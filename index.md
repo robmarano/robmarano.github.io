@@ -6,11 +6,11 @@ layout: default
 
 ### ECE 251 - Computer Architecture - Spring 2026
 
-- [Course Syllabus](./courses/ece251/2025/ece251-syllabus-spring-2026.md) ([pdf](./courses/ece251/2025/ece251_comp_arch_syllabus_spring_2026.pdf))
+- [Course Syllabus](./courses/ece251/2026/ece251-syllabus-spring-2026.html) ([pdf](./courses/ece251/2025/ece251_comp_arch_syllabus_spring_2026.pdf))
 
 ### ECE 465 - Cloud Computing - Spring 2026 (Independent Study)
 
-- [Course Syllabus](./courses/ece465/2026/ece465-ind-study-syllabus-spring-2026.md)([pdf](./courses/ece465/2025/ece465-ind-study-syllabus-spring-2026.pdf))
+- [Course Syllabus](./courses/ece465/2026/ece465-ind-study-syllabus-spring-2026.html)([pdf](./courses/ece465/2025/ece465-ind-study-syllabus-spring-2026.pdf))
 
 ---
 
@@ -26,16 +26,16 @@ Serving as an [adjunct professor of Electrical and Computer Engineering](https:/
 
 ### ECE 251 - Computer Architecture - Spring 2025
 
-- [Course Syllabus](./courses/ece251/2025/ece251-syllabus-spring-2025.md) ([pdf](./courses/ece251/2025/ece251_comp_arch_syllabus_spring_2025.pdf))
+- [Course Syllabus](./courses/ece251/2025/ece251-syllabus-spring-2025.html) ([pdf](./courses/ece251/2025/ece251_comp_arch_syllabus_spring_2025.pdf))
 
 ### ECE 465 - Cloud Computing - Spring 2025 (Independent Study)
 
-- [Course Syllabus](./courses/ece465/2025/ece465-ind-study-syllabus-spring-2025.md)([pdf](./courses/ece465/2025/ece465-ind-study-syllabus-spring-2025.pdf))
+- [Course Syllabus](./courses/ece465/2025/ece465-ind-study-syllabus-spring-2025.html)([pdf](./courses/ece465/2025/ece465-ind-study-syllabus-spring-2025.pdf))
 
 
 ### ECE 251 - Computer Architecture - Spring 2024
 
-- [Course Syllabus](./courses/ece251/2024/ece251-syllabus-spring-2024.md) ([pdf](./courses/ece251/2024/ece251_comp_arch_syllabus_spring_2024.pdf))
+- [Course Syllabus](./courses/ece251/2024/ece251-syllabus-spring-2024.html) ([pdf](./courses/ece251/2024/ece251_comp_arch_syllabus_spring_2024.pdf))
 
 ### ECE 465 - Cloud Computing - Fall 2023
 
@@ -43,27 +43,27 @@ Serving as an [adjunct professor of Electrical and Computer Engineering](https:/
 
 ### ECE 251 - Computer Architecture - Spring 2023
 
-- [Course Syllabus](./courses/ece251/2023/ece251-syllabus-spring-2023.md)
-- [Optional Readings & Subject Information](./courses/ece251/2023/readings.md)
+- [Course Syllabus](./courses/ece251/2023/ece251-syllabus-spring-2023.html)
+- [Optional Readings & Subject Information](./courses/ece251/2023/readings.html)
 
 ### ECE 251 - Computer Architecture - Spring 2022
 
 - [Course Syllabus](./courses/ece251/2022/ece251-syllabus-spring-2022.html)
-- [Optional Readings & Subject Information](./courses/ece251/2022/readings.md)
+- [Optional Readings & Subject Information](./courses/ece251/2022/readings.html)
 
 ### ECE 366 - SW Engineering and Large Scale Design - Spring 2022
 
 - [Course Syllabus](./courses/ece366/2022/ece366-syllabus-spring-2022.html)
 - [Team Project Specifications](./courses/ece366/2022/project-ece366-spring-2022.html)
-- [Helpful Readings on Course Topics](./courses/ece366/2022/readings.md)
+- [Helpful Readings on Course Topics](./courses/ece366/2022/readings.html)
 
 ### CS 102 - Section M - Fall 2022
 
-- [Course Syllabus](./courses/cs102/2022/cs102-syllabus-fall-2022.md)
+- [Course Syllabus](./courses/cs102/2022/cs102-syllabus-fall-2022.html)
 
 ### CS 102 - Section C - Fall 2021
 
-- [Course Syllabus](./courses/cs102/2021/cs102-syllabus-fall-2021.md)
+- [Course Syllabus](./courses/cs102/2021/cs102-syllabus-fall-2021.html)
 
 ### ECE 465 - Cloud Computing - Spring 2021
 
