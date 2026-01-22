@@ -4,9 +4,13 @@ layout: default
 
 # Courses
 
+### ECE 251 - Computer Architecture - Spring 2026
+
+- [Course Syllabus](./courses/ece251/2025/ece251-syllabus-spring-2026.md) ([pdf](./courses/ece251/2025/ece251_comp_arch_syllabus_spring_2026.pdf))
+
 ### ECE 465 - Cloud Computing - Spring 2026 (Independent Study)
 
-- [Course Syllabus](./courses/ece465/2026/ece465-ind-study-syllabus-spring-2026.md)([pdf](./courses/ece465/2025/ece465-ind-study-syllabus-spring-2025.pdf))
+- [Course Syllabus](./courses/ece465/2026/ece465-ind-study-syllabus-spring-2026.md)([pdf](./courses/ece465/2025/ece465-ind-study-syllabus-spring-2026.pdf))
 
 ---
 
@@ -20,7 +24,7 @@ Serving as an [adjunct professor of Electrical and Computer Engineering](https:/
 
 ---
 
-### ECE 251 - Computer Architecture - Spring 2024
+### ECE 251 - Computer Architecture - Spring 2025
 
 - [Course Syllabus](./courses/ece251/2025/ece251-syllabus-spring-2025.md) ([pdf](./courses/ece251/2025/ece251_comp_arch_syllabus_spring_2025.pdf))
 
