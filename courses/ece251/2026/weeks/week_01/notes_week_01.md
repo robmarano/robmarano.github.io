@@ -1,9 +1,11 @@
 # Notes for Week 1
-[ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.md) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.md)
+[ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
+
+[Slides for Class 01](https://cooperunion.sharepoint.com/:p:/s/Section_ECE-251-B-2026SP/IQBwKZo1hrldSql8eipiyQ8uARaOo3iqJQVQ1WOgeJ_0P_s?e=PJOBLj)
 
 # Topics
 
-1. Software eats the world: Computers, their abstraction, and why we study them -- [prologue](/courses/ece251/2026/textbook-notes.md)
+1. Software eats the world: Computers, their abstraction, and why we study them -- [prologue](/courses/ece251/2026/textbook-notes.html)
 2. Stored Program Concept and its processing
   1. The alphabet, vocabulary, grammar of computers
     1. `1`s and `0`s as the **alphabet**
@@ -23,9 +25,52 @@
     5. Clock speed
     6. Multi-core (Ahmdal's Law)
     7. Threading
-  4. History of computer architecture and modern advancements
+  4. Intro to the history of computer architecture and modern advancements
 
+# Class 01 Lecture Summary
 
+We had our inaugural lecture of the ECE 251 Computer Architecture course this Spring 2026 semester. I outlined the course logistics, the "arc of learning" for the semester, and introduces foundational concepts regarding the definition, history, and design principles of modern computers.
+
+### **Course Structure and Philosophy**
+I emphasized a supportive teaching environment, encouraging open communication via chat and direct contact. The course is co-taught with Professor Fontaine and is designed to teach the "art and science" behind modern computer construction, applicable to electrical engineers, computer scientists, and programmers alike.
+*   **Assessment:** The course includes weekly homework, a midterm, a final exam, and a "pared back" final project where students will each design and model their own computer and potentially run programs on it.
+*   **Curriculum Roadmap:** The semester progresses from computer abstractions to the Instruction Set Architecture (ISA), hardware modeling with Verilog, assembly language, the internal components (ALU, Memory, Control), and finally memory hierarchies.
+
+### **Topics Covered**
+
+**1. Definition of a Computer**
+The lecture distinguishes between historical analog computers and modern digital general-purpose computers.
+*   **Analog Origins:** I cited historical examples of computation, such as using knotted ropes to create right angles for the pyramids or analog circuits for WWII ballistics calculations.
+*   **General Purpose:** A modern computer is defined by its ability to process algorithms across vast magnitudes, from astronomical units down to molecular scales, using floating-point numbers.
+*   **The Five Components:** The classic components of a computer are identified as **Input, Output, Memory, Datapath, and Central Processing Unit (CPU)**.
+
+**2. Instruction Set Architecture (ISA)**
+The course focuses on **MIPS** because it is a pedagogically pure RISC (Reduced Instruction Set Computer) architecture, unlike the more complex x86.
+*   **Hardware/Software Interface:** The ISA serves as the boundary between software (instructions) and hardware. Software is defined as a combination of instructions and data.
+*   **Binary Representation:** I noted that the course will use the binary number system, referencing John von Neumann's influence, and that data (bits) can represent anything from numbers to instructions depending on context.
+
+**3. The Seven Great Ideas in Computer Architecture**
+I introduced seven enduring design principles found in our textbook:
+*   **Abstraction:** Hiding lower-level details to simplify design models.
+*   **Make the Common Case Fast:** Optimizing for frequent events rather than rare ones to enhance overall performance.
+*   **Performance via Parallelism:** Doing multiple things at once, such as using multiple cores or networked computers.
+*   **Performance via Pipelining:** Illustrated using a **laundry analogy** (washing, drying, and folding loads simultaneously), pipelining overlaps the execution of instructions to improve throughput.
+*   **Performance via Prediction:** Guessing outcomes (like branch prediction) to proceed without waiting for confirmation.
+*   **Hierarchy of Memories:** Using layers of memory with different speeds and sizes (e.g., SRAM, DRAM, Disk) because fast memory is expensive.
+*   **Dependability via Redundancy:** Including redundant components (like in RAID storage or cloud infrastructure) to ensure systems survive failures.
+
+**4. Performance Measurement**
+Performance is defined by the time it takes to execute a program, not just clock speed.
+*   **The CPU Equation:** Computer performance is determined by **Instruction Count** (from the program), **CPI** (Cycles Per Instruction, determined by hardware/ISA), and **Clock Cycle Time**.
+*   **Benchmarking:** I introduced **SPEC** (System Performance Evaluation Cooperative) as a standard way to compare computer performance using real-world workloads.
+
+**5. Computer Architectures**
+Two primary memory architectures are distinguished:
+*   **Von Neumann Architecture:** A single memory system for both instructions and data, used in general-purpose computing.
+*   **Harvard Architecture:** Physically separate memories and buses for instructions and data, typically used in Digital Signal Processing (DSP) and vector processing.
+
+**6. Current Revolutions**
+We closed the lecture by contextualizing the course within current technological revolutions, specifically **Quantum Computing** and **Generative AI**. AI workloads (like matrix multiplication) rely heavily on specialized architectures like GPUs and NPUs (Neural Processing Units), requiring engineers to understand these underlying hardware principles.
 
 # Topics Deep Dive
 
@@ -59,13 +104,12 @@ Every computer, from your smartphone to a supercomputer, can be conceptually bro
 1. **Input:**  Mechanisms for feeding data into the computer (keyboard, mouse, network interface, sensors, etc.).
 2. **Output:**  Mechanisms for displaying or transmitting results (monitor, printer, network interface, actuators, etc.).
 3. **Memory:**  Stores both instructions (the program) and data that the computer is actively using.  Think of it as the computer's workspace.  We'll explore different types of memory (RAM, cache, registers) in detail later.
-4. **Arithmetic Logic Unit (ALU):**  Performs the actual computations (arithmetic operations, logical comparisons) on the data.  This is the "brain" of the CPU.
+4. **CPU:**  Performs the actual computations (arithmetic operations, logical comparisons) on the data.  This is the "brain" of the computer.
 5. **Control Unit:**  Directs the operation of all other components.  It fetches instructions from memory, decodes them, and issues signals to the ALU, memory, and I/O devices to execute those instructions.  It's the "conductor" of the computer's orchestra.
 
-These five components are interconnected by buses, which are sets of wires that carry data and control signals.
+These five components are interconnected by address buses, data buses, and control buses, which are sets of wires that carry data and control signals.
 
-![Five Components](/courses/ece251/2026/images/computer_5_parts.jpg)
-
+<img src="../../images/computer_5_parts.jpg" alt="Five Parts of a Computer" width="50%" />
 
 ## The Stored Program Concept
 
@@ -79,7 +123,7 @@ The stored program concept, attributed to John von Neumann, revolutionized compu
 
 This concept is fundamental to how all modern computers operate.
 
-## IV. von Neumann vs. Harvard Architectures
+## von Neumann (Princeton) vs. Harvard Architectures
 
 While the von Neumann architecture is dominant, it's important to understand its historical context and alternatives.
 
@@ -93,12 +137,48 @@ While the von Neumann architecture is dominant, it's important to understand its
 
 The **von Neumann bottleneck** arises because both instructions and data must travel over the same bus to and from memory.  This can limit performance, especially when the CPU needs to fetch instructions and data frequently.  The Harvard architecture mitigates this by allowing parallel access to instruction and data memories.
 
-**(Diagrams comparing the two architectures)**
+**Architectural Comparison**
+
+<img src="../../images/von_neumann_vs_harvard.jpg" alt="Von Neumann vs. Harvard Architectures" width="50%" />
 
 While modern general-purpose computers primarily use variations of the von Neumann architecture (often with caching and other techniques to reduce the bottleneck), the Harvard architecture is still relevant in specialized applications where performance and parallelism are critical.
 
 Additional readings for these architecture types:
 * [Von Neumann Architecture vs. Harvard Architecture: A Detailed Comparison](https://www.spiceworks.com/tech/tech-general/articles/von-neumann-architecture-vs-harvard-architecture/)
+
+### History of the Stored Program Concept
+The stored-program concept, a fundamental principle in computer architecture, was pioneered by John von Neumann in the mid-1940s. It revolutionized computing by allowing computers to store both data and instructions in the same memory location. This seemingly simple idea had profound implications, enabling computers to become much more flexible and powerful than their predecessors, which relied on fixed programs or manual reconfiguration.   
+
+Before the stored-program concept, computers were often limited to specific tasks. These "Fixed Program Computers" had their functionality determined by their physical design and could not be easily reprogrammed.  For example, the ENIAC and Colossus had to be physically rewired or reconfigured with switches and cables to change their programs. This process was time-consuming and laborious, often taking weeks to set up and debug a single program. Imagine having to rewire your computer every time you wanted to switch from writing an email to browsing the internet!   
+
+With the stored-program concept, instructions are encoded as binary numbers and stored in memory alongside the data they operate on. This means that the computer can access and execute instructions sequentially, just like it accesses data. This is achieved through a continuous cycle of fetching instructions from memory, decoding them, and then executing them, known as the fetch-decode-execute cycle. The control unit acts like the brain of the computer, fetching instructions from memory and interpreting them. It then instructs the ALU, which is responsible for performing calculations and logical operations, to carry out the tasks specified by the instructions.
+
+### Relating through an Example
+Think of a chef in a kitchen. In early computers, the chef would have to follow a single recipe written on a wall, with no way to change it, cooking one item, dish, or ingredient at a time. The chef **is** the computer system and the program. With the stored-program concept, the chef now has a cookbook where they can store and access different recipes (programs) as needed. The chef can then follow the instructions in the chosen recipe to prepare a dish (perform a computation).
+
+A crucial aspect of this concept is that instructions are treated as data, that is, data and instructions are coded into binary representation and manipulated by the computer architecture to compute (and store) the results requested by the program and driven by the data. As a result, programs can not only be stored and executed, but they can also be manipulated and modified like any other data. This has profound implications, as it allows for the creation of programs that can write or modify other programs, leading to the development of assemblers, compilers, linkers, and other essential software tools. It also enables self-modifying code, where a program can alter its own instructions during execution, allowing for more complex and dynamic behavior.   
+
+This ability to store and execute different programs from memory is what allows your computer to run various applications, from TikTok, SnapChat, and web browsers to games, video editing software, and Matlab, for example.   
+
+### Key Advantages of the Stored-Program Concept:
+
+1. **Programmability:** Computers can be easily reprogrammed to perform different tasks by simply loading a new set of instructions into memory.
+2. **Flexibility:** A single computer can be used for a wide range of applications.
+3. **Self-modifying code:** Programs can modify their own instructions during execution, enabling more complex and dynamic behavior. (Think how computer viruses work...)
+
+### Limitations of the Von Neumann Architecture (aka Princeton Architecture)
+While the Von Neumann architecture revolutionized computing, it also has limitations. One of the most significant is the "Von Neumann bottleneck." This bottleneck arises because the CPU fetches both data and instructions from the **same memory location** using a single bus. This means that the CPU cannot fetch data and instructions simultaneously, leading to a slowdown in processing speed, especially when dealing with large amounts of data.   
+
+To mitigate this bottleneck, modern computer architectures employ various techniques, such as:
+
+1. **Memory Hierarchy:** Two of the five main components of a modern, general purpose computer are CPU and memory. This general term memory represents all the addressable storage locations. The memory hierarchy begins with cache memory, closest to the CPU. These small, high-speed memory units store frequently accessed data and instructions, reducing the need to access the lower memory stages in the hierarchy, ultimately to the full extent of all the addressable storage locations, aka, main memory.
+2. **Modified Harvard architecture:** Using separate caches or access paths for data and instructions.   
+3. **Branch prediction:** Predicting the flow of program execution to pre-fetch instructions and reduce delays.   
+
+These advancements help to improve the performance of modern computers, but the fundamental principle of the Von Neumann architecture remains a cornerstone of their design.
+
+### In Conclusion
+The stored-program concept, a brainchild of John von Neumann, revolutionized computing by allowing both data and instructions to reside in the same memory. This innovation enabled computers to become programmable, flexible, and capable of performing a wide range of tasks. By treating instructions as data, it paved the way for the development of software, operating systems, and ultimately, the digital world we have today. Modern computers, from smartphones to supercomputers, owe their versatility and power to this fundamental principle.
 
 ## Introducing Performance of a Computer
 
@@ -219,4 +299,116 @@ The ISA defines the set of instructions that a particular processor can understa
 
 Understanding the ISA is crucial for writing efficient code, optimizing compiler design, and designing new processors.  It's the bridge between the high-level world of programming and the low-level world of hardware.
 
-[ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.md) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.md)
+# Textbook Chapter 1 Summary Notes
+
+## 1.1 Introduction
+The computer revolution has been driven by rapid improvements in technology, leading to distinct classes of computing systems:
+*   **Personal Mobile Devices (PMDs)**: Battery-operated, wireless, multimedia-centric (e.g., smartphones, tablets).
+*   **Desktop Computers**: Price/performance driven, personal use.
+*   **Servers**: High availability, scalability, high throughput. Used for file storage, web serving, and database applications.
+*   **Clusters/Warehouse Scale Computers (WSCs)**: Thousands of servers connected via LAN/WAN; powering "Software as a Service" (SaaS) and Cloud Computing.
+*   **Embedded Computers**: Hidden processors in other systems (cars, appliances), strict power/cost/performance constraints.
+
+## 1.2 Seven Great Ideas in Computer Architecture
+1.  **Use Abstraction to Simplify Design**: Hiding lower-level details to manage complexity (e.g., instruction set architecture).
+2.  **Make the Common Case Fast**: Optimize the most frequently executed paths.
+3.  **Performance via Parallelism**: Doing multiple things at once.
+4.  **Performance via Pipelining**: Specific form of parallelism (like an assembly line).
+5.  **Performance via Prediction**: Guessing the outcome to proceed sooner (e.g., branch prediction).
+6.  **Hierarchy of Memories**: Combining small/fast memory (cache) with large/slow memory to give the illusion of large/fast memory.
+7.  **Dependability via Redundancy**: Redundant components to handle failures (e.g., RAID).
+
+## 1.3 Below Your Program
+Software is organized in layers:
+1.  **Applications**: High-level code.
+2.  **System Software**:
+    *   **Operating System (OS)**: Handles I/O, memory, and resource allocation.
+    *   **Compiler**: Translates high-level language (C, Java) into assembly language.
+3.  **Hardware**: Executes the machine code.
+
+**Translation Hierarchy**:
+*   High-Level Language $\rightarrow$ Assembly Language $\rightarrow$ Machine Language (Binary).
+*   **Assembler**: Translates assembly to binary.
+
+## 1.4 Under the Covers (The 5 Classic Components)
+Every computer consists of 5 components:
+1.  **Input**: Feeds data (keyboard, mouse, mic).
+2.  **Output**: Conveys results (display, speaker).
+3.  **Memory**: Stores data and programs (DRAM for main memory, SRAM for cache, Flash/Disk for secondary).
+4.  **Datapath**: Performs arithmetic operations (brawn).
+5.  **Control**: Commands the datapath, memory, and I/O (brain).
+
+*   **Processor (CPU)** = Datapath + Control.
+
+## 1.5 Technologies for Processors and Memory
+*   **Integrated Circuits (ICs)**: Chips containing transistors (on/off switches).
+*   **VLSI (Very Large Scale Integration)**: Millions/billions of transistors on a chip.
+*   **Manufacturing**: Silicon Ingot $\rightarrow$ Wafers $\rightarrow$ Patterning $\rightarrow$ Dicing into Dies.
+*   **Yield**: Percentage of good dies per wafer. Cost increases with die size.
+
+## 1.6 Performance
+Performance is defined by the user's needs:
+*   **Response Time (Execution Time)**: Time to complete one task. (Primary focus for individual users).
+*   **Throughput (Bandwidth)**: Total work done per unit time. (Primary focus for datacenters).
+
+**Measuring Time**:
+*   **Wall-clock time (Elapsed time)**: Total time including I/O, OS overhead, etc.
+*   **CPU Time**: Time the CPU spends working on a specific task (User CPU time + System CPU time).
+
+**The CPU Performance Equation**:
+Execution time depends on the number of clock cycles and the clock cycle time.
+
+$$ \text{CPU Time} = \text{Instruction Count} \times \text{CPI} \times \text{Clock Cycle Time} $$
+
+Or equivalently:
+$$ \text{CPU Time} = \frac{\text{Instruction Count} \times \text{CPI}}{\text{Clock Rate}} $$
+
+*   **Instruction Count ($I$)**: Determined by the program, algorithm, and compiler.
+*   **CPI (Cycles Per Instruction)**: Average number of cycles per instruction. Determined by computer organization and instruction set.
+*   **Clock Cycle Time ($T$)**: Determined by hardware technology and organization.
+
+### CPU Performance Equation
+<img src="./cpu-perf-diagram.png" alt="cpu-perf-diagram" style="height: 60%; width: 60%;" />
+
+## 1.7 The Power Wall
+For decades, clock rates increased rapidly, but this has slowed due to thermal limits.
+*   **Power Equation**:
+    $$ P_{\text{dynamic}} \propto \text{Capacitive Load} \times \text{Voltage}^2 \times \text{Frequency} $$
+*   We cannot reduce voltage further without leakage issues, and we cannot remove heat fast enough to increase frequency significantly.
+*   **Result**: The "Power Wall" forces a shift in design strategy.
+
+## 1.8 The Sea Change: Multicore
+To improve performance without increasing clock rate, manufacturers switched to **Multicore Processors** (multiple processors per chip).
+*   **Impact**: Programmers must now write **parallel** programs to get performance benefits.
+*   **Challenges**: Scheduling, load balancing, synchronization, and communication overhead.
+Read [The Free Lunch is Over - A Fundamental Turn Toward Concurrency in Software](./The%20Free%20Lunch%20is%20Over%20-%20A%20Fundamental%20Turn%20Toward%20Concurreny%20in%20Software.pdf)
+
+## 1.11 Fallacies and Pitfalls
+### **1. The Amdahl’s Law Pitfall**
+**Pitfall:** Expecting the improvement of one aspect of a computer to increase overall performance by an amount proportional to the size of the improvement.
+
+*   **Concept:** This pitfall ignores the "law of diminishing returns" known as **Amdahl’s Law**. The total speedup of a system is strictly limited by the fraction of the workload that *cannot* be improved (the sequential or unaffected part). No matter how much you optimize a specific feature, the execution time can never drop below the time required for the unaffected portion.
+*   **Workable Example:**
+    *   **Scenario:** A program takes **100 seconds** to execute. **80 seconds** of this time is spent on multiplication operations, and **20 seconds** is spent on other tasks.
+    *   **Attempt:** A designer improves the multiplication hardware to be infinitely fast (0 seconds).
+    *   **Result:** The program still takes **20 seconds** to run (the unaffected portion). Despite improving the multiplication hardware by 100%, the overall system performance only improves by a factor of 5, not infinity. This proves that the opportunity for improvement is limited by how much the specific feature is actually used.
+
+### **2. The Low Utilization Fallacy**
+**Fallacy:** Computers at low utilization use little power.
+
+*   **Concept:** It is a common misconception that if a computer is doing very little work (low load), it consumes a proportionally small amount of energy. In reality, processors often remain inefficient at low loads due to static power (leakage) and peripheral components.
+*   **Workable Example:**
+    *   **Scenario:** A server in a warehouse-scale computer (like Google's) is running at only **10% utilization** (a light workload).
+    *   **Expectation:** One might assume it uses ~10% of its peak power.
+    *   **Reality:** The server actually consumes roughly **33% of its peak power**. This inefficiency is problematic because servers spend most of their time (10% to 50%) in these lower utilization states, wasting significant energy.
+
+### **3. The Performance Metric Pitfall**
+**Pitfall:** Using a subset of the performance equation as a performance metric.
+
+*   **Concept:** Relying on a single metric—such as clock rate, instruction count, or MIPS (Million Instructions Per Second)—can be misleading because these metrics do not account for the total time required to execute a program. Time is the only reliable measure of performance.
+*   **Workable Example:**
+    *   **Scenario:** You are comparing **Computer A** (Clock rate: 4 GHz, CPI: 1.0) and **Computer B** (Clock rate: 4 GHz, CPI: 1.1) running different programs.
+    *   **The Metric (MIPS):** MIPS is calculated as $\frac{\text{Instruction Count}}{\text{Execution Time} \times 10^6}$. Because MIPS does not account for instruction capability, a computer with simple instructions might execute more of them per second (high MIPS) but take longer to complete the actual task.
+    *   **Result:** If a new program is written using more instructions that are individually faster to execute, the MIPS rating might go up, but the actual performance (execution time) could go down. Thus, a higher MIPS rating does not automatically mean a faster computer when comparing different instruction sets.
+
+[ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)

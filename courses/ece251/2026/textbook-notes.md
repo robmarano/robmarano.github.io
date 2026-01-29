@@ -1,5 +1,5 @@
 # Course Notes
-[<- back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.md)
+[<- back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html)
 ## Prologue
 
 "What I hear, I forget; What I see I remember; What I do, I understand." &mdash; Confucius (551-479 B.C.)
@@ -25,4 +25,4 @@ The course is based upon the "abstraction-implementation paradigm." Each topic m
 The course (**hardware**) starts with a review of boolean logic, algebra using the HDL called "Verilog," which will serve as the implementation of our digital logic "chips" to realize combinational logic circuits and sequential logic circuits combined together using abstraction to result in compute, storage ("memory") and control of a computer design. Once the compute and memory circuits have been created in Verilog, we will discuss low-level programming, specificying a machine language in both its symbolic and binary forms. We will focus on the use of four design principles that drive modern computer architecture design.
 
 
-[ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.md) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.md)
+[ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)

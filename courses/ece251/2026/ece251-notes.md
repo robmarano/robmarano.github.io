@@ -9,7 +9,7 @@
 |                                     Week(s) |                                            Dates | Topic                                                          |
 | ------------------------------------------: | -----------------------------------------------: | :------------------------------------------------------------- |
 |                                 [1](#week1) |                                   [1/22](#week1) | Computer Abstraction & Stored Program Concept                  |
-|                    [2](#week2), [3](#week3) |                   [1/29](#week2), [2/5](#week3) | Instructions &mdash;The Language & Grammar of Computers        |
+|                    [2](#week2), [3](#week3) |                   [1/29](#week2), [2/5](#week3)  | Instructions &mdash;The Language & Grammar of Computers        |
 |                    [4](#week4), [5](#week5) |                   [2/12](#week4), [2/19](#week5) | Hardware Modeling with Software (Verilog HDL)                  |
 |                    [6](#week6), [7](#week7) |                    [2/26](#week6), [3/5](#week7) | Intro to Assembly Language Programming &mdash; MIPS CPU        |
 |                                 [8](#week8) |                                   [3/12](#week8) | Arithmetic for Computers; **Midterm Exam**                     |
@@ -27,7 +27,7 @@ Follow the link above to the respective week's materials below.
 # <a id="week1">Week 1 &mdash; 1/22 &mdash; Verilog; Computer Abstraction & Stored Program Concept</a>
 
 ## Let's begin
-Have a read of our opening [prologue](/courses/ece251/2026/textbook-notes.md), and then let's get started with why we are taking this class...
+Have a read of our opening [prologue](/courses/ece251/2026/textbook-notes.html), and then let's get started with why we are taking this class...
 
 ## Topics
 

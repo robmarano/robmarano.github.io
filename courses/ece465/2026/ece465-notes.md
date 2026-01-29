@@ -1,6 +1,6 @@
 # ECE 465 Spring 2026 Weekly Course Notes
 
-[<- back to syllabus](./ece465-ind-study-syllabus-spring-2025.html)
+[<- back to syllabus](./ece465-ind-study-syllabus-spring-2026.html)
 
 ---
 
@@ -224,3 +224,6 @@ if __name__ == "__main__":
     start_client()
 ```
 *Ref: Adapted from Note 2.1 illustrating basic connectivity principles discussed in Chapter 1.*
+
+--
+[<- back to syllabus](./ece465-ind-study-syllabus-spring-2026.html)
