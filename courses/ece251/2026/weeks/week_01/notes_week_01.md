@@ -166,7 +166,6 @@ As clock speeds increase, so does the power consumption of the processor.  This 
 * **Power Consumption:**  Higher power consumption translates to higher energy bills and reduces battery life in mobile devices.  This has significant environmental implications as well.
 * **Diminishing Returns:**  At a certain point, the performance gains from increasing clock speed are outweighed by the increased power consumption and cooling costs.  The extra heat generated becomes unmanageable, and further increases in clock speed provide only marginal performance improvements.
 
-
 **The Relationship Between Clock Speed and Power**
 
 * **Dynamic Power:** A significant portion of a processor's power consumption is dynamic power, which is the power used to switch transistors on and off. This is directly related to the clock speed. Note there is also "static power consumption," also known as the leakage current to power up transitors. We will deal here only with dynamic power, that is, the power created by switching between 0s and 1s.
