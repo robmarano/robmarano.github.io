@@ -68,8 +68,6 @@ The ISA defines the set of instructions that a particular processor can understa
 
 Understanding the ISA is crucial for writing efficient code, optimizing compiler design, and designing new processors.  It's the bridge between the high-level world of programming and the low-level world of hardware.
 
-## 
-
 Read [Textbook Chapter 2 notes by professor](../../Prof%20Rob%20Marano%20Course%20Notes%20on%20Intro%20to%20Computer%20Architecure.pdf)
 
 ## Introduction (Textbook &sect;2.1)
@@ -77,14 +75,33 @@ Read [Textbook Chapter 2 notes by professor](../../Prof%20Rob%20Marano%20Course%
 *   **Stored-Program Concept**: The fundamental idea that instructions and data are both stored in memory as numbers. This allows computers to run different programs by simply loading new numbered instructions into memory.
 
 ## Operations of the Computer Hardware (Textbook &sect;2.2)
-*   **Arithmetic**: Every computer must perform arithmetic. MIPS provides operations like `add` and `sub`.
-*   **Design Principle 1: Simplicity favors regularity**. MIPS arithmetic instructions always have exactly three operands (e.g., `add a, b, c` creates `a = b + c`). This regularity simplifies the hardware implementation.
+* **Arithmetic**: Every computer must perform arithmetic. MIPS provides operations like `add` and `sub`.
+* **Design Principle 1: Simplicity favors regularity**. MIPS arithmetic instructions always have exactly three operands (e.g., `add a, b, c` creates `a = b + c`). This regularity simplifies the hardware implementation.
 
 Every computer must be able to perform arithmetic. The MIPS instruction set includes:
 - `add a, b, c`  # The sum of b and c is placed in a.
 - `sub a, b, c`  # The difference of b and c is placed in a.
 
-## Operands of the Computer Hardware (Textbook &sect;2.3)
+The arithmetic instructions of the MIPS32 architecture are a cornerstone of understanding how CPUs actually do math. Remember, we're building up from the ground floor, so understanding these fundamentals is crucial for your future work in computer architecture and embedded systems.
+
+Here's the high-level overview of MIPS32 arithmetic instructions, focusing on the key concepts relevant to you as budding engineers and computer scientists:
+
+1. **Register-Based Operations:** MIPS32 is a **load-store architecture**. This means arithmetic operations are performed only on data held in registers. You can't directly manipulate values in memory with arithmetic instructions. This is a crucial design decision that impacts performance and instruction complexity. Think of registers as the CPU's scratchpad – quick access, limited space.
+2. **Three-Operand Instructions:** Most MIPS32 arithmetic instructions are **three-operand instructions**. This means they take **two source registers** and **one destination register**. The general format is `operation $rd, $rs, $rt`, where `$rd` is the destination, `$rs` is the first source, and `$rt` is the second source. For example, `add $t0, $t1, $t2` means `$t0 = $t1 + $t2`. This consistent format simplifies instruction decoding and execution.
+3. **Instruction Types and Functionality:** MIPS32 provides a variety of arithmetic instructions, covering the basic operations:
+   1. **Addition:** `add`, `addu` (unsigned), `addi` (immediate), `addiu` (unsigned immediate).<br>
+      Pay close attention to the signed vs. unsigned versions. Overflow handling is different!
+   2. **Subtraction:** `sub`, `subu` (unsigned). <br>
+      Again, mind the signed/unsigned distinction.
+   3. **Multiplication:** `mul`, `mult`, `multu`. `mult` and `multu` produce a 64-bit result, stored in the special `HI` and `LO` registers. You then use `mfhi` and `mflo` to move these parts into general-purpose registers. `mul` provides the _lower 32-bit result_.
+   4. **Division:** `div`, `divu`. Similar to multiplication, `div` and `divu` produce a quotient and a remainder. The quotient is stored in `LO`, and the remainder in `HI`.
+   5. **Logical Operations:** `and`, `or`, `xor`, `nor`. These perform bitwise logical operations. Crucial for manipulating data at the bit level. We'll delve into their uses later when we discuss control flow and data manipulation.
+   6. **Shift Operations:** `sll` (shift left logical), `srl` (shift right logical), `sra` (shift right arithmetic). These are essential for bit manipulation and are often used in implementing multiplication and division by powers of 2.
+4. **Immediate Operands:** Many instructions have an "immediate" version (e.g., `addi`). This allows you to use a constant value directly in the instruction, without needing to load it into a register first. This is a significant optimization for frequently used constants. Preparation is handled by the assembler and encoded into the machine code of the program.
+5. **Overflow and Underflow:** It's your responsibility as the programmer to handle **overflow** and **underflow** conditions. MIPS32 provides some instructions that detect overflow (the signed versions), but it doesn't automatically throw exceptions in all cases. Understanding the implications of signed and unsigned arithmetic is crucial to the success of your CPU design!
+6. **No Condition Codes:** Unlike some other architectures, MIPS32 does not use condition codes (flags) set by arithmetic operations. This has implications for how you implement branching and comparisons, which we'll discuss when we cover control flow.
+
+## Exploration of Operands of the Computer Hardware (Textbook &sect;2.3)
 *   **Registers**: Hardware primitives used for storing variables. MIPS has 32 32-bit registers. Groups of 32 bits are called a **word**.
 *   **Design Principle 2: Smaller is faster**. A smaller number of registers generally allows for faster clock cycles than a very large number of registers.
 *   **Memory Operands**: Since there are only a few registers, complex data structures (arrays, structs) are kept in memory.
