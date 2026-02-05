@@ -9,6 +9,85 @@
 
 # Topic Deep Dive
 
+## How to Program MIPS Assembly: Arithmetic & Memory Access
+
+**Reference:** *Computer Organization and Design*, Sections 2.5 – 2.6 and said sections in[Prof. Marano's Notes](/courses/ece251/2026/Prof_Marano_Course_Notes-Intro_Comp_Arch.pdf)
+
+### Part 1: Translating Assembly to Machine Language (Section 2.5)
+In Week 2, we learned the *vocabulary* (instructions like `add`, `lw`). Now we define the *grammar*—how these instructions are physically represented in the hardware as 32-bit binary numbers. This is the **Stored-Program Concept**: instructions are just numbers stored in memory.
+
+#### 1. The MIPS Instruction Formats
+To balance "Simplicity favors regularity" with "Good design demands good compromise," MIPS uses three specific instruction formats. All instructions are exactly 32 bits long.
+
+##### **A. R-Type (Register Format)**
+Used for arithmetic and logical instructions that use three registers (e.g., `add`, `sub`, `and`, `or`, `slt`).
+
+| Field | **op** | **rs** | **rt** | **rd** | **shamt** | **funct** |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Bits** | 6 | 5 | 5 | 5 | 5 | 6 |
+
+*   **op (Opcode):** Basic operation. For R-Type, this is always **0**.
+*   **rs:** The first source register operand.
+*   **rt:** The second source register operand.
+*   **rd:** The destination register (where the result goes).
+*   **shamt:** Shift amount (used only for shift instructions; **0** for math).
+*   **funct:** Function code. This selects the specific variant of the operation (e.g., `add`=32, `sub`=34) given that `op` is 0.
+
+**Example Translation:** `add $t0, $s1, $s2`
+*   **Map Registers:** `$s1`=17, `$s2`=18, `$t0`=8.
+*   **Fields:** op=0, rs=17, rt=18, rd=8, shamt=0, funct=32.
+*   **Binary:** `000000 10001 10010 01000 00000 100000`.
+
+##### **B. I-Type (Immediate Format)**
+Used for data transfer (`lw`, `sw`) and immediate arithmetic (`addi`, `andi`). This format handles cases where we need a constant or an address offset.
+
+| Field | **op** | **rs** | **rt** | **constant / address** |
+| :--- | :---: | :---: | :---: | :---: |
+| **Bits** | 6 | 5 | 5 | 16 |
+
+*   **op:** The opcode value identifies the instruction (e.g., `lw`=35, `sw`=43, `addi`=8).
+*   **rs:** The base register (for memory) or source register.
+*   **rt:**
+    *   For **Loads (`lw`)**: The *destination* register.
+    *   For **Stores (`sw`)**: The *source* register (data to be stored).
+*   **constant:** A 16-bit signed integer (range -32,768 to +32,767).
+
+**Example Translation:** `lw $t0, 32($s3)`
+*   **Analysis:** Base register is `$s3` (19). Destination is `$t0` (8). Offset is 32.
+*   **Fields:** op=35, rs=19, rt=8, address=32.
+*   **Binary:** `100011 10011 01000 0000000000100000`.
+
+### Part 2: Logical Operations (Section 2.6)
+Logical instructions allow us to operate on bits within a word (packing/unpacking data) rather than treating the word as a single integer.
+
+#### 1. Shift Operations (R-Type)
+Shifting moves all bits in a word to the left or right, filling the empty spots with 0s.
+*   **sll (Shift Left Logical):** Moves bits left. Mathematically equivalent to multiplying by $2^i$.
+    *   *Example:* `sll $t2, $s0, 4` (Reg `$t2` = `$s0` << 4).
+    *   *Encoding:* The `rs` field is unused (0). The shift amount goes into the **shamt** field.
+*   **srl (Shift Right Logical):** Moves bits right. Mathematically equivalent to dividing by $2^i$ (for unsigned numbers).
+
+#### 2. Bitwise Operations
+*   **AND (`and`, `andi`):** Used for **masking**. It isolates bits by forcing 0s where the mask is 0.
+*   **OR (`or`, `ori`):** Used to combine bits. It places 1s where the mask is 1.
+*   **NOR (`nor`):** Used to invert bits. MIPS does not have a NOT instruction.
+    *   *Implementation:* To invert register `$t1`, use `nor $t0, $t1, $zero`. (A NOR 0 = NOT A).
+
+#### 3. Immediate Logic Differences
+*   **Arithmetic (`addi`):** Uses **sign-extension** (copies the sign bit) to fill the upper 16 bits of the 32-bit register.
+*   **Logical (`andi`, `ori`):** Uses **zero-extension** (fills upper 16 bits with 0s) because we treat the data as a collection of bits, not a signed number.
+
+### Part 3: Handling Large Constants (Section 2.10)
+Since the I-Format only allows for 16-bit constants, we cannot load a full 32-bit address or large integer in a single instruction. We must construct it in two steps using the `lui` (Load Upper Immediate) instruction.
+
+**Algorithm to load 32-bit constant:**
+1.  **`lui $s0, 61`**: Loads the upper 16 bits (decimal 61) into the left half of `$s0` and clears the lower half to 0s.
+2.  **`ori $s0, $s0, 2304`**: logically ORs the lower 16 bits (decimal 2304) into the register.
+
+*Note:* The assembler often handles this via the pseudoinstruction `li` (load immediate), splitting it into `lui` and `ori` automatically, using the reserved register `$at`.
+
+Let's do some examples on your computer. Follow this [link](#coding) for our programs.
+
 ## How memory is segmented on a von Neumann computer like MIPS32
 
 ### The General Purpose Computer Memory Map
@@ -165,5 +244,963 @@ The four steps to run C code:
 2.  **Assembler**: Assembly $\rightarrow$ Machine Language (Object File). Handles pseudoinstructions.
 3.  **Linker**: Combines object files and libraries into an Executable. Resolves addresses.
 4.  **Loader**: Loads executable into memory and starts execution.
+
+# <a id="coding">Examples of using the Assembler (`spim`)</a>
+
+Based on the course syllabus, **Week 3** focuses on **"Instructions — The Language & Grammar of Computers (Part 2),"** covering logical operations, decision making, and procedures.
+
+Here is a series of MIPS assembly programs designed for the **SPIM** emulator. These examples progress from basic memory and arithmetic operations (Textbook &sect;2.2&ndash;&sect;2.6) to control flow (&sect;2.7) and finally procedures (&sect;2.8&ndash;&sect;2.9).
+
+## General Steps to Writing Assembly Code and Running it on `spim`
+
+To see how instructions are loaded and view memory, we will:
+
+1. **Write a simple MIPS assembly file** (`.s`).
+2. **Load it into SPIM.**
+3. **Use the `step` command** to watch the Program Counter (PC) move.
+4. **Examine the Data Segment** to see how variables are stored in RAM.
+
+### The Memory Layout
+
+When you load code, SPIM divides memory into specific sections:
+
+* **Text Segment:** Where your machine code (instructions) lives.
+* **Data Segment:** Where your static variables live.
+* **Stack Segment:** For dynamic data during function calls.
+
+
+### The Code: `example.s`
+
+Let's create a simple script that adds two numbers and stores them in memory.
+
+```mips
+# -------------------------------------------------------------------
+# Program: Simple Addition
+# Purpose: Demonstrate memory loading and instruction execution
+# -------------------------------------------------------------------
+
+.data
+    val1: .word 10          # Store the number 10 in memory
+    val2: .word 20          # Store the number 20 in memory
+    res:  .word 0           # Space for the result
+
+.text
+.globl main
+
+main:
+    # 1. Load val1 from memory into register $t0
+    lw $t0, val1            
+    
+    # 2. Load val2 from memory into register $t1
+    lw $t1, val2            
+    
+    # 3. Add registers $t0 and $t1, store in $t2
+    add $t2, $t0, $t1       
+    
+    # 4. Store the result back into the 'res' memory location
+    sw $t2, res             
+
+    # Exit the program (SPIM syscall for exit)
+    li $v0, 10
+    syscall
+```
+
+### How to Inspect Instructions and Memory
+
+If you are using the command-line `spim`, follow these steps in your terminal:
+
+1. **Launch SPIM:** Type `spim`.
+2. **Load your file:** `load "example.s"`
+3. **Examine Instructions:** Type `re` (read/print registers). You will see the **PC (Program Counter)** pointing to the first instruction.
+4. **Step through code:** Type `step`. SPIM will show you the exact instruction being executed.
+5. **View Memory:** * To see the **Data Segment** (where `val1` and `val2` are), type: `dump`.
+* This will show you the hexadecimal addresses and the values stored there (e.g., `0x0000000a` for 10).
+
+> **Pro Tip:** In the `step` mode, watch the **PC** register. Every time an instruction is loaded, the PC usually increments by 4 bytes, as MIPS instructions are fixed at 32-bit lengths.
+
+To see the value of `res` in memory using the command-line version of **spim**, you need to inspect the **Data Segment**.
+
+In MIPS, global variables defined under `.data` are stored starting at a specific base address, usually `0x10010000`.
+
+### Finding the Address
+
+When you define variables in your code, SPIM assigns them sequential addresses in memory:
+
+| Variable | Offset | Estimated Address |
+| --- | --- | --- |
+| `val1` | 0 bytes | `0x10010000` |
+| `val2` | 4 bytes | `0x10010004` |
+| `res` | 8 bytes | `0x10010008` |
+
+### Using the `print` Command
+
+Once you have run your program (or stepped through the `sw $t2, res` instruction), you can view the memory content directly in the terminal.
+
+#### The Syntax
+
+To view a specific memory address, use the `print` command followed by the address:
+
+```bash
+(spim) print 0x10010008
+```
+
+#### The `dump` Command
+
+If you aren't sure of the exact address, you can view the entire data segment:
+
+```bash
+(spim) dump
+```
+
+This will output a block of hexadecimal values. You will look for the line starting with `[0x10010000]`. If your code successfully added 10 and 20, the third word in that row (at offset `+8`) should change from `00000000` to `0000001e` (which is 30 in hexadecimal).
+
+### Step-by-Step Execution Trace
+
+To verify the value is actually being stored, follow this sequence in your terminal:
+
+1. **Run the program:** Type `run`.
+2. **Print the memory:** Type `print 0x10010008`.
+3. **Check the output:** SPIM should return `30` (or `0x0000001e`).
+
+#### Important Note on Big/Little Endian
+
+If you are on an **Apple Silicon Mac** or **ARM-based computer**, your system is **Little-Endian**. SPIM adopts the endianness of the host machine. This means the bytes might look "flipped" if you were to look at them individually, but the `print` command will handle the conversion and show you the integer correctly.
+
+### Summary of Commands
+
+| Command | Action |
+| --- | --- |
+| `step` | Execute one instruction (watch the registers change). |
+| `print_all_regs hex` | Show all registers (to see if `$t2` holds 30). |
+| `print addr` | Show the value at a specific memory address. |
+| `dump` | Show a large chunk of the data segment memory. |
+
+### Saving the Memory Dump to a File
+
+When you use the `dump` command in the `spim` console, it prints to the screen. To use external CLI tools like `od` (octal dump) or `hexdump`, you first need to tell `spim` to save that memory state to a physical file on your Mac.
+
+Inside the `spim` interface, use the `dump` command with a filename argument. This exports the current state of memory into a binary format.
+
+1. Open `spim` and load your code.
+2. Run your instructions so `res` is updated.
+3. Execute:
+```bash
+(spim) dump "spim.dump"
+```
+
+4. Exit `spim` using `exit` or `quit`.
+
+### Analyzing with `od` and `hexdump`
+
+Now that you have a file named `spim.dump` in your directory, you can use standard Unix terminal tools to inspect it.
+
+#### Using `hexdump` (Recommended)
+
+`hexdump` is often more readable for MIPS because you can group bytes into 4-byte "words" (the size of a MIPS instruction/integer).
+
+```bash
+hexdump -C spim.dump
+```
+
+* **`-C`**: Displays "Canonical" hex+ASCII output.
+* The first column is the offset, the middle is the hex data, and the right side is the ASCII representation.
+
+#### Using `od` (Octal Dump)
+
+To see the decimal values (like your result `30`) directly from the file, use:
+
+```bash
+od -t d4 spim.dump
+```
+
+* **`-t d4`**: Interprets the data as **signed decimal integers** in **4-byte** chunks.
+
+### Interpreting the Output
+
+The dump file contains the entire address space, so it can be quite large. You need to look for the **Data Segment offset**.
+
+In MIPS, the data segment usually starts at `0x10010000`. In a file dump, you will often find your data after the "header" or empty space.
+
+| Hex Offset in File | Value (Hex) | Value (Decimal) | MIPS Variable |
+| --- | --- | --- | --- |
+| `0000000` | `0000000a` | `10` | `val1` |
+| `0000004` | `00000014` | `20` | `val2` |
+| `0000008` | `0000001e` | `30` | `res` |
+
+> **Note:** Because ARM-based computers are **Little-Endian**, if you look at the raw bytes using `od -t x1` (1-byte hex), you will see `1e 00 00 00` instead of `00 00 00 1e`. Using `d4` or `x4` tells the tool to treat them as 32-bit words, which fixes the ordering for you.
+
+### Quick CLI Shortcut
+
+If you want to quickly see the value of `res` without scrolling through a huge file, you can pipe the output to `head` (to see the beginning of the data segment):
+
+```bash
+od -An -j 0 -N 12 -t d4 spim.dump
+```
+
+* **`-An`**: Removes the address column.
+* **`-j 0`**: Skips 0 bytes (adjust if your variables start further down).
+* **`-N 12`**: Only looks at the first 12 bytes (3 integers: `val1`, `val2`, `res`).
+
+
+#### Setting Up Your Files
+
+Before starting, ensure each program is saved as a `.s` file (e.g., `prog1.s`, `prog2.s`, `prog3.s`) in your working directory. To launch the emulator, simply open your terminal and type:
+
+```bash
+spim
+```
+
+#### Program 1: Memory, Arithmetic, and Logic
+
+This program is all about moving data between RAM and the CPU.
+
+##### How to Run and Inspect:
+
+1. **Load the code:** `(spim) load "prog1.s"`
+2. **See the Memory (Data Segment):** Before running, see how `var_a` (15) and `var_b` (10) are stored:
+` (spim) dump`
+Look at address `[0x10010000]`. You should see `0x0000000f` (15) and `0x0000000a` (10).
+3. **Step through the Loading:**
+Type `step` twice.
+* Watch the **PC** (Program Counter) increase by 4 bytes each time.
+* Type `re` (read registers) to see `$s0` and `$s1` fill up with the values from memory.
+
+4. **Verify Logic:** Step through the `sll` (Shift Left Logical) instruction. Check register `$t8`. It should now hold `40` (or `0x28`), proving that shifting left by 2 is equivalent to multiplying by .
+
+#### Program 2: Decisions and Loops
+
+This program demonstrates "Control Flow"—how the CPU skips or repeats instructions.
+
+##### How to Run and Inspect:
+
+1. **Load the code:** `(spim) load "prog2.s"`
+2. **Observe the Branching:**
+Instead of typing `run`, type `step` repeatedly.
+* When you reach `beq $t1, $zero, Loop_Exit`, look at the **PC**.
+* If `$t1` is not zero, notice how the next `step` command makes the PC jump back to a lower address (the start of the loop) instead of moving forward.
+
+3. **Monitor the Iterator:**
+Type `print $t0` after every few steps. You will see the loop index  incrementing ().
+4. **Final Result:**
+Once the program hits the `syscall` for exit, type `re`. Register `$t4` will hold the last value loaded from the array before the loop finished or found the target.
+
+#### Program 3: Procedures and the Stack
+
+This is the most advanced stage: managing "The Stack" to ensure functions don't overwrite important data.
+
+##### How to Run and Inspect:
+
+1. **Load the code:** `(spim) load "prog3.s"`
+2. **Watch the Stack Pointer ($sp):**
+Before the `jal` instruction, type `print $sp`. Note the address (e.g., `0x7fffeffc`).
+3. **Step into the Procedure:**
+Step until you execute `addi $sp, $sp, -12`.
+* Type `print $sp` again. You will see the address has **decreased**.
+* **The Concept:** In MIPS, the stack grows "downward" toward lower memory addresses.
+
+4. **See the Return Address ($ra):**
+After the `jal` instruction, type `print $ra`. This address tells the CPU exactly where to go back to in `main` once the function finishes.
+5. **Final Output (Printing to Screen):**
+Type `run`. Because this program uses `li $v0, 1` and `syscall`, SPIM will print the result directly to your terminal:
+`19` (Since ).
+
+### Summary of "Cheat Sheet" Commands
+
+| Task | SPIM Command | Explanation |
+| --- | --- | --- |
+| **Load File** | `load "filename.s"` | Prepares your code for execution. |
+| **Run All** | `run` | Executes the entire program until a syscall exit. |
+| **Step One** | `step` | Executes exactly one line of code. |
+| **View Registers** | `re` | Shows the hex value of all 32 registers. |
+| **View Single Reg** | `print $t0` | Shows the value of a specific register in decimal. |
+| **View RAM** | `dump` | Shows the "Data Segment" where variables live. |
+
+### Pro-Tip: User Input
+
+To ask a student for an integer during a program, use **Syscall 5**:
+
+```mips
+li $v0, 5      # Prepare to read integer
+syscall        # System pauses and waits for user input in terminal
+move $t0, $v0  # The input is now stored in $v0; move it to use it
+```
+
+## **Program 1: Memory Access, Arithmetic, and Logic (Textbook &sect;2.2 &ndash; &sect;2.6)**
+This program demonstrates how to define integer literals in the `.data` segment (memory), load them into registers, perform arithmetic, and manipulate bits using logical operators.
+    
+**Key Concepts:**
+*   **`.data` vs `.text`:** separating memory storage from executable instructions.
+*   **`lw` / `sw`:** The Data Transfer instructions to move values between memory and the register file,.
+*   **`add`, `sub`:** R-type arithmetic.
+*   **`and`, `or`, `nor`, `sll`:** Logical operations for bit masking and shifting.
+
+```mips
+# ECE 251 - Week 3 Example 1
+# Topics: Memory Access, Arithmetic, Logic Operations
+# Textbook Sections: 2.2, 2.3, 2.5, 2.6
+
+.data
+    # Define integer literals in memory
+    var_a:  .word 15        # Binary: 0000...0000 1111
+    var_b:  .word 10        # Binary: 0000...0000 1010
+    result: .word 0         # Space to store a result
+
+.text
+.globl main
+
+main:
+    # ---------------------------------------------------------
+    # 1. MEMORY CALLS: Loading literals from Memory to Registers
+    # ---------------------------------------------------------
+    # Use 'la' (Load Address) pseudo-instruction to get address of var_a
+    la  $t0, var_a          # $t0 = Address of var_a
+    lw  $s0, 0($t0)         # $s0 = Memory[$t0 + 0] (Value: 15)
+
+    # Use 'la' for var_b
+    la  $t1, var_b          # $t1 = Address of var_b
+    lw  $s1, 0($t1)         # $s1 = Memory[$t1 + 0] (Value: 10)
+
+    # ---------------------------------------------------------
+    # 2. ARITHMETIC: Using values in registers (Section 2.2)
+    # ---------------------------------------------------------
+    add $t2, $s0, $s1       # $t2 = $s0 + $s1 (15 + 10 = 25)
+    sub $t3, $s0, $s1       # $t3 = $s0 - $s1 (15 - 10 = 5)
+
+    # Store arithmetic result back to memory
+    la  $t4, result         # Load address of result variable
+    sw  $t2, 0($t4)         # Memory[$t4] = 25
+
+    # ---------------------------------------------------------
+    # 3. BOOLEAN LOGIC & SHIFTS (Section 2.6)
+    # ---------------------------------------------------------
+    
+    # Bitwise AND (Masking)
+    # 15 (1111) AND 10 (1010) = 10 (1010)
+    and $t5, $s0, $s1       
+    
+    # Bitwise OR (Combining)
+    # 15 (1111) OR 10 (1010) = 15 (1111)
+    or  $t6, $s0, $s1       
+
+    # Bitwise NOR (Implementing NOT)
+    # MIPS does not have a NOT instruction. It uses NOR with $zero.
+    # ~(1010 OR 0000) = ~(1010)
+    nor $t7, $s1, $zero     # Inverts bits of $s1
+
+    # Shift Left Logical (sll) - Multiplying by powers of 2
+    # Shift 10 (1010) left by 2 becomes 40 (101000)
+    sll $t8, $s1, 2         # $t8 = $s1 << 2 
+
+    # Shift Right Logical (srl) - Dividing by powers of 2
+    # Shift 15 (1111) right by 1 becomes 7 (0111) (Integer division)
+    srl $t9, $s0, 1         # $t9 = $s0 >> 1
+
+    # ---------------------------------------------------------
+    # EXIT: Clean termination (System Call 10)
+    # ---------------------------------------------------------
+    li  $v0, 10             # Load immediate 10 into $v0 (Service 10: Exit)
+    syscall
+```
+
+## **Program 2: Decisions, Loops, and Inequalities (Textbook &sect;2.7)**
+This program demonstrates control flow. It covers inequalities (`slt`), unconditional jumps (`j`), and conditional branches (`beq`/`bne`) to construct a `while` loop.
+
+**Key Concepts:**
+*   **Basic Blocks:** Sequences of instructions without branches.
+*   **`slt` (Set Less Than):** Handling inequalities like $<$, $>$, $\leq$.
+*   **`beq` / `bne`:** Branch if Equal / Not Equal.
+*   **`j`:** Unconditional Jump,.
+
+```mips
+# ECE 251 - Week 3 Example 2
+# Topics: Branching, Loops, Inequalities
+# Textbook Section: 2.7
+
+.data
+    array:  .word 10, 20, 30, 40, 50  # An array of integers
+    length: .word 5                   # Length of the array
+    target: .word 30                  # Value we are searching for
+
+.text
+.globl main
+
+main:
+    # Initialize variables
+    la   $s0, array         # $s0 = Base address of array
+    lw   $s1, length        # $s1 = Array length (5)
+    lw   $s2, target        # $s2 = Target value (30)
+    li   $t0, 0             # $t0 = i (Loop iterator/index), init to 0
+
+# ---------------------------------------------------------
+# LOOP STRUCTURE (Simulating a C while loop)
+# while (i < length) { ... }
+# ---------------------------------------------------------
+Loop_Start:
+    # 1. INEQUALITY CHECK (Set Less Than)
+    # Check if i < length. 
+    # slt sets destination to 1 if true, 0 if false.
+    slt  $t1, $t0, $s1      # if ($t0 < $s1) set $t1 = 1, else $t1 = 0
+    
+    # 2. CONDITIONAL BRANCH (Exit if condition fails)
+    # If $t1 is 0, then i >= length, so we exit the loop.
+    beq  $t1, $zero, Loop_Exit 
+
+    # -----------------------------------------------------
+    # Loop Body: Access Array[i] and Compare
+    # -----------------------------------------------------
+    
+    # Calculate byte offset: offset = i * 4 (since words are 4 bytes)
+    sll  $t2, $t0, 2        # $t2 = i << 2 (multiplying by 4)
+    
+    # Get address of Array[i]: Base + Offset
+    add  $t3, $s0, $t2      # $t3 = &array[i]
+    
+    # Load value: val = Array[i]
+    lw   $t4, 0($t3)        # $t4 = array[i]
+
+    # Check for equality: if (Array[i] == target)
+    beq  $t4, $s2, Found_Target
+
+    # Increment iterator: i++
+    addi $t0, $t0, 1        
+    
+    # 3. UNCONDITIONAL JUMP
+    # Go back to the start of the loop
+    j    Loop_Start
+
+Found_Target:
+    # If we get here, we found the number. 
+    # We can perform an action, or just exit.
+    # For this example, we jump to exit.
+    j    Loop_Exit
+
+Loop_Exit:
+    # End of program
+    li   $v0, 10
+    syscall
+```
+
+## **Program 3: Procedures and the Stack (Textbook &sect;2.8)**
+This program implements a leaf procedure (a function that does not call other functions). It demonstrates the **Jump-and-Link (`jal`)** instruction, the **Jump Register (`jr`)** instruction, and how to manage the **Stack Pointer (`$sp`)** to preserve registers.
+
+**Key Concepts:**
+*   **`jal`:** Jumps to a label and saves `PC + 4` in `$ra` (Return Address).
+*   **`jr $ra`:** Jumps back to the address stored in `$ra`.
+*   **The Stack:** Growing the stack down (subtracting from `$sp`) to save registers, and shrinking it (adding to `$sp`) to restore them,.
+*   **Register Conventions:** Arguments in `$a0-$a3`, Return values in `$v0-$v1`, Saved registers `$s0-$s7`.
+
+```mips
+# ECE 251 - Week 3 Example 3
+# Topics: Procedures, jal, jr, Stack Management
+# Textbook Section: 2.8
+
+.text
+.globl main
+
+# ---------------------------------------------------------
+# MAIN PROGRAM (The Caller)
+# ---------------------------------------------------------
+main:
+    # Initialize arguments for the function
+    # Let's compute: leaf_example(g, h, i, j)
+    # Mapping: g=$a0, h=$a1, i=$a2, j=$a3
+    li  $a0, 10     # g = 10
+    li  $a1, 20     # h = 20
+    li  $a2, 5      # i = 5
+    li  $a3, 6      # j = 6
+
+    # CALL THE PROCEDURE
+    # jal (Jump and Link) puts the address of the next instruction 
+    # into register $ra, then jumps to the label.
+    jal leaf_example
+
+    # RETURN POINT
+    # The result is now in $v0. 
+    # (Optional: Print result using syscall 1)
+    move $a0, $v0   # Move result to $a0 for printing
+    li   $v0, 1     # Service 1: Print Integer
+    syscall
+
+    # Exit
+    li   $v0, 10
+    syscall
+
+# ---------------------------------------------------------
+# PROCEDURE: leaf_example
+# C Code equivalent:
+# int leaf_example(int g, int h, int i, int j) {
+#    int f;
+#    f = (g + h) - (i + j);
+#    return f;
+# }
+# ---------------------------------------------------------
+leaf_example:
+    # 1. PROLOGUE: Adjust Stack to save registers
+    # We need to use saved registers $s0, $t0, $t1 for calculation.
+    # Note: Optimization might use only $t registers without saving,
+    # but we will save 3 registers to demonstrate the stack concept.
+    
+    addi $sp, $sp, -12      # Create space for 3 words (3 * 4 bytes)
+    sw   $t1, 8($sp)        # Save $t1
+    sw   $t0, 4($sp)        # Save $t0
+    sw   $s0, 0($sp)        # Save $s0
+
+    # 2. BODY OF PROCEDURE
+    add  $t0, $a0, $a1      # $t0 = g + h
+    add  $t1, $a2, $a3      # $t1 = i + j
+    sub  $s0, $t0, $t1      # $s0 = (g + h) - (i + j)
+
+    # 3. SET RETURN VALUE
+    add  $v0, $s0, $zero    # Returns f ($v0 = $s0)
+
+    # 4. EPILOGUE: Restore registers and stack
+    lw   $s0, 0($sp)        # Restore $s0
+    lw   $t0, 4($sp)        # Restore $t0
+    lw   $t1, 8($sp)        # Restore $t1
+    addi $sp, $sp, 12       # Deallocate stack space
+
+    # 5. RETURN TO CALLER
+    jr   $ra                # Jump to address stored in $ra
+```
+
+## Coding exercises
+TDebugging is where the "magic" of assembly really clicks.
+
+Let's modify **Program 2** to include a very common "Off-by-One" error. In this version, the loop is supposed to search for the number `50` in the array, but it contains a logic bug that causes it to stop too early.
+
+### The Debugging Challenge: "The Missing Element"
+
+#### 1. The Broken Code (`challenge.s`)
+
+This program is supposed to find the value 50 (the last element) in the array, but it fails to find it. Use `SPIM` to find out why. Remember `#` is a comment in a MIPS assembly program.
+
+```mips
+# DEBUG CHALLENGE: Find the logic error!
+.data
+    array:  .word 10, 20, 30, 40, 50
+    length: .word 5
+    target: .word 50        # We are looking for the last element
+    msg_found: .asciiz "Found it!\n"
+
+.text
+.globl main
+main:
+    la   $s0, array
+    lw   $s1, length
+    lw   $s2, target
+    li   $t0, 0             # i = 0
+
+Loop_Start:
+    # --- THE BUG IS LIKELY HERE ---
+    # Logic: if (i < length - 1) ... wait, is that right?
+    addi $t7, $s1, -1       # $t7 = length - 1 (4)
+    slt  $t1, $t0, $t7      # if (i < 4) $t1 = 1
+    beq  $t1, $zero, Exit   # If $t1 is 0, exit loop
+
+    # --- Loop Body ---
+    sll  $t2, $t0, 2        # Offset = i * 4
+    add  $t3, $s0, $t2      # Address of array[i]
+    lw   $t4, 0($t3)        # Load array[i]
+
+    beq  $t4, $s2, Found    # Did we find 50?
+    
+    addi $t0, $t0, 1        # i++
+    j    Loop_Start
+
+Found:
+    li   $v0, 4             # Print string syscall
+    la   $a0, msg_found
+    syscall
+
+Exit:
+    li   $v0, 10
+    syscall
+
+```
+
+#### 2. Instructions to Solve the Bug
+
+##### Step A: Observe the Failure
+
+1. Load the file into `spim`: `load "challenge.s"`
+2. Type `run`.
+3. **Observe:** The program finishes, but "Found it!" is never printed to the screen.
+
+##### Step B: Use the `step` Command to Trace
+
+1. Reload the program and type `step`.
+2. Watch the value of `$t0` (the index `i`).
+3. When `$t0` reaches `3`, keep stepping carefully.
+4. **The "Aha!" Moment:** Look at the `slt` instruction. When `i=4`, the program compares `4 < 4`. This is false, so it jumps to `Exit` **before** it ever loads the 5th element (the 50).
+
+##### Step C: Inspect Memory to Confirm
+
+1. To prove the `50` actually exists in memory, type:
+`dump`
+2. Look at the data segment addresses. You will see `0x00000032` (which is 50 in hex) sitting at the 5th word position.
+
+##### Step D: The Fix
+
+To fix the bug, you should change the inequality logic. Instead of comparing `i < length - 1`, they should compare `i < length`:
+
+**Old Code:**
+
+```mips
+addi $t7, $s1, -1
+slt  $t1, $t0, $t7
+
+```
+
+**New (Fixed) Code:**
+
+```mips
+slt  $t1, $t0, $s1  # Directly compare i ($t0) and length ($s1)
+
+```
+
+##### Interactive Bonus: Getting User Input
+
+To make this more engaging, modify the program so the user can **type in** the target number they are searching for.
+
+**Add this to the start of `main`:**
+
+```mips
+# Get target from user
+li $v0, 5      # Syscall for read_int
+syscall
+move $s2, $v0  # Store user input into our target register
+
+```
+
+
+
+## MIPS Syscall Cheat Sheet
+
+Here is a **MIPS Syscall Cheat Sheet**. These system calls are the "bridge" between the CPU and the outside world (the console and the user).
+
+In `spim`, you always load the **Service Code** into register `$v0` before calling `syscall`.
+
+### MIPS Syscall Quick Reference
+
+| Service | Code (`$v0`) | Arguments | Result |
+| --- | --- | --- | --- |
+| **Print Integer** | 1 | `$a0` = value to print | Prints integer to console |
+| **Print String** | 4 | `$a0` = address of null-terminated string | Prints string to console |
+| **Read Integer** | 5 | None | `$v0` contains the integer entered |
+| **Read String** | 8 | `$a0` = buffer address, `$a1` = length | Fills buffer with user input |
+| **Exit** | 10 | None | Gracefully stops the emulator |
+
+## Demonstrating User Input: The "Search Interactive" Program
+
+Let's combine the Syscall knowledge with the previous loop challenge. This program asks the user for a number and tells them if it exists in the array.
+
+### The Code (`search.s`)
+
+```mips
+# ECE 251 - Interactive Search
+.data
+    array:  .word 5, 12, 18, 25, 30
+    length: .word 5
+    prompt: .asciiz "Enter a number to find: "
+    found_msg: .asciiz "Success! The number is in the array.\n"
+    lost_msg:  .asciiz "Not found. Try again!\n"
+
+.text
+.globl main
+main:
+    # 1. PRINT PROMPT (Syscall 4)
+    li $v0, 4
+    la $a0, prompt
+    syscall
+
+    # 2. READ INPUT (Syscall 5)
+    li $v0, 5
+    syscall
+    move $s2, $v0          # $s2 = target number from user
+
+    # 3. INITIALIZE LOOP
+    la $s0, array
+    lw $s1, length
+    li $t0, 0              # i = 0
+
+search_loop:
+    slt $t1, $t0, $s1      # i < length?
+    beq $t1, $zero, not_found
+
+    sll $t2, $t0, 2        # Offset
+    add $t3, $s0, $t2      # Address
+    lw  $t4, 0($t3)        # Load value
+
+    beq $t4, $s2, is_found # Compare input to array element
+
+    addi $t0, $t0, 1       # i++
+    j search_loop
+
+is_found:
+    li $v0, 4
+    la $a0, found_msg
+    syscall
+    j exit
+
+not_found:
+    li $v0, 4
+    la $a0, lost_msg
+    syscall
+
+exit:
+    li $v0, 10
+    syscall
+
+```
+
+## Instructions to Observe the Interaction
+
+### 1. Observe the Syscall Flow
+
+1. **Load and Step:** Load `search.s` and `step` until the PC hits the `syscall` for reading an integer ( ).
+2. **Terminal Input:** Notice that SPIM will pause. You must click in your terminal and type a number (e.g., `18`), then press **Enter**.
+3. **Register Check:** Immediately type `print $v0`. You will see the number you just typed is now sitting inside that register.
+
+### 2. Verify the Array Address
+
+Before the loop starts, look at `$s0`.
+
+* Type `print $s0`. This is the starting address of your array (usually `0x10010000`).
+* Type `dump`. Verify that the five numbers (`5, 12, 18, 25, 30`) are indeed sitting at that location in RAM.
+
+### 3. Step Through the Comparison
+
+Step until the code reaches `beq $t4, $s2, is_found`.
+
+* Type `print $t4` to see the current element being checked.
+* Type `print $s2` to see your input.
+* If they match, the next `step` will jump the PC to the `is_found` label!
+
+
+## 💡 MIPS Quick Start Guide for SPIM
+
+Here is a **MIPS Quick Start Guide**. This document is designed to be a "one-stop shop" for you to transition from high-level logic to assembly execution on your Unix-based systems.
+
+### 1. Essential SPIM Commands
+
+Once you launch `spim` in your terminal, use these commands to control the simulation:
+
+| Command | Usage | Description |
+| --- | --- | --- |
+| `load "file.s"` | `load "lab3.s"` | Loads your assembly file into memory. |
+| `run` | `run` | Executes the entire program. |
+| `step <n>` | `step` or `step 5` | Executes  instructions (default is 1). |
+| `print_all_regs hex` | `print_all_regs hex` | **R**ead **E**very register (Hexadecimal). |
+| `print $t0` | `print $s1` | Shows the value of a specific register in **Decimal**. |
+| `dump` | `dump` | Shows the Data Segment (RAM). |
+| `exit` | `exit` | Quits the SPIM emulator. |
+
+---
+
+### 2. The MIPS Memory Map
+
+Understanding where your data lives is crucial for debugging.
+
+* **Text Segment (`0x00400000`):** Where your executable instructions are stored.
+* **Data Segment (`0x10010000`):** Where your variables (strings, arrays, words) start.
+* **Stack Segment (`0x7ffffffc`):** Where local function data is stored. It grows **downward**.
+
+### 3. Register Conventions (The "Social Rules" of MIPS)
+
+While you *can* use almost any register for anything, following these rules ensures your code works with procedures:
+
+| Register Name | Number | Usage |
+| --- | --- | --- |
+| **$zero** | 0 | Always holds the value 0. Cannot be changed. |
+| **$v0 - $v1** | 2 - 3 | Values for results and expression evaluation (and Syscalls). |
+| **$a0 - $a3** | 4 - 7 | Arguments for functions. |
+| **$t0 - $t9** | 8-15, 24-25 | Temporaries. Can be overwritten by functions. |
+| **$s0 - $s7** | 16 - 23 | Saved registers. Must be preserved by functions. |
+| **$sp** | 29 | Stack Pointer. Points to the top of the stack. |
+| **$ra** | 31 | Return Address. Used by `jal` and `jr`. |
+
+### 4. Anatomy of a Procedure (The Stack)
+
+When writing a function (procedure), follow this pattern to ensure you don't lose data:
+
+1. **Prologue:** Save registers you plan to use onto the stack.
+2. **Body:** Perform your logic.
+3. **Epilogue:** Restore the registers from the stack.
+4. **Return:** Use `jr $ra`.
+
+### 5. Common Debugging Workflow
+
+If your code isn't working, follow this checklist:
+
+1. **Syntax Check:** Does the file load without errors?
+2. **Initial State:** Use `re` to see if your constants loaded into `$s` registers correctly.
+3. **The Step Test:** Step through your loop **once**. After `lw`, use `print` to see if the register actually holds the value from the array.
+4. **Memory Check:** Use `dump` to ensure your `sw` (Store Word) instruction actually placed the result at the correct address in the Data Segment.
+
+### Pro-Tip for Unix Users
+
+Since you are using a terminal, you can "pipe" your assembly files directly into `spim` for a quick result without entering the interactive console:
+
+```bash
+spim -file program.s
+```
+but if you want to perform more complex operations, such as capturing the output to a text file for your lab report or filtering for specific results, you can use standard Unix redirection and pipes:
+
+```bash
+# Save the output of your program to a file
+spim -file program.s > output.txt
+
+# Run the program and search for a specific value in the output
+spim -file program.s | grep "Result:"
+```
+This is particularly useful to automate testing or keep a log of your program's behavior without manually copying text from the terminal.
+
+## MIPS Instruction Syntax Reference
+
+### 1. Arithmetic & Logic (R-Type)
+
+*Most R-type instructions follow the format: `op $dest, $src1, $src2*`
+
+| Instruction | Syntax | Description |
+| --- | --- | --- |
+| **Add** | `add $t0, $t1, $t2` | `$t0 = $t1 + $t2` (signed) |
+| **Subtract** | `sub $t0, $t1, $t2` | `$t0 = $t1 - $t2` |
+| **And** | `and $t0, $t1, $t2` | Bitwise AND |
+| **Or** | `or $t0, $t1, $t2` | Bitwise OR |
+| **Nor** | `nor $t0, $t1, $zero` | Bitwise NOT (Inverts bits of `$t1`) |
+| **Shift Left** | `sll $t0, $t1, 2` | `$t0 = $t1 << 2` (Multiply by 4) |
+| **Shift Right** | `srl $t0, $t1, 1` | `$t0 = $t1 >> 1` (Divide by 2) |
+
+---
+
+### 2. Data Transfer (I-Type)
+
+*Remember: Address format is `offset($base_register)*`
+
+| Instruction | Syntax | Description |
+| --- | --- | --- |
+| **Load Word** | `lw $t0, 4($s0)` | Load value at `($s0 + 4)` into `$t0` |
+| **Store Word** | `sw $t0, 8($s0)` | Store value of `$t0` into address `($s0 + 8)` |
+| **Load Addr** | `la $t0, label` | (Pseudo) Load the memory address of `label` |
+| **Load Imm** | `li $t0, 100` | (Pseudo) Load the constant 100 into `$t0` |
+
+---
+
+### 3. Comparison & Branching
+
+*Used for `if` statements and `loops`.*
+
+| Instruction | Syntax | Description |
+| --- | --- | --- |
+| **Set Less Than** | `slt $t0, $s1, $s2` | If `$s1 < $s2`, `$t0 = 1`; else `$t0 = 0` |
+| **Branch Equal** | `beq $t0, $t1, Label` | If `$t0 == $t1`, jump to `Label` |
+| **Branch Not Eq** | `bne $t0, $t1, Label` | If `$t0 != $t1`, jump to `Label` |
+| **Jump** | `j Label` | Unconditional jump to `Label` |
+
+---
+
+### 4. Procedures & The Stack
+
+*Crucial for modular programming.*
+
+| Instruction | Syntax | Description |
+| --- | --- | --- |
+| **Jump & Link** | `jal Function` | Jump to `Function` and store return address in `$ra` |
+| **Jump Register** | `jr $ra` | Jump to the address stored in `$ra` (Return) |
+| **Move** | `move $t0, $a0` | (Pseudo) Copy `$a0` into `$t0` |
+
+---
+
+## Pro-Tips
+
+* **Pseudo-instructions:** Note that `li`, `la`, and `move` are not "real" MIPS instructions; the assembler converts them into `ori` or `add` instructions. If you use `step` in SPIM, you might see these expand into two lines of code!
+* **Word Alignment:** Always remember that memory addresses move in increments of **4** for words. If you use `3` or `5`, SPIM will throw an **Address Alignment Error**.
+* **The Zero Register:** `$zero` is your best friend. Want to clear a register? `add $t0, $zero, $zero`. Want to check if a number is negative? `slt $t1, $s0, $zero`.
+
+# `spim` command line workflow
+
+## 1. The Preparation Phase
+
+Before launching the emulator, ensure your source code is formatted correctly.
+
+1. **Write your code:** Use a plain text editor (like VS Code or TextEdit) and save your file with a `.s` extension (e.g., `lab_test.s`).
+2. **Verify the Entry Point:** Ensure your code has a `.text` section and a `.globl main` label so SPIM knows where to start.
+3. **Mandatory Exit:** Ensure the last thing your program does is call **Syscall 10**. Without this, SPIM will keep executing "empty" memory, leading to errors.
+
+## 2. Running the Program
+
+Open your terminal and enter the interactive SPIM shell.
+
+```bash
+spim
+
+```
+
+Once inside the `(spim)` prompt, follow these commands:
+
+* **Load:** `load "program.s"` (Always use quotes).
+* **Run:** `run` (This executes the code to completion).
+* **Check Results:** If you used a print syscall, the output will appear directly in your terminal.
+
+## 3. The Debugging Phase (The "Inner Workings")
+
+If the program doesn't work as expected, you need to look inside the CPU.
+
+### A. Inspecting Registers
+
+To see the values currently held in the 32 general-purpose registers:
+
+* **Command:** `print_all_regs hex`
+* **What to look for:** Look at `$t` and `$s` registers. Values are shown in **Hexadecimal**.
+* **Specific Check:** `print $t0` will show you the value of that specific register in **Decimal**, which is often easier for debugging math logic.
+
+### B. Stepping Through Code
+
+Instead of `run`, execute one line at a time to find exactly where the logic fails:
+
+* **Command:** `step`
+* **The Visualization:** Every time you type `step`, SPIM shows you the **next instruction** to be executed and its memory address.
+* **The PC:** Watch the **Program Counter (PC)**. It should increment by **4** each step unless a branch (`beq`) or jump (`j`) occurs.
+
+### C. Inspecting Memory (The Data Segment)
+
+If your program stores results in memory (using `sw`), you must verify the RAM:
+
+* **Command:** `dump`
+* **Interpretation:** This shows a large block of hex values.
+* Find the row starting with `[0x10010000]`. This is the start of your `.data` section.
+* Each 8-digit hex value is one **Word** (4 bytes).
+
+
+* **Direct Access:** `print 0x10010004` will show you the specific decimal value stored at that exact memory address.
+
+## 4. Advanced: The "Quick Pipe" Workflow
+
+For a fast check without entering the shell, use the Unix terminal command we discussed:
+
+```bash
+# Run the file and immediately see the register state at the end
+spim -file program.s
+
+```
+
+### Pro-Tip for Unix Users
+
+Since you are using a terminal, you can "pipe" your assembly files directly into `spim` for a quick result without entering the interactive console:
+
+```bash
+spim -file program.s
+
+```
+
+...and if you suspect a memory alignment issue, you can pipe the `dump` output into `hexdump` for a clearer view of the byte order:
+
+```bash
+# This forces a dump to a file and lets you inspect it with Mac's native tools
+echo "dump \"mem.bin\"" | spim -file program.s
+hexdump -C mem.bin
+
+```
+
 
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
