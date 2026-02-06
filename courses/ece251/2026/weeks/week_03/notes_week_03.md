@@ -268,6 +268,9 @@ When you load code, SPIM divides memory into specific sections:
 * **Data Segment:** Where your static variables live.
 * **Stack Segment:** For dynamic data during function calls.
 
+### Emulation Tools to Run MIPS Code
+
+There are several tools to run MIPS code, but we will use **SPIM** (Simple Program Interpreter for MIPS). SPIM is a simulator that allows you to run MIPS code and examine the memory and registers. It is available for Windows, macOS, and Linux. You can download it from the [SPIM website](https://www.cs.cmu.edu/~spim/). You can also use **QEMU** (Quick Emulator) to run MIPS code. QEMU is a simulator that allows you to run MIPS code and examine the memory and registers. It is available for Windows, macOS, and Linux. You can download it from the [QEMU website](https://www.qemu.org/). Additionally, you can use https://shawnzhong.github.io/JsSpim/ to run MIPS code in your browser.
 
 ### The Code: `example.s`
 
@@ -1469,5 +1472,20 @@ end_loop:
 ### Pro Tip: Alignment
 
 MIPS requires 32-bit words to be **word-aligned**, meaning their memory addresses must be multiples of 4. The `.word` directive handles this for you automatically!
+
+### Pro Tip: Debugging
+
+If you are having trouble with your code, you can use the `break` instruction to pause the program and inspect the values of the registers and memory.
+
+### Additional Code Examples
+* [prog_00.s](/courses/ece251/2026/weeks/week_03/prog_00.s)
+* [prog_01.s](/courses/ece251/2026/weeks/week_03/prog_01.s)
+* [prog_02.s](/courses/ece251/2026/weeks/week_03/prog_02.s)
+* [prog_03.s](/courses/ece251/2026/weeks/week_03/prog_03.s)
+* [lui.s](/courses/ece251/2026/weeks/week_03/lui.s)
+* [mips0.asm](/courses/ece251/2026/weeks/week_03/mips0.asm)
+* [challenge_01.s](/courses/ece251/2026/weeks/week_03/challenge_01.s)
+* [add.s](/courses/ece251/2026/weeks/week_03/add.s)
+* [array.s](/courses/ece251/2026/weeks/week_03/array.s)
 
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
