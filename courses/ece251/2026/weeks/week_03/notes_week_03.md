@@ -1202,5 +1202,272 @@ hexdump -C mem.bin
 
 ```
 
+# Why do we need two instructions to load a 32-bit constant?
+
+Let's dive into the architecture of MIPS32 to understand why loading a full 32-bit constant is a two-step process.
+
+---
+
+## The "Why": The 16-bit Immediate Limit
+
+In MIPS32, every instruction is exactly **32 bits long**. This fixed-length instruction set is a hallmark of RISC (Reduced Instruction Set Computer) architecture, designed for speed and simplicity.
+
+When you use an **I-type (Immediate) instruction** (like `addi`, `ori`, or `lw`), the 32 bits of the instruction must be divided to fit different pieces of information:
+
+* **Opcode:** 6 bits (tells the CPU what to do)
+* **Source Register ():** 5 bits
+* **Target Register ():** 5 bits
+* **Immediate Value:** 16 bits
+
+Because 16 bits are dedicated to the "immediate" value, you can only represent numbers from  to  (unsigned) or  to  (signed) in a single instruction. A 32-bit integer requires all 32 bits to be set, but there simply isn't enough physical "room" left in a single MIPS instruction to hold a 32-bit constant alongside the opcode and register addresses.
+
+---
+
+## The "How": The Two-Step Solution
+
+To load a 32-bit constant (e.g., `0x12345678`), we have to split the process into two steps: loading the "Upper" 16 bits and then the "Lower" 16 bits.
+
+### 1. The Strategy
+
+1. **`lui` (Load Upper Immediate):** This instruction takes a 16-bit value and places it in the top 16 bits of a register, filling the lower 16 bits with zeros.
+2. **`ori` (Bitwise OR Immediate):** This instruction performs a logical OR between the register and a 16-bit constant, effectively "plugging in" the lower half without changing the upper half.
+
+### 2. The Code Implementation
+
+Suppose we want to load the value `0x12345678` into register `$s0`.
+
+```mips
+.text
+.globl main
+
+main:
+    # Step 1: Load the upper 16 bits (0x1234)
+    # $s0 becomes 0x12340000
+    lui $s0, 0x1234
+
+    # Step 2: Load the lower 16 bits (0x5678) using OR
+    # 0x12340000 OR 0x00005678 = 0x12345678
+    ori $s0, $s0, 0x5678
+
+    # The 32-bit number is now fully loaded in $s0
+    
+    # Exit program (standard MARS/SPIM syscall)
+    li $v0, 10
+    syscall
+
+```
+
+### 3. Documentation of Steps
+
+* **`lui $s0, 0x1234`**: The CPU takes the constant `0x1234`, shifts it left by 16 bits, and stores it in `$s0`.
+* **`ori $s0, $s0, 0x5678`**: The `ori` instruction treats the immediate value as an unsigned 16-bit integer. By ORing it with the register that already has the upper bits, we combine them into a single 32-bit word.
+
+> **Pro Tip:** Most MIPS assemblers provide a **pseudo-instruction** called `li` (Load Immediate). When you write `li $s0, 0x12345678`, the assembler automatically translates that single line into the `lui` and `ori` sequence shown above for you!
+
+## Load/Store Architecture
+
+Because MIPS is a **Load/Store architecture**, we can't perform math directly on values sitting in memory. We must first load them into registers (as we did in the previous step) and then use **R-type (Register-type)** instructions to perform the calculation.
+
+### 1. The Overview
+
+To demonstrate, we will:
+
+1. Load a second 32-bit number into another register (`$s1`).
+2. Use the `add` instruction to calculate the sum.
+3. Store the result in a third register (`$s2`).
+
+Since `add` is an **R-type instruction**, it doesn't have the 16-bit limitation because it pulls its data from two 32-bit registers rather than an immediate field in the instruction itself.
+
+### 2. The Code Implementation
+
+This script adds `0x12345678` and `0x00001111`.
+
+```mips
+.text
+.globl main
+
+main:
+    # --- Load First 32-bit Number (0x12345678) ---
+    lui $s0, 0x1234
+    ori $s0, $s0, 0x5678
+
+    # --- Load Second 32-bit Number (0x00001111) ---
+    # Since the upper bits are 0, we can just use ori or li
+    lui $s1, 0x0000
+    ori $s1, $s1, 0x1111
+
+    # --- Perform Addition ---
+    # add rd, rs, rt -> rd = rs + rt
+    # This works on the full 32-bit values stored in the registers
+    add $s2, $s0, $s1
+
+    # --- End Program ---
+    li $v0, 10
+    syscall
+
+```
+
+### 3. Implementation Instructions
+
+1. **Open an Emulator:** Use a MIPS simulator like **MARS** or **QtSpim**.
+2. **Assemble:** Click the "Assemble" (wrench and screwdriver) icon.
+3. **Execute:** Step through the code line-by-line using the "F7" key or the "Step" button.
+4. **Observe Registers:** Watch the **Registers** pane. You will see `$s0` and `$s1` populate with the 32-bit values, and finally, `$s2` will show the result: `0x12346789`.
+
+### Key Takeaway
+
+While **I-type** instructions (like `addi`) are limited to 16-bit constants, **R-type** instructions (like `add`, `sub`, `and`, `or`) operate on the **full 32-bit width** of the registers. This is why we load the large numbers first, then do the math.
+
+## Loading Values from RAM
+
+Loading values from RAM is a fundamental skill in MIPS. Unlike loading immediate constants, where the data is embedded directly in the instruction code, loading from memory involves pointing the CPU to a specific address in the Data Segment.
+
+### 1. The Overview
+
+To load 32-bit values from memory, we follow these steps:
+
+1. **Define a `.data` section:** This is where we allocate space for our variables.
+2. **Use labels:** Labels act as human-readable names for memory addresses.
+3. **The `lw` (Load Word) instruction:** This instruction moves 4 bytes (32 bits) from a memory address into a register.
+
+In MIPS, memory is byte-addressed, meaning every byte has its own address. A 32-bit integer is a "word" (4 bytes), so we use `lw`.
+
+---
+
+### 2. The Code Implementation
+
+This program defines two 32-bit integers in memory, loads them into registers, and adds them.
+
+```mips
+.data
+    # Define two 32-bit words in memory
+    num1: .word 0x12345678
+    num2: .word 0x00001111
+    result: .word 0          # Space to store the result later
+
+.text
+.globl main
+
+main:
+    # Step 1: Get the address of 'num1' and load the value
+    # 'la' (Load Address) is a pseudo-instruction that uses lui/ori
+    la $t0, num1       # Put the memory address of num1 into $t0
+    lw $s0, 0($t0)     # Load the 32-bit word at that address into $s0
+
+    # Step 2: Load 'num2'
+    la $t1, num2       # Put the memory address of num2 into $t1
+    lw $s1, 0($t1)     # Load the 32-bit word at that address into $s1
+
+    # Step 3: Perform addition
+    add $s2, $s0, $s1
+
+    # Step 4: Store the result back into RAM
+    la $t2, result     # Get address of the result label
+    sw $s2, 0($t2)     # Store Word: move value from $s2 to memory
+
+    # --- End Program ---
+    li $v0, 10
+    syscall
+
+```
+
+### 3. Implementation Instructions
+
+* **`.word` directive:** This tells the assembler to reserve 32 bits of space and initialize it with the value provided.
+* **`la $t0, num1`:** Since memory addresses are also 32-bit numbers, the assembler translates `la` into a `lui`/`ori` pair to load the address of your variable into a register.
+* **`lw $rt, offset($rs)`:** * `$rs` is the base register (the address).
+* `offset` is a numerical constant (usually 0 here) added to the address.
+* `$rt` is the destination register.
+
+
+* **`sw` (Store Word):** This is the opposite of `lw`. it takes the 32-bit value in a register and writes it to the RAM address.
+
+
+### Why this matters
+
+Using memory allows your program to handle much larger datasets than what can fit in the 32 available registers. However, remember that accessing RAM is significantly slower than accessing registers, which is why we "load" them into registers to do the actual math.
+
+## Arrays
+
+Moving from single variables to **arrays** is where assembly language starts to feel powerful.
+
+To handle an array, we use a loop and an **index/offset** that we increment to point to the next 32-bit (4-byte) word in memory.
+
+---
+
+### 1. The Overview
+
+We will:
+
+1. Define an array of 32-bit integers in the `.data` section.
+2. Set up a **loop** using a counter.
+3. Use a **pointer** (the memory address) and increment it by **4** in each iteration (since each 32-bit word takes 4 bytes).
+4. Sum the elements of the array.
+
+---
+
+### 2. The Code Implementation
+
+This program iterates through an array of 5 integers and calculates their total sum.
+
+```mips
+.data
+    myArray: .word 10, 20, 30, 40, 50  # An array of five 32-bit integers
+    length:  .word 5                   # The number of elements
+    sum:     .word 0                   # Variable to store final result
+
+.text
+.globl main
+
+main:
+    # --- Initialization ---
+    la $t0, myArray      # $t0 = Base address of the array
+    lw $t1, length       # $t1 = Loop counter (starts at 5)
+    li $t2, 0            # $t2 = Accumulator (sum starts at 0)
+
+loop:
+    # --- Check Loop Condition ---
+    # If counter ($t1) is 0, jump to the end
+    beq $t1, $zero, end_loop
+
+    # --- Load Data and Add ---
+    lw $t3, 0($t0)       # Load the current 32-bit word into $t3
+    add $t2, $t2, $t3    # sum = sum + $t3
+
+    # --- Update Pointer and Counter ---
+    addi $t0, $t0, 4     # Move pointer to the next word (add 4 bytes)
+    addi $t1, $t1, -1    # Decrement the loop counter
+    
+    j loop               # Jump back to the start of the loop
+
+end_loop:
+    # --- Store Result ---
+    sw $t2, sum          # Store the final sum back into RAM
+
+    # --- End Program ---
+    li $v0, 10
+    syscall
+
+```
+
+---
+
+### 3. Documentation of the Logic
+
+* **The 4-Byte Jump (`addi $t0, $t0, 4`):** This is the most critical part. Because MIPS memory is byte-addressed, if you only incremented the address by 1, you would be pointing to the second *byte* of the first number. To reach the first byte of the *second* number, you must skip 4 bytes.
+* **`beq $t1, $zero, end_loop`:** This is a **Branch if Equal** instruction. It controls the flow of the program by checking if our counter has reached zero.
+* **`j loop`:** This is an unconditional jump that creates the "looping" behavior by sending the program counter back to the `loop:` label.
+
+### 4. Implementation Instructions
+
+1. **Load into MARS/SPIM:** Copy the code above.
+2. **Watch the Registers:** Pay close attention to `$t0` (the address). You will see it increase by 4 each time (`...00`, `...04`, `...08`, `...0C`, etc.).
+3. **Check Data Segment:** After the program finishes, look at the memory address associated with the `sum` label to see the result (which should be 150, or `0x96` in hex).
+
+---
+
+### Pro Tip: Alignment
+
+MIPS requires 32-bit words to be **word-aligned**, meaning their memory addresses must be multiples of 4. The `.word` directive handles this for you automatically!
 
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
