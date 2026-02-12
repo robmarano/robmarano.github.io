@@ -1,4 +1,7 @@
 COaD-MIPS-6ed.pdf
+Verilog HDL Design Examples.pdf
+Structural Design with Verilog - Harris.pdf
+Digital Design and Verilog HDL Fundamentals.pdf
 .DS_Store
 _site
 .jekyll-cache
@@ -36,3 +39,7 @@ assets/**/*.md
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# SystemVerilog
+*.vvp
+*.vcd
