@@ -43,6 +43,10 @@ See [notes_week_01](/courses/ece251/2026/weeks/week_01/notes_week_01.html)
 
 - Read sections Chap 2.1-2.7 in the [textbook handout for chapter 2](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/Ed8wNobvQCVPozj701I4bOABAZtXH7rlL6rjFgUkqp_0Vg?e=BPbInD), along with my summary notes handout [Prof's Notes on Comp Arch](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EaFcET5zxcBHsS529aI4YmEBnUJnbvjWv2R6XsQfFwzC5w?e=2BFfUf)
 
+## Homework Assignment
+
+See [hw-01](/courses/ece251/2026/assignments/hw-01.html); [solution](/courses/ece251/2026/assignments/hw-01-solution.html)
+
 # <a id="week2">Week 2 &mdash; 1/29 &mdash; Instructions &mdash;The Language & Grammar of Computers &mdash; Part 1</a>
 
 ## Topics
@@ -68,6 +72,11 @@ See [notes_week_02](/courses/ece251/2026/weeks/week_02/notes_week_02.html)
 - Read sections Chap 2.1-2.7 in my notes handout [Prof's Notes on Comp Arch](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EaFcET5zxcBHsS529aI4YmEBnUJnbvjWv2R6XsQfFwzC5w?e=2BFfUf), and these notes follow exactly from the [MIPS textbook's](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EfW8ouRjnFNNn7E7K5rvkWoBPWU0tDLednaJ95eaJWXx8Q?e=Ar9Pmf) Chapter 2 and its 22 sections. I suggest reading the textbook sections too.
 - Follow along with our [textbook's Chapter 2 slide deck](/courses/ece251/2026/weeks/week_05/Patterson6e_MIPS_Ch02_PPT.ppt)
 
+## Homework Assignment
+
+See [hw-02](/courses/ece251/2026/assignments/hw-02.html); [solution](TBD)
+
+
 # <a id="week3">Week 3 &mdash; 2/5 &mdash; Instructions &mdash;The Language & Grammar of Computers &mdash; Part 2</a>
 
 ## Topics
@@ -92,6 +101,11 @@ See [notes_week_03](/courses/ece251/2026/weeks/week_03/notes_week_03.html)
 - Continue to follow along with our [textbook's Chapter 2 slide deck](/courses/ece251/2026/weeks/week_05/Patterson6e_MIPS_Ch02_PPT.ppt)
 
 NOTE: Check our [shared Teams drive](https://cooperunion.sharepoint.com/:f:/s/Section_ECE-251-A-2025SP/EujI9o0hInpGmHtZhWVN_PIBCw4GRYTWunYcmy94tx3LrA?e=BVZ9Uy) for these files too as well as the installation for our software.
+
+## Homework Assignment
+
+See [hw-03](/courses/ece251/2026/assignments/hw-03.html); [solution](TBD)
+
 
 # <a id="week4">Week 4</a> &mdash; 2/12 &mdash; Hardware Modeling with Verilog HDL &mdash; Part 1
 
@@ -119,7 +133,7 @@ See [notes_week_04](/courses/ece251/2026/weeks/week_04/notes_week_04.html)
 
 ## Homework Assignment
 
-See [hw-01](/courses/ece251/2026/assignments/hw-01.html); [solution](/courses/ece251/2026/assignments/hw-01-solution.html)
+See [hw-04](/courses/ece251/2026/assignments/hw-04.html); [solution](TBD)
 
 # <a id="week5">Week 5 &mdash; 2/19 &mdash; Hardware Modeling &mdash; Part 2</a>
 
