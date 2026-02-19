@@ -2,9 +2,15 @@
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
 
 # Topics
+## SystemVerilog HDL
 1. Built-in Primitives
 2. User-Defined Primitives (UDPs)
 3. Dataflow Modeling Deep Dive
+
+## MIPS CPU
+4. Supporting Procedures in Computer Hardware (Section 2.8)
+5. MIPS Addressing for 32-Bit Immediates and Addresses (Section 2.10)
+6. Parallelism and Instructions: Synchronization (Section 2.11)
 
 ---
 
@@ -305,6 +311,7 @@ SystemVerilog provides a rich set of operators for dataflow equations. Understan
 *Always use parentheses `()` to clarify intent, even if you memorize precedence.*
 
 **Dataflow Modeling Patterns:**
+
 *   **Arithmetic**: `assign y = (a + b) - c;` (Synthesis tools infer adders/subtractors).
 *   **Logical**: `assign is_valid = (data_in > 10) && (en == 1);` (Returns 1-bit boolean).
 *   **Conditional Selection (Muxing)**: 
@@ -315,7 +322,6 @@ SystemVerilog provides a rich set of operators for dataflow equations. Understan
     ```
 *   **Concatenation & Replication**: Excellent for bit-packing.
     ```systemverilog
-```systemverilog
     // Packing state flags
     assign status_bus = {is_ready, has_error, 6'b000000}; 
     
@@ -341,6 +347,7 @@ endmodule
 ```
 
 **Example 2: Medium (Dataflow 4-to-1 Mux)**
+
 *Task: A 4:1 Mux modeled strictly with nested conditional (`?:`) operators.*
 ```systemverilog
 module med_dataflow(output logic [31:0] y, input logic [31:0] d0, d1, d2, d3, input logic [1:0] s);
@@ -351,6 +358,7 @@ endmodule
 ```
 
 **Example 3: Hard (Simple Arithmetic Logic Unit)**
+
 *Task: A dataflow ALU determining its output operation via a 3-bit opcode.*
 ```systemverilog
 module hard_dataflow(output logic [15:0] result, output logic zero, input logic [15:0] a, b, input logic [2:0] opcode);
@@ -371,22 +379,47 @@ endmodule
 ---
 
 # Student Problem Set
+
 *Complete these 9 problems. See the answers at the bottom when you are done to check your work!*
 
 ## Topic 1: Built-in Primitives
+
 **1. Easy**: Translate the equation $Y = A \cdot B + C$ directly into structural gate primitives `and` and `or`.
+
 **2. Medium**: Identify the error in the following instantiation of logic primitives: `and u1 (in1, in2, out);`
+
 **3. Hard**: Design a structural 2-bit Equality Comparator ($A=B$) using only `xnor` and `and` primitives. Assume $A = {a1, a0}$ and $B = {b1, b0}$. 
 
 ## Topic 2: UDPs
+
 **4. Easy**: Write the `table` section of a combinational UDP for a 3-input XOR gate ($Y = A \oplus B \oplus C$).
+
 **5. Medium**: Write the state table for an RS-Latch Sequential UDP. The latch holds state if $R=0, S=0$. It sets if $S=1$, resets if $R=1$, and state is unpredictable limit (`x`) if $R=1, S=1$. 
+
 **6. Hard**: Write the core state table for a negative-edge-triggered T-Flip-Flop (Toggles on clock falling edge if $T=1$).
 
 ## Topic 3: Dataflow Modeling 
+
 **7. Easy**: Write a single `assign` statement for a 2-to-4 decoder's $0$th signal (`dec0`), which should be high only when `sel` is `2'b00`.
+
 **8. Medium**: What is logically incorrect about this dataflow statement trying to select 'data1' when 'enable' is high, and bitwise ORing the result with a mask? `assign out = enable ? data1 : data0 | mask;` (Hint: Check operator precedence!)
+
 **9. Hard**: Design a 4-input priority encoder using nested conditional operators. $D[3]$ has highest priority, $D[0]$ has lowest. If $D[3]$ is 1, output `2'b11`. If $D=\text{0000}$, output `2'b00` and assert an `idle` signal using concatenation `{idle, val}`.
+
+## Topic 4: Supporting Procedures (Section 2.8)
+**10. Easy**: Categorize the following registers into "Caller-Saved" or "Callee-Saved": `$t0`, `$s0`, `$ra`, `$a0`.
+**11. Medium**: Write a MIPS procedure prologue and epilogue that safely backs up and restores `$s0` and `$s1`. Assume `$sp` needs to stay 4-byte aligned (so allocate 8 bytes).
+**12. Hard**: Calculate the necessary stack frame size (in bytes) and `$sp` movement for a deeply nested recursive function that needs to save `$ra`, `$a0`, `$s0`, `$s1`, and `$s2` on the stack for each call. 
+
+## Topic 5: MIPS Addressing (Section 2.10)
+**13. Easy**: Write the two instructions needed to load the 32-bit constant `0xDEADBEEF` into register `$t0`.
+**14. Medium**: Calculate the exact target address of a `beq` instruction given the $PC = \text{0x00400010}$ and the 16-bit offset is `0x0005`.
+**15. Hard**: Contrast the reach (addressable range) of a `j` instruction vs. a `jr` instruction. Explain why `jr` is strictly necessary for large OS kernels to jump anywhere in a 32-bit address space.
+
+## Topic 6: Synchronization (Section 2.11)
+**16. Easy**: Define a "data race" condition in the context of multicore processors.
+**17. Medium**: Explain what happens to an `sc` (store conditional) instruction if an operating system context-switch (an interrupt) occurs entirely between the `ll` (load linked) and the `sc`.
+**18. Hard**: Write a simple atomic "spin-lock" acquisition loop using `ll` and `sc` instructions in MIPS assembly. Assume the lock address is in `$a0` (0 means unlocked, 1 means locked).
 
 ---
 
@@ -394,13 +427,17 @@ endmodule
 <summary><b>Click here to reveal Answer Key</b></summary>
 
 ### Topic 1 Answers
+
 **1. Easy**
+
 ```systemverilog
 logic net1;
 and (net1, A, B);
 or (Y, net1, C);
 ```
+
 **2. Medium**: The port ordering is incorrect. In SystemVerilog primitives, the **output** is always listed first. It should be `and u1 (out, in1, in2);`
+
 **3. Hard**
 ```systemverilog
 logic eq0, eq1;
@@ -410,6 +447,7 @@ and (A_eq_B, eq0, eq1);
 ```
 
 ### Topic 2 Answers
+
 **4. Easy**
 ```systemverilog
 table
@@ -424,6 +462,7 @@ table
        1 1 1 : 1;
 endtable
 ```
+
 **5. Medium**
 ```systemverilog
 table
@@ -434,6 +473,7 @@ table
        1  1 :   ?   :   x; // unpredictable
 endtable
 ```
+
 **6. Hard**
 ```systemverilog
 table
@@ -451,13 +491,68 @@ endtable
 ```systemverilog
 assign dec0 = (sel == 2'b00); // Evaluates to 1-bit logic 1/0
 ```
+
 **8. Medium**: According to precedence rules, Bitwise OR (`|`) evaluates *before* the Conditional operator (`?:`). Therefore, the code actually evaluates as `assign out = enable ? data1 : (data0 | mask)`. If 'enable' is high, the mask is entirely ignored! The correct notation requires parenthesis: `assign out = (enable ? data1 : data0) | mask;`
+
 **9. Hard**
 ```systemverilog
 assign {idle, val} = (D[3]) ? {1'b0, 2'b11} :
                      (D[2]) ? {1'b0, 2'b10} :
                      (D[1]) ? {1'b0, 2'b01} :
                      (D[0]) ? {1'b0, 2'b00} : {1'b1, 2'b00}; // D is 0000, assert idle bit
+```
+
+### Topic 4 Answers
+**10. Easy**: 
+*   **Caller-Saved (Not preserved across calls)**: `$t0`, `$a0`.
+*   **Callee-Saved (Preserved across calls)**: `$s0`, `$ra`.
+
+**11. Medium**
+```systemverilog
+// Prologue
+addi $sp, $sp, -8  // Allocate 8 bytes
+sw   $s0, 4($sp)   // Save $s0
+sw   $s1, 0($sp)   // Save $s1
+
+// [Procedure Body]
+
+// Epilogue
+lw   $s1, 0($sp)   // Restore $s1
+lw   $s0, 4($sp)   // Restore $s0
+addi $sp, $sp, 8   // Deallocate 8 bytes
+jr   $ra           // Return
+```
+
+**12. Hard**: Saving 5 registers requires 5 words. Each word is 4 bytes. 
+Frame Size = $5 \times 4 = 20$ bytes. 
+Stack Pointer movement: `addi $sp, $sp, -20` (prologue) and `addi $sp, $sp, 20` (epilogue).
+
+### Topic 5 Answers
+**13. Easy**
+```systemverilog
+lui $t0, 0xDEAD     // Load Upper Immediate
+ori $t0, $t0, 0xBEEF // OR Immediate
+```
+
+**14. Medium**: `beq` uses PC-Relative Addressing. The target address is $PC + 4 + (\text{offset} \times 4)$. 
+$Target = \text{0x00400010} + 4 + (5 \times 4) = \text{0x00400014} + 20 = \text{0x00400014} + \text{0x00000014} = \text{0x00400028}$.
+
+**15. Hard**: A `j` instruction uses Pseudodirect Addressing, allowing it to reach anywhere within the current **256 MB block** (determined by the upper 4 bits of the PC). A `jr` instruction jumps to the address contained in a 32-bit register, giving it an **absolute 4 GB reach**. `jr` is necessary for OS kernels and dynamically linked libraries because they might reside in completely different memory segments than the calling code block.
+
+### Topic 6 Answers
+**16. Easy**: A data race occurs when two or more concurrent threads/processes access the same memory location simultaneously, and at least one access is a write, and the accesses are not synchronized. The final result depends on the unpredictable timing of the execution.
+
+**17. Medium**: If a context switch occurs between `ll` and `sc`, the `sc` instruction will fail (store 0 into the target register instead of 1, and not update memory) because the operating system guarantees that any exception/interrupt resets the link register used by the `ll`/`sc` pair.
+
+**18. Hard**
+```systemverilog
+spin_lock:
+    ll   $t0, 0($a0)     // Load Linked: Read lock status
+    bne  $t0, $zero, spin_lock // If lock is 1 (taken), spin and try again
+    add  $t1, $zero, 1   // Setup $t1 = 1 (locked value)
+    sc   $t1, 0($a0)     // Store Conditional: Try to write 1 to lock
+    beq  $t1, $zero, spin_lock // If sc failed (returned 0), spin and try again
+    // Lock acquired!
 ```
 </details>
 
