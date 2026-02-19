@@ -333,6 +333,31 @@ SystemVerilog provides a rich set of operators for dataflow equations. Understan
 
 By mastering these Dataflow tools, complex combinational logic blocks like ALU functions (Add, Subtract, Shift, Compare) become readable and highly synthesizable one-liners.
 
+### 3.5 SystemVerilog Assignment Rules: `assign`, `=`, and `<=`
+
+As designs grow complex, understanding EXACTLY how values are placed into variables is critical to synthesize working hardware. SystemVerilog strictly separates continuous dataflow assignments from procedural block assignments.
+
+**1. Continuous Assignment (`assign`)**
+*   **Where it lives:** Concurrently placed directly inside a `module`.
+*   **Target Data Type:** The left-hand side MUST be a net type (like `wire` or the structural use of `logic`).
+*   **How it works:** It acts as a physical wire. Any time a signal on the right side changes, the left side updates instantaneously. It *cannot* have memory or state. 
+
+**2. Procedural Blocking Assignment (`=`)**
+*   **Where it lives:** Exclusively inside `always` or `always_comb` procedural blocks.
+*   **Target Data Type:** The left-hand side MUST be a variable type (`reg` or the procedural use of `logic`).
+*   **How it works:** Statements execute sequentially, top-to-bottom. The variable receives its new value *immediately*, and subsequent lines see the updated value. It is the primary way to define complex **combinational logic** using software-like `if/else` and `case` structures.
+
+**3. Procedural Non-Blocking Assignment (`<=`)**
+*   **Where it lives:** Exclusively inside clocked `always_ff` or `always @(posedge clk)` blocks.
+*   **Target Data Type:** The left-hand side MUST be a variable type (`reg` or `logic`).
+*   **How it works:** Statements execute concurrently. The right-hand side of all `<=` statements in the block are evaluated immediately, but the left-hand sides *do not change* until the very end of the simulation time step. This is explicitly required to model **Registers and Flip-Flops**. Using `<=` safely prevents simulation race conditions between discrete clocked hardware elements.
+
+> [!WARNING]
+> **The Golden Rules:**
+> 1. Never use `=` to model sequential logic (Flip-Flops). Use `<=`.
+> 2. Never use `<=` to model combinational logic. Use `=` or `assign`.
+> 3. Never mix `=` and `<=` in the same `always` block.
+
 ### Examples: Dataflow Modeling
 
 **Example 1: Easy (Full Adder)**
