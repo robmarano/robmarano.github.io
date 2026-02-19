@@ -22,6 +22,10 @@ While we touched upon structural modeling (instantiating gates) in Week 4, Syste
 
 [Detailed notes on Verilog/SystemVerilog as a whole](./verilog.md) and [notes on how to run SystemVerilog on your computer](./installing_verilog_locally.md)
 
+[`module_template.sv`](./module_template.sv)
+
+[`testbench_template.sv`](testbench_template.sv)
+
 ### Basic Logic Gates
 SystemVerilog supports the standard logic gates, which can have one output and multiple inputs:
 *   `and`, `nand`
