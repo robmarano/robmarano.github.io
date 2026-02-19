@@ -149,7 +149,7 @@ See [notes_week_05](/courses/ece251/2026/weeks/week_05/notes_week_05.html)
 
 ## Homework Assignment
 
-See [hw-02.md](/courses/ece251/2026/assignments/hw-02.html); [solution](/courses/ece251/2026/assignments/hw-02-solution.html)
+See [hw-05.md](/courses/ece251/2026/assignments/hw-05.html); [solution](TBD)
 
 # <a id="week6">Week 6 &mdash; 2/26 &mdash; Intro to Assembly Language Programming — MIPS CPU; Part 1</a>
 
@@ -165,6 +165,7 @@ See [notes_week_06](/courses/ece251/2026/weeks/week_06/notes_week_06.html)
 
 - Read sections Chap 2.12 through Chap 2.14 in my notes handout [Prof's Notes on Comp Arch](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EaFcET5zxcBHsS529aI4YmEBnUJnbvjWv2R6XsQfFwzC5w?e=2BFfUf)
 - Read [class notes on MIPS assembly programming](/courses/ece251/mips/mips.html)
+
 
 # <a id="week7">Week 7 &mdash; 3/5 &mdash; Intro to Assembly Language Programming — MIPS CPU; Part 2</a>
 

@@ -127,5 +127,5 @@ Instructions are represented as binary numbers. MIPS uses a 32-bit fixed-length 
 *   **Shift**: `sll` (shift left logical) and `srl` (shift right logical) move bits, effectively multiplying or dividing by powers of 2.
 *   **Bitwise**: `and`, `or`, `nor`, `xor` operate bit-by-bit, useful for masking and setting bits.
 
-
+---
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)

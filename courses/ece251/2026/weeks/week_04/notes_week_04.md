@@ -1508,7 +1508,7 @@ module tb_multiplier;
     end
 endmodule
 ```
-
-
+---
+[ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
 
 

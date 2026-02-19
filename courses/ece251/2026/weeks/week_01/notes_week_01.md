@@ -411,4 +411,5 @@ Read [The Free Lunch is Over - A Fundamental Turn Toward Concurrency in Software
     *   **The Metric (MIPS):** MIPS is calculated as $\frac{\text{Instruction Count}}{\text{Execution Time} \times 10^6}$. Because MIPS does not account for instruction capability, a computer with simple instructions might execute more of them per second (high MIPS) but take longer to complete the actual task.
     *   **Result:** If a new program is written using more instructions that are individually faster to execute, the MIPS rating might go up, but the actual performance (execution time) could go down. Thus, a higher MIPS rating does not automatically mean a faster computer when comparing different instruction sets.
 
+---
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)

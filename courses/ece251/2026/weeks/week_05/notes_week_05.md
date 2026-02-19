@@ -20,6 +20,8 @@
 
 While we touched upon structural modeling (instantiating gates) in Week 4, SystemVerilog provides a robust set of built-in gate primitives that form the lowest level of structural description natively supported by the language.
 
+[Detailed notes on Verilog/SystemVerilog as a whole](./verilog.md) and [notes on how to run SystemVerilog on your computer](./installing_verilog_locally.md)
+
 ### Basic Logic Gates
 SystemVerilog supports the standard logic gates, which can have one output and multiple inputs:
 *   `and`, `nand`
@@ -375,6 +377,76 @@ module hard_dataflow(output logic [15:0] result, output logic zero, input logic 
     assign zero = ~(|result);
 endmodule
 ```
+
+---
+
+## 4. Supporting Procedures in Computer Hardware (Section 2.8)
+
+A **procedure** (or function) is a mechanism for code reuse and abstraction. The MIPS architecture relies heavily on software conventions to implement procedure calls seamlessly.
+
+### The 6-Step Procedure Execution
+1.  **Place Parameters:** The caller places arguments where the procedure can access them (`$a0`-`$a3`).
+2.  **Transfer Control:** The caller jumps to the procedure (`jal Label`).
+3.  **Acquire Storage:** The procedure allocates memory for local variables and saved registers on the stack.
+4.  **Perform Task:** The procedure executes its logic.
+5.  **Place Result:** The procedure places its return value where the caller can access it (`$v0`-`$v1`).
+6.  **Return:** The procedure returns control to the point of origin (`jr $ra`).
+
+### MIPS Register Conventions
+*   `$a0`-`$a3` (4-7): Arguments passed to the procedure.
+*   `$v0`-`$v1` (2-3): Return values.
+*   `$t0`-`$t9` (8-15, 24-25): **Caller-Saved** temporaries (not preserved across calls).
+*   `$s0`-`$s7` (16-23): **Callee-Saved** saved registers (must be preserved across calls).
+*   `$sp` (29): Stack Pointer.
+*   `$ra` (31): Return Address.
+
+### The Stack and Stack Frames
+The stack is memory used to "spill" registers when we run out of MIPS's 32 hardware registers, or when we need to preserve variables across a nested procedure call. The stack grows **downwards** from high memory addresses to low.
+*   **Push:** `addi $sp, $sp, -4` then `sw $t0, 0($sp)`
+*   **Pop:** `lw $t0, 0($sp)` then `addi $sp, $sp, 4`
+
+**Leaf vs. Nested Procedures:**
+A **leaf procedure** does not call any other procedures. It may not need to use the stack at all if it only uses `$t` registers. A **nested procedure** calls another procedure. It **must** save its `$ra` to the stack before jumping, otherwise the second `jal` will irreparably overwrite the original return address!
+
+---
+
+## 5. MIPS Addressing for 32-Bit Immediates and Addresses (Section 2.10)
+
+MIPS instructions are rigidly 32 bits long. This makes it impossible for an I-Type instruction (like `addi`) to contain both the opcode/registers AND a full 32-bit constant, as the immediate field is only 16 bits.
+
+### Loading 32-Bit Constants
+We construct 32-bit constants using two instructions:
+1.  **`lui` (Load Upper Immediate):** Loads a 16-bit constant into the top 16 bits of a register, clearing the bottom 16 bits to 0.
+2.  **`ori` (OR Immediate):** Bitwise ORs a 16-bit constant into the bottom 16 bits.
+
+```assembly
+// Load 0xDEADBEEF into $s0
+lui $s0, 0xDEAD     // $s0 = 0xDEAD0000
+ori $s0, $s0, 0xBEEF // $s0 = 0xDEADBEEF
+```
+
+### The 5 Addressing Modes of MIPS
+1.  **Immediate Addressing:** The operand is a constant embedded in the instruction itself (e.g., `addi $t0, $t1, 5`).
+2.  **Register Addressing:** The operand is a hardware register (e.g., `add $t0, $t1, $t2`).
+3.  **Base (Displacement) Addressing:** The memory address is the sum of a register and a sign-extended 16-bit constant (e.g., `lw $t0, 100($s1)`).
+4.  **PC-Relative Addressing:** The memory address is the sum of the PC and a sign-extended 16-bit constant, shifted left by 2 (e.g., `beq $t0, $t1, Label`). Used for relatively close branches. Target = $PC + 4 + (\text{offset} \times 4)$.
+5.  **Pseudodirect Addressing:** The target address is the 26-bit field of a `J-Type` instruction shifted left by 2, combined with the top 4 bits of the current PC (e.g., `j Label`). This allows a jump anywhere within the current 256 MB block of memory. To jump further, `jr` (Register Addressing) must be used.
+
+---
+
+## 6. Parallelism and Instructions: Synchronization (Section 2.11)
+
+In modern multicore processors, multiple CPUs share the same main memory. This introduces the concept of a **Data Race**: when two threads try to read and write to the same memory location simultaneously, the final variable state is unpredictable and depends on the exact timing of the threads.
+
+### The Synchronization Problem
+A simple "lock" mechanism stored in memory (0 = unlocked, 1 = locked) cannot be implemented with standard `lw` and `sw`. Two threads might both `lw` the lock simultaneously, see that it is 0, and both `sw` 1 to claim it. They both think they own the lock! We need an **atomic** read-modify-write operation (an operation that cannot be interrupted).
+
+### Load Linked and Store Conditional
+MIPS provides two special instructions to build atomic operations hardware-efficiently without complex lock lines on the memory bus.
+*   **`ll rt, offset(rs)` (Load Linked):** Loads a word from memory and registers the memory address with the CPU.
+*   **`sc rt, offset(rs)` (Store Conditional):** Attempts to store to the address. **It succeeds (writes to memory and sets `rt` to 1) ONLY IF no other processor has written to that address since the `ll`.** Otherwise, it fails (does not write, sets `rt` to 0).
+
+If `sc` fails, the local thread can simply loop back and try the `ll` again.
 
 ---
 

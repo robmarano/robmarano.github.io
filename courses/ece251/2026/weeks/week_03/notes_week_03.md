@@ -1488,4 +1488,5 @@ If you are having trouble with your code, you can use the `break` instruction to
 * [add.s](/courses/ece251/2026/weeks/week_03/add.s)
 * [array.s](/courses/ece251/2026/weeks/week_03/array.s)
 
+---
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
