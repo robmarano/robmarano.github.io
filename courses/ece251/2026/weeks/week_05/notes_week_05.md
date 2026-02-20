@@ -692,4 +692,14 @@ spin_lock:
 </details>
 
 ---
+
+## MIPS32 ALU SystemVerilog Project
+A fully parameterized, combinational Arithmetic Logic Unit (ALU) modeled after the MIPS32 architecture has been added to this week's materials. It processes standard R-Type instructions (e.g., `add`, `sub`, `and`, `or`, `slt`) directly from the opcode and funct bit inputs without utilizing a hardware clock.
+
+**Project Files:**
+*   [`README.md`](mips32_alu/README.md): Documentation and simulation instructions.
+*   [`alu.sv`](mips32_alu/alu.sv): The parameterized ALU SystemVerilog module.
+*   [`tb_alu.sv`](mips32_alu/tb_alu.sv): The testbench validating signed/unsigned math operations and the zero-flag.
+
+---
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
