@@ -549,7 +549,7 @@ Write a simple atomic "spin-lock" acquisition loop using `ll` and `sc` instructi
 
 ---
 
-<details>
+<details markdown="1">
 <summary><b>Click here to reveal Answer Key</b></summary>
 
 ### Topic 1 Answers
