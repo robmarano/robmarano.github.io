@@ -1511,4 +1511,22 @@ endmodule
 ---
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
 
+---
 
+## Class Summary (from Transcript)
+
+**1. ISA Review**
+*   **Design Principles**: Emphasized the contrast between RISC (MIPS) and CISC (x86) architectures and highlighted the four foundational design principles: simplicity favors regularity, smaller is faster, make the common case fast, and good design demands good compromises.
+*   **32-Bit Fundamentals**: Reinforced that memory, instructions, and operands are all 32 bits wide, making them universally structured elements within the CPU.
+*   **Instruction Format**: Deep dived into the differences between R, I, and J-Type instructions, making connections to machine instructions like `set less than` and conditionals (`beq`) that require the components of base offset or immediate addressing arrays.
+*   **Memory Architecture**: Detailed the layout of the memory map: addressing for the text segment (instructions), the static data segment (global variables), and the dynamic data elements (the stack that grows down and the heap that grows up). Clarified the Load/Store structure where ALUs only compute using registers decoupled from memory.
+*   **Program Control Flow**: Distinguished leaf procedures from nested procedures. Covered the required use of stacking (`$sp` registers) and preservation of return addresses (`$ra`) to support deep hierarchies, particularly detailing how recursion must be managed to avoid infinite loops and memory faults.
+*   **Real-world Context**: Pointed to the Quake 3 Fast Inverse Square Root algorithm as a powerful real-world historical example of manipulating floating point data protocols to optimize instruction overhead for computationally intensive math.
+
+**2. SystemVerilog as our Hardware Definition Language (HDL)**
+*   **HDL Context**: Outlined that SystemVerilog offers a scalable simulation alternative to discrete wired logic chips (like building ALUs from physical 7400-series gates) and is the current industry standard across Google, Intel, and others.
+*   **Model Styles**: Contrasted the three paradigms: Structural representation (netlists), Dataflow representation (`assign`), and Behavioral modeling (incorporating concurrency limits via `always_ff`).
+*   **Data Types and Manipulation**: Introduced 4-state Logic (`0, 1, x, z`) vs regular Bits, emphasizing why the `X` and `Z` states matter in hardware mapping. Demonstrated vector/bus replication, concatenation, and manipulation (e.g., bit swizzling).
+*   **Structure & Verification**: Discussed separating design definitions into parameterized `modules` (DUTs) configured for simulation within independent testbench environments, including viewing output logic analyzers (like `gtkwave`).
+*   **Clocking & State**: Focused specifically on simulating hardware clocks natively, covering standard 50% duty cycles and scaling them down utilizing clock dividers. Further explored latch mapping versus Edge-Triggered (`D-Flip Flop`) synchronization.
+*   **Macros & Generative Code**: Introduced the powerful `generate` block tool which automatically provisions repetitive parallel logic structures like an entire 32-bit `Register File` with identical instantiations to reduce redundant coding and error scaling.
