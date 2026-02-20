@@ -701,5 +701,12 @@ A fully parameterized, combinational Arithmetic Logic Unit (ALU) modeled after t
 *   [`alu.sv`](mips32_alu/alu.sv): The parameterized ALU SystemVerilog module.
 *   [`tb_alu.sv`](mips32_alu/tb_alu.sv): The testbench validating signed/unsigned math operations and the zero-flag.
 
+Run it at the command line:
+
+```bash
+iverilog -o alu.vvp alu.sv tb_alu.sv
+vvp alu.vvp
+```
+
 ---
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
