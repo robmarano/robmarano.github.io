@@ -688,6 +688,7 @@ spin_lock:
     beq  $t1, $zero, spin_lock // If sc failed (returned 0), spin and try again
     // Lock acquired!
 ```
+
 </details>
 
 ---
