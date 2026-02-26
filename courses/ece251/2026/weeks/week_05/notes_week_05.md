@@ -708,5 +708,20 @@ iverilog -o alu.vvp alu.sv tb_alu.sv
 vvp alu.vvp
 ```
 
+## Class Summary & Key Takeaways (from Transcript)
+
+### Transcript vs. Notes Alignment
+The classroom discussion tightly mirrored the structural topics of the Week 05 notes, primarily focusing on transitioning from gate-level logic (`and`, `not`, `bufif1`) to Dataflow and Behavioral modeling. 
+*   **SystemVerilog Types & Delays:** Reinforced the 4-state logic system (`0, 1, x, z`) essential for tri-state buffers and undefined signal detection. Emphasized testing edge cases with manual delays (`#10`) tied to defined timescales (`1ns/10ps`).
+*   **Operator Precedence:** Reminded students that `PEMDAS` rules heavily dictate dataflow interpretation inside `assign` statements; failing to use parentheses correctly will result in broken logic arrays.
+*   **Assignment Protocols:** Delineated exactly why `assign` is for continuous logic, `=` for blocking combinational (`always_comb`), and `<=` for non-blocking sequential logic (`always_ff`), warning that mixing them up causes indeterminate race conditions.
+*   **MIPS ALU Testbench:** Walked through constructing the combinational ALU in SystemVerilog, emphasizing generating a `Zero` flag (for `beq`) and an `Overflow` flag, acknowledging how signed math implicitly models behavior. 
+
+### Key Extended Concepts from Class
+The lecture expanded significantly beyond the raw textbook notes to provide real-world architectural context:
+*   **The "Why" Behind Memory Management:** Connected the concept of MIPS memory movement (Heap/Stack and procedures) directly to how modern Large Language Models (LLMs) distribute computations across CPUs, GPUs, and Neural Processing Units (NPUs) over wide, 256-bit memory buses.
+*   **Pointers and Memory Addresses:** Explicitly linked upcoming high-level programming topics (like C/C++ pointer arithmetic) back to the raw hardware. Understanding MIPS pointers and array memory boundaries acts as a strong foundation to prevent "blowing your foot off" with segfaults.
+*   **Architecture Trade-offs (32-bit vs. 8-bit vs. 4-bit):** Explored the compromises required when parametrizing an Architecture. While 32-bit provides ample room for 6-bit opcodes, 6-bit functions, and a 32-register filing system, reducing an architecture to 8-bit or 4-bit (like the historical Intel 4004 accumulator) aggressively limits opcodes and forces heavier, slower stack push/pop interactions because of a lack of available internal registers.
+
 ---
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
