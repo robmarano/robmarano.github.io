@@ -1,7 +1,7 @@
 # Notes for Week 6
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
 
-# Topics
+# Topics (Let's review!)
 ## MIPS Assembly
 1. The 5 Components of a Computer & CPU Deep Dive
 2. MIPS ISA Overview: Load-Store Architecture & Design Principles
@@ -61,23 +61,25 @@ The compromise? Keep all instructions 32 bits, but break them into three differe
 Before your code reaches the CPU, it must be properly compiled. 
 Below is a visual diagram tracing source code through the compiler, assembler, and linker down into an executable binary:
 
-<img src="../../mips/Modern_Computer_Programming_with_steps.png" alt="Compilation to Execution Steps Diagram" style="width: 80%; display: block; margin: auto;">
+<img src="../../../mips/Modern_Computer_Programming_with_steps.png" alt="Compilation to Execution Steps Diagram" style="width: 80%; display: block; margin: auto;">
 
 ### The MIPS Memory Layout
+
+<img src="../../../mips/mips32_memory_layout.png" alt="MIPS32 Memory Layout" style="width: 30%; float: margin-left: 20px;">
+
+
 When that executable binary is launched, the Operating System assigns the program its own segmented space within Main Memory to execute.
 
-<img src="../../mips/mips32_memory_layout.png" alt="MIPS32 Memory Layout" style="width: 30%; float: right; margin-left: 20px;">
-
-**1. Text Segment (`0x00400000`):**
+**1. Text Segment (`0x00400000` and above):**
 This is where the translated binary (machine code) of your program's instructions lives. The CPU's Program Counter (`PC` register) starts here and natively reads downwards line-by-line.
 
-**2. Data Segment (`0x10000000`):**
+**2. Data Segment (`0x10000000` and above):**
 This area holds static or global variables required by your program before it even runs (such as pre-defined arrays or hard-coded ASCII strings).
 
 **3. Heap:**
 This memory area sits directly above the Data Segment and grows *upwards* toward higher memory addresses. This is used when your program asks for dynamic memory while it is running (like invoking `malloc` in C).
 
-**4. Stack (`0x7FFFFFFF`):**
+**4. Stack (`0x7FFFFFFF` and below):**
 Located at the very top of user memory, the Stack grows *downwards*. It is heavily utilized for passing temporary function arguments and tracking function return layers dynamically as procedures are called.
 
 
@@ -120,7 +122,10 @@ MIPS enforces procedure structures heavily via a specific convention (see the Gr
 
 ### The Stack 
 The Stack is simply a segment of memory (`0x7FFFFFFF`) acting as a temporary "scratchpad" for your procedures. It mimics a physical stack of plates. 
-- You manually "Push" items down the Stack by decreasing `$sp` (`addi $sp, $sp, -4` creates 1 new slot) and writing the value (`sw $t0, 0($sp)`). 
+- You manually "Push" items **down** the Stack by **decreasing** `$sp`
+  - for example, `addi $sp, $sp, -4` creates 1 new slot of memory sized to one word (4 bytes, hence `4`)
+  - `-4` means one word below the current stack pointer `$sp`
+  - `sw $t0, 0($sp)` writing the value to the new memory slot
 - You "Pop" items off by loading the memory location back into your Register and increasing the pointer back up (`addi $sp, $sp, 4`).
 
 ### Leaf Procedures
@@ -130,8 +135,8 @@ You simply act upon arguments `$a0-$a3` and jump explicitly back to the caller u
 ### Nested & Recursive Procedures
 Things get complicated when a function *calls another function*. A Recursive Procedure literally calls *itself* back-to-back.
 
-When you trigger `jal` (Jump and Link), MIPS automatically overwrites the `$ra` registry slot with the address of the *current* instruction. 
-If your procedure calls another function, **you lose your original return address.**
+When you trigger `jal` (Jump and Link), MIPS automatically overwrites the `$ra` registry slot with the address of the *next* instruction (`PC + 4`). 
+If your procedure calls another function via a subsequent `jal`, **you overwrite and lose your original return address.**
 
 *To prevent this memory loss*, inside nested functions, your first move is to **spill to the stack**. 
 ```assembly
@@ -159,7 +164,9 @@ Combine `slt` (Set-on-Less-Than) with `bne` to implement `for` or `while` loops!
 ### Unconditional Jumps
 When shifting massively across memory boundaries (not just a few lines of code locally), you require Jumps.
 - `j TargetLabel` literally overrides the `PC` register to aim immediately at the matching instruction string address.
-- `jal TargetLabel` forces a jump *but leaves a breadcrumb* inside `$ra` to find its way smoothly back when finished. This explicitly initiates a Procedure event.
+- `jal TargetLabel` (Jump and Link) forces a jump *but leaves a breadcrumb* inside `$ra` to find its way smoothly back when finished. This explicitly initiates a Procedure event.
+  - **Returning PC-wise:** When `jal` executes, it calculates the address of the *very next instruction* following the `jal` call (which is mathematically `PC + 4` bytes) and saves it into the `$ra` register. 
+  - To **return** from the procedure, your function invokes `jr $ra` (Jump Register computation). This directly copies the stored `PC + 4` address from `$ra` back into the `PC` register, seamlessly returning control to the exact instruction that follows your original function call.
 
 ---
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
