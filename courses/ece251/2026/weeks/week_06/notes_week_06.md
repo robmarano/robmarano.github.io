@@ -57,7 +57,57 @@ The compromise? Keep all instructions 32 bits, but break them into three differe
 - **I-Type (Immediate/Data Transfer):** Used for loading constants and calculating memory offsets (e.g., `addi`, `lw`, `sw`).
 - **J-Type (Jump):** Used for leaping to distinct memory addresses.
 
-## 3. From Code to Execution: Memory Sequence
+## 3. Assessing Performance: The Single-Cycle Processor
+As we discuss the MIPS ISA, it is critical to evaluate the performance characteristics of our current processor implementation. Based on Chapter 1 of our textbook, CPU performance is fundamentally governed by the **Classic CPU Performance Equation**:
+
+> `Execution Time = Instruction Count (IC) * Cycles Per Instruction (CPI) * Clock Cycle Time`
+
+### The Single-Cycle Characteristic
+Our foundational model of the MIPS architecture assumes a **single-cycle datapath**. This means the CPU fetches, decodes, executes, and writes back exactly **one instruction at a time per clock cycle**. 
+
+Because every instruction completes in exactly one cycle, our **CPI is strictly 1**.
+
+**The Trade-off:** 
+The length of a clock cycle *cannot* change dynamically; it must be fixed. Because we must wait for the absolute slowest instruction to finish before starting the next one, the entire CPU's clock cycle time must be drawn out long enough to accommodate this worst-case scenario. 
+
+In MIPS, the slowest instruction is typically the `lw` (Load Word) operation because it must sequentially:
+1. Access Instruction Memory (to fetch `lw`).
+2. Read the Register File.
+3. Run the ALU (to calculate the memory address).
+4. Access Data Memory (to read the physical data).
+5. Write back to the Register File.
+
+Faster instructions (like a simple `add` which skips Data Memory) are forced to wait for the clock cycle to finish, intrinsically wasting hardware time.
+
+### Assembly Performance Examples
+
+Let's assess the execution time of simple assembly blocks assuming we are running a single-cycle processor with a hypothetical **Clock Cycle Time of 500ps (picoseconds)**.
+
+**Example 1: Pure Arithmetic**
+```assembly
+    add $t0, $s1, $s2
+    sub $t1, $s3, $s4
+    add $t2, $t0, $t1
+```
+*   **Instruction Count (IC):** 3
+*   **CPI:** 1
+*   **Clock Cycle Time:** 500ps
+*   **Total Execution Time:** `3 * 1 * 500ps = 1500ps`
+
+**Example 2: Memory Access Block**
+```assembly
+    lw  $t0, 0($s1)
+    add $t0, $t0, $s2
+    sw  $t0, 0($s1)
+```
+*   **Instruction Count (IC):** 3
+*   **CPI:** 1
+*   **Clock Cycle Time:** 500ps
+*   **Total Execution Time:** `3 * 1 * 500ps = 1500ps`
+
+Notice that even though `add` physically evaluates much faster through the digital logic gates than the `lw` and `sw` instructions in Example 2, the single-cycle datapath forces *all* instructions to consume the same rigid 500ps block of time. 
+
+## 4. From Code to Execution: Memory Sequence
 Before your code reaches the CPU, it must be properly compiled. 
 Below is a visual diagram tracing source code through the compiler, assembler, and linker down into an executable binary:
 
