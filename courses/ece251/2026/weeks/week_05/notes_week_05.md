@@ -708,20 +708,17 @@ iverilog -o alu.vvp alu.sv tb_alu.sv
 vvp alu.vvp
 ```
 
-## Class Summary & Key Takeaways (from Transcript)
+## Lecture Review & Key Takeaways
 
-### Transcript vs. Notes Alignment
-The classroom discussion tightly mirrored the structural topics of the Week 05 notes, primarily focusing on transitioning from gate-level logic (`and`, `not`, `bufif1`) to Dataflow and Behavioral modeling. 
-*   **SystemVerilog Types & Delays:** Reinforced the 4-state logic system (`0, 1, x, z`) essential for tri-state buffers and undefined signal detection. Emphasized testing edge cases with manual delays (`#10`) tied to defined timescales (`1ns/10ps`).
-*   **Operator Precedence:** Reminded students that `PEMDAS` rules heavily dictate dataflow interpretation inside `assign` statements; failing to use parentheses correctly will result in broken logic arrays.
-*   **Assignment Protocols:** Delineated exactly why `assign` is for continuous logic, `=` for blocking combinational (`always_comb`), and `<=` for non-blocking sequential logic (`always_ff`), warning that mixing them up causes indeterminate race conditions.
-*   **MIPS ALU Testbench:** Walked through constructing the combinational ALU in SystemVerilog, emphasizing generating a `Zero` flag (for `beq`) and an `Overflow` flag, acknowledging how signed math implicitly models behavior. 
+To reinforce the transition from gate-level logic to more advanced behavior and dataflow modeling, keep these core practical concepts in mind as you work through the assignments and the MIPS ALU project:
 
-### Key Extended Concepts from Class
-The lecture expanded significantly beyond the raw textbook notes to provide real-world architectural context:
-*   **The "Why" Behind Memory Management:** Connected the concept of MIPS memory movement (Heap/Stack and procedures) directly to how modern Large Language Models (LLMs) distribute computations across CPUs, GPUs, and Neural Processing Units (NPUs) over wide, 256-bit memory buses.
-*   **Pointers and Memory Addresses:** Explicitly linked upcoming high-level programming topics (like C/C++ pointer arithmetic) back to the raw hardware. Understanding MIPS pointers and array memory boundaries acts as a strong foundation to prevent "blowing your foot off" with segfaults.
-*   **Architecture Trade-offs (32-bit vs. 8-bit vs. 4-bit):** Explored the compromises required when parametrizing an Architecture. While 32-bit provides ample room for 6-bit opcodes, 6-bit functions, and a 32-register filing system, reducing an architecture to 8-bit or 4-bit (like the historical Intel 4004 accumulator) aggressively limits opcodes and forces heavier, slower stack push/pop interactions because of a lack of available internal registers.
+*   **SystemVerilog Types & Edge Cases:** Always remember the 4-state logic system (`0, 1, x, z`). High-impedance (`z`) and undefined (`x`) states are essential for debugging bus conflicts and undefined signals. When writing simulation tests, using manual delays (like `#10`) relative to your defined timescales (`1ns/10ps`) is crucial for verifying that signals settle properly.
+*   **Operator Rules & Race Conditions:** Apply `PEMDAS` meticulously when writing dataflow `assign` statements. Furthermore, maintaining strict assignment protocols is mandatory: use `assign` for continuous logic, `=` for blocking combinational blocks (`always_comb`), and `<=` for non-blocking sequential blocks (`always_ff`). Mixing these up will cause unpredictable race conditions during simulation.
+*   **The MIPS ALU Interface:** When building your combinational ALU, it's not just about arithmetic. Generating control flags—like the `Zero` flag (critical for the `beq` branch instruction) and the `Overflow` flag—is just as important as the primary data output.
+*   **Memory Movement and Modern Scale:** Why do we care so deeply about MIPS memory movement, heap/stack boundaries, and procedure calls? Because the fundamentals scale. Modern Large Language Models (LLMs) operate by pushing massive matrices across CPUs, GPUs, and Neural Processing Units (NPUs) over wide, 256-bit memory buses. The way we manage memory locally mirrors how the biggest computing clusters on Earth optimize data delivery.
+*   **Pointers as Hardware Addresses:** As you move into higher-level languages like C/C++, you will encounter pointer arithmetic. Remember that a pointer is simply a raw hardware address in memory. Understanding how MIPS manages memory arrays ensures you don't step out of bounds and cause segmentation faults.
+*   **Architecture Trade-offs:** Parametrizing your architecture is an exercise in prioritization. A 32-bit architecture gives us plenty of room for 6-bit opcodes, 6-bit functions, and 32 registers. However, historical architectures like the 8-bit Commodore 64 or the 4-bit Intel 4004 (which relied heavily on a central accumulator) forced aggressive limits on instruction sets and placed high, slow burdens on stack push/pop operations due to a severe lack of internal registers.
+
 
 ---
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
