@@ -38,3 +38,28 @@ This document serves to record decisions, architectural structure, and recent de
 ### 5. Supplemental Materials
 *   **Slide Deck**: `ece251_week_04_slides.md` was generated directly from the notes for a 3-hour lecture.
 *   **Homework**: `hw-04.md` created matching the style of previous assignments. Features 3 ISA problems (Machine code translation, Endianness, Stack frames) and 2 SV problems (Multiplexor design, Program Counter state logic).
+
+## Recent Updates: Week 05
+
+### 1. SystemVerilog Deep Dive (`notes_week_05.md`)
+*   **Primitives**: Added instruction on Built-in Primitives (gates, buffers, delays) and User-Defined Primitives (Combinational and Sequential UDPs with state tables).
+*   **Dataflow Modeling**: Expanded upon continuous assignments, ternary selections, concatenation, and explicit operator precedence tables.
+*   **Assignment Rules**: Clarified the "Golden Rules" dividing continuous `assign`, blocking `=`, and non-blocking `<=` logic to prevent simulation and synthesis mismatch. 
+
+### 2. MIPS Textbook Integration (`notes_week_05.md`)
+*   **Procedures (Sec 2.8)**: Added detailed notes on caller/callee-saved registers, nested versus leaf procedures, and using the `$sp` stack pointer.
+*   **Addressing (Sec 2.10)**: Explained PC-Relative addressing for branching and Pseudodirect addressing for jumping, highlighting the utility of `jr`.
+*   **Synchronization (Sec 2.11)**: Introduced data races and mapped out MIPS atomic instructions (`ll` and `sc`) for implementing spin-locks.
+
+### 3. Comprehensive Problem Set
+*   Incorporated 18 new graded practice problems (Easy/Medium/Hard) covering all 6 topics recorded in `notes_week_05.md`, supplemented by a hidden (Kramdown-compatible) Answer Key.
+
+### 4. MIPS32 ALU SystemVerilog Project (`mips32_alu/`)
+*   **`alu.sv`**: Defined a fully parameterized, clockless (combinational) Arithmetic Logic Unit processing MIPS32 standard `opcode` and `funct` inputs.
+*   **Supported logic**: Directly handles standard R-Type signals (`ADD`, `ADDU`, `SUB`, `SUBU`, `AND`, `OR`, `XOR`, `NOR`, signed `SLT`, and unsigned `SLTU`), driving the target `$rd` value and computing a boolean `zero` flag.
+*   **`tb_alu.sv`**: Wrote an execution testbench checking combinational limits, mask calculations, and signed arithmetic logic. Documented testing and simulation in `README.md`.
+
+### 5. Repository Maintenance
+*   Cleaned and extracted topics from the Week 4 transcript (`2026-02-12.txt`) and placed them within `notes_week_04.md`.
+*   Created reusable `module_template.sv` and `testbench_template.sv` files for fast prototyping.
+*   Removed the accidentally staged `2026-02-12.txt` from Git tracking via `.gitignore`.
