@@ -218,5 +218,66 @@ When shifting massively across memory boundaries (not just a few lines of code l
   - **Returning PC-wise:** When `jal` executes, it calculates the address of the *very next instruction* following the `jal` call (which is mathematically `PC + 4` bytes) and saves it into the `$ra` register. 
   - To **return** from the procedure, your function invokes `jr $ra` (Jump Register computation). This directly copies the stored `PC + 4` address from `$ra` back into the `PC` register, seamlessly returning control to the exact instruction that follows your original function call.
 
+## 7. Advanced Topic: Pipelining Teaser
+As we close out our discussion of the single-cycle processor, let's look ahead. In **Chapter 4** of our textbook, we will introduce the **pipelined processor** as the successor to both the single-cycle and multi-cycle processor designs to massively increase performance. 
+
+The following questions tease some of the performance optimizations and mechanical changes we will explore under a pipelined architecture:
+
+**Topic Question 1: When a procedure returns to the place in the MIPS assembly program it branched from, where does the PC point right before returning?**
+
+**Answer:** When a procedure returns to the place in the MIPS assembly program it branched from, it relies on the return address that was saved when the procedure was initially called. Here is exactly where the Program Counter (PC) points throughout this process:
+
+*   **During the initial call:** When the caller uses the `jal` (jump and link) instruction to branch to the procedure, the CPU automatically saves the address of the *next* instruction (the one immediately following the `jal` call) into the `$ra` (return address) register.
+*   **Right before returning:** To return, the procedure uses the `jr $ra` (jump register) instruction. As your professor explained in the lecture, by the time the CPU loads this `jr $ra` instruction into the Instruction Register (IR) to execute it, the hardware has already automatically incremented the PC by 4. Therefore, right before the return jump actually executes, the PC is technically pointing to the memory address immediately following the `jr $ra` instruction. 
+*   **Executing the return:** The `jr $ra` instruction then executes, replacing the PC's current value with the contents of `$ra`, which successfully jumps the execution flow back to the caller's next instruction.
+
+**Topic Question 2: Immediately right after a branch or a jump instruction what is the relative value of the PC? Is the answer the same for a jump and a branch?**
+
+**Answer:** Immediately after a branch or jump instruction is fetched by the processor, the hardware automatically increments the Program Counter (PC). Therefore, the relative value of the PC during the execution of that instruction is **PC + 4**, meaning it points to the memory address of the very next instruction. Because the PC is already pointing to this next instruction, the instruction immediately following the branch or jump is said to be in the **"branch delay slot"**. 
+
+**Is the answer the same for a jump and a branch?**
+
+Yes, the actual value held in the PC register at that exact moment is exactly the same (`PC + 4`) for both branch and jump instructions. However, **how they use this `PC + 4` value to calculate where to go next is fundamentally different**:
+
+*   **Branches use PC-relative addressing:** For conditional branches (like `beq` or `bne`), the processor calculates the target destination by taking the 16-bit offset provided in the instruction, sign-extending it, shifting it left by 2 bits, and **adding it to the full `PC + 4` value**. This means a branch is strictly relative to the instruction immediately following it.
+*   **Jumps use pseudodirect addressing:** For unconditional jumps (like `j` or `jal`), the processor calculates the target destination by taking the 26-bit address field from the instruction, shifting it left by 2 bits, and **concatenating it with the upper 4 bits of the `PC + 4` value**. It does not add the jump address to the PC; it directly replaces the lower 28 bits of the PC.
+
+*(Note: The Jump Register (`jr`) instruction acts differently from the standard jump. It simply replaces the PC with the absolute 32-bit address stored in a specified register, entirely ignoring the current PC value for its destination calculation).*
+
+**Topic Question 3: I thought the PC change was PC+8, not PC+4.**
+
+**Answer:** You are thinking of a very specific and important scenario: **saving the return address during a procedure call**. 
+
+You are absolutely correct that **`PC + 8`** is used, but it is used specifically by "and Link" instructions like **`jal`** (Jump and Link) and **`bal`** (Branch and Link) to set the return address, rather than to calculate the jump destination. 
+
+Here is why `PC + 8` is used in that context:
+
+**The Branch Delay Slot**
+In the MIPS architecture, to keep the pipeline running efficiently, the processor always executes the instruction immediately following a branch or jump (this is called the **branch delay slot**). 
+
+If your `jal` (Jump and Link) instruction is located at the current `PC`, here is what happens:
+1. **`PC + 4`**: This is the address of the instruction in the delay slot. Because it executes immediately after the jump regardless of what happens, you *do not* want your procedure to return here (otherwise it would run the delay slot instruction twice). 
+2. **`PC + 8`**: This is the address of the instruction immediately *after* the delay slot. This is the true next step in your program where execution should resume once the procedure finishes.
+
+**How the Hardware Handles It**
+Because of this, when a `jal` (Jump and Link) or `bal` (Branch and Link) instruction executes, the hardware automatically stores **`PC + 8`** into register `$ra` (register 31, the Return Address register). 
+
+So, to summarize the distinction:
+* **`PC + 4`** is the value the processor uses to calculate where a relative branch is *going*. 
+* **`PC + 8`** is the value the processor saves in `$ra` so it knows where to *return* after a procedure call.
+
+**Topic Question 4: The concept of the delay slot specifically is covered in Chapter 4 of our textbook, during the discussion of pipelined CPU design. Correct?**
+
+**Answer:** Yes, you are exactly correct. The concept of the delay slot is covered in Chapter 4 of your textbook (*Computer Organization and Design*), specifically during the discussions on pipelined CPU design and how to handle control hazards. 
+
+The textbook notes that a "delayed branch" redefines how a branch works: the hardware always executes the instruction immediately following the branch (the instruction in the **delay slot**), and the actual branching effect is delayed until the second instruction following the branch. The compiler is tasked with trying to schedule a useful instruction into this delay slot, though this becomes harder in modern, deeply pipelined processors.
+
+Additionally, another one of your course texts, *See MIPS Run*, goes into even more detail on this topic, categorizing delay slots as "Programmer-Visible Pipeline Effects". It highlights two specific types of delay slots that programmers (or assemblers) must manage:
+*   **Branch delay slot:** The instruction position immediately following a branch, which executes even if the branch is taken.
+*   **Load delay slot (in earlier MIPS CPUs):** The instruction position immediately following a load (`lw`), which must not attempt to use the data that was just loaded because the pipeline hasn't finished retrieving it from memory yet. 
+
+In both cases, if the compiler or programmer cannot find a useful, independent instruction to fill the delay slot, they must insert a "do-nothing" `nop` instruction to ensure the pipeline executes correctly.
+
+
 ---
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
