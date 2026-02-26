@@ -11,6 +11,12 @@ Below is the complete solution code and mathematical reasoning for all four exer
 **A) The Golden Rule Violation**
 The module is using a blocking assignment (`=`) inside an edge-triggered sequential block (`always_ff @(posedge clk)`). According to SystemVerilog's **Golden Rules**, sequential hardware (like a Flip-Flop) must *always* use non-blocking assignments (`<=`). Using blocking assignments here causes a **race condition** in simulation where the `q` value updates instantly, potentially triggering cascading logic on the exact same clock edge rather than properly delaying to the next cycle.
 
+> 📝 **Whiteboard Teaching Suggestion:**
+> To visually prove *why* this dictates hardware synthesis, draw **two distinct D-Flip-Flops in series** (a shift register), where FF1 connects to FF2. 
+> 
+> *   **If using Blocking (`=`):** Tell the students to simulate the clock edge top-to-bottom. FF1 captures `D` and updates `Q1` *instantly*. The very next line of code, FF2 evaluates its input (`Q1`). Because it evaluates sequentially, FF2 instantly grabs the *brand new* value of `Q1` in the exact same clock cycle. The hardware synthesizer realizes the two flip-flops have collapsed into a single simultaneous wire, completely destroying the memory pipeline!
+> *   **If using Non-Blocking (`<=`):** Explain that `<= `means "evaluate now, update later." On the clock edge, both FF1 and FF2 look at their inputs simultaneously. FF2 sees the *old* value of `Q1`. Only at the *end* of the clock step do the outputs actually update. Thus, the hardware properly synthesizes two distinct, pipelined memory stages.
+
 **B) Corrected Sequential Logic**
 ```systemverilog
 module corrected_dff (output logic q, input logic clk, d);
