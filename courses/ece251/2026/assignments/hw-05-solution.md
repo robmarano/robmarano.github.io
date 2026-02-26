@@ -14,8 +14,31 @@ The module is using a blocking assignment (`=`) inside an edge-triggered sequent
 > 📝 **Visualizing Hardware Synthesis:**
 > To understand *why* this logic dictates physical hardware synthesis, imagine **two distinct D-Flip-Flops wired in series** (a shift register), where FF1 connects directly to FF2. 
 > 
+> ```mermaid
+> graph LR
+>     D([Data In]) --> FF1[D-FlipFlop 1]
+>     FF1 -- "q1 (Intermediate)" --> FF2[D-FlipFlop 2]
+>     FF2 --> Q([Data Out])
+>     
+>     CLK([Clock]) --> FF1
+>     CLK --> FF2
+> ```
+> 
+> Here is how we code this exact physical structure:
+> ```systemverilog
+> module shift_register (output logic q2, input logic clk, d);
+>     logic q1; // The wire connecting FF1 to FF2
+> 
+>     always_ff @(posedge clk) begin
+>         // These lines execute SIMULTANEOUSLY in hardware
+>         q1 <= d;  // FF1 captures D
+>         q2 <= q1; // FF2 captures the OLD q1
+>     end
+> endmodule
+> ```
+> 
 > *   **If using Blocking (`=`):** Simulating the clock edge top-to-bottom, FF1 captures `D` and updates `Q1` *instantly*. The very next line of code, FF2 evaluates its input (`Q1`). Because it evaluates sequentially, FF2 instantly grabs the *brand new* value of `Q1` in the exact same clock cycle. The hardware synthesizer realizes the two flip-flops have collapsed into a single simultaneous wire, destroying the memory pipeline!
-> *   **If using Non-Blocking (`<=`):** The non-blocking operator `<=` means "evaluate now, update later." On the clock edge, both FF1 and FF2 look at their inputs simultaneously. FF2 sees the *old* value of `Q1`. Only at the *end* of the clock step do the outputs actually update! Thus, the hardware properly synthesizes two distinct, pipelined memory stages.
+> *   **If using Non-Blocking (`<=`):** As in the code above, the non-blocking operator `<=` means "evaluate now, update later." On the clock edge, both FF1 and FF2 look at their inputs simultaneously. FF2 sees the *old* value of `Q1`. Only at the *end* of the clock step do the outputs actually update! Thus, the hardware properly synthesizes two distinct, pipelined memory stages.
 
 **B) Corrected Sequential Logic**
 ```systemverilog
