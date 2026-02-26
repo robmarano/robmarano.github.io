@@ -218,6 +218,21 @@ When shifting massively across memory boundaries (not just a few lines of code l
   - **Returning PC-wise:** When `jal` executes, it calculates the address of the *very next instruction* following the `jal` call (which is mathematically `PC + 4` bytes) and saves it into the `$ra` register. 
   - To **return** from the procedure, your function invokes `jr $ra` (Jump Register computation). This directly copies the stored `PC + 4` address from `$ra` back into the `PC` register, seamlessly returning control to the exact instruction that follows your original function call.
 
+### Calculating Target Addresses (PC-Relative vs. Pseudodirect)
+While both Branches and Jumps manually alter the Program Counter to a new destination, they calculate *where* to go fundamentally differently due to MIPS's 32-bit architectural constraints.
+
+**PC-Relative Addressing (Branches: `beq`, `bne`)**
+Branches are "I-Type" instructions, meaning they only have 16 bits available in their syntax to store a target destination. Because 16 bits is too small to represent a 32-bit physical RAM location, MIPS assumes that branches typically leap locally to nearby code blocks (like evaluating an `if/else` block or executing a `while` loop). Therefore, it treats the 16-bit number as a mathematical *offset relative to where the program currently sits*.
+1. The CPU smoothly increments its internal pointer to `PC + 4`.
+2. It extracts the 16-bit instruction offset, temporally sign-extends it to 32 bits, and shifts it mathematically left by 2 bits (multiplying by 4, converting it from an "instruction index" into a rigid "byte offset" to align safely within physical memory limits).
+3. It natively adds this final calculated byte offset directly to the `PC + 4` baseline. 
+
+**Pseudodirect Addressing (Jumps: `j`, `jal`)**
+Jumps are "J-Type" instructions, giving them 26 full bits to store a target destination. While larger than a Branch offset, this is *still* not theoretically large enough to represent a full 32-bit memory address natively. Jumps are mechanically designed to leap violently across large memory distances regardless of their current relative position.
+1. The CPU immediately ignores the lower 28 bits of the current PC.
+2. It isolates the 26-bit instruction target and shifts it logically left by 2 bits (smoothly converting it into a wider 28-bit block).
+3. It physically concatenates (glues) the uppermost 4 bits natively held in the ongoing `PC` register directly onto the front of this 28-bit block to cleanly generate a full 32-bit physical address, overtly overriding the Program Counter tracking register.
+
 ## 7. Advanced Topic: Pipelining Teaser
 As we close out our discussion of the single-cycle processor, let's look ahead. In **Chapter 4** of our textbook, we will introduce the **pipelined processor** as the successor to both the single-cycle and multi-cycle processor designs to massively increase performance. 
 
