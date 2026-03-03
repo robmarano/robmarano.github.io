@@ -261,6 +261,26 @@ async def list_equalized_files():
                 files.append({"name": item.name})
     return {"files": files}
 
+@app.delete("/files/{filename}")
+async def delete_file(filename: str):
+    file_path = UPLOAD_DIR / filename
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="File not found or already deleted.")
+    
+    try:
+        os.remove(file_path)
+        # Also clean up the equalized version if it exists
+        eq_file_path = str(file_path).replace(file_path.suffix, f"_equalized{file_path.suffix}")
+        if os.path.exists(eq_file_path):
+            os.remove(eq_file_path)
+            
+        logger.info(f"Deleted file {filename} and localized artifacts.")
+        add_log("Master", f"Deleted file {filename}.")
+        return {"status": "success", "filename": filename}
+    except Exception as e:
+        logger.error(f"Error deleting file {filename}: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/process/{filename}")
 async def process_file(filename: str, background_tasks: BackgroundTasks):
     file_path = UPLOAD_DIR / filename

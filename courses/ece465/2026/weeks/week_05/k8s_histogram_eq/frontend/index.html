@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.2.5/angular-material.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Local Premium UI CSS -->
-    <link rel="stylesheet" href="static/style.css?v=2">
+    <link rel="stylesheet" href="static/style.css?v=3">
 </head>
 
 <body ng-controller="MainController" ng-cloak>
@@ -128,11 +128,18 @@
                                     <h3>{{file.name}}</h3>
                                     <p>{{file.size | number}} bytes</p>
                                 </div>
-                                <md-button class="md-raised md-accent" ng-click="processImage(file.name)"
-                                    ng-disabled="processingImages[file.name]">
-                                    <md-icon style="margin-right: 4px;">image</md-icon>
-                                    {{processingImages[file.name] ? 'Processing in Cluster...' : 'Equalize Histogram'}}
-                                </md-button>
+                                <div layout="row">
+                                    <md-button class="md-raised md-accent" ng-click="processImage(file.name)"
+                                        ng-disabled="processingImages[file.name]">
+                                        <md-icon style="margin-right: 4px;">image</md-icon>
+                                        {{processingImages[file.name] ? 'Processing in Cluster...' : 'Equalize
+                                        Histogram'}}
+                                    </md-button>
+                                    <md-button class="md-icon-button md-warn" aria-label="Delete"
+                                        ng-click="deleteFile(file.name)">
+                                        <md-icon>delete</md-icon>
+                                    </md-button>
+                                </div>
                             </md-list-item>
                             <p ng-if="availableFiles.length === 0">No images uploaded yet.</p>
                         </md-list>
@@ -175,7 +182,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-messages.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.2.5/angular-material.min.js"></script>
     <!-- App Script -->
-    <script src="static/app.js?v=2"></script>
+    <script src="static/app.js?v=3"></script>
 </body>
 
 </html>
