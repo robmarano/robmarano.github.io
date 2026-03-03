@@ -646,5 +646,107 @@ Instead of running multiple `kubectl apply` commands for every YAML file, we dep
 helm install my-release ./ece465-app
 ```
 
-**Summary of the Journey:**
+**Summary of Containerization & Orchestration:**
 We started with defining a single uniprocessor application, utilized IPC to jump isolation boundaries, modeled networked sockets for distributed processing, abstracted the OS using Docker, coordinated multiple Docker containers natively using Docker Compose, deployed at scale referencing declarative infrastructure on Kubernetes, and finally abstracted the deployment complexity using Helm charts. This forms the foundation of modern cloud-native software engineering.
+
+---
+
+## 9. Distributed Algorithms: The Map-Reduce Paradigm
+
+As we transition from building infrastructure to orchestrating highly distributed computational workloads, we need a mathematical programming paradigm designed for horizontal scaling. **Map-Reduce** is that paradigm.
+
+### 9.1 What is Map-Reduce?
+
+Map-Reduce is a programming model and an associated implementation for processing and generating large data sets with a parallel, distributed algorithm on a cluster. It fundamentally simplifies parallel programming by abstracting away the communication, synchronization, and fault-tolerance mechanisms, allowing developers to focus solely on the data transformation logic via two core functions:
+
+1.  **`Map(k1, v1) -> list(k2, v2)`**:
+    *   Takes an input key-value pair and produces a set of intermediate key-value pairs.
+    *   *Analogy*: Filtering, sorting, transforming, or stripping data cleanly without caring about global state.
+2.  **`Reduce(k2, list(v2)) -> list(v3)`**:
+    *   Accepts an intermediate key (`k2`) and a set of values for that key (`list(v2)`). It merges together these values to form a possibly smaller set of values.
+    *   *Analogy*: Summarizing, grouping, aggregations, computing totals.
+
+### 9.2 History and Industry Implementations
+
+The Map-Reduce pattern borrows heavily from functional programming (e.g., Lisp's `map` and `reduce`). However, it exploded in popularity due to Google's 2004 whitepaper, *MapReduce: Simplified Data Processing on Large Clusters*. Google used it to index the entire internet efficiently across commodity hardware, gracefully handling node failures during execution.
+
+*   **Apache Hadoop**: The open-source community's answer to Google's paper. It paired the Hadoop Distributed File System (HDFS) with a robust Disk-based Map-Reduce engine.
+*   **Google Bigtable**: Built on top of Map-Reduce principles, Bigtable introduced a distributed storage system capable of handling petabytes of data.
+*   **Apache Spark**: The modern evolution. While Hadoop Map-Reduce wrote intermediate results to disk (causing I/O bottlenecks), Spark performs Map-Reduce operations largely **in-memory**, making it vastly faster for machine learning iterations and streaming data.
+
+### 9.3 When to use Map-Reduce?
+
+Map-Reduce is not a silver bullet. Understanding when a workload is applicable to it is a fundamental system design skill.
+
+**Excellent Fits ("Embarrassingly Parallel" workloads):**
+*   **Log Analysis:** Counting occurrences of IP addresses, HTTP status codes, or specific errors across terabytes of web server logs.
+*   **Inverted Index Generation:** Building search engine indexes by mapping words to document IDs.
+*   **Distributed Sort:** Sorting massive datasets that exceed the memory capacity of any single machine.
+*   **Machine Learning Training:** Calculating gradients over massive subsets of training data simultaneously before a master node reduces the weights.
+
+**Terrible Fits:**
+*   **Real-time highly interactive systems:** Sub-millisecond latency requirements (e.g., high-frequency trading) cannot afford the overhead of shuffling and reducing data across a network.
+*   **Highly mutated shared state:** Systems requiring ACID transaction guarantees where a central database row is constantly updated by thousands of users sequentially.
+*   **Graph Traversals / Recursive algorithms:** Algorithms where the next step intrinsically depends entirely on the previous step's output (though specialized frameworks like GraphX attempt to bridge this).
+
+### 9.4 Programming Map-Reduce: Intuition through Bash
+
+Before looking at Python or Java clusters, you can understand Map-Reduce using nothing more than standard Unix pipes in your terminal! The pipe (`|`) naturally hands off data between independent processes.
+
+*Goal: Count the frequency of every word in all `.txt` files in a directory.*
+
+```bash
+cat books/*.txt | tr ' ' '\n' | grep -v '^$' | sort | uniq -c
+```
+
+**Breaking down the architecture:**
+1.  **Input Generation**: `cat books/*.txt` reads massive amounts of raw text.
+2.  **MAP**: `tr ' ' '\n'` replaces spaces with newlines, generating intermediate data (one word per line). `grep -v '^$'` filters out blank lines.
+3.  **SHUFFLE**: `sort` takes the mapped intermediate data and groups identical keys (words) adjacently. In a real distributed cluster, this phase pushes all identical keys to the *same* physical reduce server over the network!
+4.  **REDUCE**: `uniq -c` consumes the sorted keys and aggregates them, outputting the final reduced values (word frequencies).
+
+### 9.5 Programming Map-Reduce: Standard Python
+
+Standard Python includes functional primitives that perfectly model the distributed cluster behavior on a single thread.
+
+*Goal: Calculate the total bytes transferred from a web server access log.*
+
+```python
+import functools
+
+# Simulated log data: "IP_ADDRESS BYTES_TRANSFERRED"
+log_data = [
+    "192.168.1.1 500",
+    "10.0.0.5 1250",
+    "192.168.1.1 200",
+    "172.16.0.2 404", # Let's say 404 means error, 0 bytes.
+    "10.0.0.8 3000"
+]
+
+# 1. Map Function: Extract bytes and handle errors
+def extract_bytes(log_entry):
+    parts = log_entry.split()
+    try:
+        bytes_val = int(parts[1])
+        # Only return positive bytes, map errors to 0
+        return bytes_val if bytes_val > 0 else 0
+    except ValueError:
+        return 0
+
+# 2. Reduce Function: Summation
+def sum_bytes(current_total, next_val):
+    return current_total + next_val
+
+# Execute Map
+mapped_bytes = list(map(extract_bytes, log_data))
+print(f"Intermediate Mapped Data: {mapped_bytes}")
+# Output: [500, 1250, 200, 404, 3000]
+
+# Execute Reduce
+total_bytes = functools.reduce(sum_bytes, mapped_bytes)
+print(f"Total Bytes Reduced: {total_bytes}")
+# Output: 5354
+```
+
+In a distributed environment like Hadoop, the `extract_bytes` function would run simultaneously on thousands of cheap worker nodes holding different blocks of the `log_data` file. The `sum_bytes` function would run on a few Reducer nodes to calculate the final `total_bytes` output!
+
