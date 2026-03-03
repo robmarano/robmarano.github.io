@@ -288,7 +288,7 @@ def handle_client(conn, addr):
             response = f"Acknowledged {msg}\n"
             conn.sendall(response.encode('utf-8'))
 
-def start_server(host='0.0.0.0', port=5000):
+def start_server(host='0.0.0.0', port=5055):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((host, port))
         s.listen()
@@ -309,7 +309,7 @@ import socket
 import time
 import random
 
-def start_client(host='127.0.0.1', port=5000, pid=0):
+def start_client(host='127.0.0.1', port=5055, pid=0):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((host, port))
         
@@ -375,19 +375,19 @@ RUN python3 -m venv venv && ./venv/bin/pip install -r requirements.txt
 COPY net_server.py net_server.py
 
 # Expose the TCP port our server listens on
-EXPOSE 5000
+EXPOSE 5055
 
 # Command to run when the container starts
-CMD ["./venv/bin/python3", "net_server.py"]
+CMD ["./venv/bin/python3", "-u", "net_server.py"]
 ```
 
 **To build the Docker image (an immutable snapshot):**
 `docker build -t ece465-server -f Dockerfile.server .`
 
 **To run the container:**
-`docker run -d -p 5000:5000 --name my_coordinator ece465-server`
+`docker run -d -p 5055:5055 --name my_coordinator ece465-server`
 
-At this point, you have an isolated Python Coordinator listening on port 5000. It doesn't matter what OS the host machine is running, the container guarantees it executes consistently.
+At this point, you have an isolated Python Coordinator listening on port 5055. It doesn't matter what OS the host machine is running, the container guarantees it executes consistently.
 
 ---
 
@@ -409,7 +409,7 @@ services:
       context: .
       dockerfile: Dockerfile.server
     ports:
-      - "5000:5000"
+      - "5055:5055"
     networks:
       - ece465-net
 
@@ -499,7 +499,7 @@ spec:
       - name: coordinator-container
         image: your-docker-hub-username/ece465-server:v1
         ports:
-        - containerPort: 5000
+        - containerPort: 5055
 ```
 
 *Create `k8s-coordinator-service.yaml`:*
@@ -513,8 +513,8 @@ spec:
     app: ece465-coordinator # Routes traffic to the Pods with this label
   ports:
     - protocol: TCP
-      port: 5000
-      targetPort: 5000
+      port: 5055
+      targetPort: 5055
 ```
 
 **To deploy to Kubernetes:**
@@ -573,7 +573,7 @@ spec:
           imagePullPolicy: {{ .Values.coordinator.image.pullPolicy }}
           ports:
             - name: tcp
-              containerPort: 5000
+              containerPort: 5055
               protocol: TCP
 ```
 
