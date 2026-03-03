@@ -45,3 +45,6 @@ replay_pid*
 # SystemVerilog
 *.vvp
 *.vcd
+
+# Large PDFs
+Distributed Systems - van Steen and Tannenbaum version 4.0.3x.pdf
