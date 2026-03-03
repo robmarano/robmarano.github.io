@@ -5,10 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cooper Union Distributed Histogram Equalizer</title>
-    <!-- Angular Material CSS -->
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.2.5/angular-material.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Local App CSS -->
+    <!-- Local Premium UI CSS -->
     <link rel="stylesheet" href="static/style.css">
 </head>
 
@@ -76,6 +75,7 @@
                     <form ng-submit="uploadFile()">
                         <input type="file" file-model="upload.myFile" accept=".jpg,.jpeg,.tiff,.tif" required>
                         <md-button class="md-raised md-primary" type="submit" ng-disabled="uploading">
+                            <md-icon style="margin-right: 8px;">cloud_upload</md-icon>
                             {{uploading ? 'Uploading...' : 'Upload File'}}
                         </md-button>
                     </form>
@@ -84,7 +84,7 @@
 
             <div layout="row" flex>
                 <!-- Available Images -->
-                <md-card flex="50">
+                <md-card flex="50" style="margin-right: 12px;">
                     <md-card-content>
                         <h3>Available Images</h3>
                         <md-list>
@@ -95,6 +95,7 @@
                                 </div>
                                 <md-button class="md-raised md-accent" ng-click="processImage(file.name)"
                                     ng-disabled="processingImages[file.name]">
+                                    <md-icon style="margin-right: 4px;">image</md-icon>
                                     {{processingImages[file.name] ? 'Processing in Cluster...' : 'Equalize Histogram'}}
                                 </md-button>
                             </md-list-item>
@@ -104,12 +105,14 @@
                 </md-card>
 
                 <!-- Processed Images -->
-                <md-card flex="50">
+                <md-card flex="50" style="margin-left: 12px;">
                     <md-card-content>
-                        <h3>Processed Results</h3>
-                        <md-button class="md-icon-button md-primary" ng-click="refreshFiles()" aria-label="Refresh">
-                            <md-icon>refresh</md-icon>
-                        </md-button>
+                        <div layout="row" layout-align="space-between center">
+                            <h3 style="margin: 0; border: none;">Processed Results</h3>
+                            <md-button class="md-icon-button md-primary" ng-click="refreshFiles()" aria-label="Refresh">
+                                <md-icon>refresh</md-icon>
+                            </md-button>
+                        </div>
                         <md-list>
                             <md-list-item class="md-2-line" ng-repeat="file in equalizedFiles">
                                 <div class="md-list-item-text">
@@ -117,6 +120,7 @@
                                 </div>
                                 <md-button class="md-raised md-primary" ng-href="/download/{{file.name}}"
                                     target="_blank">
+                                    <md-icon style="margin-right: 4px;">file_download</md-icon>
                                     Download
                                 </md-button>
                             </md-list-item>
