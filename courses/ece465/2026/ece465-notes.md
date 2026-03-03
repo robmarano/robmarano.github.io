@@ -225,5 +225,111 @@ if __name__ == "__main__":
 ```
 *Ref: Adapted from Note 2.1 illustrating basic connectivity principles discussed in Chapter 1.*
 
+---
+
+<br>
+
+# <a id="week05">Week 5 &mdash; 2/24 &mdash; Containerization: Docker and Kubernetes</a>
+
+## Chapter 3: Processes (Distributed Systems by Tanenbaum & van Steen)
+
+### 3.1 Introduction to Threads
+In modern distributed systems, processes are often decomposed into threads to achieve higher performance and hide latency.
+- **Process:** An executing program with its own virtual processor, including a virtual CPU, memory, and OS state. Switching between processes requires a **context switch**, which is an expensive operation involving saving CPU context, modifying memory maps, and flushing caches.
+- **Thread:** A minimal execution context within a process, sharing the same memory and file descriptors as other threads in that process. Context switching between threads is significantly faster.
+
+**Why use threads in distributed systems?**
+1. **Hiding Latency:** When one thread blocks (e.g., waiting for a network response or disk I/O), another thread can execute, keeping the CPU utilized.
+2. **Performance:** Multithreaded servers can handle multiple concurrent client requests much more efficiently than spawning a new process for each request.
+
+### 3.2 Virtualization
+Virtualization plays a foundational role in cloud computing by decoupling software from the underlying hardware.
+
+**Types of Virtualization:**
+1. **Hardware Virtualization (Virtual Machines):** A hypervisor (Virtual Machine Monitor - VMM) allows multiple operating systems to run concurrently on the same hardware. Each VM contains a full OS, applications, and virtualized hardware resources.
+    *   *Pros:* Complete isolation, run any OS.
+    *   *Cons:* High overhead (resource-intensive to boot and run a full OS).
+2. **OS-Level Virtualization (Containers):** The host OS kernel is shared among multiple isolated user-space instances. Instead of virtualizing the hardware, it virtualizes the OS environment.
+    *   *Pros:* Extremely lightweight, fast startup, high density of instances on a single physical machine.
+    *   *Cons:* All instances must share the same host OS kernel type (e.g., Linux containers run on a Linux kernel).
+
+---
+
+## Docker: Practical OS-Level Virtualization
+
+Docker is the industry standard for creating and managing containers. It packages code and all its dependencies into a standard unit for software development.
+
+### Key Docker Concepts
+*   **Image:** A read-only template with instructions for creating a Docker container. It includes the application, libraries, and necessary configuration files.
+*   **Container:** A runnable instance of an image. You can start, stop, move, or delete a container.
+*   **Dockerfile:** A text document that contains all the commands a user could call on the command line to assemble an image.
+
+### Building a Containerized Application
+To containerize our `TCPServer` from previous weeks, we use a `Dockerfile`. Consider the following `week_05/netprog/Dockerfile` snippet:
+
+```dockerfile
+# Start from a base Ubuntu image
+FROM ubuntu:24.10
+
+# Install Java and networking tools
+RUN apt-get update && apt-get install -y openjdk-21-jdk-headless dnsutils dos2unix
+
+# Copy the compiled Java classes into the container
+RUN mkdir -p /classes
+COPY ./bin/TCPServer.class /classes
+COPY ./bin/TCPServer\$ClientHandler.class /classes
+
+# Copy and configure the startup script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh && dos2unix /entrypoint.sh
+
+# Expose the port the server listens on
+EXPOSE 12345
+
+# Define the command to run when the container starts
+CMD ["/bin/bash","-c","/entrypoint.sh"]
+```
+
+### Docker Workflow
+1.  **Build:** Create an image from a Dockerfile.
+    *   `docker build -t transcriptor:v1 .`
+2.  **Run:** Execute the application inside an isolated container.
+    *   `docker run -d -p 12345:12345 transcriptor:v1`
+3.  **Ship:** Push the image to a registry (like Docker Hub) so it can run anywhere.
+
+---
+
+## Kubernetes (K8s): Container Orchestration
+
+While Docker is excellent for running single containers, managing thousands of containers across many physical machines requires an orchestrator. Kubernetes is an open-source platform designed to automate deploying, scaling, and operating containerized applications.
+
+### Why Kubernetes?
+As distributed systems scale, they face challenges:
+- What happens if a container crashes?
+- How do we handle network traffic spikes by adding more containers (scaling out)?
+- How do containers find each other securely over the network?
+
+Kubernetes solves these problems by providing a framework to run distributed systems resiliently.
+
+### Core K8s Objects
+1.  **Pod:** The smallest deployable computing unit in Kubernetes. A Pod contains one or more containers (usually one) that share storage and network resources.
+2.  **Deployment:** A higher-level abstraction that manages a set of identical Pods, ensuring a specified number of replicas are always running (self-healing).
+3.  **Service:** An abstract way to expose an application running on a set of Pods as a network service. Since Pod IP addresses change frequently, a Service provides a stable endpoint for communication.
+
+### K8s Architecture Summary
+A Kubernetes cluster consists of a set of worker machines, called **Nodes**, that run containerized applications. Every cluster has at least one worker node. The worker nodes host the Pods. The **Control Plane** manages the worker nodes and the Pods in the cluster.
+
+---
+
+## Session 5 Lab
+
+In this week's lab, you will:
+1. Compile the multi-threaded `TCPServer` Java code.
+2. Use the provided `Dockerfile` to build a Docker image for the server.
+3. Run the server as an isolated Docker container, exposing its port to your host machine.
+4. Use the `TCPClient` to communicate with the containerized application.
+
+See the `README.md` inside `weeks/week_05/netprog/` for step-by-step instructions.
+
 --
 [<- back to syllabus](./ece465-ind-study-syllabus-spring-2026.html)
