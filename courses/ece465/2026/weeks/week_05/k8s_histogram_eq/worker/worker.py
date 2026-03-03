@@ -13,6 +13,16 @@ MASTER_PORT = int(os.environ.get("MASTER_PORT", 6000))
 # Let the worker ID be its hostname
 WORKER_ID = socket.gethostname()
 
+async def log_to_master(writer, msg):
+    logger.info(msg)
+    if writer:
+        try:
+            header = f"LOG {WORKER_ID} {msg}\n"
+            writer.write(header.encode('utf-8'))
+            await writer.drain()
+        except:
+            pass
+
 async def worker_loop():
     logger.info(f"Worker {WORKER_ID} starting up. Pointing to Master {MASTER_HOST}:{MASTER_PORT}")
     
@@ -29,6 +39,7 @@ async def worker_loop():
             ack = await reader.readline()
             if ack.decode('utf-8').strip() == "ACK_REGISTER":
                 logger.info("Successfully registered with Master.")
+                await log_to_master(writer, "Successfully registered with Master and awaiting jobs.")
                 
             while True:
                 line = await reader.readline()
@@ -48,6 +59,7 @@ async def worker_loop():
                     chunk_size = int(parts[2])
                     
                     logger.info(f"[{job_id}] Received CALC_HIST for {chunk_size} bytes.")
+                    await log_to_master(writer, f"[{job_id}] Phase 1: Calculating local histogram mapping...")
                     chunk_bytes = await reader.readexactly(chunk_size)
                     
                     # Convert to numpy array of uint8
@@ -63,12 +75,14 @@ async def worker_loop():
                     writer.write((json.dumps(hist_list) + "\n").encode('utf-8'))
                     await writer.drain()
                     logger.info(f"[{job_id}] Sent HIST_RESULT.")
+                    await log_to_master(writer, f"[{job_id}] Sent HIST_RESULT back to Master.")
                     
                 elif cmd == "APPLY_CDF":
                     job_id = parts[1]
                     chunk_size = int(parts[2])
                     
                     logger.info(f"[{job_id}] Received APPLY_CDF for {chunk_size} bytes.")
+                    await log_to_master(writer, f"[{job_id}] Phase 3: Applying Global CDF mapping to chunk.")
                     
                     # First read the 256 byte CDF array
                     cdf_bytes = await reader.readexactly(256)
@@ -89,6 +103,7 @@ async def worker_loop():
                     writer.write(mapped_bytes)
                     await writer.drain()
                     logger.info(f"[{job_id}] Sent MAPPED_RESULT ({len(mapped_bytes)} bytes).")
+                    await log_to_master(writer, f"[{job_id}] Sent Processed MAPPED_RESULT back to Master.")
 
         except Exception as e:
             logger.error(f"Error connecting to master: {e}")

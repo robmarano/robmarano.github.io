@@ -57,16 +57,51 @@
         <!-- Main Dashboard View -->
         <div ng-if="isLoggedIn" class="dashboard-container" layout="column" layout-align="start stretch">
 
-            <!-- Nodes Status -->
-            <md-card>
-                <md-card-content>
-                    <h3>Cluster Status</h3>
-                    <p>Connected Worker Nodes: <span class="md-subhead"
-                            ng-style="{'color': connectedNodes.length > 0 ? 'green' : 'red'}">{{connectedNodes.length}}</span>
-                    </p>
-                    <md-button class="md-raised md-primary" ng-click="refreshNodes()">Refresh Node Roster</md-button>
-                </md-card-content>
-            </md-card>
+            <!-- Nodes Status & Logs Row -->
+            <div layout="row" flex style="margin-bottom: 24px;">
+                <!-- Cluster Status -->
+                <md-card flex="30" style="margin-right: 12px; margin-bottom: 0;">
+                    <md-card-content>
+                        <h3>Cluster Status</h3>
+                        <p>Active Worker Nodes:
+                            <span class="md-subhead" style="font-weight: 800;"
+                                ng-style="{'color': connectedNodes.length > 0 ? '#4caf50' : '#f44336'}">
+                                {{connectedNodes.length}}
+                            </span>
+                        </p>
+
+                        <div layout="row" layout-wrap style="margin-top: 16px;">
+                            <div class="node-badge" ng-repeat="node in connectedNodes">
+                                <md-icon
+                                    style="color: white; font-size: 18px; margin-right: 4px; height: 18px; width: 18px; min-height: 18px; min-width: 18px;">dns</md-icon>
+                                <span>{{node}}</span>
+                            </div>
+                            <p ng-if="connectedNodes.length === 0"
+                                style="color: #666; font-size: 0.9em; font-style: italic;">Awaiting Worker
+                                Registration...</p>
+                        </div>
+                    </md-card-content>
+                </md-card>
+
+                <!-- System Logs -->
+                <md-card flex="70" style="margin-left: 12px; margin-bottom: 0;">
+                    <md-card-content>
+                        <div layout="row" layout-align="space-between center">
+                            <h3 style="margin: 0; border: none;">Distributed System Logs</h3>
+                        </div>
+                        <div class="log-console" id="logConsole">
+                            <div ng-repeat="log in logs track by $index" class="log-entry">
+                                <span class="log-time">[{{log.time}}]</span>
+                                <span class="log-source">[{{log.source}}]</span>
+                                <span class="log-msg">{{log.message}}</span>
+                            </div>
+                            <div ng-if="logs.length === 0" style="color: #666; font-style: italic; padding: 10px;">
+                                No system logs generated yet...
+                            </div>
+                        </div>
+                    </md-card-content>
+                </md-card>
+            </div>
 
             <!-- Upload Section -->
             <md-card>

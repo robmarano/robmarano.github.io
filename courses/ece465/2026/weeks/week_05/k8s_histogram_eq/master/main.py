@@ -8,6 +8,7 @@ from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import json
 from pathlib import Path
+from datetime import datetime
 
 from fastapi.staticfiles import StaticFiles
 
@@ -33,18 +34,27 @@ FRONTEND_DIR_STR = os.environ.get("FRONTEND_DIR", "/app/frontend")
 # Serve the static frontend SPA
 app.mount("/static", StaticFiles(directory=FRONTEND_DIR_STR), name="static")
 
-
 # --- Global State for Distributed Processing ---
 # Map worker writer streams to IDs
 connected_workers = {}
 # Thread-safe incrementing job counter
 job_counter = 0
 
+# Distributed Logging
+app_logs = []
+
+def add_log(source, msg):
+    timestamp = datetime.now().strftime("%H:%M:%S")
+    app_logs.append({"time": timestamp, "source": source, "message": msg})
+    if len(app_logs) > 100:
+        app_logs.pop(0)
+
 # --- TCP Server (Custom Protocol) ---
 async def handle_worker(reader, writer):
     global connected_workers
     addr = writer.get_extra_info('peername')
     logger.info(f"New connection from {addr}")
+    add_log("Master", f"New TCP connection from {addr}")
     
     worker_id = None
     try:
@@ -65,8 +75,14 @@ async def handle_worker(reader, writer):
                 worker_id = parts[1] if len(parts) > 1 else str(addr)
                 connected_workers[worker_id] = (reader, writer)
                 logger.info(f"Worker {worker_id} registered.")
+                add_log("Master", f"Worker {worker_id} registered.")
                 writer.write(b"ACK_REGISTER\n")
                 await writer.drain()
+            
+            elif cmd == "LOG":
+                wid = parts[1]
+                log_msg = " ".join(parts[2:])
+                add_log(wid, log_msg)
                 
             elif cmd == "HIST_RESULT":
                 # Expected format: HIST_RESULT <job_id>
@@ -269,6 +285,15 @@ async def download_file(filename: str):
 @app.get("/nodes")
 async def get_nodes():
     return {"connected_workers": list(connected_workers.keys())}
+
+@app.get("/logs")
+async def get_logs():
+    return {"logs": app_logs}
+
+@app.post("/clear_logs")
+async def clear_logs():
+    app_logs.clear()
+    return {"status": "cleared"}
 
 @app.get("/")
 async def root():

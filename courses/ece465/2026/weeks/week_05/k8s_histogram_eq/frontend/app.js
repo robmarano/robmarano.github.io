@@ -33,12 +33,13 @@ app.directive('fileModel', ['$parse', function ($parse) {
 
 app.controller('MainController', function ($scope, $http, $mdToast, $interval) {
     $scope.isLoggedIn = false;
-    $scope.loginData = {};
     $scope.username = "";
+    $scope.loginData = {};
 
     $scope.availableFiles = [];
     $scope.equalizedFiles = [];
     $scope.connectedNodes = [];
+    $scope.logs = [];
     $scope.processingImages = {};
     $scope.upload = {}; // Wrap in object to avoid ng-if child scope shadowing
     $scope.uploading = false;
@@ -75,6 +76,34 @@ app.controller('MainController', function ($scope, $http, $mdToast, $interval) {
             console.error("Error fetching nodes", error);
         });
     };
+
+    $scope.refreshLogs = function () {
+        $http.get('/logs').then(function (response) {
+            $scope.logs = response.data.logs;
+        }, function (error) {
+            console.error("Error fetching logs", error);
+        });
+    };
+
+    // Auto-scroll log console
+    $scope.$watchCollection('logs', function (newVal, oldVal) {
+        if (newVal !== oldVal) {
+            setTimeout(function () {
+                var consoleDiv = document.getElementById('logConsole');
+                if (consoleDiv) {
+                    consoleDiv.scrollTop = consoleDiv.scrollHeight;
+                }
+            }, 50);
+        }
+    });
+
+    // Auto-refresh cluster status
+    $interval(function () {
+        if ($scope.isLoggedIn) {
+            $scope.refreshNodes();
+            $scope.refreshLogs();
+        }
+    }, 2000);
 
     $scope.refreshFiles = function () {
         $http.get('/files').then(function (response) {
