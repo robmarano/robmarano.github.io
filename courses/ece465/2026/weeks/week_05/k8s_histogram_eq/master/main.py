@@ -15,7 +15,8 @@ from fastapi.staticfiles import StaticFiles
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("MasterNode")
 
-UPLOAD_DIR = Path("/app/shared_data")
+UPLOAD_DIR_STR = os.environ.get("UPLOAD_DIR", "/app/shared_data")
+UPLOAD_DIR = Path(UPLOAD_DIR_STR)
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 app = FastAPI(title="Histogram Equalizer Master")
@@ -27,8 +28,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+FRONTEND_DIR_STR = os.environ.get("FRONTEND_DIR", "/app/frontend")
+
 # Serve the static frontend SPA
-app.mount("/static", StaticFiles(directory="/app/frontend"), name="static")
+app.mount("/static", StaticFiles(directory=FRONTEND_DIR_STR), name="static")
 
 
 # --- Global State for Distributed Processing ---
@@ -269,7 +272,7 @@ async def get_nodes():
 
 @app.get("/")
 async def root():
-    return FileResponse("/app/frontend/index.html")
+    return FileResponse(f"{FRONTEND_DIR_STR}/index.html")
 
 # To run for local dev: uvicorn main:app --host 0.0.0.0 --port 8000
 

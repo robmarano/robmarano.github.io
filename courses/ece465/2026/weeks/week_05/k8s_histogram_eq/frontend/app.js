@@ -40,6 +40,7 @@ app.controller('MainController', function ($scope, $http, $mdToast, $interval) {
     $scope.equalizedFiles = [];
     $scope.connectedNodes = [];
     $scope.processingImages = {};
+    $scope.upload = {}; // Wrap in object to avoid ng-if child scope shadowing
     $scope.uploading = false;
 
     // Simple mock login
@@ -85,7 +86,7 @@ app.controller('MainController', function ($scope, $http, $mdToast, $interval) {
     };
 
     $scope.uploadFile = function () {
-        var file = $scope.myFile;
+        var file = $scope.upload.myFile;
         if (!file) {
             $scope.showToast("Please select a file first.");
             return;

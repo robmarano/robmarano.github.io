@@ -74,7 +74,7 @@
                 <md-card-content>
                     <h3>Upload New Image (.jpg, .tiff)</h3>
                     <form ng-submit="uploadFile()">
-                        <input type="file" file-model="myFile" accept=".jpg,.jpeg,.tiff,.tif" required>
+                        <input type="file" file-model="upload.myFile" accept=".jpg,.jpeg,.tiff,.tif" required>
                         <md-button class="md-raised md-primary" type="submit" ng-disabled="uploading">
                             {{uploading ? 'Uploading...' : 'Upload File'}}
                         </md-button>
