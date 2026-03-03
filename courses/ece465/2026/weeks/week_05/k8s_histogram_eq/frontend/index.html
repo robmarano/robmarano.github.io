@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="HistogramApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooper Union Distributed Histogram Equalizer</title>
+    <!-- Angular Material CSS -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.2.5/angular-material.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Local App CSS -->
+    <link rel="stylesheet" href="static/style.css">
+</head>
+
+<body ng-controller="MainController" ng-cloak>
+
+    <!-- Toolbar -->
+    <md-toolbar color="primary">
+        <div class="md-toolbar-tools">
+            <h2>
+                <span>Cooper Union Distributed Image Processor</span>
+            </h2>
+            <span flex></span>
+            <span ng-if="isLoggedIn">Welcome, {{username}}</span>
+            <md-button class="md-icon-button" aria-label="Logout" ng-if="isLoggedIn" ng-click="logout()">
+                <md-icon>logout</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-content flex layout="column" layout-align="start center" class="main-content">
+
+        <!-- Login View -->
+        <md-card ng-if="!isLoggedIn" class="login-card">
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline">System Login</span>
+                </md-card-title-text>
+            </md-card-title>
+            <md-card-content>
+                <form name="loginForm" ng-submit="login()">
+                    <md-input-container class="md-block">
+                        <label>Username</label>
+                        <input required ng-model="loginData.username" name="username">
+                    </md-input-container>
+                    <md-input-container class="md-block">
+                        <label>Password</label>
+                        <input required type="password" ng-model="loginData.password" name="password">
+                    </md-input-container>
+                    <md-button type="submit" class="md-raised md-primary" ng-disabled="loginForm.$invalid"
+                        style="width: 100%; margin: 0;">
+                        Login
+                    </md-button>
+                </form>
+            </md-card-content>
+        </md-card>
+
+        <!-- Main Dashboard View -->
+        <div ng-if="isLoggedIn" class="dashboard-container" layout="column" layout-align="start stretch">
+
+            <!-- Nodes Status -->
+            <md-card>
+                <md-card-content>
+                    <h3>Cluster Status</h3>
+                    <p>Connected Worker Nodes: <span class="md-subhead"
+                            ng-style="{'color': connectedNodes.length > 0 ? 'green' : 'red'}">{{connectedNodes.length}}</span>
+                    </p>
+                    <md-button class="md-raised md-primary" ng-click="refreshNodes()">Refresh Node Roster</md-button>
+                </md-card-content>
+            </md-card>
+
+            <!-- Upload Section -->
+            <md-card>
+                <md-card-content>
+                    <h3>Upload New Image (.jpg, .tiff)</h3>
+                    <form ng-submit="uploadFile()">
+                        <input type="file" file-model="myFile" accept=".jpg,.jpeg,.tiff,.tif" required>
+                        <md-button class="md-raised md-primary" type="submit" ng-disabled="uploading">
+                            {{uploading ? 'Uploading...' : 'Upload File'}}
+                        </md-button>
+                    </form>
+                </md-card-content>
+            </md-card>
+
+            <div layout="row" flex>
+                <!-- Available Images -->
+                <md-card flex="50">
+                    <md-card-content>
+                        <h3>Available Images</h3>
+                        <md-list>
+                            <md-list-item class="md-2-line" ng-repeat="file in availableFiles">
+                                <div class="md-list-item-text">
+                                    <h3>{{file.name}}</h3>
+                                    <p>{{file.size | number}} bytes</p>
+                                </div>
+                                <md-button class="md-raised md-accent" ng-click="processImage(file.name)"
+                                    ng-disabled="processingImages[file.name]">
+                                    {{processingImages[file.name] ? 'Processing in Cluster...' : 'Equalize Histogram'}}
+                                </md-button>
+                            </md-list-item>
+                            <p ng-if="availableFiles.length === 0">No images uploaded yet.</p>
+                        </md-list>
+                    </md-card-content>
+                </md-card>
+
+                <!-- Processed Images -->
+                <md-card flex="50">
+                    <md-card-content>
+                        <h3>Processed Results</h3>
+                        <md-button class="md-icon-button md-primary" ng-click="refreshFiles()" aria-label="Refresh">
+                            <md-icon>refresh</md-icon>
+                        </md-button>
+                        <md-list>
+                            <md-list-item class="md-2-line" ng-repeat="file in equalizedFiles">
+                                <div class="md-list-item-text">
+                                    <h3>{{file.name}}</h3>
+                                </div>
+                                <md-button class="md-raised md-primary" ng-href="/download/{{file.name}}"
+                                    target="_blank">
+                                    Download
+                                </md-button>
+                            </md-list-item>
+                            <p ng-if="equalizedFiles.length === 0">No results ready.</p>
+                        </md-list>
+                    </md-card-content>
+                </md-card>
+            </div>
+
+        </div>
+    </md-content>
+
+    <!-- Angular and Material scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-messages.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.2.5/angular-material.min.js"></script>
+    <!-- App Script -->
+    <script src="static/app.js"></script>
+</body>
+
+</html>

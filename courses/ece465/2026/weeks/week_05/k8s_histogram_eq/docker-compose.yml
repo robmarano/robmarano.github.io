@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  master:
+    build:
+      context: .
+      dockerfile: master/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./shared_data:/app/shared_data
+    networks:
+      hist-net:
+        aliases:
+          - master-service
+
+  worker-1:
+    build:
+      context: ./worker
+    environment:
+      - MASTER_HOST=master-service
+      - MASTER_PORT=6000
+    depends_on:
+      - master
+    networks:
+      - hist-net
+
+  worker-2:
+    build:
+      context: ./worker
+    environment:
+      - MASTER_HOST=master-service
+      - MASTER_PORT=6000
+    depends_on:
+      - master
+    networks:
+      - hist-net
+
+networks:
+  hist-net:
