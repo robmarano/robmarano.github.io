@@ -179,4 +179,16 @@ app.controller('MainController', function ($scope, $http, $mdToast, $interval) {
         }
     };
 
+    $scope.deleteProcessedFile = function (filename) {
+        if (confirm("Are you sure you want to delete the processed result '" + filename + "'?")) {
+            $http.delete('/files/' + filename).then(function (response) {
+                $scope.showToast("Deleted " + filename);
+                $scope.refreshEqualizedFiles();
+            }, function (error) {
+                console.error("Error deleting processed file", error);
+                $scope.showToast("Failed to delete processed file: " + (error.data.detail || "Unknown error"));
+            });
+        }
+    };
+
 });
