@@ -2,7 +2,7 @@
 # Dockerfile for my Zookeeper application
 #
 # docker build -t transcriptor:v1 .
-ARG BASE_IMAGE=24.10
+ARG BASE_IMAGE=24.04
 FROM ubuntu:$BASE_IMAGE
 ENV APP="transcriptor"
 
