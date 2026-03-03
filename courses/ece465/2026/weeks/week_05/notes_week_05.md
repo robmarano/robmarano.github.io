@@ -205,6 +205,54 @@ if __name__ == '__main__':
 
 **To run:** `python3 thread_dining.py`
 
+### Example: Dining Philosophers via AsyncIO (Chopsticks)
+
+Another powerful concurrency model in Python uses **AsyncIO** for cooperative multitasking. Instead of the OS preemptively pausing threads, the code explicitly yields control using the `await` keyword. In this version, we will use **Chopsticks** instead of forks to demonstrate another classic variation of the synchronization problem!
+
+*Create `async_dining.py`:*
+
+```python
+import asyncio
+import random
+
+NUM_PHILOSOPHERS = 5
+# Shared memory space: 5 asyncio locks representing 5 chopsticks
+chopsticks = [asyncio.Lock() for _ in range(NUM_PHILOSOPHERS)]
+
+async def philosopher_async(pid):
+    left_chopstick_id = pid
+    right_chopstick_id = (pid + 1) % NUM_PHILOSOPHERS
+    
+    # As always, acquire lower ID chopstick first to prevent deadlock
+    first_chopstick, second_chopstick = sorted([left_chopstick_id, right_chopstick_id])
+    
+    while True:
+        print(f"[Async Philosopher {pid}] Thinking...")
+        await asyncio.sleep(random.uniform(0.5, 1.5))
+        
+        # Await the locks cooperatively
+        async with chopsticks[first_chopstick]:
+            async with chopsticks[second_chopstick]:
+                print(f"[Async Philosopher {pid}] Eating with chopsticks!")
+                await asyncio.sleep(random.uniform(0.5, 1.0))
+        
+        print(f"[Async Philosopher {pid}] Returning chopsticks...")
+
+async def main():
+    print("Starting AsyncIO Dining Philosophers with Chopsticks...")
+    # Schedule all philosopher coroutines to run cooperatively
+    tasks = [asyncio.create_task(philosopher_async(i)) for i in range(NUM_PHILOSOPHERS)]
+    await asyncio.gather(*tasks)
+
+if __name__ == '__main__':
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Shutting down.")
+```
+
+**To run:** `python3 async_dining.py`
+
 ### Threading Model: Producer-Consumer
 
 Another common multi-threading pattern is the **Producer-Consumer** queue. This is excellent for decoupling tasks, like a web server receiving a request (producer) and a background worker processing it (consumer).
