@@ -800,14 +800,14 @@ sequenceDiagram
     Master-->>Worker: REGISTERED
     
     Note over Master, Worker: Map Phase
-    Master->>Worker: CALC_HIST <size>\n<binary_chunk>
+    Master->>Worker: CALC_HIST <size><br/><binary_chunk>
     Worker-->>Master: HIST_RESULT <json_array>
     
     Note over Master, Worker: Reduce Phase (Internal to Master)
     
     Note over Master, Worker: Apply Phase
-    Master->>Worker: APPLY_CDF <size>\n<256_byte_cdf><binary_chunk>
-    Worker-->>Master: CDF_RESULT <size>\n<equalized_binary_chunk>
+    Master->>Worker: APPLY_CDF <size><br/><256_byte_cdf><binary_chunk>
+    Worker-->>Master: CDF_RESULT <size><br/><equalized_binary_chunk>
 ```
 
 #### 9.6.4 Packaging & Deployment Toolkit
