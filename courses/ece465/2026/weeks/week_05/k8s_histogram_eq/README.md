@@ -1,6 +1,6 @@
-# Guided Walkthrough: Kubernetes Distributed Image Processor
+# Guided Walkthrough: Docker Compose Distributed Image Processor
 
-This directory contains a complete, N-node distributed application designed to perform Histogram Equalization on uploaded image files (JPG/TIFF). It features a real Custom TCP Protocol implementing a Map-Reduce style algorithm to ensure mathematically correct global equalization without visual artifacts.
+This directory contains a complete, N-node distributed application designed to perform Histogram Equalization on uploaded image files (JPG/TIFF). It features a real Custom TCP Protocol implementing a Map-Reduce style algorithm to ensure mathematically correct global equalization without visual artifacts. The system is deployed using Docker Compose. (not yet Kubernetes)
 
 ## System Architecture
 

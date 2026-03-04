@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.2.5/angular-material.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Local Premium UI CSS -->
-    <link rel="stylesheet" href="static/style.css?v=4">
+    <link rel="stylesheet" href="static/style.css?v=5">
 </head>
 
 <body ng-controller="MainController" ng-cloak>
@@ -156,6 +156,22 @@
                             </md-button>
                         </div>
                         <md-list>
+                            <!-- Processing Placeholder -->
+                            <md-list-item class="md-2-line" ng-repeat="(filename, isProcessing) in processingImages"
+                                ng-if="isProcessing"
+                                style="background: rgba(255,179,0,0.05); border: 1px dashed rgba(255,179,0,0.5);">
+                                <div class="md-list-item-text">
+                                    <h3 style="color: #666; font-style: italic;">{{getEqualizedName(filename)}}</h3>
+                                </div>
+                                <div layout="row" layout-align="center center">
+                                    <md-progress-circular md-mode="indeterminate" md-diameter="24"
+                                        style="margin-right: 12px;"></md-progress-circular>
+                                    <span
+                                        style="font-size: 0.85em; color: #ff9800; font-weight: bold; padding-right: 8px;">Map-Reducing...</span>
+                                </div>
+                            </md-list-item>
+
+                            <!-- Completed Results -->
                             <md-list-item class="md-2-line" ng-repeat="file in equalizedFiles">
                                 <div class="md-list-item-text">
                                     <h3>{{file.name}}</h3>
@@ -171,7 +187,7 @@
                                     </md-button>
                                 </div>
                             </md-list-item>
-                            <p ng-if="equalizedFiles.length === 0">No results ready.</p>
+                            <p ng-if="equalizedFiles.length === 0 && !hasProcessingImages()">No results ready.</p>
                         </md-list>
                     </md-card-content>
                 </md-card>
@@ -187,7 +203,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-messages.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.2.5/angular-material.min.js"></script>
     <!-- App Script -->
-    <script src="static/app.js?v=4"></script>
+    <script src="static/app.js?v=5"></script>
 </body>
 
 </html>

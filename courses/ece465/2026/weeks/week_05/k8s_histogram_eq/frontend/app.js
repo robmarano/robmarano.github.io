@@ -69,6 +69,17 @@ app.controller('MainController', function ($scope, $http, $mdToast, $interval) {
         );
     };
 
+    $scope.hasProcessingImages = function () {
+        return Object.values($scope.processingImages).some(val => val === true);
+    };
+
+    $scope.getEqualizedName = function (filename) {
+        if (!filename) return "";
+        var parts = filename.split('.');
+        var ext = parts.pop();
+        return parts.join('.') + '_equalized.' + ext;
+    };
+
     $scope.refreshNodes = function () {
         $http.get('/nodes').then(function (response) {
             $scope.connectedNodes = response.data.connected_workers;
@@ -154,7 +165,7 @@ app.controller('MainController', function ($scope, $http, $mdToast, $interval) {
                     if (isDone) {
                         clearInterval(checkInterval);
                         $scope.processingImages[filename] = false;
-                        $scope.refreshEqualizedFiles();
+                        $scope.refreshFiles();
                         $scope.showToast("Equalization complete for " + filename);
                     }
                 });
@@ -171,7 +182,6 @@ app.controller('MainController', function ($scope, $http, $mdToast, $interval) {
             $http.delete('/files/' + filename).then(function (response) {
                 $scope.showToast("Deleted " + filename);
                 $scope.refreshFiles();
-                $scope.refreshEqualizedFiles();
             }, function (error) {
                 console.error("Error deleting file", error);
                 $scope.showToast("Failed to delete file: " + (error.data.detail || "Unknown error"));
@@ -183,7 +193,7 @@ app.controller('MainController', function ($scope, $http, $mdToast, $interval) {
         if (confirm("Are you sure you want to delete the processed result '" + filename + "'?")) {
             $http.delete('/files/' + filename).then(function (response) {
                 $scope.showToast("Deleted " + filename);
-                $scope.refreshEqualizedFiles();
+                $scope.refreshFiles();
             }, function (error) {
                 console.error("Error deleting processed file", error);
                 $scope.showToast("Failed to delete processed file: " + (error.data.detail || "Unknown error"));
