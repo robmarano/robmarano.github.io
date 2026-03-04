@@ -758,9 +758,81 @@ To see a complete, real-world implementation of the Map-Reduce paradigm running 
 
 This project is a **Distributed Image Processor** that performs mathematical Histogram Equalization on images (JPG/TIFF) utilizing a Custom TCP Protocol.
 
-*   **The Master Node** acts as the Coordinator (Python FastAPI). It ingests an uploaded image and splits it into discrete data chunks.
-*   **The Worker Nodes** act as the Mappers/Reducers. They connect to the Master via TCP sockets, receive the chunks, compute the local pixel histograms (**Map**), and send them back.
-*   **The Master Node** then merges these histograms to calculate the global Cumulative Distribution Function (**Reduce**), calculates the pixel-perfect equalization transformation, and finally reassembles the new image.
+#### 9.6.1 Solution Architecture
 
-It features a complete **AngularJS Material UI** dashboard and is strictly containerized. You can deploy it instantly using `docker-compose` or the provided Kubernetes `helm` charts. We highly encourage you to read the `README.md` inside that directory, spin up the cluster, and trace the distributed logs!
+```mermaid
+graph TD
+    User["Web Browser (UI)"] --"HTTP/REST"--> Master["Master Node (FastAPI)"]
+    Master --"Read/Write"--> Volume["Shared Volume (shared_data/)"]
+    Master --"Custom TCP (Port 6000)"--> Worker1["Worker Node 1"]
+    Master --"Custom TCP (Port 6000)"--> Worker2["Worker Node N..."]
+```
+
+*   **The Master Node** acts as the Coordinator (Python FastAPI). It ingests an uploaded image, saves it to a shared volume, and acts as a TCP server to orchestrate the worker nodes.
+*   **The Worker Nodes** act as the Mappers/Reducers. They connect to the Master via TCP sockets, receive the chunks, compute the local pixel histograms, and send them back.
+
+#### 9.6.2 Map-Reduce Data Flow
+
+```mermaid
+flowchart LR
+    Original["Original Image"] --> Split["Master: Split into N chunks"]
+    Split --> Map1["Worker 1: Map (Hist)"]
+    Split --> Map2["Worker 2: Map (Hist)"]
+    Map1 --> Reduce["Master: Reduce (Sum Hists, Calc CDF)"]
+    Map2 --> Reduce
+    Reduce --> Apply1["Worker 1: Apply CDF"]
+    Reduce --> Apply2["Worker 2: Apply CDF"]
+    Apply1 --> Stitch["Master: Stitch Chunks"]
+    Apply2 --> Stitch
+    Stitch --> Equalized["Equalized Image"]
+```
+
+#### 9.6.3 Custom TCP Sequence Protocol
+
+The Master and Workers communicate over a newline-delimited custom TCP protocol transmitting binary byte chunks:
+
+```mermaid
+sequenceDiagram
+    participant Worker
+    participant Master
+    
+    Worker->>Master: REGISTER <worker_id>
+    Master-->>Worker: REGISTERED
+    
+    Note over Master, Worker: Map Phase
+    Master->>Worker: CALC_HIST <size>\n<binary_chunk>
+    Worker-->>Master: HIST_RESULT <json_array>
+    
+    Note over Master, Worker: Reduce Phase (Internal to Master)
+    
+    Note over Master, Worker: Apply Phase
+    Master->>Worker: APPLY_CDF <size>\n<256_byte_cdf><binary_chunk>
+    Worker-->>Master: CDF_RESULT <size>\n<equalized_binary_chunk>
+```
+
+#### 9.6.4 Packaging & Deployment Toolkit
+
+```mermaid
+graph TD
+    Code["Python Source Code"]
+    Code --> Docker["Docker (Dockerfile)"]
+    Docker --"docker-compose.yml"--> Local["Local Cluster (Docker Compose)"]
+    Docker --"helm-histogram-eq/"--> K8s["Kubernetes Cluster (Helm)"]
+```
+
+It is strictly containerized. You can deploy it instantly using `docker-compose` or the provided Kubernetes `helm` charts. 
+
+#### 9.6.5 Codebase Walkthrough
+
+Here are the key files inside the `k8s_histogram_eq` directory and what they do:
+
+*   **`master/main.py`**: The core Coordinator. It runs a Uvicorn/FastAPI web server to host the UI and REST endpoints (`/upload`, `/process`, `/nodes`, etc.). Internally, it spawns a background `asyncio` TCP server to listen for Worker registrations and orchestrates the Map-Reduce byte chunking and aggregation.
+*   **`master/test_master.py` & `master/test_integration.py`**: Automated test suites verifying the API logic and the end-to-end Local Fallback pipeline using `pytest` and `httpx`.
+*   **`worker/worker.py`**: The independent node script. Upon startup, it blindly connects to the Master's TCP port, waits for `CALC_HIST` instructions, performs the OpenCV pixel counting, and later applies the `APPLY_CDF` mapping.
+*   **`worker/Dockerfile` & `master/Dockerfile`**: Instructions on how to build the raw Linux OS, install Python/OpenCV dependencies, and package the respective node logic into immutable container images.
+*   **`frontend/index.html` & `frontend/app.js`**: The Single Page Application (SPA). Written in AngularJS with Material Design, providing a reactive interface to monitor connected workers, view distributed logs, and submit images for equalization.
+*   **`docker-compose.yml`**: The local orchestration file. It automatically builds the Dockerfiles, mounts the `shared_data` volume, and spins up 1 Master and 2 Worker containers on an isolated virtual network.
+*   **`helm-histogram-eq/`**: The Kubernetes packaging chart. It translates the Docker Compose architecture into production-grade K8s manifests (Deployments, Services, PersistentVolumeClaims) for data center scaling.
+
+We highly encourage you to read the `README.md` inside that directory, spin up the cluster, and trace the distributed logs!
 
