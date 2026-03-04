@@ -800,7 +800,7 @@ sequenceDiagram
 
 ---
 
-### 9.7 Real-World Example: Kubernetes Distributed Image Processor
+### 9.7 Real-World Example: Docker Compose Distributed Image Processor
 
 To see a complete, real-world implementation of the Map-Reduce paradigm running across a local container cluster, we have provided a full project in this week's code directory:
 
