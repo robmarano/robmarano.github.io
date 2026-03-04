@@ -750,3 +750,17 @@ print(f"Total Bytes Reduced: {total_bytes}")
 
 In a distributed environment like Hadoop, the `extract_bytes` function would run simultaneously on thousands of cheap worker nodes holding different blocks of the `log_data` file. The `sum_bytes` function would run on a few Reducer nodes to calculate the final `total_bytes` output!
 
+### 9.6 Real-World Example: Kubernetes Distributed Image Processor
+
+To see a complete, real-world implementation of the Map-Reduce paradigm running across a local container cluster, we have provided a full project in this week's code directory:
+
+👉 **[k8s_histogram_eq](./k8s_histogram_eq/)**
+
+This project is a **Distributed Image Processor** that performs mathematical Histogram Equalization on images (JPG/TIFF) utilizing a Custom TCP Protocol.
+
+*   **The Master Node** acts as the Coordinator (Python FastAPI). It ingests an uploaded image and splits it into discrete data chunks.
+*   **The Worker Nodes** act as the Mappers/Reducers. They connect to the Master via TCP sockets, receive the chunks, compute the local pixel histograms (**Map**), and send them back.
+*   **The Master Node** then merges these histograms to calculate the global Cumulative Distribution Function (**Reduce**), calculates the pixel-perfect equalization transformation, and finally reassembles the new image.
+
+It features a complete **AngularJS Material UI** dashboard and is strictly containerized. You can deploy it instantly using `docker-compose` or the provided Kubernetes `helm` charts. We highly encourage you to read the `README.md` inside that directory, spin up the cluster, and trace the distributed logs!
+
