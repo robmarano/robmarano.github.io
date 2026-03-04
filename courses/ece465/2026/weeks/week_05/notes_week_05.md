@@ -750,7 +750,57 @@ print(f"Total Bytes Reduced: {total_bytes}")
 
 In a distributed environment like Hadoop, the `extract_bytes` function would run simultaneously on thousands of cheap worker nodes holding different blocks of the `log_data` file. The `sum_bytes` function would run on a few Reducer nodes to calculate the final `total_bytes` output!
 
-### 9.6 Real-World Example: Kubernetes Distributed Image Processor
+### 9.6 Distributed Networking: Containerized TCP Server (`netprog`)
+
+Before jumping into a massive Kubernetes orchestration, let's look at how to containerize a fundamental Networking component: a Multi-threaded Java TCP Server. We provide the complete code for this in the `netprog` directory:
+
+👉 **[netprog](./netprog/)**
+
+This project demonstrates how to compile and wrap a standard Java Socket application into an immutable Docker image, allowing clients to connect to it securely over a mapped port.
+
+#### 9.6.1 Solution Architecture
+
+```mermaid
+graph LR
+    Client["Host Machine (TCPClient.java)"] --"TCP Port 12345"--> Docker["Docker Engine"]
+    subgraph Container ["Docker Container (transcriptor:v1)"]
+        Server["TCPServer.java (Listening Port 12345)"]
+        Server -.-> Thread1["ClientHandler Thread 1"]
+        Server -.-> Thread2["ClientHandler Thread N..."]
+    end
+    Docker --> Server
+```
+
+#### 9.6.2 Interaction Sequence
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Server as Server (Docker)
+    
+    Client->>Server: TCP Handshake (Port 12345)
+    Server-->>Client: Connection Accepted
+    Note over Server: Spawns new isolated Thread
+    
+    loop Echo Chat
+        Client->>Server: "Hello World"
+        Server-->>Client: "Server received: Hello World"
+    end
+    
+    Client->>Server: "exit"
+    Note over Server: Thread terminates, Socket closes
+```
+
+#### 9.6.3 Codebase Walkthrough
+
+*   **`src/TCPServer.java`**: The multi-threaded server. It binds to port `12345` and infinitely accepts inbound socket connections. For every connection, it delegates the I/O streams to a newly spawned `ClientHandler` `Runnable` thread so that multiple clients can connect simultaneously without blocking.
+*   **`src/TCPClient.java`**: A standard console application that connects to `localhost:12345`, reads STDIO from the user, transmits the string over the socket, and blocks waiting for the server's echo response.
+*   **`Makefile`**: A build script that executes `javac` to compile the `.java` files into `.class` bytecode artifacts and drops them into a `bin/` directory.
+*   **`Dockerfile`**: Defines the container environment. It starts from `ubuntu:24.10`, installs `openjdk-21-jdk-headless`, copies the pre-compiled `bin/` directory into the image, and sets `entrypoint.sh` to execute the JVM against `TCPServer`.
+
+---
+
+### 9.7 Real-World Example: Kubernetes Distributed Image Processor
 
 To see a complete, real-world implementation of the Map-Reduce paradigm running across a local container cluster, we have provided a full project in this week's code directory:
 
@@ -758,7 +808,7 @@ To see a complete, real-world implementation of the Map-Reduce paradigm running 
 
 This project is a **Distributed Image Processor** that performs mathematical Histogram Equalization on images (JPG/TIFF) utilizing a Custom TCP Protocol.
 
-#### 9.6.1 Solution Architecture
+#### 9.7.1 Solution Architecture
 
 ```mermaid
 graph TD
@@ -771,7 +821,7 @@ graph TD
 *   **The Master Node** acts as the Coordinator (Python FastAPI). It ingests an uploaded image, saves it to a shared volume, and acts as a TCP server to orchestrate the worker nodes.
 *   **The Worker Nodes** act as the Mappers/Reducers. They connect to the Master via TCP sockets, receive the chunks, compute the local pixel histograms, and send them back.
 
-#### 9.6.2 Map-Reduce Data Flow
+#### 9.7.2 Map-Reduce Data Flow
 
 ```mermaid
 flowchart LR
@@ -787,7 +837,7 @@ flowchart LR
     Stitch --> Equalized["Equalized Image"]
 ```
 
-#### 9.6.3 Custom TCP Sequence Protocol
+#### 9.7.3 Custom TCP Sequence Protocol
 
 The Master and Workers communicate over a newline-delimited custom TCP protocol transmitting binary byte chunks:
 
@@ -810,7 +860,7 @@ sequenceDiagram
     Worker-->>Master: CDF_RESULT <size><br/><equalized_binary_chunk>
 ```
 
-#### 9.6.4 Packaging & Deployment Toolkit
+#### 9.7.4 Packaging & Deployment Toolkit
 
 ```mermaid
 graph TD
@@ -822,7 +872,7 @@ graph TD
 
 It is strictly containerized. You can deploy it instantly using `docker-compose` or the provided Kubernetes `helm` charts. 
 
-#### 9.6.5 Codebase Walkthrough
+#### 9.7.5 Codebase Walkthrough
 
 Here are the key files inside the `k8s_histogram_eq` directory and what they do:
 
