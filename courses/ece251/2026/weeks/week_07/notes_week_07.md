@@ -452,6 +452,19 @@ main:
 ```
 **Why this exact number?** Mathematically, computing $\frac{1}{\sqrt{16.0}}$ yields exactly $\frac{1}{4.0}$, or `0.25000000`. By exploiting integer bitwise architecture to yield an initial guess, and mathematically refining it with *two* iterations of the Newton-Raphson method, Quake approximates `0.24999891`. This is stunningly precise (an error margin of just 0.000436%) while entirely avoiding the use of a strict floating-point division instruction.
 
+#### A Look Ahead: Decimal Data Types and the FPU
+Wait, * decimals*? Up until this exact moment in Chapter 1 and Chapter 2 of our textbook ([Computer Organization and Design](/COaD-MIPS-6ed.pdf)), we have rigidly introduced you *only* to the integer data type (both unsigned integers and signed integers using Two's Complement).
+
+However, just like desktop calculators, computer CPUs must structurally handle fractional decimal numbers too (like `0.24999891`). Our native 32-bit registers (`$t0`, `$s0`) are perfectly wired for whole integers. But how do we physically wire a `.` (decimal point) into microscopic silicon gates? 
+
+A rudimentary "Fixed-Point" decimal system is the first intuitive option, but structurally, it does not provide sufficient dynamic range to handle both macroscopically *huge* numbers and microscopically *tiny* numbers inside the exact same 32-bit operand limit. A universally robust protocol is required. 
+
+Next week, we transition into **Chapter 3**. We will formally introduce the **Floating-Point Data Type** powered by the **IEEE 754 protocol**. We will explore how MIPS handles these specialized decimals by delegating them to an entirely separate piece of hardware acting as a Coprocessor: the **Floating Point Unit (FPU)**. 
+
+*(Check out the bottom-right corner of your [MIPS Green Sheet](/courses/ece251/mips/MIPS_Green_Sheet.pdf) to preview the dedicated `add.s`, `sub.s`, and `div.s` instructions that exclusively run on this FPU coprocessor!)*
+
+$\Rightarrow$ **[Continue to Week 08 Notes: Floating-Point Architecture](../week_08/notes_week_08.md)**
+
 ### Performance Analysis: Instruction Count vs. Hardware Latency
 In an engineering context, let's compare the Quake approach against the standard IEEE-754 approach to demonstrate the marked performance improvement.
 
