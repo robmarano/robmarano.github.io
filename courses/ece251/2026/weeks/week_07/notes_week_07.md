@@ -14,6 +14,35 @@
 
 # Topic Deep Dive
 
+## 0. SPIM OS-like Library Calls
+
+Since SPIM is a simulator and not an operating system, it provides basic OS-like functionality to assembly programmers via the `syscall` instruction. This allows your MIPS code to practically interact with the console for input and output. 
+
+To use a `syscall`, you follow a strict convention:
+1. Load the specific **Service Code** into register `$v0`.
+2. Load any required **Arguments** into the `$a0` (and `a1`) data registers (or `$f12` for FP).
+3. Execute the `syscall` instruction physically.
+
+Here is the essential reference table of SPIM library calls you will need to design and test your assembly programs pragmatically:
+
+| Service | Code in `$v0` | Arguments Required | Action / Result |
+| :--- | :---: | :--- | :--- |
+| **Print Integer** | 1 | `$a0` = integer value to print | Prints integer to the console |
+| **Print Float** | 2 | `$f12` = float value to print | Prints float to the console |
+| **Print Double** | 3 | `$f12` = double value to print | Prints double to the console |
+| **Print String** | 4 | `$a0` = address of NULL-terminated string (`.asciiz`) | Prints string to the console |
+| **Read Integer** | 5 | - | User inputs integer; Returned in `$v0` |
+| **Read Float** | 6 | - | User inputs float; Returned in `$f0` |
+| **Read Double** | 7 | - | User inputs double; Returned in `$f0` |
+| **Read String** | 8 | `$a0` = address of input buffer; `$a1` = length | User inputs string into memory at `$a0` |
+| **Allocate Heap (`sbrk`)**| 9 | `$a0` = number of bytes to allocate | Address of allocated memory returned in `$v0` |
+| **Exit** | 10 | - | Terminates program execution cleanly |
+| **Print Char** | 11 | `$a0` = character to print | Prints a single ASCII character |
+| **Read Char** | 12 | - | User inputs character; Returned in `$v0` |
+| **Exit (with value)** | 17 | `$a0` = termination result | Terminates program, returns value to OS |
+
+*Note: The `Print String` syscall (4) structurally relies on the target string being explicitly terminated by a `NULL` byte. This is handled automatically by the compiler's `.asciiz` directive, but must be mathematically managed if you use the raw `.ascii` declaration.*
+
 ## 1. Advanced Assembly Patterns
 
 We've mastered the mechanical foundations of MIPS: the load-store architecture, memory layouts, control flow (`beq`/`j`), and basic procedure calling. Today, we bridge these isolated mechanics to write complex, algorithmic software natively in hardware.
