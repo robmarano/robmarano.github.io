@@ -43,6 +43,54 @@ Here is the essential reference table of SPIM library calls you will need to des
 
 *Note: The `Print String` syscall (4) structurally relies on the target string being explicitly terminated by a `NULL` byte. This is handled automatically by the compiler's `.asciiz` directive, but must be mathematically managed if you use the raw `.ascii` declaration.*
 
+### Example: Interactive I/O (Prompting the User)
+Here is a complete, runnable example demonstrating how to use syscalls to print string prompts, wait for the user to type on their keyboard, and capture their input into memory:
+
+```assembly
+    .data
+prompt_age:   .asciiz "Please enter your age: "
+prompt_name:  .asciiz "Please enter your name: "
+result_msg:   .asciiz "You entered age: "
+name_buffer:  .space 64     # Reserve 64 bytes in memory for the string input
+
+    .text
+    .globl main
+main:
+    # 1. Ask for Age
+    li  $v0, 4              # syscall 4: print string
+    la  $a0, prompt_age     
+    syscall
+    
+    # 2. Read Integer from Keyboard
+    li  $v0, 5              # syscall 5: read integer
+    syscall                 # Program pauses waiting for user to type and press Enter
+    move $s0, $v0           # IMMEDIATELY save the returned integer into a safe register ($s0)
+    
+    # 3. Ask for Name
+    li  $v0, 4              # syscall 4: print string
+    la  $a0, prompt_name
+    syscall
+    
+    # 4. Read String from Keyboard
+    li  $v0, 8              # syscall 8: read string
+    la  $a0, name_buffer    # $a0 = address of where to save the string in memory
+    li  $a1, 64             # $a1 = maximum length to read (prevents buffer overflow)
+    syscall                 # Program pauses waiting for user input
+    
+    # 5. Echo the Age Back
+    li  $v0, 4              # syscall 4: print string
+    la  $a0, result_msg
+    syscall
+    
+    li  $v0, 1              # syscall 1: print integer
+    move $a0, $s0           # load our saved age from $s0
+    syscall
+    
+    # Exit cleanly
+    li  $v0, 10
+    syscall
+```
+
 ## 1. Advanced Assembly Patterns
 
 We've mastered the mechanical foundations of MIPS: the load-store architecture, memory layouts, control flow (`beq`/`j`), and basic procedure calling. Today, we bridge these isolated mechanics to write complex, algorithmic software natively in hardware.
