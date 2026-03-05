@@ -450,7 +450,23 @@ main:
 ```text
 1 / sqrt(16.0) is approx: 0.24999891
 ```
-**Why this exact number?** Mathematically, computing $\frac{1}{\sqrt{16.0}}$ yields exactly $\frac{1}{4.0}$, or `0.25000000`. By exploiting integer bitwise architecture to yield an initial guess, and mathematically refining it with *two* iterations of the Newton-Raphson method, Quake approximates `0.24999891`. This is stunningly precise (an error margin of just 0.000436%) while entirely avoiding the devastating CPU performance cost of a strict floating-point division instruction!
+**Why this exact number?** Mathematically, computing $\frac{1}{\sqrt{16.0}}$ yields exactly $\frac{1}{4.0}$, or `0.25000000`. By exploiting integer bitwise architecture to yield an initial guess, and mathematically refining it with *two* iterations of the Newton-Raphson method, Quake approximates `0.24999891`. This is stunningly precise (an error margin of just 0.000436%) while entirely avoiding the use of a strict floating-point division instruction.
+
+### Performance Analysis: Instruction Count vs. Hardware Latency
+In an engineering context, we must rely on hard data rather than hyperbole to justify algorithm selection. Let's compare the Quake approach against the standard IEEE-754 approach.
+
+**Standard IEEE Approach:** 2 Instructions
+```assembly
+    sqrt.s $f0, $f12        # Calculate square root
+    div.s  $f0, $f4, $f0    # 1.0 / sqrt(x)
+```
+
+**Quake Approach:** 14 Instructions
+As seen in the code block above, the Quake method utilizes roughly 14 individual instructions (`mul.s`, `sub`, `srl`, `mfc1`, etc.) to achieve the same result.
+
+**The Simulation Illusion:** If you write a benchmark script to loop both algorithms 100,000 times in the `SPIM` emulator, the Standard approach will finish roughly 3x faster than the Quake approach. Why? Because software emulators like SPIM execute instructions sequentially on your modern host Mac/PC CPU. SPIM treats every instruction as taking exactly 1 "step", meaning 2 steps easily beats 14 steps.
+
+**The Physical Hardware Reality:** On physical silicon in 1999 (e.g., Pentium III or MIPS R4000 CPUs), all instructions did not take equal time. Standard ALUs executed integer math (`sub`, `srl`) and bit-moves (`mfc1`) natively in **1 clock cycle**. However, Floating Point Division (`div.s`) was incredibly complex and could stall the processor pipeline for **up to 54 clock cycles** waiting for completion! Therefore, executing 14 simple 1-cycle instructions vastly outperformed waiting 54+ cycles for physical silicon to grind through a single float division.
 
 ---
 
