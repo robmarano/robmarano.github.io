@@ -51,6 +51,7 @@ Here is a complete, runnable example demonstrating how to use syscalls to print 
 prompt_name:  .asciiz "Please enter your name: "
 prompt_age:   .asciiz "Please enter your age: "
 result_msg:   .asciiz "Hello! You entered age: "
+newline:      .asciiz "\n"
 name_buffer:  .space 64     # Reserve 64 bytes in memory for the string input
 
     .text
@@ -86,6 +87,11 @@ main:
     move $a0, $s0           # load our saved age from $s0
     syscall
     
+    # Print trailing newline
+    li  $v0, 4              # syscall 4: print string
+    la  $a0, newline
+    syscall
+    
     # Exit cleanly
     li  $v0, 10
     syscall
@@ -111,6 +117,7 @@ The following code demonstrates how to open that file, read the dense string of 
 filename:    .asciiz "data.txt"
 file_buffer: .space 1024        # Reserve 1024 bytes in the Data Segment to hold the raw text file
 result_msg:  .asciiz "The average of the 5 integers is: "
+newline:     .asciiz "\n"
 myArray:     .word 0, 0, 0, 0, 0 # Reserve 5 integer slots (20 bytes) to store the converted math values
 
     .text
@@ -155,6 +162,11 @@ main:
     
     li  $v0, 1              # syscall 1: print integer
     move $a0, $t0           # load our average
+    syscall
+    
+    # Print trailing newline
+    li  $v0, 4              # syscall 4: print string
+    la  $a0, newline
     syscall
     
     # Exit cleanly
@@ -251,6 +263,7 @@ When we talk about "Arrays" in assembly, we are merely talking about a contiguou
     .data
 myArray: .word 10, 20, 30, 40, 50   # 5 integers (20 bytes total)
 length:  .word 5
+newline: .asciiz "\n"
 
     .text
     .globl main
@@ -276,6 +289,11 @@ Loop_End:
     li  $v0, 1          # syscall 1 = print integer
     move $a0, $t3       # move our accumulated sum into the argument register
     syscall             # execute print
+    
+    # Print trailing newline
+    li  $v0, 4          # syscall 4 = print string
+    la  $a0, newline
+    syscall
     
     # Exit cleanly
     li  $v0, 10         # syscall 10 = exit

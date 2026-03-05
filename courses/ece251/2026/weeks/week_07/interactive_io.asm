@@ -2,6 +2,7 @@
 prompt_name:  .asciiz "Please enter your name: "
 prompt_age:   .asciiz "Please enter your age: "
 result_msg:   .asciiz "Hello! You entered age: "
+newline:      .asciiz "\n"
 name_buffer:  .space 64     # Reserve 64 bytes in memory for the string input
 
     .text
@@ -35,6 +36,11 @@ main:
     
     li  $v0, 1              # syscall 1: print integer
     move $a0, $s0           # load our saved age from $s0
+    syscall
+    
+    # Print trailing newline
+    li  $v0, 4              # syscall 4: print string
+    la  $a0, newline
     syscall
     
     # Exit cleanly

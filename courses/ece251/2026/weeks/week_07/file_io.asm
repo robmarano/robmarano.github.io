@@ -2,6 +2,7 @@
 filename:    .asciiz "data.txt"
 file_buffer: .space 1024        # Reserve 1024 bytes in the Data Segment to hold the raw text file
 result_msg:  .asciiz "The average of the 5 integers is: "
+newline:     .asciiz "\n"
 myArray:     .word 0, 0, 0, 0, 0 # Reserve 5 integer slots (20 bytes) to store the converted math values
 
     .text
@@ -46,6 +47,11 @@ main:
     
     li  $v0, 1              # syscall 1: print integer
     move $a0, $t0           # load our average
+    syscall
+    
+    # Print trailing newline
+    li  $v0, 4              # syscall 4: print string
+    la  $a0, newline
     syscall
     
     # Exit cleanly

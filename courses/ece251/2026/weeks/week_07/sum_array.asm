@@ -1,6 +1,7 @@
     .data
 myArray: .word 10, 20, 30, 40, 50   # 5 integers (20 bytes total)
 length:  .word 5
+newline: .asciiz "\n"
 
     .text
     .globl main
@@ -26,6 +27,11 @@ Loop_End:
     li  $v0, 1          # syscall 1 = print integer
     move $a0, $t3       # move our accumulated sum into the argument register
     syscall             # execute print
+    
+    # Print trailing newline
+    li  $v0, 4          # syscall 4 = print string
+    la  $a0, newline
+    syscall
     
     # Exit cleanly
     li  $v0, 10         # syscall 10 = exit
