@@ -573,7 +573,7 @@ The Midterm will heavily assess the following comprehensive topics:
 3. **MIPS Architecture Overview:** Applying the 4 core design principles of MIPS, evaluating performance (IC x CPI x Clock time), and mapping memory out spatially (Text, Data, Heap, Stack).
 4. **Assembly Programming:** Simulating code blocks tracing loops (`bne`/`beq`), array manipulations, translating standard C structures (`if/else/while`), and procedure tracking (`jal`, `$ra`, `$sp` execution chains).
 
-Begin aggressively studying the posted [Midterm Study Guide](../assignments/study_guide_midterm.md). Office hours will dynamically switch to structured, review-oriented topic overviews!
+Begin aggressively studying the posted [Midterm Study Guide](../../assignments/study_guide_midterm.md). Office hours will dynamically switch to structured, review-oriented topic overviews!
 
 ---
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
