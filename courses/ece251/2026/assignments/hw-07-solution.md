@@ -22,5 +22,35 @@
 *   **B. Architectural Consequence:** If you leave only 8 total bits available, and you dedicate 4 of those bits to defining an `opcode` (allowing $2^{4} = 16$ unique commands natively), you only have **4 bits remaining** for a target Register map! A 4-bit register field means your datapath can strictly support a maximum of only $2^4 = 16$ discrete registers. Contrast this to the MIPS ISA, which supports 32 physical registers because it structurally dedicates 5-bit width arrays (`rs`/`rt`/`rd`).
 
 **4. MIPS Dataflow & Recursion (Fibonacci Sequence)**
+
+*Note: For reference during grading, here is the student's conceptually broken code presented in the prompt:*
+```assembly
+fib:
+    beq  $a0, 0, fib_zero
+    beq  $a0, 1, fib_one
+    
+    # FATAL ERROR 1: Missing Stack push to save $ra, $a0, $s0
+    
+    addi $a0, $a0, -1      
+    jal  fib               # <-- OVERWRITES EXISTING $ra IMMEDIATELY!
+    
+    move $s0, $v0          
+    
+    addi $a0, $a0, -1      
+    jal  fib               # <-- OVERWRITES $ra AGAIN!
+    
+    add  $v0, $s0, $v0     
+    
+    # FATAL ERROR 2: Missing Stack pop to restore original $ra and $a0
+    
+    jr   $ra               # <-- TRAPPED IN INFINITE LOOP!
+
+fib_zero:
+    li   $v0, 0
+    jr   $ra
+fib_one:
+    li   $v0, 1
+    jr   $ra
+```
 *   **A. Hardware Overwrite:** The Return Address register (`$ra`) is definitively destroyed (overwritten). The `jal` execution natively and forcefully saves the address of the immediately following instruction (`PC + 4`) directly into `$ra`. Because calculating Fibonacci explicitly requires the procedure to call `jal` *twice internally* (once for `fib(n-1)` and again for `fib(n-2)`) without shifting that initial return branch offset into the stack, the old return marker is erased forever.
 *   **B. The `jr $ra` Failure:** When the recursion bottoms out into the base case (`n=1` or `n=0`) and attempts to unfold natively, the code executes `jr $ra`. However, because the `$ra` points to the recursive block literally inside itself (the result of the internal `jal` calls) rather than the original `main` entry marker, the program enters an infinite structural loop. It will continually bounce between `jr $ra` and the inner recursively executed loops, never returning dynamically to `main`. This generates a fatal stack fault or timeout.
