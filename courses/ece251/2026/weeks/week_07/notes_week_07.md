@@ -369,6 +369,71 @@ Let's trace how the CPU physically builds the stack frame when calculating `fact
 When the base case `factorial(1)` is finally breached, the recursion violently collapses *upwards*. 
 The CPU systematically calculates the math, issues `lw` to pop the saved `$ra` and `$a0` values back off their respective stack plates, destroys the physical stack slot (`addi $sp, $sp, 8`), and utilizes `jr $ra` to seamlessly return up the chain of functions. If a single stack `push/pop` operation triggers out of order, the entire program fatally crashes into the void of memory.
 
+### Real-World Application: The Fast Inverse Square Root (Quake Engine)
+The **Fast Inverse Square Root** algorithm was famously used in the source code of the 1999 video game *Quake III Arena*. In 3D graphics engines, calculating how light reflects off a polygonal surface requires calculating the "surface normal" (a perpendicular vector). Normalizing this lighting vector mathematically requires computing $\frac{1}{\sqrt{x}}$, where $x$ is the magnitude. 
+
+At the time, performing a standard CPU square root followed by a division instruction was devastatingly slow. To maintain a smooth, performant 3D experience, the Quake developers implemented a brilliant algorithmic hack that drastically sped up this calculation using bit manipulation and Newton-Raphson approximation.
+
+Here is a simplified MIPS implementation of that exact logic. Notice how it seamlessly moves raw bits between the floating-point (`$f12`) and integer (`$t0`) registers using `mfc1` and `mtc1` to perform rapid integer math on a floating-point structure!
+
+**Simplified Lighting Reflection Example:**
+```assembly
+    .data
+magic:      .word 0x5f3759df    # The famous Quake "magic number" constant
+threehalfs: .float 1.5
+half:       .float 0.5
+magnitude:  .float 16.0         # Simulated light vector magnitude (x)
+newline:    .asciiz "\n"
+
+    .text
+    .globl main
+main:
+    # Load our lighting magnitude into a floating-point register
+    l.s   $f12, magnitude
+    
+    # --- The Fast Inverse Square Root Algorithm ---
+    
+    # 1. Calculate x2 = x * 0.5
+    l.s   $f4, half
+    mul.s $f2, $f12, $f4        # $f2 (x2) = x * 0.5
+
+    # 2. Evil Bit-Level Hacking (Move float bits natively to an integer register)
+    mfc1  $t0, $f12             # Copy raw IEEE 754 bits from FPU ($f12) to CPU ($t0)
+
+    # 3. Initial Approximation via Magic Number Subtraction
+    srl   $t1, $t0, 1           # Logic Shift Right by 1 (i >> 1)
+    lw    $t2, magic            # Load the 0x5f3759df magic constant
+    sub   $t0, $t2, $t1         # i = magic - (i >> 1)
+
+    # 4. Move the manipulated integer bits back to the FPU
+    mtc1  $t0, $f0              # The float structure in $f0 is now incredibly close to 1/sqrt(x)!
+
+    # 5. First iteration of Newton-Raphson to clean up the approximation
+    l.s   $f6, threehalfs       # Load 1.5
+    mul.s $f8, $f0, $f0         # y * y
+    mul.s $f8, $f2, $f8         # x2 * (y * y)
+    sub.s $f8, $f6, $f8         # threehalfs - (x2 * y * y)
+    mul.s $f0, $f0, $f8         # Final $f0 Result: y = y * [1.5 - (x2 * y * y)]
+    
+    # ----------------------------------------------
+    
+    # (The value in $f0 can now be used to rapidly normalize the light reflection vector!)
+    
+    # Print the calculated float result in $f0
+    li  $v0, 2                  # syscall 2: print float
+    mov.s $f12, $f0             # Move result to argument register for printing           
+    syscall
+    
+    # Print trailing newline
+    li  $v0, 4
+    la  $a0, newline
+    syscall
+
+    # Exit cleanly
+    li  $v0, 10
+    syscall
+```
+
 ---
 
 ## 2. The Final Group Project Launch

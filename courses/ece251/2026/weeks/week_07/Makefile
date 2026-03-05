@@ -1,6 +1,6 @@
-.PHONY: all sum interactive fileio exception clean
+.PHONY: all sum interactive fileio exception quake clean
 
-all: sum interactive fileio exception
+all: sum interactive fileio exception quake
 
 sum:
 	spim -file sum_array.asm
@@ -13,6 +13,9 @@ fileio:
 
 exception:
 	spim -file exception_demo.asm
+
+quake:
+	spim -file quake_inv_sqrt.asm
 
 clean:
 	rm -f *.out
