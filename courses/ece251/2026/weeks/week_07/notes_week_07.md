@@ -47,7 +47,14 @@ Loop_Start:
     j   Loop_Start          # Unconditionally jump back up to evaluate the next loop
 
 Loop_End:
-    # ... Print $t3 and exit ...
+    # Print the final sum ($t3)
+    li  $v0, 1          # syscall 1 = print integer
+    move $a0, $t3       # move our accumulated sum into the argument register
+    syscall             # execute print
+    
+    # Exit cleanly
+    li  $v0, 10         # syscall 10 = exit
+    syscall
 ```
 
 ### String Manipulation (Byte-by-Byte)
