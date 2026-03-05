@@ -546,7 +546,7 @@ If your base von Neumann machine boots successfully, you may attempt the followi
 
 *Note: The Professor will be hosting optional weekend lab sessions leading up to the deadline to assist with simulation debugging or architectural design consultation.*
 
-### Homework Assignment: ECE 251 Final Project Ideation
+### First assignment for this project: Ideation
 
 Choose a partner. Brainstorm your final project for which you will design, program, and simulate a computer with your own CPU ISA using SystemVerilog. The theme of the project is to create a computer of your choice with a minimum of 4 bits, given the complexity expected from this course. 
 
