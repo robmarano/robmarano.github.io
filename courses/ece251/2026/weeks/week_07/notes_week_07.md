@@ -472,9 +472,9 @@ As seen in the code block above, the Quake method utilizes roughly 14 individual
 
 ## 2. The Final Group Project Launch
 
-Today commemorates the official assignment of your **Final Group Project** (due Friday, May 8, 2026 at 11:59:59 ET)! This project encompasses the primary educational objective of ECE 251: you will organically design and implement a von Neumann computer from scratch.
+Today commemorates the official assignment of your **Final Group Project** (due May 15, 2026 no later than 5:00 PM ET)! This project encompasses the primary educational objective of ECE 251: you will organically design and implement a von Neumann computer from scratch.
 
-This project carries a total value of **200 raw points**, with an allocation for a possible **70 points of extra-credit**. Final grades will be curved.
+This project carries a total value of **100 raw points** (accounting for 25% of your final semester grade). There is also an allocation for a possible **30 points of extra-credit**. 
 
 ### Requirements
 You are to implement the design using SystemVerilog and to include a test bench to demonstrate the full functionality of your processor and memory (especially loading and running programs, as well as taking input and showing output to the user).
@@ -482,27 +482,26 @@ You are to implement the design using SystemVerilog and to include a test bench 
 The following requirements hold for full assessment:
 *   **Team:** Teams must consist of precisely 2 students.
 *   **Instruction Set Architecture (ISA):** You must design your own ISA, document the design, and summarize it on a two-sided US Letter sized document. You are effectively creating your own ISA's "Green Card."
-*   **Submission Mechanism:** Each team will submit their project via a dedicated GitHub Classroom repository. The repository must include all Verilog code files, markdown documentation, and supporting images.
+*   **Submission Mechanism:** Each team will manage source code in a single GitHub repository and submit their final URL via Microsoft Teams. The repository must include all Verilog code files, markdown documentation, and supporting embedded images.
 
 ### Comprehensive Assessment Rubric
-The following topological domains will be rigorously assessed logically:
+The full, formal grading parameters are officially hosted here: [Grading Rubric for Final Project](../assignments/grading_rubric_final_project.md). At a high level, the 100 base points are distributed across the following architectural domains:
 
-*   **ISA (Instruction Set Architecture):** ALU Operand Size, Address Bus Size, Addressability, Register File Size, Opcode/Function/Shamt Sizes, Instruction Size, PC Increment, Immediate Size, and explicit support for R-type, I-type, and J-type instructions.
-*   **Memory Design & Implementation:** Instruction Memory, Data Memory, Memory Layout, and the Program Load mechanism into the Processor.
-*   **Processor Design & Implementation:** 
-    *   **Control & Datapath:** Clock Design, Overall Control Signals, Multiplexors, Main/ALU Decoders, Datapath Design (imem, dmem, alu, regfile, signext, sll).
+*   **[25 Points] ISA Design:** ALU Operand Size, Address Bus Size, Addressability, Register File Size, Opcode/Function/Shamt Sizes, Instruction Size, PC Increment, Immediate Size, and explicit support for R-type, I-type, and J-type instructions.
+*   **[Given] Memory Design & Implementation:** Instruction Memory, Data Memory, Memory Layout, and the Program Load mechanism into the Processor.
+*   **[30 Points] Processor Design & Implementation:** 
+    *   **Control & Datapath:** Clock Design, Overall Control Signals, Multiplexors, Main/ALU Decoders, Datapath Design.
     *   **Logic Components:** PC increment adders, Register File, Sign Extender(s), and the ALU architecture (`and`, `or`, `nor`, `add`, `sub`, `slt`).
-    *   **Execution:** Controller-Datapath Integration, Program Load Integration, and executing a provided Assembly Program alongside a minimum of one hand-compiled program translated directly into your ISA's machine code.
-*   **Project Documentation:** Overall Design Explanation, Overall Design Diagrams, timing diagrams (R-type, I-type, J-type), and explicit instructions to successfully demo the project. You must include a representative program utilizing a nested procedure or recursion (e.g., Fibonacci or Factorial).
+    *   **Execution:** Integrating components to successfully execute a provided Assembly Program alongside one hand-compiled program translated directly into your ISA's machine code.
+*   **[45 Points] Project & Design Documentation:** Overall Design Explanation, Overall diagrams, timing diagrams, and explicit instructions to successfully demo the project. You must include a 5-minute maximum YouTube technical presentation embedded directly into your `README.md`.
 
-### Extra Credit (70 Points)
+### Extra Credit (30 Points Maximum)
 If your base machine boots successfully, you may attempt the following advanced features for extra credit:
-*   **Demo Video Recording:** A YouTube link describing your design and demonstrating how to write, load, and run a program for your ISA.
 *   **Programmatic Assembler:** A software tool (e.g., Python) to compile text assembly into your raw machine code.
 *   **Pipeline Design Support:** Implementing a multi-stage execution pipeline.
 *   **Cache Support:** Designing and integrating L1 Memory Caches.
 
-*Note: I will be hosting extended office hours on select Sunday afternoons (remotely and in-person at the NAB 41 Cooper Sq) leading up to the deadline to assist with simulation debugging.*
+*Note: The Professor will be hosting optional weekend lab sessions leading up to the deadline to assist with simulation debugging or architectural design consultation.*
 
 ---
 
