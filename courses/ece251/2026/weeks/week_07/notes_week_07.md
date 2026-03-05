@@ -535,6 +535,21 @@ If your base machine boots successfully, you may attempt the following advanced 
 
 *Note: The Professor will be hosting optional weekend lab sessions leading up to the deadline to assist with simulation debugging or architectural design consultation.*
 
+### Homework Assignment: ECE 251 Final Project Ideation
+
+Choose a partner. Brainstorm your final project for which you will design, program, and simulate a computer with your own CPU ISA using SystemVerilog. The theme of the project is to create a computer of your choice with a minimum of 4 bits, given the complexity expected from this course. 
+
+Some fundamental ideas would include the Intel 4004, Intel 8086, Intel 8088, Motorola 6800, Motorola 68000, the MOS 6502, Zilog Z80, etc. Check out the [Computer History Museum Timeline](https://www.computerhistory.org/timeline/computers) for some inspiration, or be creative! Here is a design guide to use as an official resource: [Professor Marano's Notes on Designing a von Neumann Computer](/ECE%20251%20-%20Prof%20Marano's%20Notes%20on%20Designing%20a%20von%20Neumann%20Computer.pdf).
+
+You will design the entire ISA, the data path, the control path, the ALU, and the Controller units, along with the explicit support for integer processing. *(Challenge: How would you mathematically handle floating point?)* 
+
+If you like, you can choose an alternative path and write a functional MIPS simulator that shows the state of each register and how the memory works, along with writing the control path, data path, ALU, and Controller. I will share the basic architecture in SystemVerilog. Check out the [CPU HDL Catalog](https://github.com/robmarano/cpu_hdl_catalog) for reference.
+
+**Submission Guidelines:**
+1. You will work in groups of precisely two.
+2. Submit a one-page write-up via Microsoft Teams indicating who you intend to work with and what architecture you intend to pursue for your project. 
+3. *Note:* You and your partner must hand in the exact same write-up, but ensure you submit it in your own respective Team’s account within Assignments.
+
 ---
 
 ## 3. Midterm Exam Preparation
