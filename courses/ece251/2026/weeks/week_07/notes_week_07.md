@@ -517,7 +517,7 @@ The following requirements hold for full assessment:
 *   **Submission Mechanism:** Each team will manage source code in a single GitHub repository and submit their final URL via Microsoft Teams. The repository must include all Verilog code files, markdown documentation, and supporting embedded images.
 
 ### Final Project Grading Rubric
-The formal grading parameters are detailed in the official rubric: [ECE 251 Final Project Rubric.xlsx](/ECE%20251%20Final%20Project%20Rubric.xlsx). The rubric evaluates your complete architectural design across **200 raw points** (which scales directly to the 100 base points defined in the syllabus).
+See below for the formal grading parameters of the final project. The rubric evaluates your complete architectural design across **200 raw points** (which scales directly to the 100 base points defined in the syllabus).
 
 **1. ISA Design (34 Raw Points)**
 *   **[2 pts each]** ALU Operand Size, Address Bus Size, Addressability, Register File Size, Opcode Size, Function Size, `shamt` Size, Instruction Size, PC Increment, Immediate Size.
