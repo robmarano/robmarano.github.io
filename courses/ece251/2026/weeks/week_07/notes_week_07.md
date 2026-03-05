@@ -358,15 +358,15 @@ Therefore, to iterate through a string, you **do not** shift your memory pointer
 ### Deep Dive: Tracing Recursive Procedures
 Recursion is when a function calls *itself* back-to-back until it hits a base condition. It is the ultimate test of your **Stack Management** (`$sp`), because every single recursive layer aggressively overwrites the `$ra` (Return Address) tracker and the `$a0` arguments!
 
-**The Factorial Example (`n!`)**
-Let's trace how the CPU physically builds the stack frame when calculating `factorial(3)`.
+**The Fibonacci Example (`fib(n)`)**
+Let's trace how the CPU physically builds the stack frame when calculating `fib(3)`.
 
-1. `main` calls `factorial(3)`. `$a0 = 3`. The CPU saves `main`'s return address in `$ra`.
-2. Inside `factorial`: The function pushes a "plate" onto the Stack (`addi $sp, $sp, -8`). It saves its current `$ra` and `$a0` values rigidly into memory. 
-3. It subtracts 1 from `$a0` (`$a0 = 2`) and calls `jal factorial`.
-4. The cycle repeats! A new layer is built. The Stack physically grows downwards inside the CPU representing `factorial(2)` inside `factorial(3)` inside `main`.
+1. `main` calls `fib(3)`. `$a0 = 3`. The CPU saves `main`'s return address in `$ra`.
+2. Inside `fib`: The function pushes a "plate" onto the Stack (`addi $sp, $sp, -12`). It rigidly saves its current `$ra`, `$a0`, and `$s0` values into memory. 
+3. It subtracts 1 from `$a0` (`$a0 = 2`) and calls `jal fib`.
+4. The cycle repeats! A new layer is built. The Stack physically grows downwards inside the CPU representing `fib(2)` inside `fib(3)` inside `main`.
 
-When the base case `factorial(1)` is finally breached, the recursion violently collapses *upwards*. 
+When the base cases `fib(1)` or `fib(0)` are finally breached, the recursion violently collapses *upwards*. 
 The CPU systematically calculates the math, issues `lw` to pop the saved `$ra` and `$a0` values back off their respective stack plates, destroys the physical stack slot (`addi $sp, $sp, 8`), and utilizes `jr $ra` to seamlessly return up the chain of functions. If a single stack `push/pop` operation triggers out of order, the entire program fatally crashes into the void of memory.
 
 ### Real-World Application: The Fast Inverse Square Root (Quake Engine)
