@@ -463,7 +463,7 @@ Next week, we transition into **Chapter 3**. We will formally introduce the **Fl
 
 *(Check out the bottom-right corner of your [MIPS Green Sheet](/courses/ece251/mips/MIPS_Green_Sheet.pdf) to preview the dedicated `add.s`, `sub.s`, and `div.s` instructions that exclusively run on this FPU coprocessor!)*
 
-$\Rightarrow$ **[Continue to Week 08 Notes: Floating-Point Architecture](../week_08/notes_week_08.md)**
+$\Rightarrow$ **[Continue to Week 08 Notes: Where we dive deep into using decimals on our CPU (the what), the IEEE 754 protocol (the how), and the Floating-Point Unit (FPU) (the where)](../week_08/notes_week_08.md)**
 
 ### Performance Analysis: Instruction Count vs. Hardware Latency
 In an engineering context, let's compare the Quake approach against the standard IEEE-754 approach to demonstrate the marked performance improvement.
@@ -489,7 +489,16 @@ spim -file bench_quake.asm  0.13s user 0.08s system 98% cpu 0.214 total
 ```
 As you can see, the 2-instruction loop finishes in `0.074s`, while the 14-instruction loop finishes in `0.214s` (almost exactly 3x slower natively).
 
-**The Physical Hardware Reality:** On physical silicon in 1999 (e.g., Pentium III or MIPS R4000 CPUs), all instructions did not take equal time. Standard ALUs executed integer math (`sub`, `srl`) and bit-moves (`mfc1`) natively in **1 clock cycle**. However, Floating Point Division (`div.s`) was incredibly complex and could stall the processor pipeline for **up to 54 clock cycles** waiting for completion! Therefore, executing 14 simple 1-cycle instructions vastly outperformed waiting 54+ cycles for physical silicon to grind through a single float division.
+**The Physical Hardware Reality:** On physical silicon in 1999 (e.g., Pentium III or MIPS R4000 CPUs), all instructions did not take equal time. We can mathematically prove exactly why the Quake method was superior by revisiting the fundamental **CPU Performance Equation** from Chapter 1 of our textbook ([Computer Organization and Design](/COaD-MIPS-6ed.pdf)):
+
+$$ \text{CPU Execution Time} = \text{Instruction Count (IC)} \times \text{Cycles Per Instruction (CPI)} \times \text{Clock Cycle Time} $$
+
+*   **Standard IEEE Approach (2 Instructions):** The Instruction Count is extremely low ($\text{IC} = 2$). However, on 1999 silicon, Floating Point Division (`div.s`) was incredibly complex and could stall the processor pipeline for **up to 54 clock cycles** waiting for completion. Assuming a basic `sqrt.s` execution alongside it, the average CPI is roughly $27.5$. The total execution requirement is $2 \text{ instructions} \times 27.5 \text{ CPI} \approx 55 \text{ physical clock cycles}$.
+*   **Quake Approach (14 Instructions):** The Instruction Count is technically 7x higher ($\text{IC} = 14$). However, standard ALUs executed integer math (`sub`, `srl`) and bit-moves (`mfc1`) natively in exactly **1 clock cycle**. Therefore, the constant CPI is strictly $1.0$. The total execution requirement is $14 \text{ instructions} \times 1.0 \text{ CPI} = \mathbf{14 \text{ physical clock cycles}}$.
+
+Even though the *Instruction Count* was radically higher, the Quake developers minimized the *Cycles Per Instruction* so drastically that their total **CPU Execution Time** finished nearly 4x faster on actual silicon! 
+
+This perfectly illustrates why relying blindly on a software emulator (which mathematically enforces an abstracted, flat CPI of $1.0$ across every command) creates a severe pedagogical blind spot for computer architects.
 
 ---
 
