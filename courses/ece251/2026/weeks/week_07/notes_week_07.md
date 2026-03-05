@@ -91,6 +91,104 @@ main:
     syscall
 ```
 
+### Example: File I/O (Loading Data into Memory)
+A powerful capability of SPIM is its native support for opening, reading, and closing literal files on your hard drive (Syscalls 13, 14, and 16). 
+
+Suppose you have a text file named `data.txt` in the exact same directory as your `.asm` file. 
+The literal contents of `data.txt` are 5 integers separated by a newline (`\n` on Mac/Linux, or `\r\n` on Windows).
+```text
+10
+20
+30
+40
+50
+```
+
+The following code demonstrates how to open that file, read the dense string of ASCII characters into a buffer space reserved dynamically in the `.data` Memory Segment (`0x10010000`), convert those characters into mathematical integers, and then use a `jal` procedure to calculate their average.
+
+```assembly
+    .data
+filename:    .asciiz "data.txt"
+file_buffer: .space 1024        # Reserve 1024 bytes in the Data Segment to hold the raw text file
+result_msg:  .asciiz "The average of the 5 integers is: "
+myArray:     .word 0, 0, 0, 0, 0 # Reserve 5 integer slots (20 bytes) to store the converted math values
+
+    .text
+    .globl main
+main:
+    # 1. Open the File
+    li  $v0, 13             # syscall 13: open file
+    la  $a0, filename       # $a0 = address of null-terminated filename
+    li  $a1, 0              # $a1 = flags (0 = read-only)
+    li  $a2, 0              # $a2 = mode (ignored)
+    syscall
+    move $s0, $v0           # IMMEDIATELY save the "File Descriptor" returned in $v0 to $s0 safely
+    
+    # 2. Read the File into Memory
+    li  $v0, 14             # syscall 14: read from file
+    move $a0, $s0           # $a0 = File descriptor we just saved
+    la  $a1, file_buffer    # $a1 = address of our 1024 byte buffer in the `.data` segment
+    li  $a2, 1024           # $a2 = maximum number of bytes to read
+    syscall
+    
+    # 3. Close the File
+    li  $v0, 16             # syscall 16: close file
+    move $a0, $s0           # $a0 = File Descriptor
+    syscall
+    
+    # --- For brevity in this course, assume a conversion block exists here ---
+    # The file_buffer now holds the raw ASCII characters "10\n20\n30..."
+    # A standard parsing loop would read byte-by-byte (`lb`), check for '\n', 
+    # multiply the current total by 10, and add the new character (minus 48 for ASCII offset).
+    # We will assume this loop successfully populates `myArray` with the 5 physical integers.
+    # -------------------------------------------------------------------------
+    
+    # 4. Call the 'average' Procedure
+    la  $a0, myArray        # Pass the base address of the array as Argument 0
+    li  $a1, 5              # Pass the length of the array as Argument 1
+    jal average             # Jump and Link to the procedure (saves Return Address to $ra)
+    move $t0, $v0           # Save the calculated average returned in $v0
+    
+    # 5. Print the Results
+    li  $v0, 4              # syscall 4: print string
+    la  $a0, result_msg
+    syscall
+    
+    li  $v0, 1              # syscall 1: print integer
+    move $a0, $t0           # load our average
+    syscall
+    
+    # Exit cleanly
+    li  $v0, 10
+    syscall
+
+# ---------------------------------------------------- #
+# Procedure: average
+# Arguments: $a0 = array base address, $a1 = size
+# Returns:   $v0 = integer average
+# ---------------------------------------------------- #
+average:
+    li  $t0, 0              # Loop counter
+    li  $t1, 0              # Running sum
+    move $t2, $a0           # Copy the base address to $t2 so we can shift it
+
+Avg_Loop:
+    beq $t0, $a1, Avg_Done  # If counter == size, we reached the end
+    
+    lw  $t3, 0($t2)         # Load physical word from memory array
+    add $t1, $t1, $t3       # Add to sum
+    
+    addi $t2, $t2, 4        # Shift memory pointer by 4 bytes (1 word)
+    addi $t0, $t0, 1        # Increment counter by 1
+    
+    j   Avg_Loop            # Jump back up
+
+Avg_Done:
+    div $t1, $a1            # Divide Sum ($t1) by Count ($a1)
+    mflo $v0                # MIPS stores the quotient in the LO register. Move it to $v0 as our return value!
+    jr  $ra                 # Return structurally to the caller (main) using $ra
+```
+
 ## 1. Advanced Assembly Patterns
 
 We've mastered the mechanical foundations of MIPS: the load-store architecture, memory layouts, control flow (`beq`/`j`), and basic procedure calling. Today, we bridge these isolated mechanics to write complex, algorithmic software natively in hardware.
