@@ -1,6 +1,6 @@
-.PHONY: all sum interactive fileio clean
+.PHONY: all sum interactive fileio exception clean
 
-all: sum interactive fileio
+all: sum interactive fileio exception
 
 sum:
 	spim -file sum_array.asm
@@ -10,6 +10,9 @@ interactive:
 
 fileio:
 	spim -file file_io.asm
+
+exception:
+	spim -file exception_demo.asm
 
 clean:
 	rm -f *.out

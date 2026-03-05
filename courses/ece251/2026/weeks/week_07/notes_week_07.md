@@ -251,6 +251,55 @@ Parse_Done:
     jr   $ra                # Return structurally to the caller (main) using $ra
 ```
 
+### Understanding SPIM Exceptions (`exceptions.s`)
+
+Whenever you run a file in SPIM, you will notice the very first output line on your terminal is:
+```text
+Loaded: /opt/homebrew/Cellar/spim/9.1.24/share/exceptions.s
+```
+
+**What are Exceptions in Computer Architecture?**
+In hardware architecture, an **Exception** (or Interrupt) is an unscheduled event that forcibly disrupts the normal flow of program execution. When a CPU encounters an impossible physical situation—such as dividing a binary number by zero, attempting to execute an invalid opcode sequence, or trying to access memory that doesn't physically exist—it cannot simply "keep going." The hardware inherently triggers an *Exception*, immediately halting the user's program and aggressively transferring control privileges to the Operating System (or a dedicated Kernel handler) to deal with the crisis.
+
+**What is the `exceptions.s` file?**
+Because SPIM is a simulator acting as a bare-bones operating system, it must manually provide an OS Kernel Exception Handler. The `exceptions.s` file is exactly that: a pre-written MIPS assembly file that SPIM permanently loads into the protected **Kernel Text Segment** (`.ktext` at `0x80000180`) before it ever looks at your user code. 
+
+When your code violently crashes, the simulated MIPS CPU hardware jumps directly to `0x80000180`. The `exceptions.s` routine reads the hardware **Cause Register** (Coprocessor 0, Register 13) to aggressively identify *why* the CPU halted. It then prints a structured error message based on an internal array of strings (`__excp`), and conventionally terminates your process to prevent catastrophic cascading failures.
+
+**What Exceptions Does It Catch?**
+If you look closely at the `exceptions.s` source code, it officially catches and translates over a dozen hardware faults for you, including:
+*   `[Address error in inst/data fetch]` (Unaligned memory access)
+*   `[Bad instruction address]`
+*   `[Error in syscall]` (Passing an invalid `$v0` code)
+*   `[Reserved instruction]` (Invalid machine code)
+*   `[Arithmetic overflow]` (Standard `add` exceeding 32-bit limits)
+*   `[Floating point]` (FPU division by zero)
+
+**Example: Triggering an Address Exception**
+The MIPS architecture rigidly enforces that all 32-bit Words must align on physical Memory Boundaries that are multiples of `4` (e.g., `0x10000000`, `0x10000004`, `0x10000008`). If you attempt to load a Word (`lw`) from an obscure address like `0x10010001`, the silicon gating will critically fail.
+
+Running the following "simplest exception" code:
+```assembly
+    .text
+    .globl main
+main:
+    # Trigger an Address Error Exception by loading a word from an unaligned address
+    li  $t0, 0x10010001     # Unaligned memory address (not a multiple of 4)
+    lw  $t1, 0($t0)         # Attempt to load a 32-bit word
+
+    # Exit cleanly (will never be reached)
+    li  $v0, 10
+    syscall
+```
+
+Will trigger SPIM's `exceptions.s` handler to catch the hardware failure and cleanly abort the run:
+```text
+Loaded: /opt/homebrew/Cellar/spim/9.1.24/share/exceptions.s
+Exception occurred at PC=0x0040002c
+  Unaligned address in inst/data fetch: 0x10010001
+  Exception 4  [Address error in inst/data fetch]  occurred and ignored
+```
+
 ## 1. Advanced Assembly Patterns
 
 We've mastered the mechanical foundations of MIPS: the load-store architecture, memory layouts, control flow (`beq`/`j`), and basic procedure calling. Today, we bridge these isolated mechanics to write complex, algorithmic software natively in hardware.
