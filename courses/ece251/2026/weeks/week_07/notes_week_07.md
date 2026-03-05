@@ -383,6 +383,7 @@ magic:      .word 0x5f3759df    # The famous Quake "magic number" constant
 threehalfs: .float 1.5
 half:       .float 0.5
 magnitude:  .float 16.0         # Simulated light vector magnitude (x)
+result_msg: .asciiz "1 / sqrt(16.0) is approx: "
 newline:    .asciiz "\n"
 
     .text
@@ -419,6 +420,11 @@ main:
     
     # (The value in $f0 can now be used to rapidly normalize the light reflection vector!)
     
+    # Print the descriptive text
+    li  $v0, 4                  # syscall 4: print string
+    la  $a0, result_msg
+    syscall
+
     # Print the calculated float result in $f0
     li  $v0, 2                  # syscall 2: print float
     mov.s $f12, $f0             # Move result to argument register for printing           
@@ -433,6 +439,12 @@ main:
     li  $v0, 10
     syscall
 ```
+
+*When you run this code, the output will yield:*
+```text
+1 / sqrt(16.0) is approx: 0.24957679
+```
+**Why this exact number?** Mathematically, computing $\frac{1}{\sqrt{16.0}}$ yields exactly $\frac{1}{4.0}$, or `0.25000000`. By exploiting integer bitwise architecture rather than performing a true floating-point division block, Quake approximated `0.24957679`. This introduces a microscopic 0.17% error rate, visually imperceptible to gamers, while saving massive amounts of compute cycles per pixel rendered!
 
 ---
 

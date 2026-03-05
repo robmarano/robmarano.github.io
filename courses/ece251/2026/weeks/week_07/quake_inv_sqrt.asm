@@ -3,6 +3,7 @@ magic:      .word 0x5f3759df    # The famous Quake "magic number" constant
 threehalfs: .float 1.5
 half:       .float 0.5
 magnitude:  .float 16.0         # Simulated light vector magnitude (x)
+result_msg: .asciiz "1 / sqrt(16.0) is approx: "
 newline:    .asciiz "\n"
 
     .text
@@ -39,6 +40,11 @@ main:
     
     # (The value in $f0 can now be used to rapidly normalize the light reflection vector!)
     
+    # Print the descriptive text
+    li  $v0, 4                  # syscall 4: print string
+    la  $a0, result_msg
+    syscall
+
     # Print the calculated float result in $f0
     li  $v0, 2                  # syscall 2: print float
     mov.s $f12, $f0             
