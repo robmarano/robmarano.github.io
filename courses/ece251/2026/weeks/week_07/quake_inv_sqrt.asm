@@ -36,6 +36,12 @@ main:
     sub.s $f8, $f6, $f8         # threehalfs - (x2 * y * y)
     mul.s $f0, $f0, $f8         # Final $f0 Result: y = y * [1.5 - (x2 * y * y)]
     
+    # 6. Second iteration of Newton-Raphson to further refine the approximation
+    mul.s $f8, $f0, $f0         # y * y
+    mul.s $f8, $f2, $f8         # x2 * (y * y)
+    sub.s $f8, $f6, $f8         # threehalfs - (x2 * y * y)
+    mul.s $f0, $f0, $f8         # Final $f0 Result: y = y * [1.5 - (x2 * y * y)]
+    
     # ----------------------------------------------
     
     # (The value in $f0 can now be used to rapidly normalize the light reflection vector!)

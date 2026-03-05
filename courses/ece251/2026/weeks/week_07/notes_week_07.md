@@ -416,6 +416,12 @@ main:
     sub.s $f8, $f6, $f8         # threehalfs - (x2 * y * y)
     mul.s $f0, $f0, $f8         # Final $f0 Result: y = y * [1.5 - (x2 * y * y)]
     
+    # 6. Second iteration of Newton-Raphson to further refine the approximation
+    mul.s $f8, $f0, $f0         # y * y
+    mul.s $f8, $f2, $f8         # x2 * (y * y)
+    sub.s $f8, $f6, $f8         # threehalfs - (x2 * y * y)
+    mul.s $f0, $f0, $f8         # Final $f0 Result: y = y * [1.5 - (x2 * y * y)]
+    
     # ----------------------------------------------
     
     # (The value in $f0 can now be used to rapidly normalize the light reflection vector!)
@@ -442,9 +448,9 @@ main:
 
 *When you run this code, the output will yield:*
 ```text
-1 / sqrt(16.0) is approx: 0.24957679
+1 / sqrt(16.0) is approx: 0.24999891
 ```
-**Why this exact number?** Mathematically, computing $\frac{1}{\sqrt{16.0}}$ yields exactly $\frac{1}{4.0}$, or `0.25000000`. By exploiting integer bitwise architecture rather than performing a true floating-point division block, Quake approximated `0.24957679`. This introduces a microscopic 0.17% error rate, visually imperceptible to gamers, while saving massive amounts of compute cycles per pixel rendered!
+**Why this exact number?** Mathematically, computing $\frac{1}{\sqrt{16.0}}$ yields exactly $\frac{1}{4.0}$, or `0.25000000`. By exploiting integer bitwise architecture to yield an initial guess, and mathematically refining it with *two* iterations of the Newton-Raphson method, Quake approximates `0.24999891`. This is stunningly precise (an error margin of just 0.000436%) while entirely avoiding the devastating CPU performance cost of a strict floating-point division instruction!
 
 ---
 
