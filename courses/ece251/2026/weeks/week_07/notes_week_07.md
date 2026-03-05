@@ -516,22 +516,33 @@ The following requirements hold for full assessment:
 *   **Instruction Set Architecture (ISA):** You must design your own ISA, document the design, and summarize it on a two-sided US Letter sized document. You are effectively creating your own ISA's "Green Card."
 *   **Submission Mechanism:** Each team will manage source code in a single GitHub repository and submit their final URL via Microsoft Teams. The repository must include all Verilog code files, markdown documentation, and supporting embedded images.
 
-### Comprehensive Assessment Rubric
-The full, formal grading parameters are officially hosted here: [Grading Rubric for Final Project](../assignments/grading_rubric_final_project.md). At a high level, the 100 base points are distributed across the following architectural domains:
+### Final Project Grading Rubric
+The formal grading parameters are detailed in the official rubric: [ECE 251 Final Project Rubric.xlsx](/ECE%20251%20Final%20Project%20Rubric.xlsx). The rubric evaluates your complete architectural design across **200 raw points** (which scales directly to the 100 base points defined in the syllabus).
 
-*   **[25 Points] ISA Design:** ALU Operand Size, Address Bus Size, Addressability, Register File Size, Opcode/Function/Shamt Sizes, Instruction Size, PC Increment, Immediate Size, and explicit support for R-type, I-type, and J-type instructions.
-*   **[Given] Memory Design & Implementation:** Instruction Memory, Data Memory, Memory Layout, and the Program Load mechanism into the Processor.
-*   **[30 Points] Processor Design & Implementation:** 
-    *   **Control & Datapath:** Clock Design, Overall Control Signals, Multiplexors, Main/ALU Decoders, Datapath Design.
-    *   **Logic Components:** PC increment adders, Register File, Sign Extender(s), and the ALU architecture (`and`, `or`, `nor`, `add`, `sub`, `slt`).
-    *   **Execution:** Integrating components to successfully execute a provided Assembly Program alongside one hand-compiled program translated directly into your ISA's machine code.
-*   **[45 Points] Project & Design Documentation:** Overall Design Explanation, Overall diagrams, timing diagrams, and explicit instructions to successfully demo the project. You must include a 5-minute maximum YouTube technical presentation embedded directly into your `README.md`.
+**1. ISA Design (34 Raw Points)**
+*   **[2 pts each]** ALU Operand Size, Address Bus Size, Addressability, Register File Size, Opcode Size, Function Size, `shamt` Size, Instruction Size, PC Increment, Immediate Size.
+*   **[2 pts each]** Explicit architectural support for R-type, I-type, and J-type instructions.
+*   **[2 pts each]** Implementation of robust Memory Reference Support alongside physical logic for R-type, I-type, and J-type instructions.
 
-### Extra Credit (30 Points Maximum)
-If your base machine boots successfully, you may attempt the following advanced features for extra credit:
-*   **Programmatic Assembler:** A software tool (e.g., Python) to compile text assembly into your raw machine code.
-*   **Pipeline Design Support:** Implementing a multi-stage execution pipeline.
-*   **Cache Support:** Designing and integrating L1 Memory Caches.
+**2. Memory Design & Implementation (16 Raw Points)**
+*   **[3 pts each]** Instruction Memory and Data Memory structure.
+*   **[5 pts each]** Memory Layout definitions and the physical Program Load into Processor mechanism.
+
+**3. Processor Design & Implementation (120 Raw Points)**
+*   **Control & Datapath:** Overall Control Signals (10 pts), Main Decoder Details (5 pts), ALU Decoder (5 pts), Datapath Design (5 pts), Multiplexors (4 pts), Controller-Datapath Integration (4 pts), Clock Design (2 pts).
+*   **Component Logic:** Proper PC incrementing for R/I/J types & Conditional Branching (5 pts each), PC increment adders (3 pts), Register File (5 pts), Sign Extender(s) (5 pts), ALU combinatorial logic (4 pts).
+*   **Execution & Integration:** Program Load Integration (4 pts), physical computation of R/I/J Instructions (5 pts each).
+*   **Software Validation (Simulation):** Executing a Provided Assembly Program (4 pts), Hand-compiled Program (5 pts), Program 0 [Simple Assembly] (5 pts), Program 1 [Leaf Procedure] (10 pts), Program 2 [Nested Procedure] (5 pts), Program 3 [Recursive Procedure] (5 pts).
+
+**4. Project & Design Documentation (30 Raw Points)**
+*   **[5 pts each]** Overall Design Explanation, complete Architectural Diagrams, and explicit instructions to Successfully Demo the processor logic.
+*   **[5 pts each]** Creating explicit, step-by-step Timing Diagrams for R-type, I-type, and J-type executions.
+
+### Extra Credit (Up to 70 Raw Points)
+If your base von Neumann machine boots successfully, you may attempt the following advanced architectural features for extra credit:
+*   **[20 pts each]** Implementing multi-stage **Pipeline Design Support** or integrating **L1 Cache Support**.
+*   **[15 pts]** Building a **Programmatic Assembler** (e.g., in Python/C) to automatically map text mnemonics uniformly into your custom ISA machine code.
+*   **[5 pts each]** Writing individual Verilog Test Benches for each modular component, integrating explicit Structural Modeling (signal delays), and recording a structured technical Demo Video.
 
 *Note: The Professor will be hosting optional weekend lab sessions leading up to the deadline to assist with simulation debugging or architectural design consultation.*
 
