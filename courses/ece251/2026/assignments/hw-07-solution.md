@@ -54,3 +54,36 @@ fib_one:
 ```
 *   **A. Hardware Overwrite:** The Return Address register (`$ra`) is definitively destroyed (overwritten). The `jal` execution natively and forcefully saves the address of the immediately following instruction (`PC + 4`) directly into `$ra`. Because calculating Fibonacci explicitly requires the procedure to call `jal` *twice internally* (once for `fib(n-1)` and again for `fib(n-2)`) without shifting that initial return branch offset into the stack, the old return marker is erased forever.
 *   **B. The `jr $ra` Failure:** When the recursion bottoms out into the base case (`n=1` or `n=0`) and attempts to unfold natively, the code executes `jr $ra`. However, because the `$ra` points to the recursive block literally inside itself (the result of the internal `jal` calls) rather than the original `main` entry marker, the program enters an infinite structural loop. It will continually bounce between `jr $ra` and the inner recursively executed loops, never returning dynamically to `main`. This generates a fatal stack fault or timeout.
+
+---
+
+### Part 3: Architecture Translation
+
+**5. C to MIPS Assembly Translation**
+
+*   **Step-by-Step Logic**: Calculate the indices first. Integers require a 4-byte offset multiplication.
+```assembly
+    lw   $t0, 16($s7)      # $t0 = B[4]  (4 * 4 bytes = 16 offset)
+    lw   $t1, 12($s7)      # $t1 = B[3]  (3 * 4 bytes = 12 offset)
+    sub  $t0, $t0, $t1     # $t0 = B[4] - B[3]
+    sll  $t0, $t0, 2       # Multiply index result by 4 (to get byte offset for integer array A)
+    add  $t0, $t0, $s6     # $t0 = exact Base Address of A + target offset
+    lw   $t1, 0($t0)       # $t1 = A[B[4] - B[3]] (load actual array value)
+    add  $s0, $s1, $t1     # f = g + A[B[4] - B[3]]
+```
+
+**6. MIPS to Binary/Hex Machine Code**
+*   **Target Instruction:** `sw $t5, 16($t0)`
+*   **Format Type:** I-Type 
+*   **Opcode (`sw`):** `43` in decimal $\rightarrow$ `10 1011` in binary.
+*   **Base Register (`rs`):** `$t0` is register `8` $\rightarrow$ `0 1000` in binary.
+*   **Target/Source Register (`rt`):** `$t5` is register `13` $\rightarrow$ `0 1101` in binary.
+*   **Immediate Offset:** `16` $\rightarrow$ `0000 0000 0001 0000` in 16-bit binary.
+
+**Final Compilation Alignment:**
+| opcode (6 bits) | rs (5 bits) | rt (5 bits) | immediate (16 bits) |
+| :---: | :---: | :---: | :---: |
+| `101011` | `01000` | `01101` | `0000000000010000` |
+
+*   **Final Binary:** `1010 1101 0000 1101 0000 0000 0001 0000`
+*   **Final Hexadecimal:** `0xAD0D0010`
