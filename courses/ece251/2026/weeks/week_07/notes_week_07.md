@@ -259,7 +259,7 @@ Loaded: /opt/homebrew/Cellar/spim/9.1.24/share/exceptions.s
 ```
 
 **What are Exceptions in Computer Architecture?**
-In hardware architecture, an **Exception** (or Interrupt) is an unscheduled event that forcibly disrupts the normal flow of program execution. When a CPU encounters an impossible physical situation—such as dividing a binary number by zero, attempting to execute an invalid opcode sequence, or trying to access memory that doesn't physically exist—it cannot simply "keep going." The hardware inherently triggers an *Exception*, immediately halting the user's program and aggressively transferring control privileges to the Operating System (or a dedicated Kernel handler) to deal with the crisis.
+In hardware architecture, an **Exception** (or Interrupt) is an unscheduled event that forcibly disrupts the normal flow of program execution. When a CPU encounters an impossible physical situation, such as dividing a binary number by zero, attempting to execute an invalid opcode sequence, or trying to access memory that doesn't physically exist, it cannot simply "keep going." The hardware inherently triggers an *Exception*, immediately halting the user's program and aggressively transferring control privileges to the Operating System (or a dedicated Kernel handler) to deal with the crisis.
 
 **What is the `exceptions.s` file?**
 Because SPIM is a simulator acting as a bare-bones operating system, it must manually provide an OS Kernel Exception Handler. The `exceptions.s` file is exactly that: a pre-written MIPS assembly file that SPIM permanently loads into the protected **Kernel Text Segment** (`.ktext` at `0x80000180`) before it ever looks at your user code. 
