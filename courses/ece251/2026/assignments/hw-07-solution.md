@@ -5,7 +5,7 @@
 ### Part 1: Advanced Assembly & Hardware Profiling
 
 **1. The Cost of Hardware Execution**
-*   **A.** **The Simulation Illusion:** Emulators like SPIM execute instructions sequentially on modern high-speed host processors. SPIM artificially parses every MIPS command natively as exactly 1 software execution "step." Therefore, executing a block sequence of 2 instructions will empirically finish 7x faster in the terminal than iterating through a loop of 14 instructions, regardless of the underlying hardware complexity being modeled.
+*   **A.** **The Emulator Timing Abstraction:** Emulators like SPIM execute instructions sequentially on modern high-speed host processors. SPIM artificially parses every MIPS command natively as exactly 1 software execution "step." Therefore, executing a block sequence of 2 instructions will empirically finish 7x faster in the terminal than iterating through a loop of 14 instructions, regardless of the underlying hardware complexity being modeled.
 *   **B.** **The Hardware Justification:** On physical 1999 silicon (like Pentium III or MIPS processors), instructions do *not* execute in equal 1-cycle steps as modeled by the simulator. Typical ALUs execute basic integer math (`sub`, `srl`) in natively **1 clock cycle**. However, dispatching a single-precision floating-point division instruction (`div.s`) to the FPU could catastrophically stall the entire processor pipeline for **up to 54 individual clock cycles**. Thus, trading 1 agonizing 54-cycle FPU stall for 14 rapid 1-cycle integer hardware operations yielded massive performance gains for Quake graphics rendering.
 
 **2. Exception Handling Architecture**
