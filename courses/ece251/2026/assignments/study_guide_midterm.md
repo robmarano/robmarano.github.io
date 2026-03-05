@@ -65,9 +65,22 @@ Which code sequence executes the most instructions? Which will be faster? What i
 
 ## Chapter 2: Instructions (Language of the Computer)
 
-### Key Concepts
-- **MIPS Registers:** `$t0-$t9` (temporary), `$s0-$s7` (saved), `$a0-$a3` (arguments), `$v0-$v1` (return values), `$ra` (return address), `$sp` (stack pointer).
-- **Instruction Formats:** R-type (Register), I-type (Immediate), J-type (Jump).
+### Key Concepts & ISA Basics
+- **MIPS Registers:** `$t0-$t9` (temporary), `$s0-$s7` (saved across calls), `$a0-$a3` (arguments), `$v0-$v1` (return values), `$ra` (return address), `$sp` (stack pointer).
+  - *From the Green Sheet:* Registers `$s0-$s7` must be structurally saved/restored by the callee if modified, whereas `$t0-$t9` are caller-saved.
+- **Assembly Language Structure:**
+  - `.data`: Physical memory section for declaring global data and static variables in RAM.
+  - `.text`: Executive section for code instructions. The `main:` label designates the mainline execution entry point.
+- **Instruction Formats & bit-wise Decoding:** Every MIPS instruction decodes into a strict 32-bit pattern, divided into control definitions:
+  - **R-Type:** `opcode(6) | rs(5) | rt(5) | rd(5) | shamt(5) | funct(6)`
+    - *Decoding:* Used for arithmetic/logical operations between hardware registers. `opcode` is inherently 0; `funct` dictates the exact physical operation to route to the ALU. `shamt` determines the shift amount.
+  - **I-Type:** `opcode(6) | rs(5) | rt(5) | immediate(16)`
+    - *Decoding:* Used for loads/stores, branching relative addresses, and arithmetic with constants. The 16-bit immediate is mathematically mapped (usually via 2s-complement) to determine structural offsets.
+  - **J-Type:** `opcode(6) | address(26)`
+    - *Decoding:* Used for unconditional jumps. The native 26-bit target address shifted left by 2 bytes maps the absolute jump destination.
+- **Procedures and Stack Execution (`$sp`):**
+  - **Leaf Procedures:** Functions that do not natively call other functions. They allocate physical stack space by moving `$sp` downward (`addi $sp, $sp, -X`), store any utilized `$s0-$s7` registers out of harm's way, execute logical manipulations, pop them back symmetrically, and structurally return using `jr $ra`.
+  - **Nested Procedures:** Functions that call other isolated functions. Because the internal `jal` (Jump and Link) permanently overwrites `$ra` with a new return address, a nested procedure *must* save its primary `$ra` physically onto the stack. After the internal `jal` concludes, it carefully restores that original `$ra` off the stack before finalizing its own return via `jr $ra`.
 
 ### Worked Example 2.1: Binary & Two's Complement Constraints
 **Problem:** Determine the two's complement constraint integer for the raw binary address `11100111`.
