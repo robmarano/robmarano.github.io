@@ -453,7 +453,7 @@ main:
 **Why this exact number?** Mathematically, computing $\frac{1}{\sqrt{16.0}}$ yields exactly $\frac{1}{4.0}$, or `0.25000000`. By exploiting integer bitwise architecture to yield an initial guess, and mathematically refining it with *two* iterations of the Newton-Raphson method, Quake approximates `0.24999891`. This is stunningly precise (an error margin of just 0.000436%) while entirely avoiding the use of a strict floating-point division instruction.
 
 ### Performance Analysis: Instruction Count vs. Hardware Latency
-In an engineering context, we must rely on hard data rather than hyperbole to justify algorithm selection. Let's compare the Quake approach against the standard IEEE-754 approach.
+In an engineering context, let's compare the Quake approach against the standard IEEE-754 approach to demonstrate the marked performance improvement.
 
 **Standard IEEE Approach:** 2 Instructions
 ```assembly
