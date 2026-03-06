@@ -46,6 +46,8 @@ Here is the essential reference table of SPIM library calls you will need to des
 ### Example: Interactive I/O (Prompting the User)
 Here is a complete, runnable example demonstrating how to use syscalls to print string prompts, wait for the user to type on their keyboard, and capture their input into memory:
 
+**Source Code Reference:** [`interactive_io.asm`](interactive_io.asm)
+
 ```assembly
     .data
 prompt_name:  .asciiz "Please enter your name: "
@@ -102,6 +104,9 @@ A powerful capability of SPIM is its native support for opening, reading, and cl
 
 Suppose you have a text file named `data.txt` in the exact same directory as your `.asm` file. 
 The literal contents of `data.txt` are 5 integers separated by a newline (`\n` on Mac/Linux, or `\r\n` on Windows).
+
+**Target File Reference:** [`data.txt`](data.txt)
+
 ```text
 10
 20
@@ -111,6 +116,8 @@ The literal contents of `data.txt` are 5 integers separated by a newline (`\n` o
 ```
 
 The following code demonstrates how to open that file, read the dense string of ASCII characters into a buffer space reserved dynamically in the `.data` Memory Segment (`0x10010000`), convert those characters into mathematical integers, and then use a `jal` procedure to calculate their average.
+
+**Source Code Reference:** [`file_io.asm`](file_io.asm)
 
 ```assembly
     .data
@@ -279,6 +286,9 @@ If you look closely at the `exceptions.s` source code, it officially catches and
 The MIPS architecture rigidly enforces that all 32-bit Words must align on physical Memory Boundaries that are multiples of `4` (e.g., `0x10000000`, `0x10000004`, `0x10000008`). If you attempt to load a Word (`lw`) from an obscure address like `0x10010001`, the silicon gating will critically fail.
 
 Running the following "simplest exception" code:
+
+**Source Code Reference:** [`exception_demo.asm`](exception_demo.asm)
+
 ```assembly
     .text
     .globl main
@@ -308,6 +318,9 @@ We've mastered the mechanical foundations of MIPS: the load-store architecture, 
 When we talk about "Arrays" in assembly, we are merely talking about a contiguous block of data sitting in Main Memory (usually the `.data` or Heap segments). Because MIPS memory is byte-addressed, and our standard integers ("words") are 32 bits (4 bytes) long, we cannot simply increment an array index by `1` to move to the next integer. We must increment our memory pointer by `4`.
 
 **Example: Summing an Array of 5 Integers**
+
+**Source Code Reference:** [`sum_array.asm`](sum_array.asm)
+
 ```assembly
     .data
 myArray: .word 10, 20, 30, 40, 50   # 5 integers (20 bytes total)
@@ -377,6 +390,9 @@ At the time, performing a standard CPU square root followed by a division instru
 Here is a simplified MIPS implementation of that exact logic. Notice how it seamlessly moves raw bits between the floating-point (`$f12`) and integer (`$t0`) registers using `mfc1` and `mtc1` to perform rapid integer math on a floating-point structure!
 
 **Simplified Lighting Reflection Example:**
+
+**Source Code Reference:** [`quake_inv_sqrt.asm`](quake_inv_sqrt.asm)
+
 ```assembly
     .data
 magic:      .word 0x5f3759df    # The famous Quake "magic number" constant
@@ -480,6 +496,12 @@ As seen in the code block above, the Quake method utilizes roughly 14 individual
 **The Emulator Timing Abstraction:** If you write a benchmark script to loop both algorithms 100,000 times in the `SPIM` emulator, the Standard approach will finish roughly 3x faster than the Quake approach. Why? Because software emulators like SPIM execute instructions sequentially on your modern host Mac/PC CPU. SPIM treats every instruction as taking exactly 1 software "step", abstracting away the realities of the physical silicon. This creates a severe pedagogical blind spot where 2 software steps empirically beats 14 software steps, regardless of the underlying structural pipeline bottlenecks those steps might trigger on physical hardware.
 
 To explicitly prove this mathematical abstraction, here is the raw output from measuring `SPIM` executing both programs 100,000 times natively on my terminal (`time spim -file ...`):
+
+**Benchmark References:**
+*   [`bench_standard.asm`](bench_standard.asm)
+*   [`bench_quake.asm`](bench_quake.asm)
+*   [`Makefile`](Makefile)
+
 ```text
 $ time spim -file bench_standard.asm
 spim -file bench_standard.asm  0.04s user 0.03s system 96% cpu 0.074 total
