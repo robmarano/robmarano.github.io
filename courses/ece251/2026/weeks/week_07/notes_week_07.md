@@ -39,6 +39,10 @@ Here is the essential reference table of SPIM library calls you will need to des
 | **Exit** | 10 | - | Terminates program execution cleanly |
 | **Print Char** | 11 | `$a0` = character to print | Prints a single ASCII character |
 | **Read Char** | 12 | - | User inputs character; Returned in `$v0` |
+| **Open File** | 13 | `$a0` = filename, `$a1` = flags, `$a2` = mode | Opens file; File Descriptor returned in `$v0` |
+| **Read File** | 14 | `$a0` = file desc., `$a1` = buffer, `$a2` = max length | Reads from file into memory buffer |
+| **Write File** | 15 | `$a0` = file desc., `$a1` = buffer, `$a2` = output length | Writes memory buffer out to file |
+| **Close File** | 16 | `$a0` = file descriptor | Closes the open file |
 | **Exit (with value)** | 17 | `$a0` = termination result | Terminates program, returns value to OS |
 
 *Note: The `Print String` syscall (4) structurally relies on the target string being explicitly terminated by a `NULL` byte. This is handled automatically by the compiler's `.asciiz` directive, but must be mathematically managed if you use the raw `.ascii` declaration.*
@@ -78,7 +82,7 @@ main:
     # 4. Read Integer from Keyboard
     li  $v0, 5              # syscall 5: read integer
     syscall                 # Program pauses waiting for user to type and press Enter
-    move $s0, $v0           # IMMEDIATELY save the returned integer into a safe register ($s0)
+    add  $s0, $0, $v0       # IMMEDIATELY save the returned integer into a safe register ($s0)
     
     # 5. Echo the Results Back
     li  $v0, 4              # syscall 4: print string
@@ -86,7 +90,7 @@ main:
     syscall
     
     li  $v0, 1              # syscall 1: print integer
-    move $a0, $s0           # load our saved age from $s0
+    add  $a0, $0, $s0       # load our saved age from $s0
     syscall
     
     # Print trailing newline
@@ -136,18 +140,18 @@ main:
     li  $a1, 0              # $a1 = flags (0 = read-only)
     li  $a2, 0              # $a2 = mode (ignored)
     syscall
-    move $s0, $v0           # IMMEDIATELY save the "File Descriptor" returned in $v0 to $s0 safely
+    add  $s0, $0, $v0       # IMMEDIATELY save the "File Descriptor" returned in $v0 to $s0 safely
     
     # 2. Read the File into Memory
     li  $v0, 14             # syscall 14: read from file
-    move $a0, $s0           # $a0 = File descriptor we just saved
+    add  $a0, $0, $s0       # $a0 = File descriptor we just saved
     la  $a1, file_buffer    # $a1 = address of our 1024 byte buffer in the `.data` segment
     li  $a2, 1024           # $a2 = maximum number of bytes to read
     syscall
     
     # 3. Close the File
     li  $v0, 16             # syscall 16: close file
-    move $a0, $s0           # $a0 = File Descriptor
+    add  $a0, $0, $s0       # $a0 = File Descriptor
     syscall
     
     # 4. Convert the Raw ASCII Text Buffer into Physical Integers
@@ -160,7 +164,7 @@ main:
     la  $a0, myArray        # Pass the base address of the array as Argument 0
     li  $a1, 5              # Pass the length of the array as Argument 1
     jal average             # Jump and Link to the procedure (saves Return Address to $ra)
-    move $t0, $v0           # Save the calculated average returned in $v0
+    add  $t0, $0, $v0       # Save the calculated average returned in $v0
     
     # 6. Print the Results
     li  $v0, 4              # syscall 4: print string
@@ -168,7 +172,7 @@ main:
     syscall
     
     li  $v0, 1              # syscall 1: print integer
-    move $a0, $t0           # load our average
+    add  $a0, $0, $t0       # load our average
     syscall
     
     # Print trailing newline
@@ -188,7 +192,7 @@ main:
 average:
     li  $t0, 0              # Loop counter
     li  $t1, 0              # Running sum
-    move $t2, $a0           # Copy the base address to $t2 so we can shift it
+    add  $t2, $0, $a0       # Copy the base address to $t2 so we can shift it
 
 Avg_Loop:
     beq $t0, $a1, Avg_Done  # If counter == size, we reached the end
@@ -214,8 +218,8 @@ Avg_Done:
 # Returns:   None (modifies memory directly at myArray)
 # ---------------------------------------------------- #
 convert_ascii_to_int:
-    move $t0, $a0           # $t0 = Parse pointer (sliding along file_buffer)
-    move $t1, $a1           # $t1 = Store pointer (sliding along myArray)
+    add  $t0, $0, $a0       # $t0 = Parse pointer (sliding along file_buffer)
+    add  $t1, $0, $a1       # $t1 = Store pointer (sliding along myArray)
     li   $t2, 0             # $t2 = Current integer accumulator
     li   $t3, 0             # $t3 = Successful integers parsed counter
     li   $t4, 10            # $t4 = Constant math multiplier (10)
@@ -349,7 +353,7 @@ Loop_Start:
 Loop_End:
     # Print the final sum ($t3)
     li  $v0, 1          # syscall 1 = print integer
-    move $a0, $t3       # move our accumulated sum into the argument register
+    add  $a0, $0, $t3       # move our accumulated sum into the argument register
     syscall             # execute print
     
     # Print trailing newline
