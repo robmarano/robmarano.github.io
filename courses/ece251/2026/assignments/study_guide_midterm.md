@@ -9,7 +9,6 @@ To best prepare for the Midterm Examination, students must be capable of bridgin
 ## Table of Contents
 1. [Chapter 1: Computer Abstractions and Technology](#chapter-1-computer-abstractions-and-technology)
 2. [Chapter 2: Instructions (Language of the Computer)](#chapter-2-instructions-language-of-the-computer)
-3. [Digital Logic & Hardware Architecture](#digital-logic--hardware-architecture)
 
 ---
 
@@ -163,91 +162,3 @@ NEXT_ITER:
 DONE:
     # Function successfully routed and finalized natively
 ```
-
----
-
-## SystemVerilog Basics & Hardware Architecture
-
-### Key Concepts
-- **Combinational Logic:** Digital logic whose physical output depends purely on the current state of its inputs. In SystemVerilog, this is architected using continuous assignments (`assign`) for simple dataflow, or isolated `always_comb` blocks for complex routing and decision logic.
-- **Sequential Logic:** Digital memory structures whose output depends on both the current inputs and the *previous* state of the system. Modeled natively in SystemVerilog using `always_ff @(posedge clk)` blocks that are triggered precisely on the rising edge of a clock signal.
-- **Clocks and Busses:** Standard wires (`logic`) can represent singular 1-bit flags (like a clock), or multi-bit busses such as `logic [7:0] data_bus` (which physically routes 8 independent bits in parallel). Multiplexors and conditional logic dynamically route these bus signals across the CPU.
-
-### Worked Example 3.1: Writing a Hardware Module and Testbench
-**Problem:** Construct a foundational SystemVerilog module implementing a sequential Register (a D Flip-Flop) alongside its corresponding simulation Testbench.
-**Solution:**
-A hardware module encapsulates the physical logic and defines structural input/output ports. A testbench represents an isolated virtual environment that instantiates the module, generates simulated signals (like toggling a clock), and tests the logical outputs.
-
-```systemverilog
-// 1. Hardware Module Definition
-module d_flip_flop(
-    input logic clk,
-    input logic d,
-    output logic q
-);
-    // Sequential logic: triggered purely on the rising edge of the clock
-    always_ff @(posedge clk) begin
-        q <= d; // Non-blocking assignment for secure sequential state updates
-    end
-endmodule
-
-// 2. Simulation Testbench
-module tb_d_flip_flop();
-    logic clk, d, q; // Local testbench wires to drive the design
-    
-    // Instantiate the Device Under Test (DUT)
-    d_flip_flop dut(.clk(clk), .d(d), .q(q));
-    
-    // Generate a simulated physical clock (toggles every 5 time units)
-    always #5 clk = ~clk;
-    
-    initial begin
-        clk = 0; d = 0; // Initialize starting signal states
-        #10 d = 1;      // Drive inputs high and evaluate logic
-        #10 d = 0;
-        #20 $finish;    // Terminate simulation cleanly
-    end
-endmodule
-```
-
-### Worked Example 3.2: Designing an 8-bit SystemVerilog ALU
-**Problem:** Show how to construct an 8-bit ALU module that accepts two 8-bit data operands, utilizes a 4-bit operation code (Opcode) bus, handles basic mathematical and logical combinations (Add, Subtract, AND, OR, NOT, Shift Left/Right), and routes memory via an 8-bit address bus utilizing decision combination logic.
-
-**Solution:**
-This implementation necessitates an `always_comb` combinational logic block acting essentially as a massive hardware multiplexor. A structural `case` statement evaluates the 4-bit opcode bus to decide which physical circuit's manipulation gets routed natively to the 8-bit `alu_out_bus`.
-
-```systemverilog
-module alu_8bit(
-    input  logic [7:0] operand_a,    // 8-bit Data Bus (Operand A)
-    input  logic [7:0] operand_b,    // 8-bit Data Bus (Operand B)
-    input  logic [3:0] alu_opcode,   // 4-bit Operation Bus
-    input  logic [7:0] address_bus,  // 8-bit Address Bus (Routing/Memory target)
-
-    output logic [7:0] alu_out_bus,  // 8-bit Result Data Bus
-    output logic       zero_flag     // 1-bit Condition Flag
-);
-
-    // Combinational logic block for decision/routing circuitry
-    always_comb begin
-        // Default routing to prevent unwanted physical latch generation
-        alu_out_bus = 8'b0;
-        
-        case(alu_opcode)
-            4'b0000: alu_out_bus = operand_a & operand_b;       // Logical AND
-            4'b0001: alu_out_bus = operand_a | operand_b;       // Logical OR
-            4'b0010: alu_out_bus = operand_a + operand_b;       // Arithmetic Add
-            4'b0110: alu_out_bus = operand_a - operand_b;       // Arithmetic Subtract
-            4'b0111: alu_out_bus = ~operand_a;                  // Logical NOT (Invert A)
-            4'b1000: alu_out_bus = operand_a << 1;              // Shift Logic Left
-            4'b1001: alu_out_bus = operand_a >> 1;              // Shift Logic Right
-            4'b1111: alu_out_bus = address_bus;                 // Route Address directly to output
-            default: alu_out_bus = 8'b0;                        // Safe default state isolation
-        endcase
-    end
-
-    // Combinational logic calculating the Zero Flag status
-    assign zero_flag = (alu_out_bus == 8'b0);
-
-endmodule
-```
-*(Note: This logic structure implements native **Combinational Logic**. The outputs structurally update instantaneously whenever the inputs `operand_a`, `operand_b`, `address_bus`, or `alu_opcode` transform. Sequential memory architectures would be introduced structurally outside the ALU to "save" the resulting `alu_out_bus` computation onto a Register component triggered by a clock).*
