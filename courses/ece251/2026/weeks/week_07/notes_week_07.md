@@ -318,6 +318,31 @@ Exception occurred at PC=0x0040002c
 
 We've mastered the mechanical foundations of MIPS: the load-store architecture, memory layouts, control flow (`beq`/`j`), and basic procedure calling. Today, we bridge these isolated mechanics to write complex, algorithmic software natively in hardware.
 
+### A Pedagogical Note on Pseudo-Instructions (`move`, `li`, `la`)
+Before we dive into advanced patterns, let's address a structural quirk of the SPIM simulator and the MIPS assembler: **Pseudo-instructions**. 
+
+Pseudo-instructions are "fake" assembly commands that do not physically exist in the MIPS hardware silicon. They are provided purely as a convenience by the software Assembler (like SPIM), which quietly translates them into one or two actual native hardware instructions right before execution.
+
+**1. `move` (Copying Registers)**
+You will often see tutorials broadly use `move $t0, $t1`. However, the MIPS hardware architecture has no actual `move` command in silicon! To physically copy a register, you must systematically exploit the hardwired `$0` (Zero) register using the ALU. Adding zero to a number leaves it unchanged:
+*   **Pseudo-instruction:** `move $t0, $t1`
+*   **Native Hardware Translation:** `add $t0, $0, $t1`
+
+We strictly enforce this native format to prove exactly how the ALU routes data physically!
+
+**2. `li` (Load Immediate)**
+MIPS instructions are rigidly exactly *32-bits long*. The I-Type (Immediate) machine code format only grants you 16 literal bits to store a constant number. If you try to load a massive number like `100,000`, it physically cannot fit inside the instruction! 
+To bypass this limitation seamlessly, the software Assembler provides `li $t0, 100000`. Behind your back, it secretly splits the operation into two native hardware commands:
+1. `lui` (Load Upper Immediate) to securely fill the top 16 bits.
+2. `ori` (Or Immediate) to mathematically inject the bottom 16 bits.
+
+*Why do we allow it?* Forcing you to manually translate every large decimal into binary, slice it seamlessly in half, and write two native instructions for every constant is tedious and distracts heavily from the core algorithmic logic of your program (e.g., loops and recursion).
+
+**3. `la` (Load Address)**
+When you define a label in the `.data` segment (e.g., `myArray:`), the compiler/linker eventually assigns it a physical 32-bit SRAM/DRAM address (commonly `0x10010000` via SPIM). Because you, the programmer, do not mathematically know exactly what that 32-bit mapped address will be until the code physically compiles, you simply use `la $t0, myArray`. Similarly to `li`, the assembler secretly replaces this abstraction with native `lui` and `ori` instructions once it structurally finalizes the 32-bit memory map!
+
+*Why do we allow it?* Attempting to manually hardcode 32-bit RAM addresses independently without the linker's mathematical assistance is nearly impossible for dynamic software!
+
 ### Iterating Arrays and Words
 When we talk about "Arrays" in assembly, we are merely talking about a contiguous block of data sitting in Main Memory (usually the `.data` or Heap segments). Because MIPS memory is byte-addressed, and our standard integers ("words") are 32 bits (4 bytes) long, we cannot simply increment an array index by `1` to move to the next integer. We must increment our memory pointer by `4`.
 
