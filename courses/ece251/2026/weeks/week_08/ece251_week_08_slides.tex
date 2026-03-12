@@ -204,11 +204,11 @@ Mathematically packed into three distinct fields:
 \begin{frame}[fragile]{6. The Quake III Inverse Square Root Hack}
 \begin{itemize}
     \item How do we approximate $\frac{1}{\sqrt{x}}$ without halting the CPU for 20+ cycles?
-    \item \textbf{The MIPS Trick:} Move the float to an integer register, bit-shift right, and subtract from a magic constant!
+    \item \textbf{The MIPS Trick:} Move float to integer register, bit-shift right, subtract from magic constant!
 \end{itemize}
-\vspace{0.2cm}
 \begin{center}
-\begin{minipage}{0.9\textwidth}
+\begin{minipage}{0.85\textwidth}
+\scriptsize
 \begin{verbatim}
 # Move float bits from FPU ($f12) into CPU Integer Register ($t0)
 mfc1  $t0, $f12          
@@ -220,11 +220,10 @@ sub   $t0, $t2, $t1      # Integer subtraction
 \end{verbatim}
 \end{minipage}
 \end{center}
-\vspace{0.2cm}
 \begin{itemize}
     \item \textbf{Why it works:} IEEE 754 structure is inherently logarithmic.
-    \item Shifting bits right (\texttt{i >> 1}) mathematically scales the float exponent by 0.5 (calculating $x^{-0.5}$).
-    \item Subtracting from \texttt{0x5f3759df} negates the target exponent, approximates the fractional curve, and perfectly re-aligns the $+127$ bias!
+    \item Shifting bits right (\texttt{i >> 1}) mathematically scales exponent by 0.5 (calculating $x^{-0.5}$).
+    \item Subtracting from \texttt{0x5f3759df} negates target exponent, approximates curve, and re-aligns $+127$ bias!
 \end{itemize}
 \end{frame}
 
