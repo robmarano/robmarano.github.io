@@ -13,3 +13,4 @@
 * Extracted the C-to-MIPS array iteration and MIPS Machine Code decoding examples from `CSCI_155_Fall_2014_Exam_1_M01.tex`.
 * Extracted the K-Map logic simplification and Boolean Expansion examples from `CSCI_155_Fall_2014_Exam_1_M01.tex`.
 * Synthesized the comprehensive `study_guide_midterm.md` containing all historical examples explicitly mapped to SystemVerilog and MIPS conventions, applying `_ {` MathJax subscript invariants.
+* Integrated a mathematical explanation analyzing how the raw bit-shifting inside `quake_calc.s` exploits the IEEE 754 exponent bias structure to perform Fast Inverse Square Roots.

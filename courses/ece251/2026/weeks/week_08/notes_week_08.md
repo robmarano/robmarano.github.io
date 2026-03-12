@@ -257,3 +257,36 @@ Because no silicon can propagate these cascading tests and shifts instantaneousl
    $-(0 \times 0.5 \quad+\quad 1 \times 0.25 \quad+\quad 1 \times 0.125 \quad+\quad 0 \times 0.0625 \quad+\quad 1 \times 0.03125)$
    $-(0.25 + 0.125 + 0.03125) = \mathbf{-0.40625_ {10}}$.
 
+---
+
+## 6. The Quake III Inverse Square Root: Exploiting IEEE 754
+
+During Weeks 06 and 07, we observed the famous **Quake III Arena Fast Inverse Square Root** algorithm implemented in MIPS (`quake_calc.s`). Without understanding Chapter 3 and the IEEE 754 standard, the core logic appears to be pure sorcery.
+
+Let us review the exact MIPS core logic utilized to approximate $\frac{1}{\sqrt{x}}$:
+
+```mips
+# Move float bits from FPU ($f12) into CPU Integer Register ($t0)
+mfc1  $t0, $f12          
+
+# i = 0x5f3759df - ( i >> 1 );
+srl   $t1, $t0, 1        # Bit-shift right by 1
+lw    $t2, magic         # Load magic number (0x5f3759df)
+sub   $t0, $t2, $t1      # Integer subtraction
+
+# Move integer bits ($t0) back to FPU ($f0)
+mtc1  $t0, $f0           
+```
+
+### How IEEE 754 Makes This Possible
+
+Why does moving a floating-point number into an integer register, shifting its bits, and subtracting it from `0x5f3759df` yield a phenomenally accurate first-pass approximation for $\frac{1}{\sqrt{x}}$?
+
+The brilliance lies fundamentally in the **IEEE 754 Exponent Bias** and the **Mantissa (Fraction) Normalization** we just studied!
+
+1. **Logarithmic Representation:** By defining a floating-point number $x$ as $(1 + m) \times 2^{e}$, taking the log base-2 yields $\log_2(x) = \log_2(1+m) + e$. Because $m$ is constrained between 0 and 1, $\log_2(1+m) \approx m + \mu$ (where $\mu$ is a tuning constant). This means the raw 32-bit integer representation of the IEEE 754 float is essentially a scaled version of its own logarithm!
+2. **The Mathematics of $\frac{1}{\sqrt{x}}$:** Calculating an inverse square root is mathematically evaluating $x^{-0.5}$. In logarithmic space, this is simply multiplying the logarithm by $-0.5$.
+3. **The Bit Shift (`i >> 1`):** In the raw integer representation, shifting bits right by one position is exactly calculating the division by 2 (the $0.5$ in $-0.5$). 
+4. **The Magic Constant (`0x5f3759df`):** Because we must negate the exponent ($-0.5$) and correctly subtract the IEEE 754 bias offset (+127), we cannot simply subtract from zero. Mathematical derivation of the optimal bias error offset ($\mu$) combined with the bit-shifted IEEE 754 exponent bias geometrically yields the hex constant `0x5f3759df`.
+
+By exploiting the physical 32-bit structure of IEEE 754, the programmer bypassed the massive latency of FPU division and square-root operations—performing a complex non-linear curve approximation using a single sub-nanosecond integer bit-shift (`srl`) and an integer subtract (`sub`)!
