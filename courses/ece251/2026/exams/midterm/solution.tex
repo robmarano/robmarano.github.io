@@ -47,7 +47,7 @@
 
 % *** COVER *** 
 \begin{minipage}{0.3\textwidth}
-    \includegraphics[width=1.5in]{../../images/cooper_union_logo.png}
+    \includegraphics[width=1.0in]{../../images/cooper_union_logo.png}
 \end{minipage}
 \begin{minipage}{0.65\textwidth}
     \raggedleft {\bf Name: } {\color{red} \textbf{ANSWER KEY}}
@@ -109,6 +109,51 @@ Prof. Rob Marano \hfill
 \newpage
 % next lines add page numbers
 \pagestyle{myheadings}
+\markright{{\bf Name: } {\color{red} ANSWER KEY} \hfill}
+
+% ***************************************************************************
+% *** Answer Sheet Page
+\begin{center}
+{\LARGE \bf Exam Answer Sheet}
+\end{center}
+\vspace{0.2in}
+\textbf{IMPORTANT REMINDER:} Write LEGIBLY if you are not typing your answers! If I cannot read it, I cannot grade it. Additionally, WRITE CONCISELY to ensure your responses fit within the allotted spaces below. Show your full work and derivations directly on the individual problem pages that follow.
+\vspace{0.2in}
+
+\begin{enumerate}[\bf 1.]
+    \item \textbf{CPU Performance \& Clock Cycles (15 pts):} \\
+    {\color{red} \textbf{12 GHz}}
+    \vspace{0.5in}
+    
+    \item \textbf{General Computer Architecture Concepts (15 pts):} \\
+    (a) \textit{[See structural diagram on problem page.]} \\
+    (b) {\color{red} Programs and instructions share the same memory layout.} \\
+    (c) {\color{red} 1. Simplicity favors regularity 2. Smaller is faster 3. Make common case fast 4. Good design demands good compromises} \\
+    (d) {\color{red} Big-Endian: MSB at lowest address. Little-Endian: LSB at lowest address.}
+    \vspace{0.5in}
+    
+    \item \textbf{MIPS Architecture \& Layout (15 pts):} \\
+    (a) {\color{red} Variables map physically via explicit load \& store calls; ALU isolated strictly to registers.} \\
+    (b) {\color{red} \textbf{R-Type:} opcode/rs/rt/rd/shamt/funct. \textbf{I-Type:} opcode/rs/rt/imm. \textbf{J-Type:} opcode/target.} \\
+    (c) {\color{red} \texttt{.text} contains physical logic at \texttt{0x00400000}. \texttt{.data} contains arrays at \texttt{0x10000000}.} \\
+    (d) {\color{red} Base offset maps static register + imm bytes. PC-Relative jumps exactly \texttt{PC + (imm * 4)}.}
+    \vspace{0.5in}
+    
+    \item \textbf{Assembly Compilation and Disassembly (20 pts):} \\
+    (a) \textit{Machine Code Hex:} {\color{red} \textbf{0x8E69FFFC}} \hfill (b) \textit{Assembly Instruction:} {\color{red} \textbf{sw \$t3, 8(\$s0)}}
+    \vspace{0.5in}
+    
+    \item \textbf{Translating a C array manipulation (Leaf Procedure) (15 pts):} \\
+    {\color{red} \textit{See full assembly MIPS sequence on problem page limit space.}}
+    \vspace{0.5in}
+    
+    \item \textbf{Translating Nested Procedures (Stack Pointer Management) (20 pts):} \\
+    {\color{red} \textit{See full push/pop nested factorial tree execution on problem page.}}
+    \vspace{0.5in}
+\end{enumerate}
+
+\newpage
+% Return to normal page headers
 \markright{{\bf Name: } {\color{red} ANSWER KEY} \hfill}
 
 % ***************************************************************************
