@@ -171,7 +171,7 @@ Because no silicon can propagate these cascading tests and shifts instantaneousl
 5. Double Precision (64-bit):
     *   **Exponent:** True exponent is $3$. Add the Double bias (+1023): $3 + 1023 = 1026 \rightarrow$ **`100 0000 0010`**.
     *   **Mantissa:** Drop the leading `1`. The fractional remainder is `0001`. Pad with zeros to 52 bits $\rightarrow$ **`0001`** followed by 48 zeros.
-    *   *Final 64-bit Code:* `0 10000000010 0001000000000000000000000000000000000000000000000000` (**`0x4021000000000000`**)
+    *   *Final 64-bit Code:* `0 10000000010 0001000000000000000000000000000000000000000000000000` (Upper: **`0x40210000`**, Lower: **`0x00000000`**)
 
 **Exercise 2: Medium (Negative Fractional Decimal)**
 *Problem:* Convert $-0.15625_{10}$ to IEEE 754 Single and Double Precision.
@@ -186,7 +186,7 @@ Because no silicon can propagate these cascading tests and shifts instantaneousl
 5. Double Precision (64-bit):
     *   **Exponent:** $-3 + 1023 = 1020 \rightarrow$ **`011 1111 1100`**.
     *   **Mantissa:** Drop leading `1` $\rightarrow$ **`0100`** followed by 48 zeros.
-    *   *Final 64-bit Code:* `1 01111111100 0100000000000000000000000000000000000000000000000000` (**`0xBFC4000000000000`**)
+    *   *Final 64-bit Code:* `1 01111111100 0100000000000000000000000000000000000000000000000000` (Upper: **`0xBFC40000`**, Lower: **`0x00000000`**)
 
 **Exercise 3: Hard (Repeating Fraction & Rounding)**
 *Problem:* Convert $0.1_{10}$ to IEEE 754 Single and Double Precision.
@@ -201,7 +201,7 @@ Because no silicon can propagate these cascading tests and shifts instantaneousl
 5. Double Precision (64-bit):
     *   **Exponent:** $-4 + 1023 = 1019 \rightarrow$ **`011 1111 1011`**.
     *   **Mantissa:** We take the first 52 bits. Again, the 53rd bit causes us to round up the very last bit. The final field is: **`1001100110011001100110011001100110011001100110011010`**.
-    *   *Final 64-bit Code:* `0 01111111011 1001100110011001100110011001100110011001100110011010` (**`0x3FB999999999999A`**)
+    *   *Final 64-bit Code:* `0 01111111011 1001100110011001100110011001100110011001100110011010` (Upper: **`0x3FB99999`**, Lower: **`0x9999999A`**)
 
 ---
 
