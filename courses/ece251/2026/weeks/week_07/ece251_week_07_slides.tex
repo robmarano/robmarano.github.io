@@ -1,0 +1,76 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\title{ECE 251: Computer Architecture}
+\subtitle{Week 07 Notes - Advanced Assembly \& Final Project Launch}
+\author{Prof Rob Marano}
+\date{Spring 2026}
+
+% Cooper Union Brand Identity
+\definecolor{CooperRed}{HTML}{8A1538}
+\definecolor{CooperDark}{HTML}{5C0E25}
+\setbeamercolor{structure}{fg=CooperRed}
+\setbeamercolor{palette primary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette secondary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette tertiary}{bg=CooperDark,fg=white}
+\setbeamercolor{title in head/foot}{bg=CooperDark,fg=white}
+\logo{\includegraphics[height=1cm]{../../images/cooper_union_logo.png}}
+\titlegraphic{\includegraphics[width=3cm]{../../images/cooper_union_logo.png}}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{1. SPIM Operating System Simulator}
+Since SPIM is a simulator, it provides native OS-level library calls via \texttt{syscall} to handle protected hardware functions like I/O.
+\vspace{0.2cm}
+\begin{itemize}
+    \item \textbf{Convention}: Load the Service Code in \texttt{\$v0}, arguments in \texttt{\$a0}-\texttt{\$a3}, then execute \texttt{syscall}.
+    \item \textbf{Common Service Codes}:
+    \begin{itemize}
+        \item \texttt{1}: Print Integer (\texttt{\$a0} = int)
+        \item \texttt{4}: Print String (\texttt{\$a0} = address of \texttt{.asciiz})
+        \item \texttt{5}: Read Integer (Return in \texttt{\$v0})
+        \item \texttt{10}: Exit Cleanly
+        \item \texttt{-}: File I/O available via \texttt{13} (Open), \texttt{14} (Read), \texttt{16} (Close).
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{2. Tracing Recursive Procedures}
+Recursion rigidly tests a programmer's Stack Management abilities.
+\vspace{0.2cm}
+\begin{itemize}
+    \item A function calling \textit{itself} overwrites the \texttt{\$ra} (Return Address) tracker and \texttt{\$a0} arguments on every single execution loop.
+    \item The CPU Stack physically grows \textbf{downward} (\texttt{addi \$sp, \$sp, -12}) inside the CPU, placing "plates" of saved variables on top of each other.
+    \item When the base case is breached, recursion collapses \textbf{upward}, popping the plates (`lw` to restore \texttt{\$ra}) layer-by-layer to cleanly unspool the jump sequence back to \texttt{main}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{3. Hardware Execution: SPIM vs. Physical Silicon}
+Why did the intricate \textit{Quake III} Inverse Square Root function (14 instructions) decisively beat the standard IEEE CPU method (2 instructions)?
+\vspace{0.2cm}
+\begin{itemize}
+    \item \textbf{Software Emulators}: Enforce a flat, abstracted CPI of 1.0. (SPIM finishes 2 steps 7x faster than 14 steps).
+    \item \textbf{Physical 1999 Silicon}: Floating Point Division (\texttt{div.s}) could violently stall the CPU pipeline for \textbf{up to 54 clock cycles}. 
+    \item \textbf{The Result}: The Quake Algorithm relied entirely on raw integer bit-shifting (1 CPI) resulting in 14 total cycles natively, compared to $\sim$54 cycles mechanically wasting time waiting for the FPU division gate logic.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{4. The Final Group Project: 100 Points}
+\textbf{The Objective}: Organically design and implement a fundamental von Neumann computer Architecture from physical scratch.
+\vspace{0.2cm}
+\begin{enumerate}
+    \item \textbf{Team Logistics}: Teams of exactly 2.
+    \item \textbf{The Core Deliverable}: A fully functional \textbf{SystemVerilog} processor (minimum 4-bit) capable of running a functional program simulation via a Test Bench.
+    \item \textbf{The Architecture}: You must rigidly define your own explicit \textbf{Instruction Set Architecture (ISA)}, documenting the Opcode boundaries, Datapath layout, ALU functions, and Memory access limits natively.
+    \item \textbf{The Baseline}: Replicate a historical 4-bit/8-bit microchip (Intel 4004) or design a functional custom MIPS32 module implementation.
+\end{enumerate}
+\end{frame}
+
+\end{document}

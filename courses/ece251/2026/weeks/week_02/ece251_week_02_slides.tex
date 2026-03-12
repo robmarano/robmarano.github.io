@@ -1,0 +1,121 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\title{ECE 251: Computer Architecture}
+\subtitle{Week 02 Notes - Instruction Set Architecture (ISA)}
+\author{Prof Rob Marano}
+\date{Spring 2026}
+
+% Cooper Union Brand Identity
+\definecolor{CooperRed}{HTML}{8A1538}
+\definecolor{CooperDark}{HTML}{5C0E25}
+\setbeamercolor{structure}{fg=CooperRed}
+\setbeamercolor{palette primary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette secondary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette tertiary}{bg=CooperDark,fg=white}
+\setbeamercolor{title in head/foot}{bg=CooperDark,fg=white}
+\logo{\includegraphics[height=1cm]{../../images/cooper_union_logo.png}}
+\titlegraphic{\includegraphics[width=3cm]{../../images/cooper_union_logo.png}}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{1. The Language of the Computer}
+\begin{itemize}
+    \item \textbf{Instruction Set}: The vocabulary of commands understood by a computer.
+    \item \textbf{Hardware Operations}: Every computer must perform basic arithmetic.
+\end{itemize}
+\begin{block}{Design Principle 1:}
+\textit{Simplicity favors regularity.}
+\end{block}
+\begin{itemize}
+    \item Fixed format instructions simplify decoding.
+    \item MIPS arithmetic instructions \textbf{always} have exactly three operands:
+    \begin{itemize}
+        \item \texttt{add \$t0, \$t1, \$t2}  \hspace{1cm} (\texttt{\$t0 = \$t1 + \$t2})
+        \item \texttt{sub \$v0, \$a0, \$a1}  \hspace{1cm} (\texttt{\$v0 = \$a0 - \$a1})
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{2. The Operands}
+\begin{itemize}
+    \item \textbf{Registers}: The hardware primitives used for actively storing variables.
+    \item MIPS has precisely \textbf{32 registers}, each exactly \textbf{32-bits} wide (a \textit{word}).
+\end{itemize}
+\begin{block}{Design Principle 2:}
+\textit{Smaller is faster.}
+\end{block}
+\begin{itemize}
+    \item A smaller number of registers allows for faster clock cycles than a massive, sprawling array.
+    \item Complex data structures (like enormous Arrays or Structs) cannot fit in 32 registers, so they are kept in \textbf{Main Memory}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{3. Data Transfer \& Immediates}
+\begin{itemize}
+    \item \textbf{Data Transfer Instructions}: Move data between Memory and Registers.
+    \begin{itemize}
+        \item \texttt{lw} (load word): Copy heavily-used data \textit{from} memory to register.
+        \item \texttt{sw} (store word): Copy heavily-used data \textit{from} register back to memory.
+    \end{itemize}
+    \item MIPS requires data alignment (words must start at addresses that are multiples of 4).
+    \item \textbf{Immediate Operands}: Constants embedded directly into the instruction.
+    \begin{itemize}
+        \item \texttt{addi \$s1, \$s2, 100}
+    \end{itemize}
+\end{itemize}
+\begin{block}{Design Principle 3:}
+\textit{Make the common case fast.}
+\end{block}
+\begin{itemize}
+    \item Embedding small, frequently used constants directly avoids slow memory loads.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{4. Representing Instructions in MIPS}
+Instructions are compiled into \textbf{32-bit fixed-length} binary machine code.
+\vspace{0.3cm}
+\begin{itemize}
+    \item \textbf{R-type (Register)}: Used for pure arithmetic.
+    \begin{itemize}
+        \item \texttt{[op, rs, rt, rd, shamt, funct]}
+    \end{itemize}
+    \vspace{0.1cm}
+    \item \textbf{I-type (Immediate)}: Used for data transfer, constants, and branches.
+    \begin{itemize}
+        \item \texttt{[op, rs, rt, constant/address]}
+    \end{itemize}
+    \vspace{0.1cm}
+    \item \textbf{J-type (Jump)}: Used for unconditional jumps.
+    \begin{itemize}
+        \item \texttt{[op, address]}
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{5. Logical Operations}
+Operations uniquely suited to manipulate boolean bits within valid words.
+\vspace{0.3cm}
+\begin{itemize}
+    \item \textbf{Shift Instructions}:
+    \begin{itemize}
+        \item \texttt{sll} (shift left logical): Effectively multiples a value by identical powers of 2.
+        \item \texttt{srl} (shift right logical): Effectively divides unsigned values by identical powers of 2.
+    \end{itemize}
+    \vspace{0.3cm}
+    \item \textbf{Bitwise Logic}:
+    \begin{itemize}
+        \item \texttt{and}, \texttt{or}, \texttt{nor}, \texttt{xor} 
+        \item Operate structurally bit-by-bit. Crucial for masking, testing flags, and setting isolated bits.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\end{document}

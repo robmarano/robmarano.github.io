@@ -1,0 +1,83 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\title{ECE 251: Computer Architecture}
+\subtitle{Week 06 Notes - Single-Cycle Performance \& Pipelining Primer}
+\author{Prof Rob Marano}
+\date{Spring 2026}
+
+% Cooper Union Brand Identity
+\definecolor{CooperRed}{HTML}{8A1538}
+\definecolor{CooperDark}{HTML}{5C0E25}
+\setbeamercolor{structure}{fg=CooperRed}
+\setbeamercolor{palette primary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette secondary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette tertiary}{bg=CooperDark,fg=white}
+\setbeamercolor{title in head/foot}{bg=CooperDark,fg=white}
+\logo{\includegraphics[height=1cm]{../../images/cooper_union_logo.png}}
+\titlegraphic{\includegraphics[width=3cm]{../../images/cooper_union_logo.png}}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{1. Assessing Performance: The Single-Cycle Processor}
+The foundational model of the MIPS architecture executes exactly \textbf{one instruction at a time per clock cycle}.
+\vspace{0.2cm}
+\begin{block}{The Classic CPU Performance Equation}
+$$ \text{Execution Time} = \text{Instruction Count} \times \text{CPI} \times \text{Clock Cycle Time} $$
+\end{block}
+\vspace{0.2cm}
+\begin{itemize}
+    \item \textbf{CPI (Cycles Per Instruction)} is strictly 1.
+    \item \textbf{The Trade-off}: The entire CPU Clock Cycle Time must be elongated to accommodate the absolute slowest instruction (typically the \texttt{lw} Load Word command, which traverses Data Memory).
+    \item \textit{Result}: Faster operations (like \texttt{add}) inherently waste hardware time rigidly waiting for the slow clock cycle to tick over.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{2. Pseudodirect vs PC-Relative Targets}
+Both Branches and Jumps manually alter where the internal CPU logic executes \textit{next}, but their 32-bit compilation limits dictate how far they can reach.
+\begin{itemize}
+    \item \textbf{Branches (PC-Relative, \texttt{beq})}: 
+    \begin{itemize}
+        \item 16-bit parameter. Small leaps locally within the code block.
+        \item Calculates offset: $\text{Target} = \text{PC} + 4 + (\text{offset} \times 4)$.
+    \end{itemize}
+    \vspace{0.3cm}
+    \item \textbf{Jumps (Pseudodirect, \texttt{j})}:
+    \begin{itemize}
+        \item 26-bit parameter. Vast leaps overriding local logic.
+        \item Concatenates the Jump instruction bits directly against the upper 4 bits of the current PC tracker to define a raw 32-bit coordinate boundary.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{3. Pipelining Primer: Where exactly are we jumping?}
+Understanding where the CPU physically points during jumping mechanics is vastly critical in advanced Pipelining.
+\vspace{0.2cm}
+\begin{itemize}
+    \item \textbf{Question}: Immediately right after a branch or a jump instruction, what is the relative value of the PC?
+    \item \textbf{Answer}: Immediately after a branch or jump, the hardware automatically increments the Program Counter to \textbf{PC + 4}.
+    \item The instruction situated at \texttt{PC + 4} executes regardless of the branch outcome. This is called the \textbf{Branch Delay Slot}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{4. The Branch Delay Slot and \texttt{jal}}
+How do we safeguard the Return Address (\texttt{\$ra}) during a procedure call knowing the Delay Slot executes implicitly?
+\vspace{0.2cm}
+\begin{enumerate}
+    \item A \texttt{jal} (Jump and Link) instruction executes at the current PC.
+    \item The instruction at \textbf{PC + 4} (the Delay Slot) executes immediately inherently.
+    \item \textit{We do not want the procedure returning to the Delay Slot, it just executed!}
+    \item The \texttt{jal} natively calculates \textbf{PC + 8} (the instruction safely past the Delay Slot) and deliberately stores this value into the \texttt{\$ra} tracking register.
+\end{enumerate}
+\vspace{0.2cm}
+By forcing the compiler/programmer to manually acknowledge the Delay Slot, the CPU hardware extracts massive optimizations maintaining steady instructional flow.
+\end{frame}
+
+\end{document}

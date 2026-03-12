@@ -1,0 +1,102 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\title{ECE 251: Computer Architecture}
+\subtitle{Week 01 Notes - Abstractions \& Technology}
+\author{Prof Rob Marano}
+\date{Spring 2026}
+
+% Cooper Union Brand Identity
+\definecolor{CooperRed}{HTML}{8A1538}
+\definecolor{CooperDark}{HTML}{5C0E25}
+\setbeamercolor{structure}{fg=CooperRed}
+\setbeamercolor{palette primary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette secondary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette tertiary}{bg=CooperDark,fg=white}
+\setbeamercolor{title in head/foot}{bg=CooperDark,fg=white}
+\logo{\includegraphics[height=1cm]{../../images/cooper_union_logo.png}}
+\titlegraphic{\includegraphics[width=3cm]{../../images/cooper_union_logo.png}}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{1. Definition of a Computer}
+\begin{itemize}
+    \item \textbf{General Purpose}: A modern computer is defined by its ability to process algorithms across vast magnitudes.
+    \item \textbf{The Software/Hardware Interface}: The Instruction Set Architecture (ISA) serves as the boundary between software (instructions) and the physical hardware.
+    \item \textbf{The Five Components}:
+    \begin{enumerate}
+        \item Input
+        \item Output
+        \item Memory
+        \item Datapath (ALU)
+        \item Control Unit
+    \end{enumerate}
+    \item \textit{Processor (CPU) = Datapath + Control}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{2. The Stored Program Concept}
+\begin{itemize}
+    \item Pioneered by John von Neumann in the mid-1940s.
+    \item Revolutionized computing by storing \textbf{both the instructions and the data} in the computer's memory.
+    \item \textbf{Key Advantages}:
+    \begin{itemize}
+        \item \textit{Programmability}: Easily reprogrammed by loading new instructions (no rewiring).
+        \item \textit{Flexibility}: A single computer can be used for a wide range of disparate applications.
+        \item \textit{Instructions as Data}: Programs can be manipulated and modified like any other data (enabling compilers, assemblers, and operating systems).
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{3. von Neumann vs. Harvard Architectures}
+\begin{table}[]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Feature} & \textbf{Von Neumann (Princeton)} & \textbf{Harvard} \\ \hline
+\textbf{Memory} & Single memory space for instructions \& data & Separate memory spaces \\ \hline
+\textbf{Access} & Sharing the same memory bus & Simultaneous access capability \\ \hline
+\textbf{Pros} & Simpler design, efficient memory use & Faster instruction fetch \\ \hline
+\textbf{Cons} & \textit{Von Neumann Bottleneck} (shared bus) & Complex design, physical split \\ \hline
+\textbf{Use Cases} & General-purpose PCs, laptops & DSPs, embedded systems \\ \hline
+\end{tabular}%
+}
+\end{table}
+\end{frame}
+
+\begin{frame}{4. Performance of a Computer}
+\begin{itemize}
+    \item \textbf{Execution Time}: The time it takes a computer to complete a single task (primary focus for individual users).
+    \item \textbf{Throughput}: Total work done per unit time (primary focus for datacenters).
+    \item \textbf{The CPU Performance Equation}:
+\end{itemize}
+\begin{block}{CPU Execution Time}
+$$ \text{CPU Time} = \frac{\text{Instruction Count} \times \text{CPI}}{\text{Clock Rate}} $$
+\end{block}
+\begin{itemize}
+    \item \textbf{IC (Instruction Count)}: Determined by the program and compiler.
+    \item \textbf{CPI (Cycles Per Instruction)}: Determined by the ISA and hardware.
+    \item \textbf{Clock Rate}: Determined by hardware technology.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{5. The Power Wall \& Multicore}
+\begin{itemize}
+    \item \textbf{The Power Wall}: We can no longer increase processor clock speeds endlessly due to thermal dissipation limits.
+    \item $P_{dynamic} \propto \text{Capacitance} \times \text{Voltage}^2 \times \text{Frequency}$
+    \item \textbf{The Solution}: Multi-core Processors.
+    \begin{itemize}
+        \item Instead of one blistering fast core, deploy multiple slower cores executing in parallel.
+        \item \textit{Impact}: Programmers must now write parallel code to extract performance (Ahmdal's Law limits sequential scaling).
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\end{document}

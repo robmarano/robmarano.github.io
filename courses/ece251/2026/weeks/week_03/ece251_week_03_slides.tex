@@ -1,0 +1,99 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\title{ECE 251: Computer Architecture}
+\subtitle{Week 03 Notes - Assembly, Memory, and Procedures}
+\author{Prof Rob Marano}
+\date{Spring 2026}
+
+% Cooper Union Brand Identity
+\definecolor{CooperRed}{HTML}{8A1538}
+\definecolor{CooperDark}{HTML}{5C0E25}
+\setbeamercolor{structure}{fg=CooperRed}
+\setbeamercolor{palette primary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette secondary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette tertiary}{bg=CooperDark,fg=white}
+\setbeamercolor{title in head/foot}{bg=CooperDark,fg=white}
+\logo{\includegraphics[height=1cm]{../../images/cooper_union_logo.png}}
+\titlegraphic{\includegraphics[width=3cm]{../../images/cooper_union_logo.png}}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{1. Translating Assembly to Machine Code}
+\begin{itemize}
+    \item \textbf{The Stored-Program Concept}: Instructions are ultimately just 32-bit binary numbers stored in memory.
+    \item \textbf{R-Type (Register Format)}: Used for pure arithmetic (\texttt{add}, \texttt{sub}, \texttt{and}).
+    \begin{itemize}
+        \item \texttt{[op (6), rs (5), rt (5), rd (5), shamt (5), funct (6)]}
+    \end{itemize}
+    \vspace{0.2cm}
+    \item \textbf{I-Type (Immediate Format)}: Used for data transfer and constants (\texttt{lw}, \texttt{sw}, \texttt{addi}).
+    \begin{itemize}
+        \item \texttt{[op (6), rs (5), rt (5), constant/address (16)]}
+    \end{itemize}
+    \vspace{0.2cm}
+    \item \textbf{J-Type (Jump Format)}: Used for long-distance control flow jumps (\texttt{j}, \texttt{jal}).
+    \begin{itemize}
+        \item \texttt{[op (6), target address (26)]}
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{2. The von Neumann Memory Map}
+A modern general-purpose computer compartmentalizes its memory layout:
+\vspace{0.2cm}
+\begin{enumerate}
+    \item \textbf{Text Segment}: Read-only segment housing the compiled machine code (instructions).
+    \item \textbf{Data Segment}: Houses global variables and static data allocated before runtime.
+    \item \textbf{Heap}: Dynamic memory allocated during runtime (e.g. \texttt{malloc}). Grows upwards.
+    \item \textbf{Stack}: Dynamic memory used for local variables and procedure calls. Grows downwards.
+\end{enumerate}
+\vspace{0.2cm}
+\begin{block}{MIPS32 Memory Scale}
+A 32-bit architecture supports $2^{32}$ byte-addresses. $\frac{2^{32} \text{ bytes}}{2^{30} \text{ bytes/GB}} = \textbf{4 Gigabytes}$ total addressable space.
+\end{block}
+\end{frame}
+
+\begin{frame}{3. Making Decisions (Control Flow)}
+CPUs must make choices to branch, loop, and execute code conditionally.
+\vspace{0.2cm}
+\begin{itemize}
+    \item \textbf{Conditional Branches}:
+    \begin{itemize}
+        \item \texttt{beq \$t1, \$t2, Target}: Branch if Equal.
+        \item \texttt{bne \$t1, \$t2, Target}: Branch if Not Equal.
+    \end{itemize}
+    \vspace{0.2cm}
+    \item \textbf{Inequalities} ($<, >$):
+    \begin{itemize}
+        \item MIPS does not have a dedicated \textit{branch-less-than} instruction.
+        \item It uses \texttt{slt} (Set Less Than) to toggle a boolean flag register, which is then verified by a subsequent \texttt{bne} / \texttt{beq}.
+    \end{itemize}
+    \vspace{0.2cm}
+    \item \textbf{Delayed Branching}: The instruction \textit{immediately} following a branch is always executed while the target is calculated (Pipeline optimization).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{4. Supporting Procedures (Functions)}
+Procedures facilitate code abstraction and reuse without infinite copy-pasting.
+\vspace{0.2cm}
+\begin{itemize}
+    \item \textbf{Jump and Link (\texttt{jal})}: Jumps to the procedure's address while saving the \textit{Return Address} (\texttt{PC + 4}) into register \texttt{\$ra}.
+    \item \textbf{Jump Register (\texttt{jr \$ra})}: Used at the end of a procedure to jump exactly back to the caller.
+    \item \textbf{The Stack Pointer (\texttt{\$sp})}: 
+    \begin{itemize}
+        \item If a procedure needs more registers than are available, it must "spill" existing register data onto the Stack in memory.
+        \item Shrink the stack (allocate space) by subtracting 4-byte words from \texttt{\$sp}.
+        \item Restore the registers from memory, then grow the stack back up by adding to \texttt{\$sp} before calling \texttt{jr \$ra}.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\end{document}
