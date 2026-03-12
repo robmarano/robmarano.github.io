@@ -1,0 +1,117 @@
+%
+% mycommands.tex
+%
+
+\newcommand{\colorbitbox}[4][lrbt]{%
+    \rlap{\bitbox[#1]{#3}{\color{#2}\rule{\dimexpr\width-0.4pt}{\dimexpr\height-0.4pt}}}%
+    \bitbox[#1]{#3}{#4}}
+
+\definecolor{lightgray}{gray}{0.85}
+
+%
+% \ExplSyntaxOn
+% \NewDocumentCommand{\loopBin}{m}
+%  {
+%   % save the input in a variable
+%   \tl_set:Nn \mips_getletters { #1 }
+%   % replace spaces with \textvisiblespace
+%   \tl_replace_all:Nnn \mips_getletters { ~ } { \textvisiblespace }
+%   % map the input surrounding each item by parentheses
+%   \tl_map_inline:Nn \mips_getletters { ##1 }
+%  }
+% \tl_new:N \mips_getletters
+% \ExplSyntaxOff
+%
+
+
+%
+% \newcommand{\binLoop}[1]
+% {
+%     \begin{bytefield}[boxformatting={\centering\itshape},bitwidth=1.5em,endianness=big]{32}
+%     \bitheader{0-31}
+%     % \StrLen{#1}
+%     \foreach \x in {1,...\StrLen{#1}}
+%     {
+%         \bitbox{\x,#1{\x}}
+%     }
+    
+%     \end{bytefield}
+% }
+%
+
+%
+ % \NewDocumentCommand{\extract}{mm}
+\ExplSyntaxOn
+\cs_new:Npn \extract #1 #2
+ {
+  \str_item:fn { #1 } { #2+1 } % since it starts counting from 1
+ }
+\cs_generate_variant:Nn \str_item:nn {f}
+\ExplSyntaxOff
+
+\ExplSyntaxOn
+% \cs_new:Npn \makebitboxes #1 #2
+ \NewDocumentCommand{\makebitboxes}{mm}
+ {
+    \begin{bytefield}[boxformatting={\centering\itshape},bitwidth=1.5em,endianness=big]{\numbits}
+    \bitheader{0-{#1 - 1}} \\
+    
+    \int_step_variable:nnnNn {0}{1}{#1-1}{\tvar}
+   {
+        % (\tvar,\extract{#2}{\tvar})
+        \int_compare:nNnTF { \int_mod:nn {\tvar} { 2 } } = { 0 }
+       {% odd box
+            \colorbitbox{lightgray}{1}{\extract{#2}{\tvar}}
+       }
+       { %even box
+            \bitbox{1}{\extract{#2}{\tvar}}
+       }
+   }
+   \end{bytefield}
+  }
+\ExplSyntaxOff
+%
+
+\ExplSyntaxOn
+% \cs_new:Npn \makebitboxes #1 #2
+ \NewDocumentCommand{\makeemptybyteboxes}{m}
+ {
+    \begin{bytefield}[boxformatting={\centering\itshape},bitwidth=1.5em,endianness=big]{32}
+    
+    \int_step_variable:nnnNn {0}{1}{#1-1}{\tvar}
+   {
+        % (\tvar,\extract{#2}{\tvar})
+        \int_compare:nNnTF { \int_mod:nn {\tvar} { 2 } } = { 0 }
+       {% odd box
+            \colorbitbox{lightgray}{4}{}
+       }
+       { %even box
+            \bitbox{4}{}
+       }
+   }
+   \end{bytefield}
+  }
+\ExplSyntaxOff
+%
+
+\ExplSyntaxOn
+ \NewDocumentCommand{\makeemptybitboxes}{m}
+ {
+    \begin{bytefield}[boxformatting={\centering\itshape},bitwidth=1.5em,endianness=big]{\numbits}
+    \bitheader{0-{#1 - 1}} \\
+    
+    \int_step_variable:nnnNn {0}{1}{#1-1}{\tvar}
+   {
+        % (\tvar,\extract{#2}{\tvar})
+        \int_compare:nNnTF { \int_mod:nn {\tvar} { 2 } } = { 0 }
+       {% odd box
+            \colorbitbox{lightgray}{1}{}
+       }
+       { %even box
+            \bitbox{1}{}
+       }
+   }
+   \end{bytefield}
+  }
+\ExplSyntaxOff
+%

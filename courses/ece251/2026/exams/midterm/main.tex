@@ -1,0 +1,259 @@
+\documentclass[letterpaper]{report}
+\author{Prof. Rob Marano}
+\usepackage{expl3}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{setspace}
+\usepackage[normalem]{ulem}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{bytefield}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{chronology}
+\usepackage{pdfpages}
+\usepackage{forloop}
+\usepackage{xparse}
+\usepackage{xstring}
+\usepackage{listofitems}
+\usepackage{courier}
+\usepackage{textcomp}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumerate}
+
+\usepackage{./code/mips}
+\input{./code/mycommands}
+\input{./code/lauracode}
+\input{./code/testpoints}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={ECE 251 Spring 2026 Mid-Term Exam},
+    pdfpagemode=FullScreen,
+}
+\urlstyle{same}
+
+\pagestyle{empty}
+\begin{document}
+
+% *** COVER *** 
+\hfill {\bf Name: } $\underbrace{\hspace{3in}}_{\mbox{\tiny by writing my name I affirm to abide by the Cooper Union honor code.}}$
+
+\vspace{0.1in}
+
+\centerline{\huge \bf Mid-Term Exam}
+\vspace{0.1in}
+
+ECE 251 \textemdash{ Computer Architecture} \hfill
+12 March 2026 \hfill
+
+Spring 2026 \hfill
+Prof. Rob Marano \hfill
+
+\vspace{0.1in}
+\textsc{Read all of the following information before starting the exam:}
+\begin{itemize}
+	\item You have \textbf{120 minutes} for this exam, which has six (6) problems and is worth a total of \textbf{100 points}.  It is your responsibility to make sure that you answer all the problems and provide those answers in this packet. The exam is closed-book, but you have the use of the MIPS ``Green Sheet" at the end of this packet. Provide full solutions directly below the question on this handout. Keep the handout packet stapled. Loose sheets will not be accepted. Show all work, clearly and in order, if you want to get full credit.  Points will be deducted if you do not show how you arrived at your answer (even if your final answer is correct). Justify your answers with explicit assumptions whenever possible to ensure full credit. Sketch all relevant graphs and explain all relevant computations. {\bf Circle} or {\bf box} your final answer for each problem in order to {\bf indicate}, when applicable. Please keep your written answers brief, usually no more than 3-5 simple sentences; be clear and to the point.  Points will be taken off for rambling and for incorrect or irrelevant statements.
+	\item Remember, Louis Pasteur shared, ``Fortune favors the prepared mind," and Niccolò Machiavelli once wrote, ``Luck is where skill and opportunity meet." So, good luck!
+\end{itemize}
+
+\vspace{0.1in}
+
+% Academic policy
+{\bf The Cooper Union Academic Standards and Regulations} \\
+As stated in \href{https://cooper.edu/engineering/curriculum/academic-standards-regulations}{the Academic Standards web page}, faculty at Cooper Union are committed to preserving an environment that challenges every student to realize his or her potential. You are expected to provide your best effort and will be supported to produce original work of the highest caliber. Plagiarism is the presentation of another person’s {\bf work product} (ideas, words, equations, computer code, graphics, lab data, etc.) as one’s own. Whether done intentionally or unintentionally, plagiarism is not tolerated in the School of Engineering. Basically, be fair to yourself and use your own brain.
+
+% ***************************************************************************
+% *** topic sheet
+\pagestyle{empty}
+\begin{center}
+{\bf Exam Topics}
+\end{center}
+\vspace{0.5pc}
+{\it The following topics were presented and reviewed in our class.  All topics will be covered by the examination problem set that follows.}
+\vspace{0.5pc}
+\begin{center}
+\begin{multicols}{2}
+\begin{itemize}
+	\item Computer abstraction and technology
+		\begin{itemize}
+			\item Basic components of a computer
+                \item Stored Program concept
+			\item Performance of a computer
+			\item Big- and Little-Endian memory
+		\end{itemize}
+	\item Instructions as the language of the computer
+		\begin{itemize}
+                \item Design principles for creating computer architecture
+			\item Operations \& operands of computer hardware
+			\item Representing instructions in the computer
+			\item MIPS ISA referencing immediate values and memory addresses
+                \item Three (3) types of MIPS instructions
+			\item Converting a line of MIPS assembly code to machine code
+                \item Procedures, stack pointer (\texttt{\$sp}), and return address (\texttt{\$ra})
+		\end{itemize}
+\end{itemize}
+\end{multicols}
+\end{center}
+
+\newpage
+% next lines add page numbers
+\pagestyle{myheadings}
+\markright{{\bf Name: } \hfill}
+
+% ***************************************************************************
+% *** Question 1 - 15pts 
+%
+\bp{15} {\bf CPU Performance \& Clock Cycles} \\
+Our favorite program runs in 25 seconds on $\text{Computer A}$, which has a 2 GHz clock rate. We are trying to help a computer designer build $\text{Computer B}$, which will run this program in exactly 5 seconds. The hardware designer has determined that a substantial increase in the clock rate is possible, but this increase will natively affect the rest of the physical CPU design, causing $\text{Computer B}$ to require 1.2 times as many hardware clock cycles as $\text{Computer A}$ for this same program. 
+
+Determine the exact clock rate (in GHz) we should tell the designer to target for $\text{Computer B}$. Show all mathematical derivations.
+\ep
+\vf
+\newpage
+
+% ***************************************************************************
+% *** Question 2 - 15pts 
+%
+\bp{15} {\bf General Computer Architecture Concepts} \\
+Please provide concise answers to the following foundational architecture questions:
+\begin{enumerate}[(a)]
+    \item Draw a functional, high-level block diagram of a modern, general-purpose von Neumann computer architecture. Be sure to label the fundamental components and structural data/control pathways.
+    \vspace{2.5in}
+    \item Explicitly define the ``Stored-Program Concept" utilizing only 1 or 2 sentences.
+    \vspace{1.5in}
+    \item State the four primary design principles of structural computer architecture.
+    \vspace{2.0in}
+    \item Briefly define the difference in memory layout between a \textbf{Big-Endian} architecture and a \textbf{Little-Endian} architecture.
+\end{enumerate}
+\ep
+\vf
+\newpage
+
+% ***************************************************************************
+% *** Question 3 - 15pts 
+%
+\bp{15} {\bf MIPS Architecture \& Layout} \\
+Answer the following questions regarding the internal mechanics of the MIPS structural layout:
+\begin{enumerate}[(a)]
+    \item What specifically defines a ``Load-Store Architecture" compared to a register-memory architecture?
+    \vspace{1.5in}
+    \item List the three defined instruction formats (bit layouts) utilized in the MIPS methodology. Provide the structural name along with a single 1-sentence example mapping of its 32-bit layout fields.
+    \vspace{2.5in}
+    \item Briefly explain the layout difference between the \texttt{.data} section and the \texttt{.text} section in a MIPS assembly program source file. Assuming virtual memory begins addressing at \texttt{0x00000000}, structurally explain where each of these partitions natively resides in memory space.
+    \vspace{2.0in}
+    \item Explain the fundamental difference between Base/Offset Addressing (e.g. \texttt{lw \$t0, 4(\$s0)}) and PC-Relative Addressing (e.g. \texttt{bne \$s0, \$s1, Loop}).
+\end{enumerate}
+\ep
+\vf
+\newpage
+
+% ***************************************************************************
+% *** Question 4 - 20pts 
+%
+\bp{20} {\bf Assembly Compilation and Disassembly}
+\begin{enumerate}[(a)]
+    \item \textbf{Compilation (Assembly $\rightarrow$ Machine Code):} Convert the MIPS instruction \texttt{lw \$t1, -4(\$s3)} physically into its corresponding 32-bit hexadecimal machine code representation. You must show the structural breakdown of the logical instruction format bits, binary to hex mapping, and the exact two's complement integer calculation.
+    
+    (\textit{Hint: \texttt{lw} opcode is \texttt{0x23} / \texttt{100011}. \texttt{\$t1} is register \texttt{9}. \texttt{\$s3} is register \texttt{19}.})
+    \vspace{4.0in}
+
+    \item \textbf{Disassembly (Machine Code $\rightarrow$ Assembly):} Suppose memory contains the data \texttt{0xAE0B0008}. Assuming this value physically represents a native MIPS instruction, convert this hexadecimal machine code backward into its raw MIPS assembly language representation. Show the binary field breakdown natively.
+    
+    (\textit{Hint: \texttt{0xAE0B0008} begins with \texttt{1010 1110}. Opcode \texttt{101011} maps to \texttt{sw}.)}
+\end{enumerate}
+\ep
+\vf
+\newpage
+
+% ***************************************************************************
+% *** Question 5 - 15pts
+%
+\bp{15} {\bf Translating a C array manipulation (Leaf Procedure)} \\
+Compile the following C `for` loop logic natively into structural MIPS assembly. Assume \texttt{\$s0 = \&arr[0]} natively holds the base address of the array natively, and \texttt{\$s1 = size = 10}. Assume the C iterations variables \texttt{sum}, \texttt{pos}, and \texttt{neg} structurally map to hardware registers \texttt{\$t0}, \texttt{\$t1}, and \texttt{\$t2} respectively and have an initial physical state of $0$. Finally, utilize \texttt{\$t3} as the loop iterative variable \texttt{i} native state.
+
+Note: This is an internal \textit{Leaf} operation block! Do \underline{not} manipulate the stack pointer (\texttt{\$sp}) physically for this specific implementation. Simply map the functional data logic into optimal assembly.
+
+\begin{center}
+\lstset{language=C,basicstyle=\ttfamily, numbers=none, gobble=0}
+\begin{lstlisting}[frame=single]
+// Base integer initializations already handled
+for (i = 0; i < size; i++) {
+    sum += arr[i];
+    if (arr[i] > 0)
+        pos += arr[i];
+    if (arr[i] < 0)
+        neg += arr[i];
+}
+\end{lstlisting}
+\end{center}
+
+\vspace{0.2in}
+\textbf{Write your physical MIPS Assembly natively below:}
+\ep
+\vf
+\newpage
+
+% ***************************************************************************
+% *** Question 6 - 20pts
+%
+\bp{20} {\bf Translating Nested Procedures (Stack Pointer Management)} \\
+Translate the following nested recursive C factorial procedure physically into native MIPS assembly language. Ensure extreme caution regarding the MIPS Register Conventions! You must demonstrate accurate programmatic pushes and pops to the hardware Stack via manipulating the structural \texttt{\$sp} vector and safely restoring \texttt{\$ra} values logically. Assume integer \texttt{n} is physically passed into your subprogram natively via \texttt{\$a0}, and standard results are returned synchronously onto \texttt{\$v0}.
+
+\begin{center}
+\lstset{language=C,basicstyle=\ttfamily, numbers=none, gobble=0}
+\begin{lstlisting}[frame=single]
+int fact(int n)
+{
+    if (n < 1)
+        return (1);
+    else
+        return (n * fact(n - 1));
+}
+\end{lstlisting}
+\end{center}
+
+\vspace{0.2in}
+\textbf{Write your physical MIPS Assembly natively below:}
+
+\ep
+\vf
+\newpage
+
+% ***************************************************************************
+% *** SURVEY 
+
+{\large \bf Survey Question (2 Extra Credit Points):}
+
+\vspace{0.5in}
+What did you think of this functional Mid-Term Exam? Were you mathematically prepared for the kinds of structural evaluations required?
+
+\pg
+
+% ***************************************************************************
+% *** SCRAP PAGE 
+
+{\large \bf Scrap Page}
+
+(please do not remove this page from the test packet)
+
+\pg
+
+{\large \bf Scrap Page}
+
+(please do not remove this page from the test packet)
+
+\pg
+
+\includepdf[pages=-]{MIPS_Green_Sheet.pdf}
+\showpoints
+\end{document}
