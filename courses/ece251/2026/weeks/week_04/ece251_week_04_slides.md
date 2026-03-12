@@ -328,7 +328,7 @@ endmodule
 *   **Half Adder**: XOR (Sum) + AND (Carry).
 *   **Full Adder**: 2 Half Adders + OR.
 *   **Ripple Carry Adder**: Chain of Full Adders.
-    *   $C_{out}$ of bit $i$ -> $C_{in}$ of bit $i+1$.
+    *   $C_ {out}$ of bit $i$ -> $C_ {in}$ of bit $i+1$.
 *   **Multiplier**:
     *   **Structural**: AND gates (products) + Adders (sum).
     *   **Dataflow**: `assign p = a * b;`

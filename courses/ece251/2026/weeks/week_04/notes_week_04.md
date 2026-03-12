@@ -632,7 +632,7 @@ FPGA and CPU clocks run very fast (e.g., 50 MHz, 100 MHz). Often, we need slower
 *   **Communication Protocols**: Generating specific baud rates for UART (e.g., 9600 bps).
 *   **Debouncing**: Waiting for mechanical switch contacts to settle (requires ~10-20 ms).
 
-A simple way to divide a clock is using a counter. The N-th bit of a counter toggles at a frequency of $F_{clk} / 2^{(N+1)}$.
+A simple way to divide a clock is using a counter. The N-th bit of a counter toggles at a frequency of $F_ {clk} / 2^{(N+1)}$.
 
 [Download clock_divider.sv](clock_divider.sv)
 

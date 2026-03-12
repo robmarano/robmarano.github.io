@@ -249,7 +249,7 @@ As clock speeds increase, so does the power consumption of the processor.  This 
 **The Relationship Between Clock Speed and Power**
 
 * **Dynamic Power:** A significant portion of a processor's power consumption is dynamic power, which is the power used to switch transistors on and off. This is directly related to the clock speed. Note there is also "static power consumption," also known as the leakage current to power up transitors. We will deal here only with dynamic power, that is, the power created by switching between 0s and 1s.
-* **The Equation:** Power is that generated when switching between 0 and 1 and the static power: $$P=P_{dynamic}+P_{static}$$ where $P_{dynamic} = C * V^2 * f$. <br> A simplified way to represent this is: $$Power ≈ C * V^2 * f$$
+* **The Equation:** Power is that generated when switching between 0 and 1 and the static power: $$P=P_ {dynamic}+P_ {static}$$ where $P_ {dynamic} = C * V^2 * f$. <br> A simplified way to represent this is: $$Power ≈ C * V^2 * f$$
 
 Where:
  * `C` is the capacitance of the circuit
@@ -373,7 +373,7 @@ $$ \text{CPU Time} = \frac{\text{Instruction Count} \times \text{CPI}}{\text{Clo
 ## 1.7 The Power Wall
 For decades, clock rates increased rapidly, but this has slowed due to thermal limits.
 *   **Power Equation**:
-    $$ P_{\text{dynamic}} \propto \text{Capacitive Load} \times \text{Voltage}^2 \times \text{Frequency} $$
+    $$ P_ {\text{dynamic}} \propto \text{Capacitive Load} \times \text{Voltage}^2 \times \text{Frequency} $$
 *   We cannot reduce voltage further without leakage issues, and we cannot remove heat fast enough to increase frequency significantly.
 *   **Result**: The "Power Wall" forces a shift in design strategy.
 
