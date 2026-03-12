@@ -10,7 +10,7 @@ master:
     tcpPort: 6000
 
 worker:
-  replicaCount: 2
+  replicaCount: 5
   image:
     repository: ece465-histogram-worker
     tag: "latest"
