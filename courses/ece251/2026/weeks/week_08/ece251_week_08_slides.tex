@@ -60,9 +60,11 @@
     \item Uses scientific notation: hardware dynamically ``floats'' the decimal point.
     \item \textbf{Binary Floating Point Formula:} $(-1)^{s} \times (1 + \text{Fraction}) \times 2^{(\text{Exponent} - \text{Bias})}$
 \end{itemize}
-\vspace{0.2cm}
+\end{frame}
+
+\begin{frame}{Standard Representation (IEEE 754)}
 \begin{center}
-    \includegraphics[width=0.65\textwidth,height=0.45\textheight,keepaspectratio]{images/hamacher_fig9_26.png}
+    \includegraphics[width=0.95\textwidth,height=0.85\textheight,keepaspectratio]{images/hamacher_fig9_26.png}
 \end{center}
 \end{frame}
 
@@ -114,7 +116,7 @@ Mathematically packed into three distinct fields:
 \end{itemize}
 \vspace{0.2cm}
 \begin{center}
-    \includegraphics[width=0.65\textwidth,height=0.45\textheight,keepaspectratio]{images/harris_fig6_35.png}
+    \includegraphics[width=0.85\textwidth,keepaspectratio]{images/harris_fig6_35.png}
 \end{center}
 \end{frame}
 
@@ -124,8 +126,11 @@ Mathematically packed into three distinct fields:
     \item \textbf{Normalized Mantissas:} The leading \texttt{1} is implicitly hidden (\texttt{1.xxxxx}), providing 24 bits of effective precision in a 23-bit space.
     \item \textbf{Special Values:} \texttt{0} (Exp=0, Frac=0) and \textbf{NaN} (Exp=255, Frac$\neq$0).
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Normalizing a Mantissa (IEEE 754)}
 \begin{center}
-    \includegraphics[width=0.6\textwidth,height=0.5\textheight,keepaspectratio]{images/hamacher_fig9_27.png}
+    \includegraphics[width=0.95\textwidth,height=0.85\textheight,keepaspectratio]{images/hamacher_fig9_27.png}
 \end{center}
 \end{frame}
 
@@ -170,8 +175,6 @@ Mathematically packed into three distinct fields:
 \end{frame}
 
 \begin{frame}{5. Microarchitectural Hardware Implementation}
-\begin{columns}
-\begin{column}{0.45\textwidth}
 \begin{itemize}
     \item \textbf{Integer Datapath:} $\sim$ 1 cycle.
     \item \textbf{FPU Datapath:} Must pipe sequentially:
@@ -183,18 +186,15 @@ Mathematically packed into three distinct fields:
     \end{enumerate}
     \item \textbf{Bottleneck:} FPUs natively \textbf{pipeline} across 4 to 6 cycles constraint.
 \end{itemize}
-\end{column}
-\begin{column}{0.55\textwidth}
-    \begin{center}
-        \includegraphics[width=\textwidth,height=0.65\textheight,keepaspectratio]{images/hamacher_fig9_28.png}
-    \end{center}
-\end{column}
-\end{columns}
+\end{frame}
+
+\begin{frame}{FPU Datapath Architecture}
+\begin{center}
+    \includegraphics[width=0.95\textwidth,height=0.85\textheight,keepaspectratio]{images/hamacher_fig9_28.png}
+\end{center}
 \end{frame}
 
 \begin{frame}{Example: FPU Pipeline Addition Trace}
-\begin{columns}
-\begin{column}{0.4\textwidth}
 \begin{itemize}
     \item \textbf{Trace:} $7.875_{10} + 0.1875_{10}$
     \item \textbf{Step 1-2:} Unpack Exponent/Fraction.
@@ -203,13 +203,12 @@ Mathematically packed into three distinct fields:
     \item \textbf{Step 6:} \textbf{Normalize} the shifted result.
     \item \textbf{Step 7-8:} \textbf{Round} and pack back into 32-bit register format.
 \end{itemize}
-\end{column}
-\begin{column}{0.6\textwidth}
-    \begin{center}
-        \includegraphics[width=\textwidth,height=0.75\textheight,keepaspectratio]{images/harris_fig5_29.png}
-    \end{center}
-\end{column}
-\end{columns}
+\end{frame}
+
+\begin{frame}{FPU Pipeline Addition Timeline}
+\begin{center}
+    \includegraphics[width=0.95\textwidth,height=0.85\textheight,keepaspectratio]{images/harris_fig5_29.png}
+\end{center}
 \end{frame}
 
 \begin{frame}[fragile]{6. The Quake III Inverse Square Root Hack}
