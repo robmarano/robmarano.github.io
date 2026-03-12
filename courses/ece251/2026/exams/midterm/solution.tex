@@ -120,6 +120,8 @@ Prof. Rob Marano \hfill
 \textbf{IMPORTANT REMINDER:} Write LEGIBLY if you are not typing your answers! If I cannot read it, I cannot grade it. Additionally, WRITE CONCISELY to ensure your responses fit within the allotted spaces below. Show your full work and derivations directly on the individual problem pages that follow.
 \vspace{0.2in}
 
+\noindent
+\begin{minipage}[t][7in][s]{0.48\textwidth}
 \begin{enumerate}[\bf 1.]
     \item \textbf{CPU Performance \& Clock Cycles (15 pts):} \\
     {\color{red} \textbf{12 GHz}}
@@ -128,17 +130,22 @@ Prof. Rob Marano \hfill
     \item \textbf{General Computer Architecture Concepts (15 pts):} \\
     (a) \textit{[See structural diagram on problem page.]} \\
     (b) {\color{red} Programs and instructions share the same memory layout.} \\
-    (c) {\color{red} 1. Simplicity favors regularity 2. Smaller is faster 3. Make common case fast 4. Good design demands good compromises} \\
+    (c) {\color{red} 1. Simplicity favors regularity \\2. Smaller is faster \\3. Make common case fast \\4. Good design demands good compromises} \\
     (d) {\color{red} Big-Endian: MSB at lowest address. Little-Endian: LSB at lowest address.}
     \vfill
     
     \item \textbf{MIPS Architecture \& Layout (15 pts):} \\
     (a) {\color{red} Variables map physically via explicit load \& store calls; ALU isolated strictly to registers.} \\
-    (b) {\color{red} \textbf{R-Type:} opcode/rs/rt/rd/shamt/funct. \textbf{I-Type:} opcode/rs/rt/imm. \textbf{J-Type:} opcode/target.} \\
+    (b) {\color{red} \textbf{R-Type:} opcode/rs/rt/rd/shamt/funct. \\\textbf{I-Type:} opcode/rs/rt/imm. \\\textbf{J-Type:} opcode/target.} \\
     (c) {\color{red} \texttt{.text} contains physical logic at \texttt{0x00400000}. \texttt{.data} contains arrays at \texttt{0x10000000}.} \\
     (d) {\color{red} Base offset maps static register + imm bytes. PC-Relative jumps exactly \texttt{PC + (imm * 4)}.}
     \vfill
-    
+\end{enumerate}
+\end{minipage}%
+\hfill
+\begin{minipage}[t][7in][s]{0.48\textwidth}
+\begin{enumerate}[\bf 1.]
+\setcounter{enumi}{3}
     \item \textbf{Assembly Compilation and Disassembly (20 pts):} \\
     (a) \textit{Machine Code Hex:} {\color{red} \textbf{0x8E69FFFC}} \hfill (b) \textit{Assembly Instruction:} {\color{red} \textbf{sw \$t3, 8(\$s0)}}
     \vfill
@@ -151,6 +158,7 @@ Prof. Rob Marano \hfill
     {\color{red} \textit{See full push/pop nested factorial tree execution on problem page.}}
     \vfill
 \end{enumerate}
+\end{minipage}
 
 \newpage
 % Return to normal page headers
