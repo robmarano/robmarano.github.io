@@ -22,6 +22,9 @@ To solve this, the Institute of Electrical and Electronics Engineers ratified th
 Standard Scientific Notation: $-1.234 \times 10^{5}$
 Binary Floating Point Notation: $(-1)^{s} \times (1 + \text{Fraction}) \times 2^{(\text{Exponent} - \text{Bias})}$
 
+![Hamacher Figure 9.26 - IEEE 32-bit Standard Representation](./images/hamacher_fig9_26.png)
+
+
 MIPS implements the **Single Precision (32-bit)** format utilizing three distinct, mathematically packed fields:
 1.  **Sign Bit (1 bit):** Bit 31. `1` is negative, `0` is positive.
 2.  **Exponent (8 bits):** Bits 30-23. Represents the $2^{\text{power}}$. (Uses a Bias of 127).
@@ -57,6 +60,8 @@ While the basic fields of IEEE 754 provide range and precision, the standard dic
 
 *   **Biased Notation for Exponents:** Unlike integer calculations which use Two's Complement for negative numbers, the FPU exponent applies a **Bias (+127 for Single Precision)**. Why? It purely simplifies hardware comparison logic. A biased exponent ensures that all exponent values remain strictly positive integers in binary, allowing the CPU to use a standard, high-speed integer comparator to check which floating-point number is larger.
 *   **Normalized Mantissas:** The leading `1` in the fractional component is always assumed (`1.xxxxx`). This "hidden bit" buys us one extra bit of free precision, granting 24 bits of effective accuracy in a 23-bit field.
+
+![Hamacher Figure 9.27 - Normalizing a Floating Point Value](./images/hamacher_fig9_27.png)
 *   **Architectural Special Values:** 
     *   **Zero:** Exponent = `00000000`, Fraction = `0`
     *   **Infinity:** Exponent = `11111111`, Fraction = `0` (Used for divide-by-zero).
@@ -147,6 +152,8 @@ The integer addition requires precisely defined functional units in sequence:
 **Example 2: Medium/Hard (Tracing a Coprocessor 1 FPU Pipeline)**
 *Problem:* Detail the sequential hardware logic utilized by the FPU to execute `add.s $f0, $f1, $f2`, highlighting why it cannot execute in a single basic clock cycle. *(Source: Cavanagh HDL / COaD)*
 *Solution:*
+
+![Hamacher Figure 9.28 - Hardware Implementation of FPU Operations](./images/hamacher_fig9_28.png)
 Attempting $0.5 + (-0.4375)$ requires the FPU to perform multi-stage calculations that drastically exceed integer ALU latency.
 1.  **Exponent Comparison & Alignment Shift:** The hardware unpacks the 8-bit exponents. It finds `$f1`'s exponent is $2^{-1}$ and `$f2` is $2^{-4}$. The smaller number ($-0.4375$) must be shifted dynamically to the right by 3 places so both numbers share the $2^{-1}$ power frame.
 2.  **Fraction Addition:** Only once aligned can the 24-bit Mantissa ALU process the math.
