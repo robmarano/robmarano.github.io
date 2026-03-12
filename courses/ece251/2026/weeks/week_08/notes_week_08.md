@@ -53,7 +53,11 @@ Standard MIPS instructions like `add` and `lw` cannot physically access the FPU.
 *   **Arithmetic:** `add.s $f0, $f1, $f2` (Floating-Point Addition)
 *   **Moving Data:** `mfc1 $t0, $f12` (Move *From* Coprocessor 1 into Integer CPU)
 
-![Harris Figure 6.35 - F-Type Instruction Format](./images/harris_fig6_35.png)
+**F-Type (Floating-Point) Instruction Format:**
+
+| `opcode` (6 bits) | `fmt` (5 bits) | `ft` (5 bits) | `fs` (5 bits) | `fd` (5 bits) | `funct` (6 bits) |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| Instruction Class | Precision (`.s`=16, `.d`=17) | Target Reg | Source Reg 1 | Dest Reg | Specific Math Operation |
 
 $\Rightarrow$ *For a complete execution list, refer to the "Floating-Point Instruction Formats" section on the back of your [MIPS Green Sheet](/courses/ece251/mips/MIPS_Green_Sheet.pdf).*
 

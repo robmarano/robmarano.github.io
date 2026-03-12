@@ -114,9 +114,17 @@ Mathematically packed into three distinct fields:
         \item \textbf{Moving Data:} \texttt{mfc1 \$t0, \$f12} (Move \textit{From} Coprocessor 1)
     \end{itemize}
 \end{itemize}
-\vspace{0.2cm}
+\vspace{0.4cm}
 \begin{center}
-    \includegraphics[width=0.85\textwidth,keepaspectratio]{images/harris_fig6_35.png}
+    \textbf{F-Type Instruction Format} \\
+    \vspace{0.2cm}
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \textbf{opcode} & \textbf{fmt} & \textbf{ft} & \textbf{fs} & \textbf{fd} & \textbf{funct} \\
+        \hline
+        6 bits & 5 bits & 5 bits & 5 bits & 5 bits & 6 bits \\
+        \hline
+    \end{tabular}
 \end{center}
 \end{frame}
 
