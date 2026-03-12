@@ -51,6 +51,8 @@ Standard MIPS instructions like `add` and `lw` cannot physically access the FPU.
 *   **Arithmetic:** `add.s $f0, $f1, $f2` (Floating-Point Addition)
 *   **Moving Data:** `mfc1 $t0, $f12` (Move *From* Coprocessor 1 into Integer CPU)
 
+![Harris Figure 6.35 - F-Type Instruction Format](./images/harris_fig6_35.png)
+
 $\Rightarrow$ *For a complete execution list, refer to the "Floating-Point Instruction Formats" section on the back of your [MIPS Green Sheet](/courses/ece251/mips/MIPS_Green_Sheet.pdf).*
 
 ## 3. Representing Decimal Numbers: IEEE 754 Standard Deep Dive
@@ -160,6 +162,10 @@ Attempting $0.5 + (-0.4375)$ requires the FPU to perform multi-stage calculation
 3.  **Normalization Shift:** The result might have spawned a carry or absorbed a leading `1`. The hardware must shift the solution left/right until the leading `1` is perfectly normalized (`1.xxxx`), while simultaneously decrementing/incrementing the resulting Exponent field.
 4.  **Rounding Hardware:** The IEEE 754 logic ensures the trailing fractional bits are properly truncated or rounded to nearest even.
 Because no silicon can propagate these cascading tests and shifts instantaneously, FPUs must **pipeline** this operation, dividing it across 4 to 6 unique clock cycles to avoid crashing the CPU max clock frequency.
+
+*(For an explicit binary step-by-step logic trace of this execution pipeline, analyzing the alignment and addition of $7.875_{10} + 0.1875_{10}$, see Figure 5.29 below):*
+
+![Harris Figure 5.29 - Step-by-Step Floating-Point Addition](./images/harris_fig5_29.png)
 
 ---
 

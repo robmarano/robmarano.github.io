@@ -102,6 +102,10 @@ Mathematically packed into three distinct fields:
         \item \textbf{Moving Data:} \texttt{mfc1 \$t0, \$f12} (Move \textit{From} Coprocessor 1)
     \end{itemize}
 \end{itemize}
+\vspace{0.2cm}
+\begin{center}
+    \includegraphics[width=0.7\textwidth]{images/harris_fig6_35.png}
+\end{center}
 \end{frame}
 
 \begin{frame}{3. IEEE 754 Standard Deep Dive}
@@ -173,6 +177,26 @@ Mathematically packed into three distinct fields:
 \begin{column}{0.55\textwidth}
     \begin{center}
         \includegraphics[width=\textwidth]{images/hamacher_fig9_28.png}
+    \end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Example: FPU Pipeline Addition Trace}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+    \item \textbf{Trace:} $7.875_{10} + 0.1875_{10}$
+    \item \textbf{Step 1-2:} Unpack Exponent/Fraction.
+    \item \textbf{Step 3-4:} Compare Exponents and \textbf{Align} the fractional mantissas.
+    \item \textbf{Step 5:} Perform fractional \textbf{Execution} (Addition).
+    \item \textbf{Step 6:} \textbf{Normalize} the shifted result.
+    \item \textbf{Step 7-8:} \textbf{Round} and pack back into 32-bit register format.
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+    \begin{center}
+        \includegraphics[height=0.85\textheight]{images/harris_fig5_29.png}
     \end{center}
 \end{column}
 \end{columns}
