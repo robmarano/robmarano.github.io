@@ -9,6 +9,11 @@ This document serves to record decisions, architectural structure, and recent de
 *   **Assignments**: `assignments/hw-0X.md`
 *   **Code Examples**: MIPS Assembly (`.asm`), SystemVerilog (`.sv`), Makefiles
 
+### Markdown & MathJax Invariants
+*   **MathJax Subscripts**: To prevent GitHub Pages' Markdown parser from aggressively swallowing underscores and converting them into HTML italics (which breaks KaTeX/MathJax rendering), **ALL mathematical subscripts must use a single space after the underscore**. 
+    *   *Incorrect:* `$P_{dynamic}$` (Markdown reads `_` as an italic bracket).
+    *   *Correct:* `$P_ {dynamic}$` (The space escapes the italic parser but is natively ignored by MathJax, rendering a perfect subscript).
+
 ## Recent Updates: Week 04
 
 ### 1. ISA Review enhancements (`notes_week_04.md`)
