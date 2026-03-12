@@ -72,7 +72,7 @@ While the basic fields of IEEE 754 provide range and precision, the standard dic
 3. Field 1 (Sign): The number is negative, so **Sign = `1`**.
 4. Field 2 (Exponent): True exponent is $-1$. Add the bias: $-1 + 127 = 126$. Binary representation is **Exponent = `01111110`**.
 5. Field 3 (Mantissa): Drop the leading `1` (hidden bit). The fractional remainder is just `1`. Pad with zeros: **Mantissa = `100 0000 0000 0000 0000 0000`**.
-*Final 32-bit Code:* `1 01111110 10000000000000000000000`
+*Final 32-bit Code:* `1 01111110 10000000000000000000000` (**`0xBF400000`**)
 
 **Example 2: Medium/Hard (Floating-Point Decimal Arithmetic)**
 *Problem:* Convert $12.375_{10}$ to IEEE 754 Single Precision.
@@ -85,7 +85,7 @@ While the basic fields of IEEE 754 provide range and precision, the standard dic
     *   **Sign:** Positive $\rightarrow$ **`0`**.
     *   **Exponent:** $3 + 127 = 130 \rightarrow$ **`10000010`**.
     *   **Mantissa:** Drop leading 1 $\rightarrow$ **`10001100000000000000000`**.
-*Final 32-bit Code:* `0 10000010 10001100000000000000000`
+*Final 32-bit Code:* `0 10000010 10001100000000000000000` (**`0x41460000`**)
 
 ## 4. Literal Values in ISA Design
 *(Synthesized from Harris & Harris' Digital Design and COaD)*
@@ -167,7 +167,7 @@ Because no silicon can propagate these cascading tests and shifts instantaneousl
 4. Single Precision (32-bit):
     *   **Exponent:** True exponent is $3$. Add the Single bias (+127): $3 + 127 = 130 \rightarrow$ **`10000010`**.
     *   **Mantissa:** Drop the leading `1`. The fractional remainder is `0001`. Pad with zeros to 23 bits $\rightarrow$ **`0001 0000 0000 0000 0000 000`**.
-    *   *Final 32-bit Code:* `0 10000010 00010000000000000000000`
+    *   *Final 32-bit Code:* `0 10000010 00010000000000000000000` (**`0x41080000`**)
 5. Double Precision (64-bit):
     *   **Exponent:** True exponent is $3$. Add the Double bias (+1023): $3 + 1023 = 1026 \rightarrow$ **`100 0000 0010`**.
     *   **Mantissa:** Drop the leading `1`. The fractional remainder is `0001`. Pad with zeros to 52 bits $\rightarrow$ **`0001`** followed by 48 zeros.
@@ -182,7 +182,7 @@ Because no silicon can propagate these cascading tests and shifts instantaneousl
 4. Single Precision (32-bit):
     *   **Exponent:** $-3 + 127 = 124 \rightarrow$ **`01111100`**.
     *   **Mantissa:** Drop leading `1` $\rightarrow$ **`0100 0000 0000 0000 0000 000`**.
-    *   *Final 32-bit Code:* `1 01111100 01000000000000000000000`
+    *   *Final 32-bit Code:* `1 01111100 01000000000000000000000` (**`0xBE200000`**)
 5. Double Precision (64-bit):
     *   **Exponent:** $-3 + 1023 = 1020 \rightarrow$ **`011 1111 1100`**.
     *   **Mantissa:** Drop leading `1` $\rightarrow$ **`0100`** followed by 48 zeros.
@@ -197,7 +197,7 @@ Because no silicon can propagate these cascading tests and shifts instantaneousl
 4. Single Precision (32-bit):
     *   **Exponent:** $-4 + 127 = 123 \rightarrow$ **`01111011`**.
     *   **Mantissa:** Drop the leading `1`. We need the first 23 bits: `1001 1001 1001 1001 1001 100`. The incredibly strict IEEE 754 "Round to Nearest, Ties to Even" requires us to look at the 24th bit (which is a `1`). Since it's a `1`, we must round up our 23-bit mantissa $\rightarrow$ **`1001 1001 1001 1001 1001 101`**.
-    *   *Final 32-bit Code:* `0 01111011 10011001100110011001101`
+    *   *Final 32-bit Code:* `0 01111011 10011001100110011001101` (**`0x3DCCCCCD`**)
 5. Double Precision (64-bit):
     *   **Exponent:** $-4 + 1023 = 1019 \rightarrow$ **`011 1111 1011`**.
     *   **Mantissa:** We take the first 52 bits. Again, the 53rd bit causes us to round up the very last bit. The final field is: **`1001100110011001100110011001100110011001100110011010`**.
@@ -206,7 +206,7 @@ Because no silicon can propagate these cascading tests and shifts instantaneousl
 ---
 
 **Exercise 4: Easy (IEEE 754 Binary to Decimal)**
-*Problem:* Convert the following 32-bit Single-Precision binary value into a base-10 decimal:
+*Problem:* Convert the following 32-bit Single-Precision binary value (`0x40D00000`) into a base-10 decimal:
 `0 10000001 10100000000000000000000`
 *Solution:*
 1. **Sign field:** `0` $\rightarrow$ The number is Positive `$+$`.
