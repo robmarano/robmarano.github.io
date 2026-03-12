@@ -1,6 +1,8 @@
 # Notes for Week 1
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
 
+> **[🗂️ Download Week 01 Slides (PDF)](./ece251_week_01_slides.pdf)**
+
 [Slides for Class 01](https://cooperunion.sharepoint.com/:p:/s/Section_ECE-251-B-2026SP/IQBwKZo1hrldSql8eipiyQ8uARaOo3iqJQVQ1WOgeJ_0P_s?e=PJOBLj)
 
 # Topics

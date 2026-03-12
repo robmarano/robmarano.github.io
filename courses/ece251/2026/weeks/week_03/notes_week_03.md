@@ -1,6 +1,8 @@
 # Notes for Week 3
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
 
+> **[🗂️ Download Week 03 Slides (PDF)](./ece251_week_03_slides.pdf)**
+
 # Topics
 1. Recap: Instructions for arithmetic and for memory access
 2. The map of how memory is segmented on a von Neumann computer, using MIPS32 as an example.

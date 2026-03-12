@@ -1,6 +1,8 @@
 # Notes for Week 7 (Session 7)
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
 
+> **[🗂️ Download Week 07 Slides (PDF)](./ece251_week_07_slides.pdf)**
+
 # Today's Agenda: The Culmination of Assembly & Project Kickoff
 1. **Advanced Assembly Patterns**
     *   Iterating Arrays and Strings

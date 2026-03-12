@@ -1,6 +1,8 @@
 # Notes for Week 4
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
 
+> **[🗂️ Download Week 04 Slides (PDF)](./ece251_week_04_slides.pdf)**
+
 # Topics
 1. ISA Review
     * The four design principles

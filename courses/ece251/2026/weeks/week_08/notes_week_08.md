@@ -1,5 +1,7 @@
 # ECE 251: Week 08 Notes - Floating-Point Architecture
 
+> **[🗂️ Download Week 08 Slides (PDF)](./ece251_week_08_slides.pdf)**
+
 ## Overview
 This week we transition from Chapter 2 (Instructions) directly into **Chapter 3** of our textbook ([Computer Organization and Design](/COaD-MIPS-6ed.pdf)). Until now, we have exclusively designed hardware and processed data using the **Integer Data Type** (both signed and unsigned formats). 
 
