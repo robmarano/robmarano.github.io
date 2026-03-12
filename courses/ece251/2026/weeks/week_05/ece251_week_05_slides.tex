@@ -1,0 +1,87 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\title{ECE 251: Computer Architecture}
+\subtitle{Week 05 Notes - SystemVerilog Primitives \& Synchronization}
+\author{Prof Rob Marano}
+\date{Spring 2026}
+
+% Cooper Union Brand Identity
+\definecolor{CooperRed}{HTML}{8A1538}
+\definecolor{CooperDark}{HTML}{5C0E25}
+\setbeamercolor{structure}{fg=CooperRed}
+\setbeamercolor{palette primary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette secondary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette tertiary}{bg=CooperDark,fg=white}
+\setbeamercolor{title in head/foot}{bg=CooperDark,fg=white}
+\logo{\includegraphics[height=1cm]{../../images/cooper_union_logo.png}}
+\titlegraphic{\includegraphics[height=1.5cm,keepaspectratio]{../../images/cooper_union_logo.png}}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{1. SystemVerilog Primitives}
+Primitives are the lowest-level natively supported logic gates in SV.
+\vspace{0.2cm}
+\begin{itemize}
+    \item \textbf{Built-in}: \texttt{and}, \texttt{nand}, \texttt{or}, \texttt{nor}, \texttt{xor}, \texttt{xnor}, \texttt{not}, \texttt{buf}.
+    \item \textbf{Syntax}: \texttt{gate\_type instance\_name (output, in1, in2...);}
+    \item \textbf{Tri-State}: \texttt{bufif1} (passes if 1, else high-Z).
+    \item \textbf{Delays}: Accurate physical propagation delays modeled via \texttt{\#(time)}.
+\end{itemize}
+\begin{block}{User-Defined Primitives (UDPs)}
+Custom gate cells (like a 2:1 Mux or SR-Latch) defined entirely by Truth Tables evaluated extremely quickly by the simulator engine. 
+\end{block}
+\end{frame}
+
+\begin{frame}{2. SystemVerilog Dataflow Assignments}
+Strict separation of assignment syntax is required for accurate hardware synthesis.
+\vspace{0.2cm}
+\begin{enumerate}
+    \item \textbf{Continuous Assignment (\texttt{assign})}: Evaluates instantly outside procedural blocks. Acts as a continuously driven physical wire.
+    \item \textbf{Blocking Procedural (\texttt{=})}: Evaluates strictly top-to-bottom inside \texttt{always\_comb}. Used for Combinational logic.
+    \item \textbf{Non-Blocking Procedural (\texttt{<=})}: Right-hand sides evaluate immediately, but Left-hand sides update simultaneously at the end of the step. Used exclusively inside clocked \texttt{always\_ff} blocks to model Flip-Flops safely.
+\end{enumerate}
+\vspace{0.2cm}
+\textit{Warning: Never mix \texttt{=} and \texttt{<=} in the same logic block.}
+\end{frame}
+
+\begin{frame}{3. 32-Bit MIPS Addressing}
+MIPS instructions are rigidly 32 bits, making it impossible to encapsulate both an opcode and a 32-bit constant immediately.
+\vspace{0.2cm}
+\begin{itemize}
+    \item \textbf{Loading Large Constants}:
+    \begin{itemize}
+        \item \texttt{lui \$s0, 0xDEAD} (Load Upper Immediate)
+        \item \texttt{ori \$s0, \$s0, 0xBEEF} (OR Immediate)
+    \end{itemize}
+    \vspace{0.2cm}
+    \item \textbf{PC-Relative Addressing}: Used by \texttt{beq}.
+    \begin{itemize}
+        \item Target = \texttt{PC + 4 + (offset $\times$ 4)}. Allows rapid local jumps.
+    \end{itemize}
+    \vspace{0.2cm}
+    \item \textbf{Register Addressing}: Used by \texttt{jr}.
+    \begin{itemize}
+        \item Target = Address inside a 32-bit register. Allows absolute 4GB reach (necessary for OS kernels).
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{4. Hardware Synchronization \& Data Races}
+In multicore processors, concurrent threads can corrupt shared memory if they Read-Modify-Write simultaneously (\textbf{Data Race}).
+\vspace{0.2cm}
+\begin{itemize}
+    \item \textbf{Atomic Operations}: Needed to build lock mechanisms without freezing the entire hardware memory bus.
+    \item \textbf{Load Linked (\texttt{ll})}: Reads a word and uniquely registers the memory address with the CPU.
+    \item \textbf{Store Conditional (\texttt{sc})}: Attempts to write back to that address. It \textbf{fails} (returns 0) if any other core modified the data since the \texttt{ll}. Otherwise, it succeeds (returns 1).
+\end{itemize}
+\end{frame}
+
+\end{document}

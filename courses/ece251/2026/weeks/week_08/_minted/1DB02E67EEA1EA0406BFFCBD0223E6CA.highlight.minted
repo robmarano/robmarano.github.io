@@ -1,0 +1,9 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Move float bits from FPU (\PYGZdl{}f12) into CPU Integer Register (\PYGZdl{}t0)}
+\PYG{n+nf}{mfc1}\PYG{+w}{  }\PYG{k+kc}{\PYGZdl{}}\PYG{n+nv}{t0}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kc}{\PYGZdl{}}\PYG{n+nv}{f12}
+
+\PYG{c+c1}{\PYGZsh{} i = 0x5f3759df \PYGZhy{} ( i \PYGZgt{}\PYGZgt{} 1 );}
+\PYG{n+nf}{srl}\PYG{+w}{   }\PYG{k+kc}{\PYGZdl{}}\PYG{n+nv}{t1}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kc}{\PYGZdl{}}\PYG{n+nv}{t0}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{        }\PYG{c+c1}{\PYGZsh{} Bit\PYGZhy{}shift right by 1}
+\PYG{n+nf}{lw}\PYG{+w}{    }\PYG{k+kc}{\PYGZdl{}}\PYG{n+nv}{t2}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nv}{magic}\PYG{+w}{         }\PYG{c+c1}{\PYGZsh{} Load magic number (0x5f3759df)}
+\PYG{n+nf}{sub}\PYG{+w}{   }\PYG{k+kc}{\PYGZdl{}}\PYG{n+nv}{t0}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kc}{\PYGZdl{}}\PYG{n+nv}{t2}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kc}{\PYGZdl{}}\PYG{n+nv}{t1}\PYG{+w}{      }\PYG{c+c1}{\PYGZsh{} Integer subtraction}
+\end{MintedVerbatim}

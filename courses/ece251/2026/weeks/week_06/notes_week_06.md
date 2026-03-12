@@ -1,6 +1,8 @@
 # Notes for Week 6
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
 
+> **[🗂️ Download Week 06 Slides (PDF)](./ece251_week_06_slides.pdf)**
+
 # Topics (Let's review!)
 ## MIPS Assembly
 1. The 5 Components of a Computer & CPU Deep Dive

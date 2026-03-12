@@ -1,5 +1,7 @@
 # ECE 251: Week 08 Notes - Floating-Point Architecture
 
+> **[🗂️ Download Week 08 Slides (PDF)](./ece251_week_08_slides.pdf)**
+
 ## Overview
 This week we transition from Chapter 2 (Instructions) directly into **Chapter 3** of our textbook ([Computer Organization and Design](/COaD-MIPS-6ed.pdf)). Until now, we have exclusively designed hardware and processed data using the **Integer Data Type** (both signed and unsigned formats). 
 
@@ -21,6 +23,9 @@ To solve this, the Institute of Electrical and Electronics Engineers ratified th
 
 Standard Scientific Notation: $-1.234 \times 10^{5}$
 Binary Floating Point Notation: $(-1)^{s} \times (1 + \text{Fraction}) \times 2^{(\text{Exponent} - \text{Bias})}$
+
+![Hamacher Figure 9.26 - IEEE 32-bit Standard Representation](./images/hamacher_fig9_26.png)
+
 
 MIPS implements the **Single Precision (32-bit)** format utilizing three distinct, mathematically packed fields:
 1.  **Sign Bit (1 bit):** Bit 31. `1` is negative, `0` is positive.
@@ -48,6 +53,12 @@ Standard MIPS instructions like `add` and `lw` cannot physically access the FPU.
 *   **Arithmetic:** `add.s $f0, $f1, $f2` (Floating-Point Addition)
 *   **Moving Data:** `mfc1 $t0, $f12` (Move *From* Coprocessor 1 into Integer CPU)
 
+**F-Type (Floating-Point) Instruction Format:**
+
+| `opcode` (6 bits) | `fmt` (5 bits) | `ft` (5 bits) | `fs` (5 bits) | `fd` (5 bits) | `funct` (6 bits) |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| Instruction Class | Precision (`.s`=16, `.d`=17) | Target Reg | Source Reg 1 | Dest Reg | Specific Math Operation |
+
 $\Rightarrow$ *For a complete execution list, refer to the "Floating-Point Instruction Formats" section on the back of your [MIPS Green Sheet](/courses/ece251/mips/MIPS_Green_Sheet.pdf).*
 
 ## 3. Representing Decimal Numbers: IEEE 754 Standard Deep Dive
@@ -57,6 +68,8 @@ While the basic fields of IEEE 754 provide range and precision, the standard dic
 
 *   **Biased Notation for Exponents:** Unlike integer calculations which use Two's Complement for negative numbers, the FPU exponent applies a **Bias (+127 for Single Precision)**. Why? It purely simplifies hardware comparison logic. A biased exponent ensures that all exponent values remain strictly positive integers in binary, allowing the CPU to use a standard, high-speed integer comparator to check which floating-point number is larger.
 *   **Normalized Mantissas:** The leading `1` in the fractional component is always assumed (`1.xxxxx`). This "hidden bit" buys us one extra bit of free precision, granting 24 bits of effective accuracy in a 23-bit field.
+
+![Hamacher Figure 9.27 - Normalizing a Floating Point Value](./images/hamacher_fig9_27.png)
 *   **Architectural Special Values:** 
     *   **Zero:** Exponent = `00000000`, Fraction = `0`
     *   **Infinity:** Exponent = `11111111`, Fraction = `0` (Used for divide-by-zero).
@@ -65,22 +78,22 @@ While the basic fields of IEEE 754 provide range and precision, the standard dic
 ### Textbook Examples: IEEE 754
 
 **Example 1: Easy (Decimal to IEEE 754 Single Precision)**
-*Problem:* Convert $-0.75_{10}$ to IEEE 754 Single Precision binary. *(Source: COaD)*
+*Problem:* Convert $-0.75_ {10}$ to IEEE 754 Single Precision binary. *(Source: COaD)*
 *Solution:*
-1. Calculate the binary fraction: $-0.75_{10} = -3/4 = -0.11_{2}$.
-2. Normalize to scientific notation: $-1.1_{2} \times 2^{-1}$.
+1. Calculate the binary fraction: $-0.75_ {10} = -3/4 = -0.11_ {2}$.
+2. Normalize to scientific notation: $-1.1_ {2} \times 2^{-1}$.
 3. Field 1 (Sign): The number is negative, so **Sign = `1`**.
 4. Field 2 (Exponent): True exponent is $-1$. Add the bias: $-1 + 127 = 126$. Binary representation is **Exponent = `01111110`**.
 5. Field 3 (Mantissa): Drop the leading `1` (hidden bit). The fractional remainder is just `1`. Pad with zeros: **Mantissa = `100 0000 0000 0000 0000 0000`**.
 *Final 32-bit Code:* `1 01111110 10000000000000000000000` (**`0xBF400000`**)
 
 **Example 2: Medium/Hard (Floating-Point Decimal Arithmetic)**
-*Problem:* Convert $12.375_{10}$ to IEEE 754 Single Precision.
+*Problem:* Convert $12.375_ {10}$ to IEEE 754 Single Precision.
 *Solution:*
-1. Define the whole number: $12_{10} = 1100_{2}$.
-2. Define the fraction: $0.375_{10} = 3/8 = 0.011_{2}$.
-3. Combine: $1100.011_{2}$.
-4. Normalize: $1.100011_{2} \times 2^{3}$.
+1. Define the whole number: $12_ {10} = 1100_ {2}$.
+2. Define the fraction: $0.375_ {10} = 3/8 = 0.011_ {2}$.
+3. Combine: $1100.011_ {2}$.
+4. Normalize: $1.100011_ {2} \times 2^{3}$.
 5. Calculate fields:
     *   **Sign:** Positive $\rightarrow$ **`0`**.
     *   **Exponent:** $3 + 127 = 130 \rightarrow$ **`10000010`**.
@@ -108,7 +121,7 @@ There is no `subi` instruction in MIPS. The architecture handles negative consta
 *   Opcode (`addi`): `8` $\rightarrow$ `001000`
 *   `rs` (`$s1`): `17` $\rightarrow$ `10001`
 *   `rt` (`$s0`): `16` $\rightarrow$ `10000`
-*   `imm` ($-50_{10}$ in Two's Complement): `1111 1111 1100 1110`
+*   `imm` ($-50_ {10}$ in Two's Complement): `1111 1111 1100 1110`
 
 **Example 2: Medium/Hard (Loading a 32-bit Literal)**
 *Problem:* Load the enormous 32-bit hex address `0x003D0900` into integer register `$s0`. *(Source: COaD)*
@@ -147,6 +160,8 @@ The integer addition requires precisely defined functional units in sequence:
 **Example 2: Medium/Hard (Tracing a Coprocessor 1 FPU Pipeline)**
 *Problem:* Detail the sequential hardware logic utilized by the FPU to execute `add.s $f0, $f1, $f2`, highlighting why it cannot execute in a single basic clock cycle. *(Source: Cavanagh HDL / COaD)*
 *Solution:*
+
+![Hamacher Figure 9.28 - Hardware Implementation of FPU Operations](./images/hamacher_fig9_28.png)
 Attempting $0.5 + (-0.4375)$ requires the FPU to perform multi-stage calculations that drastically exceed integer ALU latency.
 1.  **Exponent Comparison & Alignment Shift:** The hardware unpacks the 8-bit exponents. It finds `$f1`'s exponent is $2^{-1}$ and `$f2` is $2^{-4}$. The smaller number ($-0.4375$) must be shifted dynamically to the right by 3 places so both numbers share the $2^{-1}$ power frame.
 2.  **Fraction Addition:** Only once aligned can the 24-bit Mantissa ALU process the math.
@@ -154,15 +169,19 @@ Attempting $0.5 + (-0.4375)$ requires the FPU to perform multi-stage calculation
 4.  **Rounding Hardware:** The IEEE 754 logic ensures the trailing fractional bits are properly truncated or rounded to nearest even.
 Because no silicon can propagate these cascading tests and shifts instantaneously, FPUs must **pipeline** this operation, dividing it across 4 to 6 unique clock cycles to avoid crashing the CPU max clock frequency.
 
+*(For an explicit binary step-by-step logic trace of this execution pipeline, analyzing the alignment and addition of $7.875_{10} + 0.1875_{10}$, see Figure 5.29 below):*
+
+![Harris Figure 5.29 - Step-by-Step Floating-Point Addition](./images/harris_fig5_29.png)
+
 ---
 
 ## Appendix: Additional Floating-Point Exercises
 
 **Exercise 1: Easy (Decimal to Single & Double Precision)**
-*Problem:* Convert $8.5_{10}$ to IEEE 754 Single-Precision (32-bit) and Double-Precision (64-bit) binary formats.
+*Problem:* Convert $8.5_ {10}$ to IEEE 754 Single-Precision (32-bit) and Double-Precision (64-bit) binary formats.
 *Solution:*
-1. Calculate the binary fraction: $8_{10} = 1000_{2}$ and $0.5_{10} = 1/2 = 0.1_{2}$. Thus, $8.5_{10} = 1000.1_{2}$.
-2. Normalize to scientific notation: $1.0001_{2} \times 2^{3}$.
+1. Calculate the binary fraction: $8_ {10} = 1000_ {2}$ and $0.5_ {10} = 1/2 = 0.1_ {2}$. Thus, $8.5_ {10} = 1000.1_ {2}$.
+2. Normalize to scientific notation: $1.0001_ {2} \times 2^{3}$.
 3. Field 1 (Sign): The number is positive, so **Sign = `0`**.
 4. Single Precision (32-bit):
     *   **Exponent:** True exponent is $3$. Add the Single bias (+127): $3 + 127 = 130 \rightarrow$ **`10000010`**.
@@ -174,10 +193,10 @@ Because no silicon can propagate these cascading tests and shifts instantaneousl
     *   *Final 64-bit Code:* `0 10000000010 0001000000000000000000000000000000000000000000000000` (Upper: **`0x40210000`**, Lower: **`0x00000000`**)
 
 **Exercise 2: Medium (Negative Fractional Decimal)**
-*Problem:* Convert $-0.15625_{10}$ to IEEE 754 Single and Double Precision.
+*Problem:* Convert $-0.15625_ {10}$ to IEEE 754 Single and Double Precision.
 *Solution:*
-1. Calculate the binary fraction: $0.15625_{10} = 5/32 = 1/8 + 1/32 = 0.125 + 0.03125 = 0.001_{2} + 0.00001_{2} = 0.00101_{2}$.
-2. Normalize to scientific notation: $-1.01_{2} \times 2^{-3}$.
+1. Calculate the binary fraction: $0.15625_ {10} = 5/32 = 1/8 + 1/32 = 0.125 + 0.03125 = 0.001_ {2} + 0.00001_ {2} = 0.00101_ {2}$.
+2. Normalize to scientific notation: $-1.01_ {2} \times 2^{-3}$.
 3. Field 1 (Sign): The number is negative, so **Sign = `1`**.
 4. Single Precision (32-bit):
     *   **Exponent:** $-3 + 127 = 124 \rightarrow$ **`01111100`**.
@@ -189,10 +208,10 @@ Because no silicon can propagate these cascading tests and shifts instantaneousl
     *   *Final 64-bit Code:* `1 01111111100 0100000000000000000000000000000000000000000000000000` (Upper: **`0xBFC40000`**, Lower: **`0x00000000`**)
 
 **Exercise 3: Hard (Repeating Fraction & Rounding)**
-*Problem:* Convert $0.1_{10}$ to IEEE 754 Single and Double Precision.
+*Problem:* Convert $0.1_ {10}$ to IEEE 754 Single and Double Precision.
 *Solution:*
-1. Calculate the binary fraction: $0.1_{10}$ cannot be represented perfectly in binary. It is a repeating fraction: $0.0001100110011...\overline{0011}_{2}$.
-2. Normalize to scientific notation: $1.100110011...\overline{0011}_{2} \times 2^{-4}$.
+1. Calculate the binary fraction: $0.1_ {10}$ cannot be represented perfectly in binary. It is a repeating fraction: $0.0001100110011...\overline{0011}_ {2}$.
+2. Normalize to scientific notation: $1.100110011...\overline{0011}_ {2} \times 2^{-4}$.
 3. Field 1 (Sign): The number is positive, so **Sign = `0`**.
 4. Single Precision (32-bit):
     *   **Exponent:** $-4 + 127 = 123 \rightarrow$ **`01111011`**.
@@ -211,10 +230,10 @@ Because no silicon can propagate these cascading tests and shifts instantaneousl
 *Solution:*
 1. **Sign field:** `0` $\rightarrow$ The number is Positive `$+$`.
 2. **Exponent field:** `10000001` in decimal is $128 + 1 = 129$. Subtract the Single-Precision bias (127): $129 - 127 = 2$. Exponent is $2^{2}$.
-3. **Mantissa field:** `101000...`. Append the hidden leading `1.`: The scientific fraction is $1.101_{2}$.
-4. **Combine:** $+1.101_{2} \times 2^{2}$. 
-5. **Shift the decimal:** Move the point to the right by 2 to multiply: $+110.1_{2}$.
-6. **Convert binary to decimal:** $(1 \times 4) + (1 \times 2) + (0 \times 1) + (1 \times 0.5) = \mathbf{6.5_{10}}$.
+3. **Mantissa field:** `101000...`. Append the hidden leading `1.`: The scientific fraction is $1.101_ {2}$.
+4. **Combine:** $+1.101_ {2} \times 2^{2}$. 
+5. **Shift the decimal:** Move the point to the right by 2 to multiply: $+110.1_ {2}$.
+6. **Convert binary to decimal:** $(1 \times 4) + (1 \times 2) + (0 \times 1) + (1 \times 0.5) = \mathbf{6.5_ {10}}$.
 
 **Exercise 5: Medium (IEEE 754 Hexadecimal to Decimal)**
 *Problem:* In a debugger, register `$f0` contains the hex value `0xC1480000`. What base-10 decimal value does this represent?
@@ -225,9 +244,9 @@ Because no silicon can propagate these cascading tests and shifts instantaneousl
    $\rightarrow$ `1` | `10000010` | `10010000000000000000000`
 3. **Sign:** `1` $\rightarrow$ Negative `$-$`.
 4. **Exponent:** `10000010` is $128 + 2 = 130$. Minus bias: $130 - 127 = 3$. Exponent is $2^{3}$.
-5. **Mantissa:** Add the hidden bit to `1001`: $1.1001_{2}$.
-6. **Combine & Shift:** $-1.1001_{2} \times 2^{3} \rightarrow -1100.1_{2}$.
-7. **Convert to Decimal:** $-(8 + 4 + 0.5) = \mathbf{-12.5_{10}}$.
+5. **Mantissa:** Add the hidden bit to `1001`: $1.1001_ {2}$.
+6. **Combine & Shift:** $-1.1001_ {2} \times 2^{3} \rightarrow -1100.1_ {2}$.
+7. **Convert to Decimal:** $-(8 + 4 + 0.5) = \mathbf{-12.5_ {10}}$.
 
 **Exercise 6: Hard (IEEE 754 Hexadecimal to Micro-Decimal)**
 *Problem:* MIPS memory contains `0xBED00000`. Calculate its exact base-10 value.
@@ -238,9 +257,42 @@ Because no silicon can propagate these cascading tests and shifts instantaneousl
    $\rightarrow$ `1` | `01111101` | `10100000000000000000000`
 3. **Sign:** `1` $\rightarrow$ Negative `$-$`.
 4. **Exponent:** `01111101` in decimal is $64 + 32 + 16 + 8 + 4 + 1 = 125$. Minus bias: $125 - 127 = -2$. Exponent is $2^{-2}$.
-5. **Mantissa:** Add the hidden bit to `101`: $1.101_{2}$.
-6. **Combine & Shift:** $-1.101_{2} \times 2^{-2} \rightarrow$ Move decimal left by 2 $\rightarrow -0.01101_{2}$.
+5. **Mantissa:** Add the hidden bit to `101`: $1.101_ {2}$.
+6. **Combine & Shift:** $-1.101_ {2} \times 2^{-2} \rightarrow$ Move decimal left by 2 $\rightarrow -0.01101_ {2}$.
 7. **Convert to base-10 Decimal:** 
    $-(0 \times 0.5 \quad+\quad 1 \times 0.25 \quad+\quad 1 \times 0.125 \quad+\quad 0 \times 0.0625 \quad+\quad 1 \times 0.03125)$
-   $-(0.25 + 0.125 + 0.03125) = \mathbf{-0.40625_{10}}$.
+   $-(0.25 + 0.125 + 0.03125) = \mathbf{-0.40625_ {10}}$.
 
+---
+
+## 6. The Quake III Inverse Square Root: Exploiting IEEE 754
+
+During Weeks 06 and 07, we observed the famous **Quake III Arena Fast Inverse Square Root** algorithm implemented in MIPS (`quake_calc.s`). Without understanding Chapter 3 and the IEEE 754 standard, the core logic appears to be pure sorcery.
+
+Let us review the exact MIPS core logic utilized to approximate $\frac{1}{\sqrt{x}}$:
+
+```mips
+# Move float bits from FPU ($f12) into CPU Integer Register ($t0)
+mfc1  $t0, $f12          
+
+# i = 0x5f3759df - ( i >> 1 );
+srl   $t1, $t0, 1        # Bit-shift right by 1
+lw    $t2, magic         # Load magic number (0x5f3759df)
+sub   $t0, $t2, $t1      # Integer subtraction
+
+# Move integer bits ($t0) back to FPU ($f0)
+mtc1  $t0, $f0           
+```
+
+### How IEEE 754 Makes This Possible
+
+Why does moving a floating-point number into an integer register, shifting its bits, and subtracting it from `0x5f3759df` yield a phenomenally accurate first-pass approximation for $\frac{1}{\sqrt{x}}$?
+
+The brilliance lies fundamentally in the **IEEE 754 Exponent Bias** and the **Mantissa (Fraction) Normalization** we just studied!
+
+1. **Logarithmic Representation:** By defining a floating-point number $x$ as $(1 + m) \times 2^{e}$, taking the log base-2 yields $\log_2(x) = \log_2(1+m) + e$. Because $m$ is constrained between 0 and 1, $\log_2(1+m) \approx m + \mu$ (where $\mu$ is a tuning constant). This means the raw 32-bit integer representation of the IEEE 754 float is essentially a scaled version of its own logarithm!
+2. **The Mathematics of $\frac{1}{\sqrt{x}}$:** Calculating an inverse square root is mathematically evaluating $x^{-0.5}$. In logarithmic space, this is simply multiplying the logarithm by $-0.5$.
+3. **The Bit Shift (`i >> 1`):** In the raw integer representation, shifting bits right by one position is exactly calculating the division by 2 (the $0.5$ in $-0.5$). 
+4. **The Magic Constant (`0x5f3759df`):** Because we must negate the exponent ($-0.5$) and correctly subtract the IEEE 754 bias offset (+127), we cannot simply subtract from zero. Mathematical derivation of the optimal bias error offset ($\mu$) combined with the bit-shifted IEEE 754 exponent bias geometrically yields the hex constant `0x5f3759df`.
+
+By exploiting the physical 32-bit structure of IEEE 754, the programmer bypassed the massive latency of FPU division and square-root operations—performing a complex non-linear curve approximation using a single sub-nanosecond integer bit-shift (`srl`) and an integer subtract (`sub`)!
