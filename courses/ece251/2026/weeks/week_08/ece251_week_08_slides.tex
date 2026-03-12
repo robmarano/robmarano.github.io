@@ -202,6 +202,29 @@ Mathematically packed into three distinct fields:
 \end{columns}
 \end{frame}
 
+\begin{frame}[fragile]{6. The Quake III Inverse Square Root Hack}
+\begin{itemize}
+    \item How do we approximate $\frac{1}{\sqrt{x}}$ without halting the CPU for 20+ cycles?
+    \item \textbf{The MIPS Trick:} Move the float to an integer register, bit-shift right, and subtract from a magic constant!
+\end{itemize}
+\vspace{0.2cm}
+\begin{minted}[fontsize=\footnotesize, bgcolor=lightgray!20]{nasm}
+# Move float bits from FPU ($f12) into CPU Integer Register ($t0)
+mfc1  $t0, $f12          
+
+# i = 0x5f3759df - ( i >> 1 );
+srl   $t1, $t0, 1        # Bit-shift right by 1
+lw    $t2, magic         # Load magic number (0x5f3759df)
+sub   $t0, $t2, $t1      # Integer subtraction
+\end{minted}
+\vspace{0.2cm}
+\begin{itemize}
+    \item \textbf{Why it works:} IEEE 754 structure is inherently logarithmic.
+    \item Shifting bits right (\texttt{i >> 1}) mathematically scales the float exponent by 0.5 (calculating $x^{-0.5}$).
+    \item Subtracting from \texttt{0x5f3759df} negates the target exponent, approximates the fractional curve, and perfectly re-aligns the $+127$ bias!
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Conclusion}
 \begin{itemize}
     \item Decimal values break classical fixed-point architectures.
