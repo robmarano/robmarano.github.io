@@ -36,5 +36,16 @@ services:
     networks:
       - hist-net
 
+  worker-3:
+    build:
+      context: ./worker
+    environment:
+      - MASTER_HOST=master-service
+      - MASTER_PORT=6000
+    depends_on:
+      - master
+    networks:
+      - hist-net
+
 networks:
   hist-net:
