@@ -1,0 +1,871 @@
+DISTRIBUTED
+SYSTEMS
+
+MAARTEN VAN STEEN
+4TH EDITION
+
+ANDREW S. TANENBAUM
+
+VERSION 03
+
+Cover art by Max van Steen
+
+DISTRIBUTED SYSTEMS
+Fourth edition
+Version 4.03x
+(February 2025)
+Maarten van Steen
+Andrew S. Tanenbaum
+
+Copyright © 2023 Maarten van Steen and Andrew S. Tanenbaum
+Published by Maarten van Steen
+The first and second edition of this book were previously published by Pearson Education, Inc.
+
+ISBN: 978-90-815406-3-6 (printed version)
+ISBN: 978-90-815406-4-3 (digital version)
+Edition: 4. Version: 02 (February 2024)
+All rights to text and illustrations are reserved by Maarten van Steen and Andrew S. Tanenbaum. This work may
+not be copied, reproduced, or translated in whole or part without written permission of the publisher, except for
+brief excerpts in reviews or scholarly analysis. Use with any form of information storage and retrieval, electronic
+adaptation or whatever, computer software, or by similar or dissimilar methods now known or developed in the
+future is strictly forbidden without written permission of the publisher.
+
+To Mariëlle, Max, and Elke
+– MvS
+To Suzanne, Barbara, Marvin, Aron, Nathan, Olivia, and Mirte
+– AST
+
+CONTENTS
+
+Preface
+
+xi
+
+1
+
+Introduction
+1.1 From networked systems to distributed systems . . . . . . . . .
+1.1.1 Distributed versus decentralized systems . . . . . . . . .
+1.1.2 Why making the distinction is relevant . . . . . . . . . .
+1.1.3 Studying distributed systems . . . . . . . . . . . . . . . .
+1.2 Design goals . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.2.1 Resource sharing . . . . . . . . . . . . . . . . . . . . . . .
+1.2.2 Distribution transparency . . . . . . . . . . . . . . . . . .
+1.2.3 Openness . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.2.4 Dependability . . . . . . . . . . . . . . . . . . . . . . . . .
+1.2.5 Security . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.2.6 Scalability . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.3 A simple classification of distributed systems . . . . . . . . . . .
+1.3.1 High-performance distributed computing . . . . . . . .
+1.3.2 Distributed information systems . . . . . . . . . . . . . .
+1.3.3 Pervasive systems . . . . . . . . . . . . . . . . . . . . . .
+1.4 Pitfalls . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.5 Summary . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+1
+3
+3
+7
+8
+10
+10
+11
+15
+18
+21
+24
+32
+32
+37
+43
+52
+53
+
+2 Architectures
+2.1 Architectural styles . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.1.1 Layered architectures . . . . . . . . . . . . . . . . . . . .
+2.1.2 Service-oriented architectures . . . . . . . . . . . . . . . .
+2.1.3 Publish-subscribe architectures . . . . . . . . . . . . . . .
+2.2 Middleware and distributed systems . . . . . . . . . . . . . . . .
+2.2.1 Middleware organization . . . . . . . . . . . . . . . . . .
+2.2.2 Modifiable middleware . . . . . . . . . . . . . . . . . . .
+2.3 Layered-system architectures . . . . . . . . . . . . . . . . . . . .
+2.3.1 Simple client-server architecture . . . . . . . . . . . . . .
+2.3.2 Multitiered Architectures . . . . . . . . . . . . . . . . . .
+2.3.3 Example: The Network File System . . . . . . . . . . . .
+2.3.4 Example: The Web . . . . . . . . . . . . . . . . . . . . . .
+2.4 Symmetrically distributed system architectures . . . . . . . . .
+2.4.1 Structured peer-to-peer systems . . . . . . . . . . . . . .
+2.4.2 Unstructured peer-to-peer systems . . . . . . . . . . . . .
+
+55
+56
+57
+62
+68
+73
+74
+78
+78
+79
+80
+83
+85
+88
+90
+92
+
+v
+
+vi
+
+CONTENTS
+
+2.5
+
+2.6
+
+2.4.3 Hierarchically organized peer-to-peer networks . . . . . 95
+2.4.4 Example: BitTorrent . . . . . . . . . . . . . . . . . . . . . 96
+Hybrid system architectures . . . . . . . . . . . . . . . . . . . . . 98
+2.5.1 Cloud computing . . . . . . . . . . . . . . . . . . . . . . . 98
+2.5.2 The edge-cloud architecture . . . . . . . . . . . . . . . . . 100
+2.5.3 Blockchain architectures . . . . . . . . . . . . . . . . . . . 104
+Summary . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 108
+
+3
+
+Processes
+111
+3.1 Threads . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 112
+3.1.1 Introduction to threads . . . . . . . . . . . . . . . . . . . 113
+3.1.2 Threads in distributed systems . . . . . . . . . . . . . . . 122
+3.2 Virtualization . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 127
+3.2.1 Principle of virtualization . . . . . . . . . . . . . . . . . . 127
+3.2.2 Containers . . . . . . . . . . . . . . . . . . . . . . . . . . . 133
+3.2.3 Comparing virtual machines and containers . . . . . . . 138
+3.2.4 Application of virtual machines to distributed systems . 139
+3.3 Clients . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 141
+3.3.1 Networked user interfaces . . . . . . . . . . . . . . . . . 141
+3.3.2 Virtual desktop environment . . . . . . . . . . . . . . . . 144
+3.3.3 Client-side software for distribution transparency . . . . 148
+3.4 Servers . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 149
+3.4.1 General design issues . . . . . . . . . . . . . . . . . . . . 149
+3.4.2 Object servers . . . . . . . . . . . . . . . . . . . . . . . . . 154
+3.4.3 Example: The Apache Web server . . . . . . . . . . . . . 159
+3.4.4 Server clusters . . . . . . . . . . . . . . . . . . . . . . . . 161
+3.5 Code migration . . . . . . . . . . . . . . . . . . . . . . . . . . . . 167
+3.5.1 Reasons for migrating code . . . . . . . . . . . . . . . . . 167
+3.5.2 Models for code migration . . . . . . . . . . . . . . . . . 171
+3.5.3 Migration in heterogeneous systems . . . . . . . . . . . . 174
+3.6 Summary . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 177
+
+4
+
+Communication
+181
+4.1 Foundations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 183
+4.1.1 Layered Protocols . . . . . . . . . . . . . . . . . . . . . . . 183
+4.1.2 Types of Communication . . . . . . . . . . . . . . . . . . 190
+4.2 Remote procedure call . . . . . . . . . . . . . . . . . . . . . . . . 192
+4.2.1 Basic RPC operation . . . . . . . . . . . . . . . . . . . . . 192
+4.2.2 Parameter passing . . . . . . . . . . . . . . . . . . . . . . 197
+4.2.3 RPC-based application support . . . . . . . . . . . . . . . 201
+4.2.4 Variations on RPC . . . . . . . . . . . . . . . . . . . . . . 205
+4.3 Message-oriented communication . . . . . . . . . . . . . . . . . 208
+4.3.1 Simple transient messaging with sockets . . . . . . . . . 208
+4.3.2 Advanced transient messaging . . . . . . . . . . . . . . . 213
+
+DS 4.03x
+
+downloaded by rob@cooper.edu
+
+CONTENTS
+
+4.4
+
+4.5
+
+vii
+
+4.3.3 Message-oriented persistent communication . . . . . . . 220
+4.3.4 Example: Advanced Message Queuing Protocol (AMQP) 227
+Multicast communication . . . . . . . . . . . . . . . . . . . . . . 232
+4.4.1 Application-level tree-based multicasting . . . . . . . . . 232
+4.4.2 Flooding-based multicasting . . . . . . . . . . . . . . . . 236
+4.4.3 Gossip-based data dissemination . . . . . . . . . . . . . . 240
+Summary . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 245
+
+5
+
+Coordination
+247
+5.1 Clock synchronization . . . . . . . . . . . . . . . . . . . . . . . . 249
+5.1.1 Physical clocks . . . . . . . . . . . . . . . . . . . . . . . . 250
+5.1.2 Clock synchronization algorithms . . . . . . . . . . . . . 253
+5.2 Logical clocks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 260
+5.2.1 Lamport’s logical clocks . . . . . . . . . . . . . . . . . . . 260
+5.2.2 Vector clocks . . . . . . . . . . . . . . . . . . . . . . . . . 266
+5.3 Mutual exclusion . . . . . . . . . . . . . . . . . . . . . . . . . . . 272
+5.3.1 Overview . . . . . . . . . . . . . . . . . . . . . . . . . . . 272
+5.3.2 A centralized algorithm . . . . . . . . . . . . . . . . . . . 273
+5.3.3 A distributed algorithm . . . . . . . . . . . . . . . . . . . 274
+5.3.4 A token-ring algorithm . . . . . . . . . . . . . . . . . . . 276
+5.3.5 A decentralized algorithm . . . . . . . . . . . . . . . . . . 277
+5.3.6 Example: Simple locking with ZooKeeper . . . . . . . . 280
+5.4 Election algorithms . . . . . . . . . . . . . . . . . . . . . . . . . . 283
+5.4.1 The bully algorithm . . . . . . . . . . . . . . . . . . . . . 283
+5.4.2 A ring algorithm . . . . . . . . . . . . . . . . . . . . . . . 285
+5.4.3 Example: Leader election in ZooKeeper . . . . . . . . . . 286
+5.4.4 Example: Leader election in Raft . . . . . . . . . . . . . . 289
+5.4.5 Elections in large-scale systems . . . . . . . . . . . . . . . 290
+5.4.6 Elections in wireless environments . . . . . . . . . . . . . 294
+5.5 Gossip-based coordination . . . . . . . . . . . . . . . . . . . . . . 297
+5.5.1 Aggregation . . . . . . . . . . . . . . . . . . . . . . . . . . 297
+5.5.2 A peer-sampling service . . . . . . . . . . . . . . . . . . . 298
+5.5.3 Gossip-based overlay construction . . . . . . . . . . . . . 299
+5.5.4 Secure gossiping . . . . . . . . . . . . . . . . . . . . . . . 303
+5.6 Distributed event matching . . . . . . . . . . . . . . . . . . . . . 306
+5.6.1 Centralized implementations . . . . . . . . . . . . . . . . 307
+5.6.2 Secure publish-subscribe solutions . . . . . . . . . . . . . 313
+5.7 Location systems . . . . . . . . . . . . . . . . . . . . . . . . . . . 315
+5.7.1 GPS: Global Positioning System . . . . . . . . . . . . . . 315
+5.7.2 When GPS is not an option . . . . . . . . . . . . . . . . . 317
+5.7.3 Logical positioning of nodes . . . . . . . . . . . . . . . . 318
+5.8 Summary . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 322
+
+6
+
+Naming
+
+downloaded by rob@cooper.edu
+
+325
+DS 4.03x
+
+viii
+
+CONTENTS
+6.1
+6.2
+
+6.3
+
+6.4
+
+6.5
+
+6.6
+7
+
+Names, identifiers, and addresses . . . . . . . . . . . . . . . . . 326
+Flat naming . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 329
+6.2.1 Simple solutions . . . . . . . . . . . . . . . . . . . . . . . 329
+6.2.2 Home-based approaches . . . . . . . . . . . . . . . . . . . 331
+6.2.3 Distributed hash tables . . . . . . . . . . . . . . . . . . . 333
+6.2.4 Hierarchical approaches . . . . . . . . . . . . . . . . . . . 338
+6.2.5 Secure flat naming . . . . . . . . . . . . . . . . . . . . . . 343
+Structured naming . . . . . . . . . . . . . . . . . . . . . . . . . . 344
+6.3.1 Name spaces . . . . . . . . . . . . . . . . . . . . . . . . . 344
+6.3.2 Name resolution . . . . . . . . . . . . . . . . . . . . . . . 347
+6.3.3 The implementation of a name space . . . . . . . . . . . 352
+6.3.4 Example: The Domain Name System . . . . . . . . . . . 359
+6.3.5 Example: The Network File System . . . . . . . . . . . . 369
+Attribute-based naming . . . . . . . . . . . . . . . . . . . . . . . 375
+6.4.1 Directory services . . . . . . . . . . . . . . . . . . . . . . 375
+6.4.2 Hierarchical implementations: LDAP . . . . . . . . . . . 376
+6.4.3 Decentralized implementations . . . . . . . . . . . . . . . 380
+Named-data networking . . . . . . . . . . . . . . . . . . . . . . . 385
+6.5.1 Basics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 385
+6.5.2 Routing . . . . . . . . . . . . . . . . . . . . . . . . . . . . 387
+6.5.3 Security in named-data networking . . . . . . . . . . . . 388
+Summary . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 389
+
+Consistency and replication
+391
+7.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 392
+7.1.1 Reasons for replication . . . . . . . . . . . . . . . . . . . . 393
+7.1.2 Replication as scaling technique . . . . . . . . . . . . . . 394
+7.2 Data-centric consistency models . . . . . . . . . . . . . . . . . . 395
+7.2.1 Consistent ordering of operations . . . . . . . . . . . . . 396
+7.2.2 Eventual consistency . . . . . . . . . . . . . . . . . . . . . 406
+7.2.3 Continuous consistency . . . . . . . . . . . . . . . . . . . 410
+7.3 Client-centric consistency models . . . . . . . . . . . . . . . . . . 415
+7.3.1 Monotonic reads . . . . . . . . . . . . . . . . . . . . . . . 417
+7.3.2 Monotonic writes . . . . . . . . . . . . . . . . . . . . . . . 418
+7.3.3 Read your writes . . . . . . . . . . . . . . . . . . . . . . . 420
+7.3.4 Writes follow reads . . . . . . . . . . . . . . . . . . . . . . 421
+7.3.5 Example: client-centric consistency in ZooKeeper . . . . 422
+7.4 Replica management . . . . . . . . . . . . . . . . . . . . . . . . . 423
+7.4.1 Finding the best server location . . . . . . . . . . . . . . 424
+7.4.2 Content replication and placement . . . . . . . . . . . . . 426
+7.4.3 Content distribution . . . . . . . . . . . . . . . . . . . . . 430
+7.4.4 Managing replicated objects . . . . . . . . . . . . . . . . 434
+7.5 Consistency protocols . . . . . . . . . . . . . . . . . . . . . . . . 437
+7.5.1 Sequential consistency: Primary-based protocols . . . . 438
+
+DS 4.03x
+
+downloaded by rob@cooper.edu
+
+CONTENTS
+
+7.6
+7.7
+
+ix
+
+7.5.2 Sequential consistency: Replicated-write protocols . . . 440
+7.5.3 Cache-coherence protocols . . . . . . . . . . . . . . . . . 443
+7.5.4 Implementing continuous consistency . . . . . . . . . . . 446
+7.5.5 Implementing client-centric consistency . . . . . . . . . . 448
+Example: Caching and replication in the Web . . . . . . . . . . 451
+Summary . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 458
+
+8
+
+Fault tolerance
+461
+8.1 Introduction to fault tolerance . . . . . . . . . . . . . . . . . . . . 462
+8.1.1 Basic concepts . . . . . . . . . . . . . . . . . . . . . . . . . 463
+8.1.2 Failure models . . . . . . . . . . . . . . . . . . . . . . . . 466
+8.1.3 Failure masking by redundancy . . . . . . . . . . . . . . 470
+8.2 Process resilience . . . . . . . . . . . . . . . . . . . . . . . . . . . 471
+8.2.1 Resilience by process groups . . . . . . . . . . . . . . . . 472
+8.2.2 Failure masking and replication . . . . . . . . . . . . . . 474
+8.2.3 Consensus in faulty systems with crash failures . . . . . 475
+8.2.4 Example: Paxos . . . . . . . . . . . . . . . . . . . . . . . . 479
+8.2.5 Consensus in faulty systems with arbitrary failures . . . 491
+8.2.6 Consensus in blockchain systems . . . . . . . . . . . . . 502
+8.2.7 Some limitations on realizing fault tolerance . . . . . . . 503
+8.2.8 Failure detection . . . . . . . . . . . . . . . . . . . . . . . 506
+8.3 Reliable client-server communication . . . . . . . . . . . . . . . 508
+8.3.1 Point-to-point communication . . . . . . . . . . . . . . . 508
+8.3.2 RPC semantics in the presence of failures . . . . . . . . . 509
+8.4 Reliable group communication . . . . . . . . . . . . . . . . . . . 515
+8.4.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . 515
+8.4.2 Scalability in reliable multicasting . . . . . . . . . . . . . 518
+8.4.3 Atomic multicast . . . . . . . . . . . . . . . . . . . . . . . 522
+8.5 Distributed commit . . . . . . . . . . . . . . . . . . . . . . . . . . 528
+8.6 Recovery . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 536
+8.6.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . 536
+8.6.2 Checkpointing . . . . . . . . . . . . . . . . . . . . . . . . 538
+8.6.3 Message logging . . . . . . . . . . . . . . . . . . . . . . . 541
+8.7 Summary . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 543
+
+9
+
+Security
+545
+9.1 Introduction to security . . . . . . . . . . . . . . . . . . . . . . . 546
+9.1.1 Security threats, policies, and mechanisms . . . . . . . . 547
+9.1.2 Design issues . . . . . . . . . . . . . . . . . . . . . . . . . 548
+9.2 Cryptography . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 555
+9.2.1 Basics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 555
+9.2.2 Symmetric and asymmetric cryptosystems . . . . . . . . 557
+9.2.3 Hash functions . . . . . . . . . . . . . . . . . . . . . . . . 560
+9.2.4 Key management . . . . . . . . . . . . . . . . . . . . . . . 562
+
+downloaded by rob@cooper.edu
+
+DS 4.03x
+
+x
+
+CONTENTS
+9.3
+
+9.7
+
+Authentication . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 571
+9.3.1 Introduction to authentication . . . . . . . . . . . . . . . 571
+9.3.2 Authentication protocols . . . . . . . . . . . . . . . . . . . 572
+Trust in distributed systems . . . . . . . . . . . . . . . . . . . . . 585
+9.4.1 Trust in the face of Byzantine failures . . . . . . . . . . . 586
+9.4.2 Trusting an identity . . . . . . . . . . . . . . . . . . . . . 586
+9.4.3 Trusting a system . . . . . . . . . . . . . . . . . . . . . . . 591
+Authorization . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 593
+9.5.1 General issues in access control . . . . . . . . . . . . . . 593
+9.5.2 Attribute-based access control . . . . . . . . . . . . . . . 598
+9.5.3 Delegation . . . . . . . . . . . . . . . . . . . . . . . . . . . 601
+9.5.4 Decentralized authorization: an example . . . . . . . . . 605
+Monitoring . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 609
+9.6.1 Firewalls . . . . . . . . . . . . . . . . . . . . . . . . . . . . 609
+9.6.2 Intrusion detection: basics . . . . . . . . . . . . . . . . . . 611
+9.6.3 Collaborative intrusion detection . . . . . . . . . . . . . . 612
+Summary . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 613
+
+Index
+
+615
+
+Bibliography
+
+631
+
+Glossary
+
+665
+
+9.4
+
+9.5
+
+9.6
+
+DS 4.03x
+
+downloaded by rob@cooper.edu
+
+PREFACE
+This is the fourth edition of “Distributed Systems.” We have stayed close
+to the setup of the third edition, including examples of (part of) existing
+distributed systems close to where general principles are discussed. For
+example, we have included material on blockchain systems, and discuss their
+various components throughout the book. We have, again, used special boxed
+sections for material that can be skipped at first reading.
+The text has been thoroughly reviewed, revised, and updated. In particular,
+all the Python code has been updated to Python3, while at the same time
+the channel package has been almost completely revised and simplified. The
+coding examples in the book leave out many details for readability, but
+the complete examples are available through the book’s Website, hosted at
+www.distributed-systems.net. We have made sure that virtually all examples
+can be instantly executed through a simple script. However, it will be necessary
+to download and install special packages, such as Redis.
+As before, the Website also contains slides in PDF and PPT, as well as the
+sources for producing slides using LATEX with the Beamer class. All figures,
+now including those for tables and coding examples, are available in PDF and
+PNG formats.
+Like the previous edition, the book can be (freely) downloaded, making it
+much easier to use hyperlinks where appropriate. At the same time, we are
+offering a printed version through Amazon.com, available at minimal costs.
+The book being fully digital allows us to incorporate updates when needed.
+We plan to run updates on a yearly basis, while keeping previous versions
+digitally available, as well as the original printed version. Running frequent
+updates is not always the right thing to do from the perspective of teaching, but
+yearly updates and maintaining previous versions seems a good compromise.
+Updates generally consist of small corrections, the kind that usually pop up
+in errata lists. Next to that, the book now also contains an index section, as
+well as a glossary section. These are typically sections that generally take a
+huge time to compile, but are also sections that typically grow as the book
+is being used. Likewise, we may find ways to improve how hyperlinks have
+been incorporated. Such matters do not affect the main text, while potentially
+improving the usability of the digital version.
+xi
+
+xii
+
+PREFACE
+
+Acknowledgements
+Many teachers and students have helped with spotting the inevitable errors
+in the third edition, and we owe them many thanks, but in any case Michael
+May, Linh Phan, Juan Abadie, and Christian Zirpins. For the fourth edition,
+a handful of colleagues were so kind to review parts of the material. In
+particular, we wish to thank Armin Stocker, Hermann de Meer, Pim Otte,
+Johan Pouwelse, Michael P. Anderson, Ivo Varenhorst, Aditya Pappu, and
+Alexander Iosup. A special thanks goes to Hein Meling of Stavanger University.
+Not only did he help us tremendously in understanding how Paxos works
+(already for the third edition), we have gratefully adopted, and adapted, his
+LATEX style file for generating message-sequence charts. These figures are now
+much more consistent. We thank Max van Steen for designing the cover.
+Maarten van Steen
+Andrew S. Tanenbaum
+
+DS 4.03x
+
+downloaded by rob@cooper.edu
+
+01
+
+INTRODUCTION
+
+2
+
+CHAPTER 1. INTRODUCTION
+
+The pace at which computer systems change was, is, and continues to be
+overwhelming. From 1945, when the modern computer era began, until about
+1985, computers were large and expensive. Moreover, lacking a way to connect
+them, these computers operated independently of one another.
+Starting in the mid-1980s, however, two advances in technology began to
+change that situation. The first was the development of powerful microprocessors. Initially, these were 8-bit machines, but soon 16-, 32-, and 64-bit CPUs
+became common. With powerful multicore CPUs, we now are again facing
+the challenge of adapting and developing programs to exploit parallelism. In
+any case, the current generation of machines have the computing power of the
+mainframes deployed 30 or 40 years ago, but for 1/1000th of the price or less.
+The second development was the invention of high-speed computer networks. Local-area networks or LANs allow thousands of machines within a
+building to be connected in such a way that small amounts of information can
+be transferred in a few microseconds or so. Larger amounts of data can be
+moved between machines at rates of billions of bits per second (bps). Wide-area
+network or WANs allow hundreds of millions of machines all over the earth
+to be connected at speeds varying from tens of thousands to hundreds of
+millions bps and more.
+Parallel to the development of increasingly powerful and networked machines, we have also been able to witness miniaturization of computer systems,
+with perhaps the smartphone as the most impressive outcome. Packed with
+sensors, lots of memory, and a powerful multicore CPU, these devices are
+nothing less than full-fledged computers. Of course, they also have networking capabilities. Along the same lines, so-called nano computers have become
+readily available. These small, single-board computers, often the size of a
+credit card, can easily offer near-desktop performance. Well-known examples
+include Raspberry Pi and Arduino systems.
+And the story continues. As digitalization of our society continues, we
+become increasingly aware of how many computers are actually being used,
+regularly embedded into other systems such as cars, airplanes, buildings,
+bridges, the power grid, and so on. This awareness is, unfortunately, increased
+when such systems suddenly turn out to be hackable. For example, in
+2021, a fuel pipeline in the United States was effectively shut down by a
+ransomware attack. In this case, the computer system consisted of a mix
+of sensors, actuators, controllers, embedded computers, servers, etc., all
+brought together into a single system. What many of us do not realize, is that
+vital infrastructures, such as fuel pipelines, are monitored and controlled by
+networked computer systems. Along the same lines, it may be time to start
+realizing that a modern car is actually an autonomously operating, mobile
+networked computer. In this case, instead of the mobile computer being
+carried by a person, we need to deal with the mobile computer carrying
+people.
+DS 4.03x
+
+downloaded by rob@cooper.edu
+
+1.1. FROM NETWORKED SYSTEMS TO DISTRIBUTED SYSTEMS
+
+3
+
+The size of a networked computer system may vary from a handful of
+devices, to millions of computers. The interconnection network may be wired,
+wireless, or a combination of both. Moreover, these systems are often highly
+dynamic, in the sense that computers can join and leave, with the topology
+and performance of the underlying network almost continuously changing.
+It is difficult to think of computer systems that are not networked. And
+as a matter of fact, most networked computer systems can be accessed from
+any place in the world because they are hooked up to the Internet. Studying
+to understand these systems can easily become exceedingly complex. In this
+chapter, we start with shedding some light on what needs to be understood
+to build up the bigger picture without getting lost.
+
+1.1
+
+From networked systems to distributed systems
+
+Before we dive into various aspects of distributed systems, let us first consider
+what distribution, or decentralization, actually entails.
+
+1.1.1
+
+Distributed versus decentralized systems
+
+When considering various sources, there are quite a few opinions on distributed versus decentralized systems. Often, the distinction is illustrated by
+three different organizations of networked computer systems, as shown in
+Figure 1.1, where each node represents a computer system and an edge a
+communication link between two nodes.
+To what extent such distinctions are useful remains to be seen, especially
+when discussions open on the pros and cons of each organization. For
+example, it is often stated that centralized organizations do not scale well.
+Likewise, distributed organizations are said to be more robust against failures.
+As we shall see, none of these claims are generally true.
+
+(a)
+
+(b)
+
+(c)
+
+Figure 1.1: The organization of a (a) centralized, (b) decentralized, and
+(c) distributed system, according to various popular sources. We take a
+different approach, as figures such as these are really not that meaningful.
+
+downloaded by rob@cooper.edu
+
+DS 4.03x
+
+4
+
+CHAPTER 1. INTRODUCTION
+
+We take a different approach. If we think of a networked computer system
+as a collection of computers connected in a network, we can ask ourselves
+how these computers even became connected to each other in the first place.
+There are roughly two views that one can take.
+The first, integrative view, is that there was a need to connect existing
+(networked) computer systems to each other. Typically, this happens when
+services running on a system need to be made available to users and applications that were not thought of before. This may happen, for example, when
+integrating financial services with project management services, as is often the
+case within a single organization. In the scientific-research domain, we have
+seen efforts to connect a myriad of often expensive resources (special-purpose
+computers, supercomputers, very large database systems, etc.) into what came
+to be known as a grid computer.
+The second, expansive view is that an existing system required an extension through additional computers. This view is the one most often related to
+the field of distributed systems. It entails expanding a system with computers
+to hold resources close to where those resources are needed. An expansion
+may also be driven by the need to improve dependability: if one computer
+fails, then there are others who can take over. An important type of expansion
+is when a service needs to be made available for remote users and applications,
+for example, by offering a Web interface or a smartphone application. This
+last example also shows that the distinction between an integrative and an
+expansive view is not a clear-cut.
+In both cases, we see that the networked system runs services, where each
+service is implemented as a collection of processes and resources spread across
+multiple computers. The two views lead to a natural distinction between two
+types of networked computer systems:
+• A decentralized system is a networked computer system in which processes and resources are necessarily spread across multiple computers.
+• A distributed system is a networked computer system in which processes and resources are sufficiently spread across multiple computers.
+Before we discuss why this distinction is important, let us look at a few
+examples of each type of system.
+Decentralized systems are mainly related to the integrative view of networked computer systems. They come to being because we want to connect systems, yet may be hindered by administrative boundaries. For example, many applications in the artificial-intelligence domain require massive
+amounts of data for building reliable predictive models. Normally, data is
+brought to the high-performance computers that literally train models before
+they can be used. But when data needs to stay within the perimeter of an
+organization (and there can be many reasons why this is necessary), we need
+to bring the training to the data. The result is known as federated learning,
+DS 4.03x
+
+downloaded by rob@cooper.edu
+
+1.1. FROM NETWORKED SYSTEMS TO DISTRIBUTED SYSTEMS
+
+5
+
+and is implemented by a decentralized system, where the need for spreading
+processes and resources is dictated by administrative policies.
+Another example of a decentralized system is that of distributed ledger,
+also known as a blockchain. In this case, we need to deal with the situation
+that participating parties do not trust each other enough to set up simple
+schemes for collaboration. Instead, what they do is essentially make transactions among each other fully public (and verifiable) by an extend-only ledger
+that keeps records of those transactions. The ledger itself is fully spread across
+the participants, and the participants are the ones who validate transactions
+(of others) before admitting them to the ledger. The result is a decentralized
+system in which processes and resources are, indeed, necessarily spread across
+multiple computers, in this case due to lack of trust.
+As a last example of a decentralized system, consider systems that are
+naturally geographically dispersed. This occurs typically with systems in
+which an actual location needs to be monitored, for example, in the case of
+a power plant, a building, a specific natural environment, and so on. The
+system, controlling the monitors and where decisions are made, may easily
+be placed somewhere else than the location being monitored. One obvious
+example is monitoring and controlling of satellites, but also more mundane
+situations as monitoring and controlling traffic, trains, etc. In these examples,
+the necessity for spreading processes and resources comes from a spatial
+argument.
+As we mentioned, distributed systems are mainly related to the expansive
+view of networked computer systems. A well-known example is making use
+of e-mail services, such as Google Mail. What often happens is that a user logs
+into the system through a Web interface to read and send mails. More often,
+however, is that users configure their personal computer (such as a laptop) to
+make use of a specific mail client. To that end, they need to configure a few
+settings, such as the incoming and outgoing server. In the case of Google Mail,
+these are imap.gmail.com and smtp.gmail.com, respectively. Logically, it seems
+as if these two servers will handle all your mail. However, with an estimate
+of close to 2 billion users as of 2022, it is unlikely that only two computers
+can handle all their e-mails (which was estimated to be more than 300 billion
+per year, that is, some 10,000 mails per second). Behind the scenes, of course,
+the entire Google Mail service has been implemented and spread across many
+computers, jointly forming a distributed system. That system has been set
+up to make sure that so many users can process their mails (i.e., ensures
+scalability), but also that the risk of losing mail because of failures, is minimal
+(i.e., the system ensures fault tolerance). To the user, however, the image of
+just two servers is kept up (i.e., the distribution itself is highly transparent
+to the user). The distributed system implementing an e-mail service, such
+as Google Mail, typically expands (or shrinks) as dictated by dependability
+requirements, in turn, dependent on the number of its users.
+downloaded by rob@cooper.edu
+
+DS 4.03x
+
+6
+
+CHAPTER 1. INTRODUCTION
+
+An entirely different type of distributed system is formed by the collection
+of so-called Content Delivery Networks, or CDNs for short. A well-known
+example is Akamai with, in 2022, over 400,000 servers worldwide. We will
+discuss the principle working of CDNs later in Chapter 3. What it boils
+down to, is that the content of an actual Website, is copied and spread across
+various servers of the CDN. When visiting a Website, the user is transparently
+redirected to a nearby server that holds all or part of the content of that Website.
+The choice for which server to direct a user to may depend on many things,
+but surely when dealing with streaming content, a server is selected for which
+good performance in terms of latency and bandwidth can be guaranteed.
+The CDN dynamically ensures that the selected server will have the required
+content readily available, as well as update that content when needed, or
+remove it from the server when there are no or very few users to service there.
+Meanwhile, the user knows nothing about what is going on behind the scenes
+(which, again, is a form of distribution transparency). We also see in this
+example, that content is not copied to all servers, yet only to where it makes
+sense, that is, sufficiently, and for reasons of performance. CDNs also copy
+content to multiple servers to provide high levels of dependability.
+As a final, much smaller distributed system, consider a setup based on a
+Network-Attached Storage device, also called a NAS. For domestic use, a
+typical NAS consists of 2–4 slots for internal hard disks. The NAS operates
+as a file server: it is accessible through a (generally wireless) network for
+any authorized device, and as such can offer services like shared storage,
+automated backups, streaming media, and so on. The NAS itself can best be
+seen as a single computer optimized for storing files, and offering the ability
+to easily share those files. The latter is important, and together with multiple
+users, we essentially have a setup of a distributed system. The users will
+be working with a set of files that are locally (i.e., from their laptop) easily
+accessible (in fact, seemingly integrated into the local file system), while also
+directly accessible by and for other users. Again, where and how the shared
+files are stored is hidden (i.e., the distribution is transparent). Assuming that
+sharing files is the goal, then we see that indeed a NAS can provide sufficient
+spreading of processes and resources.
+Note 1.1 (More information: Are centralized solutions bad?)
+There appears to be a stubborn misconception that centralized solutions cannot
+scale. Moreover, they are almost always associated with introducing a single
+point of failure. Both reasons are often seen to be enough to dismiss centralized
+solutions as being a good choice when designing distributed systems.
+What many people forget is that a difference should be made between logical
+and physical designs. A logically centralized solution can be implemented in a
+highly scalable distributed manner. An excellent example is the Domain Name
+System (DNS), which we discuss extensively in Chapter 6. Logically, DNS is
+
+DS 4.03x
+
+downloaded by rob@cooper.edu
+
+7
+
+1.1. FROM NETWORKED SYSTEMS TO DISTRIBUTED SYSTEMS
+
+organized as a huge tree, where each path from the root to a leaf node represents
+a fully qualified name, such as www.distributed-systems.net. It would be a
+mistake to think that the root node is implemented by just a single server. In
+fact, the root node is implemented by 13 different root servers, each server, in
+turn, implemented as a large cluster computer. The physical organization of DNS
+also shows that the root is not a single point of failure. Being highly replicated, it
+would take serious efforts to bring that root down and so far, all attempts to do
+so have failed.
+Centralized solutions are not bad just because they seem to be centralized.
+In fact, as we shall encounter many times throughout this book, (logically, and
+even physically) centralized solutions are often much better than distributed
+counterparts for the simple reason that there is a single point of failure. It makes
+them much easier to manage, for example, and certainly in comparison where
+there may be multiple points of failures. Moreover, that single point of failure
+can be hardened against many kinds of failures as well as many kinds of security
+attacks. When it comes to being a performance bottleneck, we will also see
+that many things can be done to ensure that even that cannot be held against
+centralization.
+In this sense, let us not forget that centralized solutions have even proven to
+be extremely scalable and robust. They are called cloud-based solutions. Again,
+their implementations can make use of very sophisticated distributed solutions,
+yet even then, we shall see that even those solutions may sometimes need to rely
+on a small set of physical machines, if only to guarantee performance.
+
+1.1.2
+
+Why making the distinction is relevant
+
+Why do we make this distinction between decentralized and distributed
+systems? It is important to realize that centralized solutions are generally
+much simpler, and also simpler along different criteria. Decentralization,
+that is, the act of spreading the implementation of a service across multiple
+computers because we believe it is necessary, is a decision that needs to be
+considered carefully. Indeed, distributed and decentralized solutions are
+inherently difficult:
+• There are many, often unexpected, dependencies that hinder understanding the behavior of these systems.
+• Distributed and decentralized systems suffer almost continuously from
+partial failures: some process or resource, somewhere at one of the
+participating computers, is not operating according to expectations.
+Discovering that failure may actually take some time, while also such
+failures are preferably masked (i.e., they go unnoticed for users and
+applications), including the recovery from failures.
+downloaded by rob@cooper.edu
+
+DS 4.03x
+
+8
+
+CHAPTER 1. INTRODUCTION
+• Much related to partial failures is the fact that in many networked
+computer systems, participating nodes, processes, resources, and so
+on, come and go. This makes these systems highly dynamic, in turn
+requiring forms of automated management and maintenance, in turn
+increasing the complexity.
+• The fact that distributed and decentralized systems are networked, used
+by many users and applications, and often cross multiple administrative boundaries, make them particularly vulnerable to security attacks.
+Therefore, understanding these systems and their behavior, requires
+that we understand how they can be, and are secured. Unfortunately,
+understanding security is not that easy.
+
+Our distinction is one between sufficiency and necessity for spreading processes
+and resources across multiple computers. Throughout this book, we take
+the standpoint that decentralization can never be a goal in itself, and that it
+should focus on the sufficiency for spreading processes and resources across
+computers. In principle, the less spreading, the better. Yet at the same time,
+we need to realize that spreading is sometimes truly necessary, as illustrated
+by the examples of decentralized systems. From this point of sufficiency, the
+book is truly about distributed systems and where appropriate, we shall speak
+of decentralized systems.
+Along the same lines, considering that distributed and decentralized
+systems are inherently complex, it is equally important to consider solutions
+that are as simple as possible. Therefore, we shall hardly discuss optimizations
+to solutions, firmly believing that the impact of their negative contribution to
+increased complexity outweighs the importance of their positive contribution
+to an increase of any type of performance.
+
+1.1.3
+
+Studying distributed systems
+
+Considering that distributed systems are inherently difficult, it is important to
+take a systematic approach toward studying them. One of our major concerns
+is that there are so many explicit and implicit dependencies in distributed
+systems. For example, there is no such thing as a separate communication
+module, or a separate security module. Our approach is to take a look at
+distributed systems from a limited number, yet different perspectives. Each
+perspective is considered in a separate chapter.
+• There are many ways in which distributed systems are organized. We
+start our discussion by taking the architectural perspective: what are
+common organizations, what are common styles? The architectural
+perspective will help in getting a first grip on how various components
+of existing systems interact and depend on each other.
+DS 4.03x
+
+downloaded by rob@cooper.edu
+
+1.1. FROM NETWORKED SYSTEMS TO DISTRIBUTED SYSTEMS
+
+9
+
+• Distributed systems are all about processes. The process perspective is
+all about understanding the different forms of processes that occur in
+distributed systems, be they threads, their virtualization of hardware
+processes, clients, servers, and so on. Processes form the software
+backbone of distributed systems, and their understanding is essential
+for understanding distributed systems.
+• Obviously, with multiple computers at stake, communication between
+processes is essential. The communication perspective concerns the
+facilities that distributed systems provide to exchange data between
+processes. It essentially entails mimicking procedure calls across multiple computers, high-level message passing with a wealth of semantic
+options, and various sorts of communication between sets of processes.
+• To make distributed systems work, what happens under the hood on top
+of which applications are executed, is that processes coordinate things.
+They jointly coordinate, for example, to compensate for the lack of global
+clock, for realizing mutual exclusive access to shared resources, and so
+on. The coordination perspective describes a number of fundamental
+coordination tasks that need to be carried out as part of most distributed
+systems.
+• To access processes and resources, we need naming. In particular,
+we need naming schemes that, when used, will lead to the process,
+resources, or whatever other type of entity that is being named. As
+simple as this may seem, naming not only turns out to be crucial in
+distributed systems, there are also many ways in which naming is
+supported. The naming perspective focuses entirely on resolving a
+name to the access point of the named entity.
+• A critical aspect of distributed systems is that they perform well in terms
+of efficiency and in terms of dependability. The key instrument for both
+aspects is replicating resources. The only problem with replication is
+that updates may happen, implying that all copies of a resource need
+to be updated as well. It is here, that keeping up the appearance of a
+nondistributed system becomes challenging. The consistency and replication perspective essentially concentrates on the trade-offs between
+consistency, replication, and performance.
+• We already mentioned that distributed systems are subject to partial
+failures. The perspective of fault tolerance dives into the means for
+masking failures and their recovery. It has proven to be one of the
+toughest perspectives for understanding distributed systems, mainly
+because there are so many trade-offs to be made, and also because
+completely masking failures and their recovery is provably impossible.
+downloaded by rob@cooper.edu
+
+DS 4.03x
+
+

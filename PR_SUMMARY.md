@@ -1,16 +1,13 @@
-# PR Summary: Week 8 Session Notes and Midterm Study Guide
+# PR Summary: ECE 465 Weeks 4, 7, 8 & Master Summary
 
 **Intended Changes**
-* Create `courses/ece251/2026/weeks/week_08/ece251_week_08_slides.tex` containing LaTeX Beamer slides for the Week 08 notes.
-* Structure slides around IEEE 754 concepts, Coprocessor 1 FPU design, floating-point hardware pipelining, and MIPS immediate literal values.
-* Include explicit exercises for converting floating-point base-10 to binary/hex and vice-versa.
-* Draft `study_guide_midterm.md` to aggregate Weeks 01-08 content for the Midterm Exam.
+* Fill the curriculum gap by authoring Session 4 Notes ("Multi-processing & network programming — Part 3").
+* Author Session 7 Notes ("Integrate application to infrastructure" / Middleware).
+* Author Session 8 Notes ("Distributed Architectures").
+* Synthesize a master table of contents and summaries for `ece465-notes.md`.
 
 **Implementation Details**
-* Generated `ece251_week_08_slides.tex` compiling the 4 new floating-point topics with Beamer.
-* Injected Harris and Hamacher textbook architecture diagrams visually into Week 08 Notes and Slides.
-* Extracted the CPU Execution Equation example from `CSCI_155_Fall_2013_Exam_1_M01.tex`.
-* Extracted the C-to-MIPS array iteration and MIPS Machine Code decoding examples from `CSCI_155_Fall_2014_Exam_1_M01.tex`.
-* Extracted the K-Map logic simplification and Boolean Expansion examples from `CSCI_155_Fall_2014_Exam_1_M01.tex`.
-* Synthesized the comprehensive `study_guide_midterm.md` containing all historical examples explicitly mapped to SystemVerilog and MIPS conventions, applying `_ {` MathJax subscript invariants.
-* Integrated a mathematical explanation analyzing how the raw bit-shifting inside `quake_calc.s` exploits the IEEE 754 exponent bias structure to perform Fast Inverse Square Roots.
+* **Week 4 (`notes_week_04.md`)**: Bridged raw TCP sockets into high-level communication paradigms. Authorized detailed explanations of Remote Procedure Calls (RPC) and Message-Oriented Communication (Transient/Persistent Message Queues and Publish-Subscribe topologies).
+* **Week 7 (`notes_week_07.md`)**: Thoroughly covered Middleware concepts (Distribution Transparency, Wrappers, Adapters, Interceptors, and Service Meshes). Concluded with progressive Easy/Medium/Hard design exercises that challenge students to build API Gateways, Rate-Limiting Interceptors, and custom Client-Side Load Balancing RPC smart-clients for the Week 5 Distributed Image Processor.
+* **Week 8 (`notes_week_08.md`)**: Broke down Tanenbaum Chapter 2 into Architectural Styles (Layered, SOA, REST, Pub-Sub) and System Architectures (Centralized, P2P, Hybrid). The progressive exercises require students to deconstruct the Week 5 architecture, migrate it to a resilient Event-Based (Message Queue) topology, and design a global Edge-Cloud hybrid processing pipeline.
+* **Master Summary (`ece465-notes.md`)**: Restored the HTML-anchored schedule chart and synthesized 1-2 paragraph executive summaries for Weeks 1 through 8, establishing dynamic markdown links to all individual weekly notes.
