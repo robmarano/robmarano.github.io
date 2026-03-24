@@ -176,7 +176,7 @@ Replacing abstract block diagrams from our older syllabus, we now enforce explic
 *   **Execution Verification (Testbenches):** Understand the structure of `tb_module.sv`. You must know how to instantiate a Device Under Test (DUT), initialize vectors inside `initial` blocks, apply delays (`#10`), and trap asserts using `$display` or `$monitor`.
 *   **8-bit Conditional ALU:** Recall your homework involving the parameterized ALU. Be able to analyze a combinational `always_comb` block that drives logic based off a switch statement checking an operation code.
 
-### Worked Example 3.1: Karnaugh Map Logic Simplification (CSCI 155 Fall 2014, Exam 1)
+### Worked Example 3.1: Karnaugh Map Logic Simplification
 **Problem:**
 Design a three-input minimal AND-OR (minimal sum form) circuit implementing the following truth table for $F(A, B, C)$:
 
@@ -202,15 +202,3 @@ Please provide the detailed design calculations, including the Karnaugh map simp
 4. **Final Minimized Logic:**  
    $$F(A,B,C) = \overline{B} + AC$$
 
-### Worked Example 3.2: Boolean Expansion (CSCI 155 Fall 2014, Exam 1)
-**Problem:**
-Express $F(x,y,z) = \overline{(\overline{x}+y)} + \overline{x}y$ in complete sum-of-products form using variables $x$, $y$, and $z$.
-
-**Solution:**
-1. **Apply DeMorgan's Theorem** to the first complex term: $\overline{(\overline{x}+y)} = \overline{\overline{x}} \cdot \overline{y} = x\overline{y}$.
-2. The intermediate function is now: $F = x\overline{y} + \overline{x}y$. (Notice this is an explicit XOR gate $x \oplus y$).
-3. **Expand to complete sum-of-products (minterms)** by multiplying the isolated terms by $(z + \overline{z})$, as substituting $1$ mathematically changes nothing:
-   - $F = x\overline{y}(z + \overline{z}) + \overline{x}y(z + \overline{z})$
-   - $F = x\overline{y}z + x\overline{y}\overline{z} + \overline{x}yz + \overline{x}y\overline{z}$
-4. **Final Complete Form:**
-   $$F(x,y,z) = x\overline{y}z + x\overline{y}\overline{z} + \overline{x}yz + \overline{x}y\overline{z}$$
