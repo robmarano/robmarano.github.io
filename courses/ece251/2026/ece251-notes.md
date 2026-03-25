@@ -12,10 +12,10 @@
 |                    [2](#week2), [3](#week3) |                   [1/29](#week2), [2/5](#week3)  | Instructions &mdash;The Language & Grammar of Computers        |
 |                    [4](#week4), [5](#week5) |                   [2/12](#week4), [2/19](#week5) | Hardware Modeling with Software (Verilog HDL)                  |
 |                    [6](#week6), [7](#week7) |                    [2/26](#week6), [3/5](#week7) | Intro to Assembly Language Programming &mdash; MIPS CPU        |
-|                                 [8](#week8) |                                   [3/12](#week8) | Arithmetic for Computers; **Midterm Exam**                     |
-|                                 [9](#week9) |                                   [3/26](#week9) | Floating Point Numbers & Arithmetic                            |
-| [10](#week10), [11](#week11), [12](#week12) |  [4/2](#week10), [4/9](#week11), [4/16](#week12) | The Processor &mdash; Data Path & Control                      |
-|                [13](#week13), [14](#week14) |                 [4/23](#week13), [4/30](#week14) | Interrupts; Memory Hierarchies (Caching)                       |
+|                                 [8](#week8) |                                   [3/12](#week8) | Arithmetic and Floating Point Numbers; **Midterm Exam**        |
+|                                 [9](#week9) |                                   [3/26](#week9) | Intro to Data Path & Control                            |
+| [10](#week10), [11](#week11), [12](#week12) |  [4/2](#week10), [4/9](#week11), [4/16](#week12) | The Processor &mdash; Data Path & Control; Interrupts                     |
+|                [13](#week13), [14](#week14) |                 [4/23](#week13), [4/30](#week14) | Memory Hierarchies (Caching)                       |
 |                               [15](#week15) |                                  [5/14](#week15) | **Final Exam**                                                 |
 |                               [15](#week15) |                                  [5/15](#week15) | Group Final Project due no later than 5pm ET this day          |
 
