@@ -27,7 +27,7 @@
 *   **Phase 2 (R-Type/Math):** Snatching operands exactly from the Register Read Ports directly into the ALU.
 *   **Phase 3 (Load/Store Memory):** Introducing the **16-to-32 bit Sign-Extender**. Why the ALU calculates base offsets instead of raw math for variables.
 *   **Phase 4 (Branch Target Constraints):** Evaluating equality via the ALU while physically Shifting-Left-2 to target distant `PC` blocks.
-*   **Fusing the Independent Modules:** Why we deploy **Multiplexers (MUXes)** acting as traffic cops (ALUSrc, MemtoReg, PCSrc) slaved purely to the Control Unit blob.
+*   **Fusing the Independent Modules:** Why we deploy **Multiplexers (MUXes)** acting as traffic cops (ALUSrc, MemtoReg, PCSrc) controlled purely by the Control Unit logic.
 
 ## 6. SystemVerilog Emulation (15 mins)
 *   **Bridging to the Final Project:** How we code this physical architecture natively using SystemVerilog structs.

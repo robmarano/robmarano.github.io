@@ -23,7 +23,7 @@ Based on Chapter 4 of the textbook (*Computer Organization and Design - MIPS Edi
 2. **Logic Design Conventions (Section 4.2)**: Understanding how the ISA is mapped to functional-level digital logic circuits, including combinational logic and sequential state elements.
 3. **Building a Datapath & Simple Implementation Scheme (Section 4.3)**: Stitching together the components to form a functional processor. We explore an end-to-end "simple" (single-cycle) implementation scheme and look at its performance limitations.
 
-These concepts lay the foundation for understanding how software (the ISA) literally drives the hardware (logic gates, registers, memory) to perform computation.
+These concepts lay the foundation for understanding how software (the ISA) fundamentally drives the hardware (logic gates, registers, memory) to perform computation.
 
 ---
 
@@ -45,7 +45,7 @@ In this framework, we are building a processor mathematically tailored to suppor
 **The Performance Equation:**
 Remember the fundamental CPU Performance formula from Chapter 1:
 $$\text{CPU Execution Time} = \text{Instruction Count} \times \text{CPI} \times \text{Clock Cycle Time}$$
-Because this is a **Single-Cycle** architecture, the CPI (Cycles Per Instruction) is artificially locked at exactly $1.0$. However, because every instruction, no matter how physically complex, must finish within that singular hardware cycle, the overall **Clock Cycle Time** will be violently bottlenecked by the slowest possible instruction logic path.
+Because this is a **Single-Cycle** architecture, the CPI (Cycles Per Instruction) is artificially locked at exactly $1.0$. However, because every instruction, no matter how physically complex, must finish within that singular hardware cycle, the overall **Clock Cycle Time** will be strictly constrained by the slowest possible instruction logic path.
 
 ### 4.2 Logic Design Conventions & Clocking
 Before we wire silicon cables between components, we must establish rigorous electrical ground rules defining how data is safely manipulated and stored.

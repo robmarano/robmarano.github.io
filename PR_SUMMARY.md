@@ -27,5 +27,7 @@ Add the lecture notes for Week 09 to the ECE 251 Computer Architecture course re
 
 - **Session Agenda & Structuring**: Created `agenda_week_09.md` modeling the Week 07 pedagogy layout and explicitly embedded the new Slide Deck download link at the top of the `notes_week_09.md` document.
 
+- **Academic Language Sanitization**: Conducted a vocabulary sweep across the Week 09 notes, agenda, and presentation deck to remove anachronistic terms (e.g., 'slaved') and informal weasel words (e.g., 'violently', 'literally'), substituting them with proper formal phrasing.
+
 ## Next Steps
 - Commit the content, push to `feature/week09-notes`, and open a Pull Request.
