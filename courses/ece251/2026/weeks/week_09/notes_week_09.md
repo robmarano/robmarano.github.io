@@ -27,6 +27,8 @@ These concepts lay the foundation for understanding how software (the ISA) liter
 
 ## Topic Deep Dive
 
+![Infographic: Inside the MIPS Single-Cycle Processor](infographic_mips_single_cycle.jpg)
+
 ### 4.1 Introduction: Basic MIPS Implementation
 The processor consists of two main parts: the **Datapath** (the muscles) and the **Control Unit** (the brain). The datapath contains all the hardware elements that operate on or hold data. The essential components include the **Program Counter (PC)**, **Instruction Memory**, **Registers**, **ALU**, and **Data Memory**. The control unit decodes the instruction formats (e.g., the 6-bit opcode and 6-bit funct fields) and acts as the explicit conductor, broadcasting the specific electrical signals indicating what the datapath components should do.
 
