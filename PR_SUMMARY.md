@@ -19,5 +19,7 @@ Add the lecture notes for Week 09 to the ECE 251 Computer Architecture course re
 - **Updated `notes_week_09.md` Latencies**: Added section `4.5 Datapath Component Latencies and Critical Paths` to support students in identifying physical execution delays.
 - **Standardized Submission Guidelines**: Updated the submission instruction text uniformly across assignments (`hw-01` through `hw-09`) to explicitly direct students to submit via Microsoft Teams instead of GitHub.
 
+- **Added MIPS Datapath Infographic**: Embedded the explicit 'Inside the MIPS Single-Cycle Processor' visual overview into `notes_week_09.md` to cleanly map the Instruction Fetch through Write-Back components for students.
+
 ## Next Steps
 - Commit the content, push to `feature/week09-notes`, and open a Pull Request.
