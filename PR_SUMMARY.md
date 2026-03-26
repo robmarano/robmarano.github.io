@@ -25,5 +25,7 @@ Add the lecture notes for Week 09 to the ECE 251 Computer Architecture course re
   - Systematically expanded `notes_week_09.md` to rigorously define Edge vs. Level-Triggering for the 5-stage loop based on Hamacher textbook details, and detailed the Datapath logic.
   - Authored a comprehensive 9-slide Beamer presentation outputting to `ece251_week_09_slides.pdf` synthesizing the newly expanded Datapath architecture.
 
+- **Session Agenda & Structuring**: Created `agenda_week_09.md` modeling the Week 07 pedagogy layout and explicitly embedded the new Slide Deck download link at the top of the `notes_week_09.md` document.
+
 ## Next Steps
 - Commit the content, push to `feature/week09-notes`, and open a Pull Request.

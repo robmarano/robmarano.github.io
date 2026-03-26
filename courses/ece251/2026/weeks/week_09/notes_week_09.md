@@ -1,6 +1,8 @@
 # Notes for Week 9
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
 
+> **[🗂️ Download Week 09 Slides (PDF)](./ece251_week_09_slides.pdf)**
+
 # The Processor: Datapath & Control (Part 1 of 3)
 
 ## Reading Assignment
