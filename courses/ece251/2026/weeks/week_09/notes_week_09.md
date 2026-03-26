@@ -136,6 +136,29 @@ endmodule
 
 These modules, alongside array-based Instruction/Data memories, are wired together structurally in a top-level wrapper (e.g., `mips_single_cycle.sv`) strictly following the data flow shown in **textbook Figure 4.11**. A testbench then supplies the `clk` and `reset` signals, computationally driving the entire emulated processor.
 
+#### 4.5 Datapath Component Latencies and Critical Paths
+To truly understand the performance limitations of the single-cycle processor architecture, we must quantify the physical timing delays of the hardware components. Every gate, multiplexer, and memory unit takes a fraction of a nanosecond to stabilize its electrical output after its inputs arrive. This delay is the component's **latency**.
+
+Assume a processor is built with components having the following latencies (measured in picoseconds, ps):
+*   **Instruction Memory (I-Mem)**: `250 ps`
+*   **Data Memory (D-Mem)**: `250 ps`
+*   **Register File (Read or Write)**: `150 ps`
+*   **ALU (Math & Logic)**: `200 ps`
+*   **Programmable Adders (e.g., PC+4)**: `150 ps`
+*   **Multiplexers (MUX)**: `25 ps`
+*   **Sign-Extension Unit**: `20 ps`
+*   **Program Counter (PC) Register (Clock-to-Q)**: `30 ps`
+
+To calculate the total latency of a specific instruction type, we mathematically trace its *longest sequential electrical path*:
+1.  **R-Type Instruction (e.g., `add $t0, $t1, $t2`)**:
+    - `PC` (30ps) -> `I-Mem` (250ps) -> `Reg Read` (150ps) -> `ALUSrc MUX` (25ps) -> `ALU` (200ps) -> `MemtoReg MUX` (25ps) -> `Reg Write Setup` (20ps) = **700 ps**
+2.  **Load Word (`lw`) Instruction**:
+    - `PC` (30ps) -> `I-Mem` (250ps) -> `Reg Read` (150ps) -> `ALUSrc MUX` (25ps) -> `ALU` (200ps) -> `D-Mem Read` (250ps) -> `MemtoReg MUX` (25ps) -> `Reg Write Setup` (20ps) = **950 ps**
+3.  **Branch (`beq`) Instruction**:
+    - `PC` (30ps) -> `I-Mem` (250ps) -> `Reg Read` (150ps) -> `ALU subtraction` (200ps) -> `Branch MUX` (25ps) -> `PC Setup` (20ps) = **675 ps** *(Requires small AND gate delay in ISA specific implementations)*
+
+Because the single-cycle machine uses one universal clock to drive all operations, the globally defined **Clock Cycle Time** MUST precisely accommodate the longest possible latency of any instruction in the ISA (`lw` at **950 ps**).
+
 ### Tracking Processor Components and System Integration
 
 Before looking at complete problem walkthroughs, we should explicitly track the primary individual components needed to physically construct our MIPS processor, as well as what is required to transform this raw processor into a fully functional general-purpose computer.
