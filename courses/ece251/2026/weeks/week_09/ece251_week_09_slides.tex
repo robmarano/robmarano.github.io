@@ -1,0 +1,117 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\title{ECE 251: Computer Architecture}
+\subtitle{Week 09 Notes - The Processor: Datapath \& Control}
+\author{Prof Rob Marano}
+\date{Spring 2026}
+
+% Cooper Union Brand Identity
+\definecolor{CooperRed}{HTML}{8A1538}
+\definecolor{CooperDark}{HTML}{5C0E25}
+\setbeamercolor{structure}{fg=CooperRed}
+\setbeamercolor{palette primary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette secondary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette tertiary}{bg=CooperDark,fg=white}
+\setbeamercolor{title in head/foot}{bg=CooperDark,fg=white}
+\logo{\includegraphics[height=1cm]{../../images/cooper_union_logo.png}}
+\titlegraphic{\includegraphics[height=1.5cm,keepaspectratio]{../../images/cooper_union_logo.png}}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{1. Anatomy of the MIPS Processor}
+The processor is built from two primary sub-systems acting in concert.
+\vspace{0.2cm}
+\begin{itemize}
+    \item \textbf{The Datapath (The Muscles)}: Contains the hardware elements that physically hold or operate on data. Key components include the Program Counter (PC), Instruction Memory, Registers, Arithmetic Logic Unit (ALU), and Data Memory.
+    \item \textbf{The Control Unit (The Brain)}: Decodes the binary instruction formats (e.g., the 6-bit opcode) and acts as the explicit conductor, broadcasting specific electrical signals to direct the Datapath MUXes on where to route information.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{2. The Core MIPS Subset \& Performance}
+In Chapter 4, we define a processor mathematically tailored to support a core computational subset of the MIPS ISA:
+\vspace{0.2cm}
+\begin{itemize}
+    \item \textbf{Memory-Reference}: \texttt{lw}, \texttt{sw}
+    \item \textbf{Arithmetic-Logical}: \texttt{add}, \texttt{sub}, \texttt{and}, \texttt{or}, \texttt{slt}
+    \item \textbf{Control Flow}: \texttt{beq}, \texttt{j}
+\end{itemize}
+\vspace{0.2cm}
+\textbf{The Bottleneck Equation:} \\
+$\text{CPU Time} = \text{Instruction Count} \times \text{CPI} \times \text{Clock Cycle Time}$. \\
+Because this is a Single-Cycle architecture, CPI is forcefully locked at 1.0. Therefore, the global Clock Cycle Time is violently bottlenecked by the slowest possible component traversal.
+\end{frame}
+
+\begin{frame}{3. Logic Design Conventions \& Clocking}
+Before wiring data buses, we must establish rigorous circuit limitations.
+\vspace{0.2cm}
+\begin{itemize}
+    \item \textbf{Combinational Logic (ALU, Adders, MUXes)}: Elements with absolutely no memory. Their outputs cascade to new math targets immediately following raw logic gate decay delays.
+    \item \textbf{Sequential State Elements (Registers, PC, Memory)}: Elements that definitively lock in memory. They absolutely refuse to overwrite their internal payload unless commanded by a distinct synchronization square-wave: \textbf{The Clock}.
+\end{itemize}
+\textbf{Edge-Triggered Constraints}: State elements only safely capture data precisely on the \textit{rising edge} transition. Input data must successfully satisfy strict **Setup Time** (stabilizing early before the hit) and **Hold Time** (stabilizing after the hit) rules.
+\end{frame}
+
+\begin{frame}{4. Building the Datapath: Fetch \& R-Type Math}
+Hardware engineers wire sequential sub-blocks tailored directly to the specific instruction arrays.
+\vspace{0.2cm}
+\begin{enumerate}
+    \item \textbf{Phase 1 (Fetch)}: The PC targets Instruction Memory to pull the raw 32-bit Opcode array. Simultaneously, the PC address hits the \texttt{PC+4} Combinational Adder to actively calculate the next sequential sequence clock target.
+    \item \textbf{Phase 2 (R-Type)}: The 5-bit \texttt{rs} and \texttt{rt} targets rip payload values exclusively from the Register File. The math hits the ALU, and the 32-bit calculated combinational result violently reverses path backward strictly to target the \texttt{rd} write port, perfectly landing within the Setup phase before the upcoming clock triggers.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{5. Building the Datapath: Loads, Stores, Branches}
+Memory and Control Flow instructions mandate heavy Address Offsets.
+\vspace{0.2cm}
+\begin{enumerate}
+    \item \textbf{Phase 3 (Load/Store)}: The 16-bit physical immediate base offset is run strictly through a 32-bit \textbf{Sign Extender}. Rather than computing strict math, the ALU mathematically \textit{adds} the register payload directly to the generated 32-bit extension base, establishing a final absolute physical boundary loop to target RAM Data Memory.
+    \item \textbf{Phase 4 (Branches)}: The ALU executes a rapid combinational Subtraction purely to analyze integer identicality, throwing a \texttt{Zero} flag if successful. Conducively, the Sign-Extended immediate natively shifts left by 2 bits, crashing into the \textbf{Branch Target Adder} to compute the distant execution trajectory.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{6. Multiplexing the Subsystems}
+We cannot physically have 3 competing wires writing to the exact same Register File node. To fuse the Datapath, we deploy MUX `traffic cops`:
+\vspace{0.2cm}
+\begin{itemize}
+    \item \textbf{ALUSrc MUX}: Selects between throwing Register 2 explicitly to the ALU, *or* shifting over into the 32-bit Sign-Extended Immediate path.
+    \item \textbf{MemtoReg MUX}: Decides whether the Register File receives the absolute ALU math result *or* the freshly discovered memory array pulled from Data Memory.
+    \item \textbf{PCSrc MUX}: Orchestrates whether the \texttt{PC+4} value continues *or* is forcefully overwritten by the distant Branch Target calculated trace.
+\end{itemize}
+These elements are all exclusively slaved directly to the explicit Control Unit wiring!
+\end{frame}
+
+\begin{frame}[fragile]{7. SystemVerilog Behavioral Emulation}
+We can physically model the datapath hardware using SystemVerilog.
+\vspace{0.2cm}
+\begin{itemize}
+    \item \textbf{State Elements}: Modeled exclusively using \texttt{always\_ff @(posedge clk)} directly mimicking Edge-Triggered constraints.
+    \item \textbf{Combinational Elements}: Modeled utilizing \texttt{always\_comb} and standard asynchronous \texttt{assign} arrays.
+\end{itemize}
+\begin{verbatim}
+always_comb begin
+    case (alucontrol)
+        3'b010: result = a + b; // ADD
+        3'b110: result = a - b; // SUB
+    endcase
+end
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{8. The Limitations of Single-Cycle \textit{(Why we Pipelined)}}
+\begin{itemize}
+    \item The global clock cycle MUST be locked to accommodate the \textbf{slowest possible instruction} in the entire ISA to guarantee the Setup and Hold architectural physical stability. 
+    \item Because the \texttt{lw} instruction dynamically utilizes the Fetch, Register Reading, ALU Address Calculation, Memory Fetching, and Terminal Register writing, it takes \textbf{950 ps}. The Clock is physically forced to be 950 ps.
+    \item \textbf{The Penalty}: A fast \texttt{add} finishes math early at 700ps, but sits electrically idle, wasting 250ps of raw CPU performance waiting for the slow \texttt{lw} clock boundary edge constraint constraint.
+    \item \textbf{Session 10 Solution}: Multicycle Breakdowns and Pipelining.
+\end{itemize}
+\end{frame}
+
+\end{document}

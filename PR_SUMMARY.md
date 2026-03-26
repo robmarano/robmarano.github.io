@@ -21,5 +21,9 @@ Add the lecture notes for Week 09 to the ECE 251 Computer Architecture course re
 
 - **Added MIPS Datapath Infographic**: Embedded the explicit 'Inside the MIPS Single-Cycle Processor' visual overview into `notes_week_09.md` to cleanly map the Instruction Fetch through Write-Back components for students.
 
+- **Deep Textbook Integration (Sections 4.1-4.3)**:
+  - Systematically expanded `notes_week_09.md` to rigorously define Edge vs. Level-Triggering for the 5-stage loop based on Hamacher textbook details, and detailed the Datapath logic.
+  - Authored a comprehensive 9-slide Beamer presentation outputting to `ece251_week_09_slides.pdf` synthesizing the newly expanded Datapath architecture.
+
 ## Next Steps
 - Commit the content, push to `feature/week09-notes`, and open a Pull Request.
