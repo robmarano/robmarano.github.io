@@ -107,7 +107,7 @@ NOTE: Check our [shared Teams drive](https://cooperunion.sharepoint.com/:f:/s/Se
 See [hw-03](/courses/ece251/2026/assignments/hw-03.html); [solution](TBD)
 
 
-# <a id="week4">Week 4</a> &mdash; 2/12 &mdash; Hardware Modeling with Verilog HDL &mdash; Part 1
+# <a id="week4">Week 4 &mdash; 2/12 &mdash; Hardware Modeling with Verilog HDL &mdash; Part 1</a>
 
 ## Topics
 
@@ -182,7 +182,7 @@ See [notes_week_07](/courses/ece251/2026/weeks/week_07/notes_week_07.html)
 - Read sections Chap 2.12 through Chap 2.14 in my notes handout [Prof's Notes on Comp Arch](https://cooperunion.sharepoint.com/:b:/s/Section_ECE-251-A-2025SP/EaFcET5zxcBHsS529aI4YmEBnUJnbvjWv2R6XsQfFwzC5w?e=2BFfUf)
 - Read [class notes on MIPS assembly programming](/courses/ece251/mips/mips.html)
 
-# <a id="week8">Week 8 &mdash; 3/12 &mdash; Arithmetic for Computers</a>
+# <a id="week8">Week 8 &mdash; 3/12 &mdash; Arithmetic and Floating Point Numbers; Midterm Exam</a>
 
 ## Topics
 
@@ -190,7 +190,8 @@ See [notes_week_07](/courses/ece251/2026/weeks/week_07/notes_week_07.html)
 2. Addition and Subtraction
 3. Multiplication
 4. Division
-5. Floating Point
+5. A better system to handle very small and very large numbers &mdash; floating point numbers (IEEE 754 standard).
+6. Arithmetic of floating point numbers.
 
 ## Topic Deep Dive
 
@@ -198,49 +199,51 @@ See [notes_week_08](/courses/ece251/2026/weeks/week_08/notes_week_08.html)
 
 ## Reading Assignment
 
-- Read sections [Chap 3.1 through Chap 3.5 of CODmips textbook](TBD)
+- Read Chapter 3, Sections 3.1 through 3.5 in *Computer Organization and Design - MIPS Edition*.
 
-# <a id="week9">Week 9 &mdash; 3/26 &mdash; Floating Point Numbers & Artihmetic</a>
+# <a id="week9">Week 9 &mdash; 3/26 &mdash; Intro to Data Path & Control (Part 1 of 3)</a>
 
 ## Topics
 
-1. A better system to handle very small and very large numbers &mdash floating point numbers through the IEEE 754 standard.
+1. Introduction to the basic MIPS processor implementation (Section 4.1).
+2. Logic design conventions and clocking methodology (Section 4.2).
+3. Building a simple single-cycle datapath and the Control Unit (Section 4.3).
+4. Retrospective: SystemVerilog behavioral modeling of the datapath logic.
 
 ## Topic Deep Dive
 
-1. Floating point number to represent the very large and the very small of numbers.
-2. Arithmetic of floating point numbers.
-
 See [notes_week_09](/courses/ece251/2026/weeks/week_09/notes_week_09.html)
 
-# <a id="week10">Week 10 &mdash; 4/2 &mdash; The Processor &mdash; Datapath & Control (Part 1 of 3)</a>
+## Reading Assignment
+
+- Read Chapter 4, Sections 4.1 through 4.3 in *Computer Organization and Design - MIPS Edition*.
+
+# <a id="week10">Week 10 &mdash; 4/2 &mdash; The Processor &mdash; Datapath & Control (Part 2 of 3)</a>
 
 ## Topics
 
-1. How to create the digital architecture from ISA instructions, component by component
-2. High level, abstract view of the processor
-3. Review of logic design conventions
-4. Building a datapath
-5. A simple implementation scheme for a subset of MIPS instructions
+1. The limitations of single-cycle implementation.
+2. Transitioning to multicycle implementations.
+3. Introduction to Pipelining.
 
 See [notes_week_10](/courses/ece251/2026/weeks/week_10/notes_week_10.html)
 
-# <a id="week11">Week 11 &mdash; 4/9 &mdash; The Processor &mdash; Datapath & Control (Part 2 of 3)</a>
+# <a id="week11">Week 11 &mdash; 4/9 &mdash; The Processor &mdash; Datapath & Control (Part 3 of 3)</a>
 
 
 See [notes_week_11](/courses/ece251/2026/weeks/week_11/notes_week_11.html)
 
-# <a id="week12">Week 12 &mdash; 4/16 &mdash; The Processor &mdash; Datapath & Control (Part 3 of 3)">
+# <a id="week12">Week 12 &mdash; 4/16 &mdash; The Processor &mdash; Interrupts</a>
 
 
 See [notes_week_12](/courses/ece251/2026/weeks/week_12/notes_week_12.html)
 
-# <a id="week13">Week 13 &mdash; 4/23 &mdash; Interrupts; Memory Hierarchies (Caching) Part 1">
+# <a id="week13">Week 13 &mdash; 4/23 &mdash; Interrupts; Memory Hierarchies (Caching) Part 1</a>
 
 
 See [notes_week_13](/courses/ece251/2026/weeks/week_13/notes_week_13.html)
 
-# <a id="week14">Week 14 &mdash; 4/30 &mdash;Interrupts; Memory Hierarchies (Caching) Part 2">
+# <a id="week14">Week 14 &mdash; 4/30 &mdash;Interrupts; Memory Hierarchies (Caching) Part 2</a>
 
 
 See [notes_week_14](/courses/ece251/2026/weeks/week_14/notes_week_14.html)

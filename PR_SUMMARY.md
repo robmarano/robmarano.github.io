@@ -11,6 +11,7 @@ Add the lecture notes for Week 09 to the ECE 251 Computer Architecture course re
   - Authored a dedicated subsection for SystemVerilog behavioral modeling of the Program Counter, Register File, and ALU to bridge theoretical logic concepts with practical RTL programming.
   - Supplied three complete problem walkthroughs mapping back to Chapter 4 textbook exercises (Simple - Ex 4.3 Component Utilization, Medium - Ex 4.1 Control Signals, Hard - Ex 4.4 Diagnosing Stuck Control Multiplexers).
   - Added reading assignments mapping directly to the week's syllabus timeline.
+- **Fixed Typography**: Corrected unclosed HTML anchor tags (`</a>`) in `ece251-notes.md` for Weeks 12, 13, and 14 headers that resulted from previous week shifts.
 
 ## Next Steps
 - Commit the content, push to `feature/week09-notes`, and open a Pull Request.
