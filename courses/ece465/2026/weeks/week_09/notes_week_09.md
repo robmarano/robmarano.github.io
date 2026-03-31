@@ -142,3 +142,32 @@ Within the Data Center, a cluster of 5 `Analytics` nodes process this data. Only
     *   IoT devices write continuously to the Pub/Sub broker asynchronously. Because messaging is *Persistent* (Section 4.3.2), the Pub/Sub broker simply buffers the millions of incoming MQTT messages in a queue while the Data Center was holding its election. No internet traffic was dropped.
 4.  **Resuming Service:**
     *   The newly elected Coordinator (Node 4) opens a TCP connection to the Pub/Sub broker, subscribes to the `thermostat/data` topic, and begins draining the buffered message queue, writing the backlog to the SQL database.
+
+---
+
+## 7. Case Study: Evolution of the Distributed Image Processor
+
+To bridge the gap between abstract theory and your practical Kubernetes exercises, let's explicitly compare the architectural topology you built in **Week 5 (`k8s_histogram_eq`)** against the highly resilient array you are deploying today in **Week 9 (`k8s_zk_template`)**.
+
+### The Week 5 Architecture (Static & Synchronous)
+In Week 5, we approached Kubernetes with a traditional **Service-Oriented** mindset:
+*   **Topology**: We hardcoded a split topology. We wrote one explicit `master` Deployment and one explicit `worker` Deployment. 
+*   **Communication**: The Master pod used synchronous **RPC-style HTTP** requests. It would open a direct TCP socket to a worker, send the image chunk, and block (wait) for the worker to return the histogram.
+*   **The Single Point of Failure**: If a worker pod crashed (OOM killed by Docker) midway through processing its chunk, the HTTP connection would prematurely severe. The Master's request would throw a fatal Exception, and the entire user upload would fail. The Master had no intrinsic way to track or coordinate failures gracefully.
+
+### The Week 9 Architecture (Homogenous, Dynamic & Fault-Tolerant)
+Today, we are moving to a purely distributed **Event-Based** mindset powered by an external Coordination Engine (Apache ZooKeeper).
+
+*   **1. Homogenous Topology (No more "Master" image)**:
+    There is only *one* Docker image and *one* Kubernetes Deployment now. Kubernetes spins up 3 completely identical Pods. They are entirely agnostic to their role upon boot. 
+*   **2. Dynamic In-Cluster DNS via Leader Election**:
+    Instead of hardcoding a Master, the 3 identical pods use the `kazoo` Python library to race for a ZooKeeper lock. 
+    The single pod that wins the race assumes the Master role. It then *recapitulates* its own environment: it issues a command to the internal Kubernetes API to patch its own Pod label to `role: master`. 
+    Because our internal Kubernetes Service specifically targets `role: master`, the internal DNS seamlessly redirects all incoming user web-traffic strictly to whatever pod won the election! If that pod dies, another pod wins the election, changes its label, and the DNS dynamically swings to the new pod in milliseconds.
+*   **3. Asynchronous Coordination (Znodes & Ephemeral Locks)**:
+    Instead of brittle HTTP POSTs, the Master coordinates the MapReduce job exclusively by creating tiny `JSON` jobs inside ZooKeeper (`/jobs/<job_id>`). 
+    The identical "Worker" pods simply place a Watch on that directory. When a job drops, they race to grab it. 
+*   **4. Total Fault Tolerance**:
+    Before a worker begins calculating a local histogram, it places an **Ephemeral ZNode Lock** over the job. 
+    If that worker pod suddenly bursts into flames and dies, its TCP session with ZooKeeper terminates. ZooKeeper instantly realizes the worker is dead and purges the Ephemeral Lock.
+    The remaining living workers immediately see that the job is "unlocked" and orphaned, allowing another worker to instantly claim it and compute the data. The external user never event suspects that a node physically exploded mid-process! This is the true power of **Distribution Transparency**.
