@@ -30,6 +30,7 @@ zk.start()
 # Track Global State
 is_master = False
 active_nodes = 0
+tailed_pods = set()
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -74,15 +75,32 @@ def run_election():
     election = Election(zk, "/election")
     election.run(become_leader)
 
+def stream_pod_logs(pod_name):
+    try:
+        config.load_incluster_config()
+        v1 = client.CoreV1Api()
+        resp = v1.read_namespaced_pod_log(name=pod_name, namespace=NAMESPACE, follow=True, _preload_content=False)
+        for line in resp.stream():
+            if line:
+                socketio.emit('node_log', {'pod': pod_name, 'log': line.decode('utf-8').strip()})
+    except Exception as e:
+        logger.error(f"Failed to stream logs for {pod_name}: {e}")
+
 # Watch cluster size (Only master cares)
 def watch_cluster_resources(children):
-    global active_nodes
+    global active_nodes, tailed_pods
     active_nodes = len(children)
     logger.info(f"Cluster topology changed. Active nodes: {active_nodes}")
     if is_master and active_nodes < 3:
         socketio.emit('cluster_alert', {'status': 'error', 'message': f'Service not available, not enough resources. Only {active_nodes} pods running.'})
     elif is_master:
         socketio.emit('cluster_alert', {'status': 'ok', 'message': f'Cluster healthy with {active_nodes} nodes.'})
+        
+        # Spawn log tailers for newly discovered nodes
+        for pod in children:
+            if pod not in tailed_pods:
+                tailed_pods.add(pod)
+                socketio.start_background_task(stream_pod_logs, pod)
 
 # --- WORKER LOGIC ---
 def worker_loop():
