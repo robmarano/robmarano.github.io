@@ -4,6 +4,8 @@
 
 **Objective**: This week we move from defining overall architectural styles to understanding the underlying mechanisms that allow geographically separated components to **Communicate** reliably and **Coordinate** their actions without a centralized clock. This session heavily maps to the theories presented in the van Steen & Tanenbaum *Distributed Systems* textbook.
 
+> 📖 **Reading Assignment:** Before proceeding with this week's exercises, please read **Chapter 4 (Communication)** and **Chapter 6 (Coordination)** in *Distributed Systems* (van Steen and Tanenbaum, Version 4.0.3x).
+
 ---
 
 ## 1. Communication in Distributed Systems
