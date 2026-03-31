@@ -61,6 +61,11 @@ def become_leader():
     update_pod_label("master")
     # Start watching /nodes
     zk.ChildrenWatch('/nodes', watch_cluster_resources)
+    
+    # Kazoo Election drops leadership immediately if this function returns. 
+    # Must block indefinitely to HOLD the Master lock.
+    while True:
+        time.sleep(10)
 
 def run_election():
     election = Election(zk, "/election")
