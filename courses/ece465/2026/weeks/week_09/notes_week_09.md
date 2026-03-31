@@ -72,3 +72,60 @@ You must deploy a Kubernetes application where **all** Pods run the exact same `
 2. The elected Master will use the Kubernetes API to add the label `role: master` to itself.
 3. Kubernetes DNS will instantly map `http://master-service` to that specific pod!
 4. The Master orchestrates a distributed MapReduce job by passing task slices not via direct HTTP, but by dropping JSON jobs into ZooKeeper `/jobs` znodes. The ephemeral workers watch this path, claim specific chunk jobs, and return the histogram logic securely.
+
+---
+
+## 5. Theoretical Problem Sets
+
+The following problems bridge the theoretical concepts of Communication (Chapter 4) and Coordination (Chapter 6) into practical, real-world data center and internet-scale scenarios. Reference the *van Steen & Tanenbaum (v4.0.3x)* textbook for foundational models.
+
+### Problem 5A (Easy): RPC Communication Semantics
+**Reference:** *Chapter 4: Communication (RPC Semantics, Sec. 4.2.2, ~p. 182-185)*
+
+**Scenario:** An e-commerce backend in an AWS Data Center uses Remote Procedure Calls (RPC) to communicate between a `CartService` and a `BillingService`. When a customer checks out over the internet (often dropping cellular connection), the `CartService` issues an RPC `process_payment(user_id, $50)` to the `BillingService`. A timeout occurs and no response is returned.
+
+**Question:** What is the difference between *At-least-once* and *At-most-once* semantics in this scenario? Which is safer for internet-scale financial transactions, and how would you implement it from a design perspective?
+
+**Worked Solution:**
+1.  **Define the semantics:**
+    *   *At-least-once* means the `CartService` will keep retrying the RPC indefinitely until it receives an ACK. If the network dropped the *reply* but not the *request*, the `BillingService` might execute the $50 charge multiple times.
+    *   *At-most-once* means the RPC is sent exactly once. If it fails, an error is thrown. The payment will never be processed twice, but it might not be processed at all.
+2.  **Evaluate Safety:** For financial transactions, *At-most-once* (or *Exactly-once*, which is practically impossible without distributed consensus) is safer than charging the user repeatedly.
+3.  **Design Implementation:** Using **Idempotency**. The `CartService` generates a unique Transaction ID (UUID) and passes it in the RPC: `process_payment(user_id, $50, TXN_1234)`. We can now safely use an *At-least-once* retry loop. The `BillingService` coordinates by storing `TXN_1234` in a database. If the RPC is retried, the `BillingService` sees the UUID, skips the credit card charge, and simply returns the cached success response. 
+
+### Problem 5B (Medium): Coordination via Logical Clocks
+**Reference:** *Chapter 6: Coordination (Logical Clocks, Sec. 6.2, ~p. 306-310)*
+
+**Scenario:** You have a distributed NoSQL database spanning three localized data centers (Nodes A, B, and C). They have distinct physical quartz clocks that suffer from clock drift. 
+*   User 1 (connected to Node A) changes their profile picture.
+*   User 2 (connected to Node B) immediately "Likes" the new profile picture.
+Due to clock drift, Node B's physical clock is 5 minutes *behind* Node A. When the events replicate to Node C, Node C sees the "Like" timestamping *before* the "Profile Picture Change", creating an impossible reality.
+
+**Question:** How does Lamport's Logical Clocks solve this without needing to physically synchronize the server clocks using NTP?
+
+**Worked Solution:**
+1.  **Discard Physical Time:** Instead of relying on quartz physical clocks, each node maintains a logical software counter, $L$.
+2.  **Internal Events:** Before a node executes an event, it increments its own counter: $L = L + 1$.
+3.  **Communication Events:** When Node A sends the "Profile Change" data to Node B, it attaches its current timestamp $L_A$. 
+4.  **Causality Sync:** When Node B receives the message, it must respect that A's event *caused* B's subsequent event. Node B updates its own clock to be strictly greater than A's: $L_B = \text{MAX}(L_B, L_A) + 1$.
+5.  **The Result:** When User 2 "Likes" the photo, Node B assigns a Lamport timestamp strictly higher than the "Profile Change". When Node C receives both replication streams, sorting by Lamport Timestamps guarantees absolute causal ordering, regardless of real-world physical drift.
+
+### Problem 5C (Hard): Combining Pub/Sub Communication with Election Coordination
+**Reference:** *Chapter 6: Coordination (Election Algorithms, Sec. 6.5, ~p. 339-344) & Chapter 4: Communication (Message-Oriented, Sec. 4.3, ~p. 192-205)*
+
+**Scenario:** Millions of IoT smart-thermostats (Edge devices) connect over the public internet to a massive Data Center cluster. They communicate purely via an asynchronous, topic-based **Publish-Subscribe (Pub/Sub)** message broker (like MQTT). 
+Within the Data Center, a cluster of 5 `Analytics` nodes process this data. Only one node can act as the "Coordinator" responsible for writing data to the Master SQL Database. The current Coordinator node catches on fire and is destroyed.
+
+**Question:** Work through the exact steps of how the remaining 4 nodes utilize an Election Algorithm to coordinate, and how they subsequently communicate the result to the asynchronous Pub/Sub broker to ensure IoT traffic is not lost during the outage.
+
+**Worked Solution (The Bully Algorithm + MOM):**
+1.  **Failure Detection:** Node 3 attempts to send a heartbeat to the Coordinator (Node 5) and receives a TCP timeout. Node 3 suspects the coordinator is dead.
+2.  **The Election (Coordination):**
+    *   Node 3 initiates the *Bully Algorithm*. It sends an `ELECTION` message to all nodes with a higher ID (Node 4 and Node 5).
+    *   Node 5 (dead) does not reply. Node 4 is alive and replies with an `OK` message, forcing Node 3 to stand down.
+    *   Node 4 now holds the election. It sends an `ELECTION` message to higher nodes (Node 5).
+    *   Receiving no reply, Node 4 promotes itself. It broadcasts a `COORDINATOR` message to Nodes 1, 2, and 3. The cluster is re-coordinated.
+3.  **State Recovery (Communication):**
+    *   IoT devices write continuously to the Pub/Sub broker asynchronously. Because messaging is *Persistent* (Section 4.3.2), the Pub/Sub broker simply buffers the millions of incoming MQTT messages in a queue while the Data Center was holding its election. No internet traffic was dropped.
+4.  **Resuming Service:**
+    *   The newly elected Coordinator (Node 4) opens a TCP connection to the Pub/Sub broker, subscribes to the `thermostat/data` topic, and begins draining the buffered message queue, writing the backlog to the SQL database.
