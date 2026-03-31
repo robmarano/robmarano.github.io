@@ -1,6 +1,7 @@
+import os
+os.environ["EVENTLET_NO_GREENDNS"] = "yes"
 import eventlet
 eventlet.monkey_patch()
-import os
 import time
 import uuid
 import json
