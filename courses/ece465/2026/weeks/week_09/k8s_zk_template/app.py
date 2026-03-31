@@ -1,3 +1,5 @@
+import eventlet
+eventlet.monkey_patch()
 import os
 import time
 import uuid
@@ -152,7 +154,7 @@ def upload_file():
     file.save(img_path)
     
     # Start orchestrator thread so we don't block the upload HTTP request
-    threading.Thread(target=orchestrate_job, args=(job_id, img_path)).start()
+    socketio.start_background_task(orchestrate_job, job_id, img_path)
     return jsonify({"job_id": job_id})
 
 def orchestrate_job(job_id, img_path):
@@ -225,6 +227,6 @@ def download(filename):
 
 if __name__ == '__main__':
     # Start the Election and the Worker polling loop asynchronously
-    threading.Thread(target=run_election, daemon=True).start()
-    threading.Thread(target=worker_loop, daemon=True).start()
+    socketio.start_background_task(run_election)
+    socketio.start_background_task(worker_loop)
     socketio.run(app, host='0.0.0.0', port=5000)
