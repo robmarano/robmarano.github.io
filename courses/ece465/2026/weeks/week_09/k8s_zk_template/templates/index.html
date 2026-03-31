@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Distributed ZooKeeper MapReduce</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; margin: 40px; background: #fdfdfd; }
+        #dropzone { border: 3px dashed #3cbd7e; padding: 50px; text-align: center; cursor: pointer; border-radius: 12px; transition: 0.3s;}
+        #dropzone:hover { background: #f0faf5; }
+        #alerts { color: #d9534f; font-weight: bold; margin-bottom: 20px;}
+        #status { margin-top: 20px; font-family: monospace; background: #222; color: #0f0; padding: 20px; border-radius:8px;}
+        .card { padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: white; border-radius: 12px; max-width: 800px; margin: 0 auto;}
+        a { color: #3cbd7e; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div style="display:flex; justify-content: space-between; align-items:center;">
+            <h2>ZK-MapReduce Engine</h2>
+            <div>Active Pods: <strong id="pod_count"><span style="color:#d9534f">Initializing</span></strong></div>
+        </div>
+        
+        <div id="alerts"></div>
+        
+        <div id="dropzone">
+            <h3>Drop an image to Equalize</h3>
+            <small>(Or click to upload. Image will be chunked via ZNode Jobs and distributed to Ephemeral Workers)</small>
+        </div>
+        <input type="file" id="fileInput" style="display: none;" accept="image/*">
+        
+        <div id="status"><i>Connected to ZooKeeper Master... Awaiting job.</i><br></div>
+    </div>
+
+    <script>
+        const socket = io();
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+        
+        socket.on('cluster_alert', function(data) {
+            document.getElementById('alerts').innerText = data.status === 'error' ? data.message : '';
+            dropzone.style.opacity = data.status === 'error' ? '0.3' : '1';
+            dropzone.style.pointerEvents = data.status === 'error' ? 'none' : 'auto';
+            if(data.message.includes('nodes.')){
+                const nums = data.message.match(/\d+/g);
+                if(nums) document.getElementById('pod_count').innerHTML = `<span style="color:#3cbd7e">${nums[0]}</span>`;
+            } else {
+                 document.getElementById('pod_count').innerHTML = `<span style="color:#d9534f">Error</span>`;
+            }
+        });
+
+        socket.on('job_status', function(data) {
+            let el = document.getElementById('status');
+            el.innerHTML += `<div>[Job: ${data.id.substring(0,8)}] ${data.msg}</div>`;
+            if (data.url) {
+                el.innerHTML += `<br><a href="${data.url}" target="_blank">View Resulting Processed File</a><br><br>`;
+            }
+            el.scrollTop = el.scrollHeight;
+        });
+
+        dropzone.onclick = () => fileInput.click();
+        
+        fileInput.onchange = e => {
+            const formData = new FormData();
+            formData.append('image', e.target.files[0]);
+            
+            fetch('/upload', { method: 'POST', body: formData })
+                .then(r => r.json())
+                .then(data => {
+                    if(data.error) alert(data.error);
+                });
+        };
+    </script>
+</body>
+</html>
