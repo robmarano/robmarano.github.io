@@ -139,6 +139,11 @@ def index():
         return "I am a worker node. I do not serve UI. Connect to master-service instead.", 403
     return render_template('index.html', pods=active_nodes)
 
+@socketio.on('connect')
+def handle_connect():
+    logger.info("New Web Client connected to Socket.IO! Sending current topology.")
+    socketio.emit('cluster_alert', {'status': 'ok', 'message': f'Cluster healthy with {active_nodes} nodes.'})
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if not is_master:
