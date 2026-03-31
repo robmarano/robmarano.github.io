@@ -75,11 +75,24 @@ You must deploy a Kubernetes application where **all** Pods run the exact same `
 
 ---
 
-## 5. Theoretical Problem Sets
+## 5. Key Vocabulary & Tough Concepts
+
+Before tackling the real-world architectural problems below, ensure you understand the following challenging technical vocabulary implicitly relied upon in Distributed Systems:
+
+*   **Idempotency**: An operation is *idempotent* if performing it multiple times yields exactly the same result as performing it once. (For example, `set_x(5)` is idempotent, whereas `add_to_x(1)` is not). In distributed network architectures, designing API handlers to be idempotent (often by passing unique Transaction UUIDs) allows clients to safely retry failed network requests without causing duplicate actions (like double-charging a credit card).
+*   **At-most-once Semantics**: An RPC middleware guarantee that an operation will be attempted exactly 1 time over the network. If it fails, it throws a fatal error and is never retried by the framework. Data safety is prioritized over reliability.
+*   **At-least-once Semantics**: An RPC guarantee that the middleware will retry the network operation indefinitely until an ACK is received. Execution reliability is prioritized, but without *Idempotency*, this is extremely dangerous.
+*   **Clock Drift**: The phenomenon where separate computers' physical motherboard quartz clocks count seconds at microscopically different rates, leading to massive time de-synchronization across datacenters over weeks or months.
+*   **Split-Brain Syndrome**: A catastrophic cluster failure where a network cable sever (Partition) causes a server farm to split in half. Assuming the other half is dead, *both* halves elect a new Master coordinator, leading to two Masters actively corrupting the database simultaneously. Coordination tools like Apache ZooKeeper explicitly solve this by requiring a strict $>50\%$ voting quorum to elect a leader.
+*   **Ephemeral State**: Data that is intentionally temporary and explicitly tied to the active lifespan of a live network connection socket. If the client disconnects or crashes, the server instantly purges the data. 
+
+---
+
+## 6. Theoretical Problem Sets
 
 The following problems bridge the theoretical concepts of Communication (Chapter 4) and Coordination (Chapter 6) into practical, real-world data center and internet-scale scenarios. Reference the *van Steen & Tanenbaum (v4.0.3x)* textbook for foundational models.
 
-### Problem 5A (Easy): RPC Communication Semantics
+### Problem 6A (Easy): RPC Communication Semantics
 **Reference:** *Chapter 4: Communication (RPC Semantics, Sec. 4.2.2, ~p. 182-185)*
 
 **Scenario:** An e-commerce backend in an AWS Data Center uses Remote Procedure Calls (RPC) to communicate between a `CartService` and a `BillingService`. When a customer checks out over the internet (often dropping cellular connection), the `CartService` issues an RPC `process_payment(user_id, $50)` to the `BillingService`. A timeout occurs and no response is returned.
@@ -93,7 +106,7 @@ The following problems bridge the theoretical concepts of Communication (Chapter
 2.  **Evaluate Safety:** For financial transactions, *At-most-once* (or *Exactly-once*, which is practically impossible without distributed consensus) is safer than charging the user repeatedly.
 3.  **Design Implementation:** Using **Idempotency**. The `CartService` generates a unique Transaction ID (UUID) and passes it in the RPC: `process_payment(user_id, $50, TXN_1234)`. We can now safely use an *At-least-once* retry loop. The `BillingService` coordinates by storing `TXN_1234` in a database. If the RPC is retried, the `BillingService` sees the UUID, skips the credit card charge, and simply returns the cached success response. 
 
-### Problem 5B (Medium): Coordination via Logical Clocks
+### Problem 6B (Medium): Coordination via Logical Clocks
 **Reference:** *Chapter 6: Coordination (Logical Clocks, Sec. 6.2, ~p. 306-310)*
 
 **Scenario:** You have a distributed NoSQL database spanning three localized data centers (Nodes A, B, and C). They have distinct physical quartz clocks that suffer from clock drift. 
@@ -110,7 +123,7 @@ Due to clock drift, Node B's physical clock is 5 minutes *behind* Node A. When t
 4.  **Causality Sync:** When Node B receives the message, it must respect that A's event *caused* B's subsequent event. Node B updates its own clock to be strictly greater than A's: $L_B = \text{MAX}(L_B, L_A) + 1$.
 5.  **The Result:** When User 2 "Likes" the photo, Node B assigns a Lamport timestamp strictly higher than the "Profile Change". When Node C receives both replication streams, sorting by Lamport Timestamps guarantees absolute causal ordering, regardless of real-world physical drift.
 
-### Problem 5C (Hard): Combining Pub/Sub Communication with Election Coordination
+### Problem 6C (Hard): Combining Pub/Sub Communication with Election Coordination
 **Reference:** *Chapter 6: Coordination (Election Algorithms, Sec. 6.5, ~p. 339-344) & Chapter 4: Communication (Message-Oriented, Sec. 4.3, ~p. 192-205)*
 
 **Scenario:** Millions of IoT smart-thermostats (Edge devices) connect over the public internet to a massive Data Center cluster. They communicate purely via an asynchronous, topic-based **Publish-Subscribe (Pub/Sub)** message broker (like MQTT). 
