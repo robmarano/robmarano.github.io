@@ -155,8 +155,12 @@ def upload_file():
     if not file:
         return jsonify({"error": "No file"}), 400
         
+    ext = os.path.splitext(file.filename)[1].lower()
+    if ext not in ['.jpg', '.jpeg', '.png', '.tiff', '.tif']:
+        ext = '.jpg'
+        
     job_id = str(uuid.uuid4())
-    img_path = os.path.join(SHARED_DIR, "uploads", f"{job_id}.jpg")
+    img_path = os.path.join(SHARED_DIR, "uploads", f"{job_id}{ext}")
     file.save(img_path)
     
     # Start orchestrator thread so we don't block the upload HTTP request
@@ -221,10 +225,11 @@ def orchestrate_job(job_id, img_path):
         data, _ = zk.get(f"{job_path}/equalize/task_{i}")
         results.append(json.loads(data.decode('utf-8'))['out_path'])
         
-    final_path = os.path.join(SHARED_DIR, "results", f"{job_id}_final.jpg")
+    ext = os.path.splitext(img_path)[1]
+    final_path = os.path.join(SHARED_DIR, "results", f"{job_id}_final{ext}")
     stitch_image(results, final_path)
     
-    socketio.emit('job_status', {'id': job_id, 'msg': 'Complete!', 'url': f'/download/{job_id}_final.jpg'})
+    socketio.emit('job_status', {'id': job_id, 'msg': 'Complete!', 'url': f'/download/{job_id}_final{ext}'})
     zk.delete(job_path, recursive=True)
 
 @app.route('/download/<filename>')
