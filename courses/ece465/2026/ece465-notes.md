@@ -63,5 +63,9 @@ Follow the link above to the respective week's materials below.
 *   **Overview**: Analyzing the fundamental logical and physical layouts of distributed environments, aligning directly with Tanenbaum's Chapter 2.
 *   **Key Concepts**: Decoupling Architectural Styles (Layered, Object-based, Resource-centered/REST, Event-based) from System Architectures (Centralized client-server topologies vs Decentralized structured P2P vs Hybrid Edge/Cloud computing).
 
+## <a id="week09"></a>[Week 9: Communication and Coordination](./weeks/week_09/notes_week_09.md)
+*   **Overview**: An exploration of how distributed applications actually pass messages and synchronize state across physical networks without failing.
+*   **Key Concepts**: The nuances of Remote Procedure Calls (RPC) versus socket-level message passing. The theory behind logical Lamport clocks, leader election via the Ring and Bully algorithms, and achieving scalable fault-tolerance. The week culminates with deploying a live, event-driven Homogeneous MapReduce engine backed natively by Apache ZooKeeper and Kubernetes.
+
 ---
 [<- back to syllabus](./ece465-ind-study-syllabus-spring-2026.html)

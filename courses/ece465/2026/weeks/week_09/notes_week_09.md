@@ -221,3 +221,37 @@ sequenceDiagram
 > [!NOTE] 
 > **Why `eventlet.tpool`?** 
 > If massive `numpy` image-slicing executions (e.g., 75MB `.tiff` chunks) run purely within Python's Eventlet GreenThreads, they consume 100% of the single CPU process, artificially starving the Kazoo ZooKeeper heartbeat thread. By explicitly wrapping Python's synchronous CPU-bound bottlenecks sequentially in `eventlet.tpool.execute()`, MapReduce processing is safely delegated to real OS threads while keeping the asynchronous network socket hub entirely available for continuous ZK ping orchestration!
+
+## 6. Live Project Code & Download Sandbox
+
+Now that we have covered the theory of message queues and ZooKeeper-orchestrated consensus, you can organically peruse the underlying application code supporting the MapReduce infrastructure.
+
+### 📥 Project Download Options
+
+Because GitHub does not natively allow you to download a single specific sub-directory natively from the Web UI, you have two primary methods to grab the project folder and deploy it locally onto your Minikube cluster:
+
+1. **Option 1: Clone the remote repository & switch into the folder**
+   You can natively clone the entire class repository securely via Git.
+   ```bash
+   git clone https://github.com/robmarano/robmarano.github.io.git
+   cd robmarano.github.io/courses/ece465/2026/weeks/week_09/k8s_zk_template
+   ```
+2. **Option 2: Direct Directory Zip Download (via DownGit)**
+   If you do not have Git installed or you prefer to pull the extracted folder purely in isolation, just click the link below to automatically package the `k8s_zk_template` directory into an isolated `.zip` archive.
+   * [Download the `k8s_zk_template.zip` Project Archive Immediately](https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/robmarano/robmarano.github.io/tree/master/courses/ece465/2026/weeks/week_09/k8s_zk_template)
+
+### 🧐 Source Code Exploration
+
+Before deciding to download to your local machine, you can interactively peruse the key architectural code elements operating beneath the MapReduce stack right here in your browser utilizing GitHub's native viewer. 
+
+Click through the file links below to study the Python backend `kazoo` execution models, or investigate how the frontend CSS Masonry grid isolates HTTP cross-site scripting natively:
+
+#### **Backend Orchestration (Python/ZooKeeper)**
+* 🐍 **[`app.py` (Master/Worker ZooKeeper Event Hub)](./k8s_zk_template/app.py)** — This handles the primary Socket.IO web hooks, `bazoo.recipe.election` races, native event `ChildrenWatch` deployments, and the asynchronous `tpool` data arrays.
+* 🐍 **[`core/image_processing.py` (MapReduce Data Pipeline)](./k8s_zk_template/core/image_processing.py)** — This handles extracting `.tiff` image partitions, serializing JSON histogram chunks natively for the `znode` payloads, and resolving final matrix equations.
+
+#### **Frontend Diagnostic Dashboard**
+* 🌐 **[`templates/index.html` (WebSockets & XSS Grid UI)](./k8s_zk_template/templates/index.html)** — Examines the native DOM element instantiation (`document.createElement`) to build live, secure, asynchronous terminal feeds.
+
+#### **Kubernetes Infrastructure**
+* 🐳 **[`k8s/zookeeper.yaml` & `k8s/app.yaml`](./k8s_zk_template/k8s/)** — Dive into the core manifestation topologies deploying the isolated ZooKeeper proxy node vs the 5 homogeneous MapReduce Python Nodes.
