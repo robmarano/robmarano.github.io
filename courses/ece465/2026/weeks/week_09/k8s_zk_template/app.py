@@ -24,8 +24,8 @@ POD_NAME = os.getenv('POD_NAME', 'unknown_pod')
 NAMESPACE = os.getenv('POD_NAMESPACE', 'default')
 SHARED_DIR = '/shared'
 
-# Kazoo Client setup
-zk = KazooClient(hosts=ZK_HOSTS)
+# Kazoo Client setup (Increased timeout to tolerate Numpy computational lag on large datasets)
+zk = KazooClient(hosts=ZK_HOSTS, timeout=60.0)
 zk.start()
 
 # Track Global State
@@ -125,21 +125,23 @@ def watch_phase(children, phase_path):
         lock_path = f"{task_path}/lock"
         done_path = f"{task_path}/done"
         try:
-            if not zk.exists(done_path) and not zk.exists(lock_path):
-                zk.create(lock_path, ephemeral=True)
-                data, stat = zk.get(task_path)
+            if not zk.retry(zk.exists, done_path) and not zk.retry(zk.exists, lock_path):
+                zk.retry(zk.create, lock_path, ephemeral=True)
+                data, stat = zk.retry(zk.get, task_path)
                 payload = json.loads(data.decode('utf-8'))
                 
                 logger.info(f"Worker {POD_NAME} computing {task_path}")
                 
                 if 'histograms' in phase_path:
-                    result = process_histogram_task(payload)
+                    from eventlet import tpool
+                    result = tpool.execute(process_histogram_task, payload)
                 else:
-                    result = apply_cdf_task(payload)
+                    from eventlet import tpool
+                    result = tpool.execute(apply_cdf_task, payload)
                     
-                zk.set(task_path, json.dumps(result).encode('utf-8'))
-                zk.create(done_path)
-                zk.delete(lock_path)
+                zk.retry(zk.set, task_path, json.dumps(result).encode('utf-8'))
+                zk.retry(zk.create, done_path)
+                zk.retry(zk.delete, lock_path)
                 logger.info(f"Worker {POD_NAME} finished {task_path}")
         except NodeExistsError:
             # NodeExists error means another worker beat us to the lock_path
@@ -156,7 +158,13 @@ def watch_jobs(children):
         for phase in phases:
             phase_path = f'/jobs/{job_id}/{phase}'
             if phase_path not in active_watches:
-                if zk.exists(phase_path):
+                try:
+                    exists = zk.retry(zk.exists, phase_path)
+                except Exception as e:
+                    logger.error(f"Failed to check phase_path {phase_path}: {e}")
+                    exists = False
+                
+                if exists:
                     active_watches.add(phase_path)
                     zk.ChildrenWatch(phase_path, partial(watch_phase, phase_path=phase_path))
 
@@ -165,7 +173,12 @@ def worker_loop():
     zk.ChildrenWatch('/jobs', watch_jobs)
     # The greenlet simply stays alive to let Kazoo background threads fire callbacks
     while True:
-        time.sleep(10)
+        try:
+            # Fallback for Kazoo Event race condition (If '/jobs/xyz' is born right before 'histograms', the event misses)
+            watch_jobs(zk.retry(zk.get_children, '/jobs'))
+        except Exception:
+            pass
+        time.sleep(2)
 
 # --- MASTER API ENDPOINTS ---
 @app.route('/')
@@ -208,11 +221,15 @@ def orchestrate_job(job_id, img_path):
     
     # Phase 1: Split and deploy histogram tasks
     socketio.emit('job_status', {'id': job_id, 'msg': f'Extracting {num_workers} chunks for distributed Map...'})
-    zk.ensure_path(f"{job_path}/histograms")
-    chunks = extract_chunks(img_path, num_workers)
+    zk.retry(zk.ensure_path, f"{job_path}/histograms")
+    
+    # 75MB TIFF chunking natively blocks single-threaded Eventlet Hubs causing Kazoo heartbeat timeouts.
+    # Offload to real OS threads to preserve cluster connectivity.
+    from eventlet import tpool
+    chunks = tpool.execute(extract_chunks, img_path, num_workers)
     
     for i, chunk in enumerate(chunks):
-        zk.create(f"{job_path}/histograms/task_{i}", json.dumps(chunk).encode('utf-8'))
+        zk.retry(zk.create, f"{job_path}/histograms/task_{i}", json.dumps(chunk).encode('utf-8'))
         
     socketio.emit('job_status', {'id': job_id, 'msg': 'Waiting for Ephemeral Workers to map local histograms...'})
     
@@ -231,16 +248,16 @@ def orchestrate_job(job_id, img_path):
     socketio.emit('job_status', {'id': job_id, 'msg': 'Calculating Global CDF (Reduce)...'})
     hists = []
     for i in range(len(chunks)):
-        data, _ = zk.get(f"{job_path}/histograms/task_{i}")
+        data, _ = zk.retry(zk.get, f"{job_path}/histograms/task_{i}")
         hists.append(json.loads(data.decode('utf-8'))['histogram'])
         
-    cdf = compute_global_cdf(hists)
+    cdf = tpool.execute(compute_global_cdf, hists)
     
     # Phase 2: Deploy CDF Equalization tasks
-    zk.ensure_path(f"{job_path}/equalize")
+    zk.retry(zk.ensure_path, f"{job_path}/equalize")
     for i, chunk in enumerate(chunks):
         payload = {**chunk, "cdf": cdf}
-        zk.create(f"{job_path}/equalize/task_{i}", json.dumps(payload).encode('utf-8'))
+        zk.retry(zk.create, f"{job_path}/equalize/task_{i}", json.dumps(payload).encode('utf-8'))
         
     socketio.emit('job_status', {'id': job_id, 'msg': 'Waiting for Ephemeral Workers to apply global distributions...'})
     while True:
@@ -257,15 +274,15 @@ def orchestrate_job(job_id, img_path):
     socketio.emit('job_status', {'id': job_id, 'msg': 'Stitching final image chunks...'})
     results = []
     for i in range(len(chunks)):
-        data, _ = zk.get(f"{job_path}/equalize/task_{i}")
+        data, _ = zk.retry(zk.get, f"{job_path}/equalize/task_{i}")
         results.append(json.loads(data.decode('utf-8'))['out_path'])
         
     ext = os.path.splitext(img_path)[1]
     final_path = os.path.join(SHARED_DIR, "results", f"{job_id}_final{ext}")
-    stitch_image(results, final_path)
+    tpool.execute(stitch_image, results, final_path)
     
     socketio.emit('job_status', {'id': job_id, 'msg': 'Complete!', 'url': f'/download/{job_id}_final{ext}'})
-    zk.delete(job_path, recursive=True)
+    zk.retry(zk.delete, job_path, recursive=True)
 
 @app.route('/download/<filename>')
 def download(filename):
