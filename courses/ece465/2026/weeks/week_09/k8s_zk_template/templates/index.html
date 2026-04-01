@@ -68,9 +68,19 @@
 
         socket.on('job_status', function(data) {
             let el = document.getElementById('status');
-            el.innerHTML += `<div>[Job: ${data.id.substring(0,8)}] ${data.msg}</div>`;
+            let div = document.createElement('div');
+            div.textContent = `[Job: ${data.id.substring(0,8)}] ${data.msg}`;
+            el.appendChild(div);
             if (data.url) {
-                el.innerHTML += `<br><a href="${data.url}" target="_blank">View Resulting Processed File</a><br><br>`;
+                let br1 = document.createElement('br');
+                let br2 = document.createElement('br');
+                let a = document.createElement('a');
+                a.href = data.url; // url is generated safely by backend but we use explicit attribute
+                a.target = "_blank";
+                a.textContent = "View Resulting Processed File";
+                el.appendChild(br1);
+                el.appendChild(a);
+                el.appendChild(br2);
             }
             el.scrollTop = el.scrollHeight;
         });
@@ -86,12 +96,19 @@
                 
                 let title = document.createElement('div');
                 title.style = "background: #2d2d2d; padding: 8px 12px; font-size: 0.85em; font-weight: bold; border-bottom: 1px solid #111; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
+                
+                let podSpan = document.createElement('span');
+                podSpan.textContent = data.pod;
+                
                 // Color Master green, workers blue
                 if (data.log.includes("I am the Master!")) {
-                    title.innerHTML = `🌟 Master Node: <span style="color:#6a8759">${data.pod}</span>`;
+                    title.textContent = "🌟 Master Node: ";
+                    podSpan.style.color = "#6a8759";
                 } else {
-                    title.innerHTML = `⚙️ Worker Node: <span style="color:#6897bb">${data.pod}</span>`;
+                    title.textContent = "⚙️ Worker Node: ";
+                    podSpan.style.color = "#6897bb";
                 }
+                title.appendChild(podSpan);
                 
                 let logArea = document.createElement('div');
                 logArea.id = podId;
@@ -103,13 +120,27 @@
                 podEl = logArea;
             }
             
-            // Nicely format the python __main__ log
-            let formattedLog = data.log.replace(/INFO:__main__:/g, '<span style="color:#6a8759; font-weight:bold;">INFO</span>: ')
-                                      .replace(/ERROR:__main__:/g, '<span style="color:#cc7832; font-weight:bold;">ERROR</span>: ');
-            
+            // Safely parse log without XSS evaluation
             let line = document.createElement('div');
-            line.innerHTML = formattedLog;
             line.style = "margin-bottom: 4px; border-bottom: 1px dotted #333; padding-bottom: 2px;";
+            
+            let prefix = document.createElement('span');
+            let content = document.createElement('span');
+            
+            if (data.log.includes('INFO:__main__:')) {
+                prefix.style = "color:#6a8759; font-weight:bold;";
+                prefix.textContent = "INFO: ";
+                content.textContent = data.log.replace('INFO:__main__:', '').trim();
+            } else if (data.log.includes('ERROR:__main__:')) {
+                prefix.style = "color:#cc7832; font-weight:bold;";
+                prefix.textContent = "ERROR: ";
+                content.textContent = data.log.replace('ERROR:__main__:', '').trim();
+            } else {
+                content.textContent = data.log;
+            }
+            
+            if (prefix.textContent) line.appendChild(prefix);
+            line.appendChild(content);
             podEl.appendChild(line);
             
             podEl.scrollTop = podEl.scrollHeight;

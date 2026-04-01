@@ -51,3 +51,11 @@ def stitch_image(chunk_paths, out_path):
     final_arr = np.vstack(arrays)
     img = Image.fromarray(final_arr.astype('uint8'))
     img.save(out_path)
+    
+    for p in chunk_paths:
+        try:
+            os.remove(p)
+            temp_path = p.replace("out_", "temp_")
+            os.remove(temp_path)
+        except OSError:
+            pass

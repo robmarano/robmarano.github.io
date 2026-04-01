@@ -1,10 +1,10 @@
 # Distributed MapReduce with Apache ZooKeeper & Kubernetes
 [<- back to syllabus](../../../ece465-ind-study-syllabus-spring-2026.html)
 
-This project demonstrates a homogenous deployment topology utilizing Apache ZooKeeper for Leader Election and distributed MapReduce job coordination.
+This project demonstrates a homogeneous deployment topology utilizing Apache ZooKeeper for Leader Election and distributed MapReduce job coordination.
 
 ### Key Features
-*   **Homogenous Nodes**: Every pod runs the exact same Python image. There is no predefined "master" or "worker".
+*   **Homogeneous Nodes**: Every pod runs the exact same Python image. There is no predefined "master" or "worker".
 *   **ZooKeeper Leader Election**: Pods race via `kazoo` to acquire an ephemeral lock. The winner automatically assumes the Master role.
 *   **Dynamic K8s Routing**: The elected Master utilizes the Kubernetes Python client to inject `role: master` into its own pod labels. The `master-service` internal DNS routes traffic *only* to the current leader.
 *   **MapReduce Coordination**: If an image is submitted for histogram equalization, the Master slices it and drops task definitions into ZooKeeper znodes. Worker pods watch for these znodes, grab an ephemeral lock on a slice, compute the result, and report back. The Master stitches the final image together.

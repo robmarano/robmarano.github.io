@@ -63,9 +63,9 @@ Instead of building the Bully algorithm, nodes simply use ZooKeeper's atomic cre
 ---
 
 ## 4. Design & Implementation Exercise
-**Task**: *The ZooKeeper Homogenous MapReduce Array*
+**Task**: *The ZooKeeper Homogeneous MapReduce Array*
 
-Move to the `k8s_zk_template` directory. We are rebuilding our Week 5 Image equalization engine to be completely fault-tolerant and homogenous. 
+Move to the `k8s_zk_template` directory. We are rebuilding our Week 5 Image equalization engine to be completely fault-tolerant and homogeneous. 
 
 You must deploy a Kubernetes application where **all** Pods run the exact same `app.py` code. Upon startup, the pods connect to a central ZooKeeper service in the cluster.
 1. The Pods will race using `kazoo` to elect a Master.
@@ -80,10 +80,10 @@ You must deploy a Kubernetes application where **all** Pods run the exact same `
 Before tackling the real-world architectural problems below, ensure you understand the following challenging technical vocabulary implicitly relied upon in Distributed Systems:
 
 *   **Idempotency**: An operation is *idempotent* if performing it multiple times yields exactly the same result as performing it once. (For example, `set_x(5)` is idempotent, whereas `add_to_x(1)` is not). In distributed network architectures, designing API handlers to be idempotent (often by passing unique Transaction UUIDs) allows clients to safely retry failed network requests without causing duplicate actions (like double-charging a credit card).
-*   **At-most-once Semantics**: An RPC middleware guarantee that an operation will be attempted exactly 1 time over the network. If it fails, it throws a fatal error and is never retried by the framework. Data safety is prioritized over reliability.
-*   **At-least-once Semantics**: An RPC guarantee that the middleware will retry the network operation indefinitely until an ACK is received. Execution reliability is prioritized, but without *Idempotency*, this is extremely dangerous.
+*   **At-most-once Semantics**: An RPC middleware guarantees that an operation will be attempted exactly 1 time over the network. If it fails, it throws a fatal error and is never retried by the framework. Data safety is prioritized over reliability.
+*   **At-least-once Semantics**: RPC guarantees that the middleware will retry the network operation indefinitely until an ACK is received. Execution reliability is prioritized, but without *Idempotency*, this is extremely dangerous.
 *   **Clock Drift**: The phenomenon where separate computers' physical motherboard quartz clocks count seconds at microscopically different rates, leading to massive time de-synchronization across datacenters over weeks or months.
-*   **Split-Brain Syndrome**: A catastrophic cluster failure where a network cable sever (Partition) causes a server farm to split in half. Assuming the other half is dead, *both* halves elect a new Master coordinator, leading to two Masters actively corrupting the database simultaneously. Coordination tools like Apache ZooKeeper explicitly solve this by requiring a strict $>50\%$ voting quorum to elect a leader.
+*   **Split-Brain Syndrome**: A catastrophic cluster failure where severed (Partition) causes a server farm to split in half. Assuming the other half is dead, *both* halves elect a new Master coordinator, leading to two Masters actively corrupting the database simultaneously. Coordination tools like Apache ZooKeeper explicitly solve this by requiring a strict $>50\%$ voting quorum to elect a leader.
 *   **Ephemeral State**: Data that is intentionally temporary and explicitly tied to the active lifespan of a live network connection socket. If the client disconnects or crashes, the server instantly purges the data. 
 
 ---
@@ -153,12 +153,12 @@ To bridge the gap between abstract theory and your practical Kubernetes exercise
 In Week 5, we approached Kubernetes with a traditional **Service-Oriented** mindset:
 *   **Topology**: We hardcoded a split topology. We wrote one explicit `master` Deployment and one explicit `worker` Deployment. 
 *   **Communication**: The Master pod used synchronous **RPC-style HTTP** requests. It would open a direct TCP socket to a worker, send the image chunk, and block (wait) for the worker to return the histogram.
-*   **The Single Point of Failure**: If a worker pod crashed (OOM killed by Docker) midway through processing its chunk, the HTTP connection would prematurely severe. The Master's request would throw a fatal Exception, and the entire user upload would fail. The Master had no intrinsic way to track or coordinate failures gracefully.
+*   **The Single Point of Failure**: If a worker pod crashed (OOM killed by Docker) midway through processing its chunk, the HTTP connection would prematurely severed. The Master's request would throw a fatal Exception, and the entire user upload would fail. The Master had no intrinsic way to track or coordinate failures gracefully.
 
-### The Week 9 Architecture (Homogenous, Dynamic & Fault-Tolerant)
+### The Week 9 Architecture (Homogeneous, Dynamic & Fault-Tolerant)
 Today, we are moving to a purely distributed **Event-Based** mindset powered by an external Coordination Engine (Apache ZooKeeper).
 
-*   **1. Homogenous Topology (No more "Master" image)**:
+*   **1. Homogeneous Topology (No more "Master" image)**:
     There is only *one* Docker image and *one* Kubernetes Deployment now. Kubernetes spins up 3 completely identical Pods. They are entirely agnostic to their role upon boot. 
 *   **2. Dynamic In-Cluster DNS via Leader Election**:
     Instead of hardcoding a Master, the 3 identical pods use the `kazoo` Python library to race for a ZooKeeper lock. 
@@ -170,4 +170,4 @@ Today, we are moving to a purely distributed **Event-Based** mindset powered by 
 *   **4. Total Fault Tolerance**:
     Before a worker begins calculating a local histogram, it places an **Ephemeral ZNode Lock** over the job. 
     If that worker pod suddenly bursts into flames and dies, its TCP session with ZooKeeper terminates. ZooKeeper instantly realizes the worker is dead and purges the Ephemeral Lock.
-    The remaining living workers immediately see that the job is "unlocked" and orphaned, allowing another worker to instantly claim it and compute the data. The external user never event suspects that a node physically exploded mid-process! This is the true power of **Distribution Transparency**.
+    The remaining living workers immediately see that the job is "unlocked" and orphaned, allowing another worker to instantly claim it and compute the data. The external user never even suspects that a node physically exploded mid-process! This is the true power of **Distribution Transparency**.

@@ -6,10 +6,11 @@ import time
 import uuid
 import json
 import logging
-import threading
+from functools import partial
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_socketio import SocketIO
 from kazoo.client import KazooClient
+from kazoo.exceptions import NodeExistsError, NoNodeError
 from kazoo.recipe.election import Election
 from kubernetes import client, config
 from core.image_processing import process_histogram_task, extract_chunks, compute_global_cdf, apply_cdf_task, stitch_image
@@ -42,8 +43,11 @@ os.makedirs(SHARED_DIR, exist_ok=True)
 os.makedirs(os.path.join(SHARED_DIR, "uploads"), exist_ok=True)
 os.makedirs(os.path.join(SHARED_DIR, "results"), exist_ok=True)
 
-# Register node presence
-zk.create(f"/nodes/{POD_NAME}", ephemeral=True)
+try:
+    zk.create(f"/nodes/{POD_NAME}", ephemeral=True)
+except NodeExistsError:
+    zk.delete(f"/nodes/{POD_NAME}")
+    zk.create(f"/nodes/{POD_NAME}", ephemeral=True)
 
 def update_pod_label(role):
     # If running outside k8s (e.g., local test), safely ignore
@@ -112,53 +116,56 @@ def watch_cluster_resources(children):
                 tailed_pods.add(pod)
                 socketio.start_background_task(stream_pod_logs, pod)
 
-# --- WORKER LOGIC ---
+active_watches = set()
+
+def watch_phase(children, phase_path):
+    if is_master: return
+    for task in children:
+        task_path = f"{phase_path}/{task}"
+        lock_path = f"{task_path}/lock"
+        done_path = f"{task_path}/done"
+        try:
+            if not zk.exists(done_path) and not zk.exists(lock_path):
+                zk.create(lock_path, ephemeral=True)
+                data, stat = zk.get(task_path)
+                payload = json.loads(data.decode('utf-8'))
+                
+                logger.info(f"Worker {POD_NAME} computing {task_path}")
+                
+                if 'histograms' in phase_path:
+                    result = process_histogram_task(payload)
+                else:
+                    result = apply_cdf_task(payload)
+                    
+                zk.set(task_path, json.dumps(result).encode('utf-8'))
+                zk.create(done_path)
+                zk.delete(lock_path)
+                logger.info(f"Worker {POD_NAME} finished {task_path}")
+        except NodeExistsError:
+            # NodeExists error means another worker beat us to the lock_path
+            pass
+        except NoNodeError:
+            pass
+        except Exception as e:
+            logger.error(f"Worker execution error on {task_path}: {e}")
+
+def watch_jobs(children):
+    if is_master: return
+    for job_id in children:
+        phases = ['histograms', 'equalize']
+        for phase in phases:
+            phase_path = f'/jobs/{job_id}/{phase}'
+            if phase_path not in active_watches:
+                if zk.exists(phase_path):
+                    active_watches.add(phase_path)
+                    zk.ChildrenWatch(phase_path, partial(watch_phase, phase_path=phase_path))
+
 def worker_loop():
+    # Setup the root job watch natively
+    zk.ChildrenWatch('/jobs', watch_jobs)
+    # The greenlet simply stays alive to let Kazoo background threads fire callbacks
     while True:
-        if not is_master:
-            try:
-                # Find available tasks ...
-                jobs = zk.get_children('/jobs')
-                for job_id in jobs:
-                    phases = ['histograms', 'equalize']
-                    for phase in phases:
-                        tasks_path = f'/jobs/{job_id}/{phase}'
-                        if zk.exists(tasks_path):
-                            tasks = zk.get_children(tasks_path)
-                            for task in tasks:
-                                task_path = f"{tasks_path}/{task}"
-                                lock_path = f"{task_path}/lock"
-                                done_path = f"{task_path}/done"
-                                
-                                # Skip if already done or currently locked
-                                if not zk.exists(done_path) and not zk.exists(lock_path):
-                                    try:
-                                        # Attempt to claim lock via Ephemeral Node
-                                        zk.create(lock_path, ephemeral=True)
-                                        data, stat = zk.get(task_path)
-                                        payload = json.loads(data.decode('utf-8'))
-                                        
-                                        logger.info(f"Worker {POD_NAME} computing {task_path}")
-                                        
-                                        # Execute MapReduce Logic
-                                        if phase == 'histograms':
-                                            result = process_histogram_task(payload)
-                                        else:
-                                            result = apply_cdf_task(payload)
-                                            
-                                        # Save result to Znode
-                                        zk.set(task_path, json.dumps(result).encode('utf-8'))
-                                        
-                                        # Mark done and release ephemeral lock
-                                        zk.create(done_path)
-                                        zk.delete(lock_path)
-                                        logger.info(f"Worker {POD_NAME} finished {task_path}")
-                                    except Exception as e:
-                                        # NodeExisits error means another worker beat us to the lock lock_path
-                                        pass
-            except Exception:
-                pass
-        time.sleep(2)
+        time.sleep(10)
 
 # --- MASTER API ENDPOINTS ---
 @app.route('/')
@@ -176,8 +183,8 @@ def handle_connect():
 def upload_file():
     if not is_master:
         return jsonify({"error": "Not master"}), 403
-    if active_nodes < 3:
-        return jsonify({"error": "Not enough resources. Minimum 3 required."}), 503
+    if active_nodes < 5:
+        return jsonify({"error": "Not enough resources. Minimum 5 required."}), 503
         
     file = request.files.get('image')
     if not file:
@@ -185,7 +192,7 @@ def upload_file():
         
     ext = os.path.splitext(file.filename)[1].lower()
     if ext not in ['.jpg', '.jpeg', '.png', '.tiff', '.tif']:
-        ext = '.jpg'
+        return jsonify({"error": f"Unsupported file format {ext}. Must be JPG, PNG, or TIFF"}), 400
         
     job_id = str(uuid.uuid4())
     img_path = os.path.join(SHARED_DIR, "uploads", f"{job_id}{ext}")
