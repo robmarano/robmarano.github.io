@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: zk-app
 spec:
-  replicas: 3
+  replicas: 5
   selector:
     matchLabels:
       app: zk-app

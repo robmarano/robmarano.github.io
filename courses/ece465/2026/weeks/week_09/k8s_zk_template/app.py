@@ -101,7 +101,7 @@ def watch_cluster_resources(children):
     global active_nodes, tailed_pods
     active_nodes = len(children)
     logger.info(f"Cluster topology changed. Active nodes: {active_nodes}")
-    if is_master and active_nodes < 3:
+    if is_master and active_nodes < 5:
         socketio.emit('cluster_alert', {'status': 'error', 'message': f'Service not available, not enough resources. Only {active_nodes} pods running.'})
     elif is_master:
         socketio.emit('cluster_alert', {'status': 'ok', 'message': f'Cluster healthy with {active_nodes} nodes.'})
