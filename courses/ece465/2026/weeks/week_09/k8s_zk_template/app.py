@@ -76,15 +76,25 @@ def run_election():
     election.run(become_leader)
 
 def stream_pod_logs(pod_name):
-    try:
-        config.load_incluster_config()
-        v1 = client.CoreV1Api()
-        resp = v1.read_namespaced_pod_log(name=pod_name, namespace=NAMESPACE, follow=True, _preload_content=False)
-        for line in resp.stream():
-            if line:
-                socketio.emit('node_log', {'pod': pod_name, 'log': line.decode('utf-8').strip()})
-    except Exception as e:
-        logger.error(f"Failed to stream logs for {pod_name}: {e}")
+    # Continuously tail to survive K8s API timeout disconnects
+    while True:
+        try:
+            config.load_incluster_config()
+            v1 = client.CoreV1Api()
+            # Only tail the most recent lines upon a fresh connection
+            resp = v1.read_namespaced_pod_log(name=pod_name, namespace=NAMESPACE, tail_lines=20, follow=True, _preload_content=False)
+            for chunk in resp.stream():
+                if chunk:
+                    log_chunk = chunk.decode('utf-8').strip()
+                    if log_chunk:
+                        socketio.emit('node_log', {'pod': pod_name, 'log': log_chunk})
+                        
+            # If the stream gracefully exhausts (K8s API Timeout Drop), log and quickly reconnect
+            logger.info(f"API tail stream for {pod_name} unexpectedly closed. Reconnecting...")
+            time.sleep(2)
+        except Exception as e:
+            logger.error(f"Stream error for {pod_name}: {e}. Retrying...")
+            time.sleep(5)
 
 # Watch cluster size (Only master cares)
 def watch_cluster_resources(children):
