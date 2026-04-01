@@ -171,3 +171,53 @@ Today, we are moving to a purely distributed **Event-Based** mindset powered by 
     Before a worker begins calculating a local histogram, it places an **Ephemeral ZNode Lock** over the job. 
     If that worker pod suddenly bursts into flames and dies, its TCP session with ZooKeeper terminates. ZooKeeper instantly realizes the worker is dead and purges the Ephemeral Lock.
     The remaining living workers immediately see that the job is "unlocked" and orphaned, allowing another worker to instantly claim it and compute the data. The external user never even suspects that a node physically exploded mid-process! This is the true power of **Distribution Transparency**.
+
+### 5. Advanced Component Coordination & Fault-Tolerant State (UML)
+
+To visually understand the real-time asynchronous data flow of the `kazoo` ZooKeeper Watchers, native K8s log shipping, and the `eventlet.tpool` OS-thread offloading mechanism, reference the execution diagrams below:
+
+#### MapReduce Job Pipeline (UML Sequence)
+
+```mermaid
+sequenceDiagram
+    participant U as User (Frontend)
+    participant M as Master Pod (zk-app)
+    participant Zk as ZooKeeper
+    participant W as Worker Pods (1..4)
+    
+    U->>M: POST /upload (File Payload)
+    M->>Zk: zk.retry(ensure_path, '/jobs/job_123')
+    M->>M: eventlet.tpool (OS Thread): extract_chunks()
+    
+    rect rgb(30, 45, 60)
+    Note right of M: Map Phase (Histograms)
+    M->>Zk: zk.create('/jobs/job_123/histograms/task_0..4')
+    Zk-->>W: Kazoo ChildrenWatch Trigger
+    W->>Zk: zk.create('.../task_0/lock', ephemeral=True)
+    Note over W: Worker claims task!
+    W->>W: eventlet.tpool: process_histogram_task()
+    W->>Zk: zk.set(..., histogram_data)
+    W->>Zk: zk.create('.../task_0/done')
+    end
+    
+    M->>Zk: Polling barrier on 'done' znodes
+    Note over M: Master awaits all workers
+    
+    M->>M: eventlet.tpool: compute_global_cdf(histograms)
+    
+    rect rgb(30, 45, 60)
+    Note right of M: Reduce Phase (Equalization)
+    M->>Zk: zk.create('/jobs/job_123/equalize/task_0..4', CDF_Payload)
+    Zk-->>W: Kazoo ChildrenWatch Trigger
+    W->>W: eventlet.tpool: apply_cdf_task(CDF_Payload)
+    W->>Zk: zk.create('.../task_0/done')
+    end
+    
+    M->>M: eventlet.tpool: stitch_image()
+    M->>U: SocketIO.emit('job_status', {url: final_path})
+    M->>Zk: zk.delete('/jobs/job_123', recursive=True)
+```
+
+> [!NOTE] 
+> **Why `eventlet.tpool`?** 
+> If massive `numpy` image-slicing executions (e.g., 75MB `.tiff` chunks) run purely within Python's Eventlet GreenThreads, they consume 100% of the single CPU process, artificially starving the Kazoo ZooKeeper heartbeat thread. By explicitly wrapping Python's synchronous CPU-bound bottlenecks sequentially in `eventlet.tpool.execute()`, MapReduce processing is safely delegated to real OS threads while keeping the asynchronous network socket hub entirely available for continuous ZK ping orchestration!
