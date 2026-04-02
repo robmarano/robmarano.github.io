@@ -2,6 +2,8 @@
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
 
 > **[🗂️ Download Week 09 Slides (PDF)](./ece251_week_09_slides.pdf)**
+>
+> **[📘 Download Textbook Chapter 4 Slides (PPT)](/courses/ece251/books/patterson-hennessey/Patterson6e_MIPS_Ch04_PPT.ppt)**
 
 # The Processor: Datapath & Control (Part 1 of 3)
 
@@ -23,7 +25,7 @@ Based on Chapter 4 of the textbook (*Computer Organization and Design - MIPS Edi
 2. **Logic Design Conventions (Section 4.2)**: Understanding how the ISA is mapped to functional-level digital logic circuits, including combinational logic and sequential state elements.
 3. **Building a Datapath & Simple Implementation Scheme (Section 4.3)**: Stitching together the components to form a functional processor. We explore an end-to-end "simple" (single-cycle) implementation scheme and look at its performance limitations.
 
-These concepts lay the foundation for understanding how software (the ISA) fundamentally drives the hardware (logic gates, registers, memory) to perform computation.
+These concepts lay the foundation for understanding how software (the ISA) drives the hardware (logic gates, registers, memory) to perform computation.
 
 ---
 
@@ -45,24 +47,24 @@ In this framework, we are building a processor mathematically tailored to suppor
 **The Performance Equation:**
 Remember the fundamental CPU Performance formula from Chapter 1:
 $$\text{CPU Execution Time} = \text{Instruction Count} \times \text{CPI} \times \text{Clock Cycle Time}$$
-Because this is a **Single-Cycle** architecture, the CPI (Cycles Per Instruction) is artificially locked at exactly $1.0$. However, because every instruction, no matter how physically complex, must finish within that singular hardware cycle, the overall **Clock Cycle Time** will be strictly constrained by the slowest possible instruction logic path.
+Because this is a **Single-Cycle** architecture, the CPI (Cycles Per Instruction) is artificially locked at exactly $1.0$. However, because every instruction, no matter how physically complex, must finish within that singular hardware cycle, the overall **Clock Cycle Time** will be constrained by the slowest possible instruction logic path.
 
 ### 4.2 Logic Design Conventions & Clocking
-Before we wire silicon cables between components, we must establish rigorous electrical ground rules defining how data is safely manipulated and stored.
+Before we wire silicon cables between components, we must establish electrical ground rules defining how data is safely manipulated and stored.
 
 **Combinational vs. Sequential Logic:**
-*   **Combinational Elements**: These elements have absolutely no memory (e.g., the ALU, Adders, Multiplexers). Their outputs instantaneously depend ONLY on their current inputs. If you change an input wire, the output wire cascades to the new mathematical result immediately following simple logic gate delay.
-*   **Sequential State Elements**: These elements definitively contain memory (e.g., the Register File, Data Memory, the PC). They hold a specific datum value and absolutely refuse to update or overwrite that internal value unless explicitly commanded to do so by a universal synchronization square-wave: the **Clock**.
+*   **Combinational Elements**: These elements have no memory (e.g., the ALU, Adders, Multiplexers). Their outputs instantaneously depend ONLY on their current inputs. If you change an input wire, the output wire cascades to the new mathematical result immediately following simple logic gate delay.
+*   **Sequential State Elements**: These elements contain memory (e.g., the Register File, Data Memory, the PC). They hold a specific datum value and refuse to update or overwrite that internal value unless commanded to do so by a universal synchronization square-wave: the **Clock**.
 
 **Hamacher's Clocking Methodology: Edge vs. Level Triggering**
-Following the architectural rigor detailed in *Computer Organization and Embedded Systems* (Hamacher et al.), we must explicitly define how the 5-stage execution loop physically interacts with the clock signal. Unlike pure software, hardware requires precise electrical orchestration utilizing a mix of **Edge-Triggering** (capturing data strictly on the instantaneous rise/fall of the clock) and **Level-Triggering** (allowing electricity to flow cleanly while the clock is held at a steady continuous high or low voltage state).
+Following the architectural rigor detailed in *Computer Organization and Embedded Systems* (Hamacher et al.), we must define how the 5-stage execution loop physically interacts with the clock signal. Unlike pure software, hardware requires precise electrical orchestration utilizing a mix of **Edge-Triggering** (capturing data on the instantaneous rise/fall of the clock) and **Level-Triggering** (allowing electricity to flow while the clock is held at a steady continuous high or low voltage state).
 
 At its core, a processor is an endlessly repeating physical sequence governed rigidly by these constraints:
-1.  **Instruction Fetch (IF)**: The Program Counter (PC) explicitly relies on **positive-edge triggering**. It locks in the next instruction address precisely on the *rising edge* ($0 \to 1$ transition) to initiate the cycle securely.
-2.  **Instruction Decode (ID) & Register Read**: Once the PC triggers, the Register File read ports operate fundamentally using **level-triggered (high)** or purely combinational data flow. Because reading is mathematically non-destructive, outputs continuously stream out as long as the inputs are held steady through the active cycle level.
-3.  **Execute (EX)**: The ALU is strictly combinational circuitry. It possesses zero clock dependency whatsoever, instantly rippling electricity through its logic gates independent of clock edges or levels.
-4.  **Memory Access (MEM)**: Writing to Data Memory requires extreme care to prevent capturing unstable "garbage" data as the ALU address circuits settle. To maximize structural safety, memory writes are frequently engineered to capture on the **negative (falling) edge** ($1 \to 0$ transition) or are strictly gated by an active **level-low** signal. This ensures the 32-bit values have had the entire positive-high duration to stabilize perfectly.
-5.  **Write Back (WB)**: The destination Register File must securely capture the finalized calculation footprint. To solve the structural hazard of attempting to Read (Stage 2) and Write (Stage 5) to the same register bank simultaneously, standard architectures employ a split-phase layout: Register Writes are forcibly synchronized on the opposite threshold (e.g., the **negative-edge** or the **trailing positive-edge** ending the global cycle), allowing the read functionality exclusive priority over the front half of the clock level.
+1.  **Instruction Fetch (IF)**: The Program Counter (PC) relies on **positive-edge triggering**. It locks in the next instruction address on the *rising edge* ($0 \to 1$ transition) to initiate the cycle .
+2.  **Instruction Decode (ID) & Register Read**: Once the PC triggers, the Register File read ports operate using **level-triggered (high)** or combinational data flow. Because reading is mathematically non-destructive, outputs continuously stream out as long as the inputs are held steady through the active cycle level.
+3.  **Execute (EX)**: The ALU is combinational circuitry. It possesses zero clock dependency whatsoever, rippling electricity through its logic gates independent of clock edges or levels.
+4.  **Memory Access (MEM)**: Writing to Data Memory requires care to prevent capturing unstable "garbage" data as the ALU address circuits settle. To maximize structural safety, memory writes are frequently engineered to capture on the **negative (falling) edge** ($1 \to 0$ transition) or are gated by an active **level-low** signal. This ensures the 32-bit values have had the entire positive-high duration to stabilize .
+5.  **Write Back (WB)**: The destination Register File must capture the finalized calculation footprint. To solve the structural hazard of attempting to Read (Stage 2) and Write (Stage 5) to the same register bank simultaneously, standard architectures employ a split-phase layout: Register Writes are synchronized on the opposite threshold (e.g., the **negative-edge** or the **trailing positive-edge** ending the global cycle), allowing the read functionality exclusive priority over the front half of the clock level.
 
 *   **Setup Time**: To satisfy these strict Edge interactions, input data arriving at any state element must physically stabilize a few picoseconds *before* the required transition strikes.
 *   **Hold Time**: The data must remain electrically stable for a few picoseconds *after* the targeted edge to ensure the flip-flops successfully snap shut.
@@ -78,18 +80,18 @@ The arrows in **textbook Figure 4.1** show how data and instructions flow from o
 ![Textbook Figure 4.1: Basic Implementation Overview](/Image%20Bank/ch004-9780128201091/jpg-9780128201091/004001.jpg)
 
 ### 4.2 Logic Design Conventions
-When transitioning from the ISA (software abstractions) to logic design (hardware blocks), we rely on strict conventions to ensure data moves reliably across the processor.
+When transitioning from the ISA (software abstractions) to logic design (hardware blocks), we rely on strict conventions to ensure data moves across the processor.
 
-*   **Combinational Logic**: These elements operate strictly on their current inputs (e.g., ALU, multiplexers, adders). They have no memory; their output is solely a function of their input.
+*   **Combinational Logic**: These elements operate on their current inputs (e.g., ALU, multiplexers, adders). They have no memory; their output is solely a function of their input.
 *   **State Elements (Sequential Logic)**: These elements have internal storage and a memory of past inputs (e.g., Register File, PC, Data Memory). Their state can only change on a defined **clock edge**.
-*   **Clocking Methodology**: MIPS relies on an edge-triggered clocking methodology. This means state elements only update their stored values when the clock signal transitions from low to high (or high to low). This separates the combinational logic delays from the state updates, ensuring that data is stable when it is captured. Because data must completely propagate through all combinational logic elements before the next clock edge, the **critical path** (the physically longest signal delay through the hardware) absolutely dictates the minimum duration of the **clock cycle time**.
+*   **Clocking Methodology**: MIPS relies on an edge-triggered clocking methodology. This means state elements only update their stored values when the clock signal transitions from low to high (or high to low). This separates the combinational logic delays from the state updates, ensuring that data is stable when it is captured. Because data must completely propagate through all combinational logic elements before the next clock edge, the **critical path** (the physically longest signal delay through the hardware) dictates the minimum duration of the **clock cycle time**.
 
-As shown in **textbook Figure 4.2** below, state elements are updated strictly on the clock edge, while combinational logic sits between them to perform work during the clock cycle.
+As shown in **textbook Figure 4.2** below, state elements are updated on the clock edge, while combinational logic sits between them to perform work during the clock cycle.
 
 ![Textbook Figure 4.2: Logic Design Conventions](/Image%20Bank/ch004-9780128201091/jpg-9780128201091/004002.jpg)
 
 ### 4.3 A Simple Implementation Scheme
-In a **single-cycle implementation**, every instruction executes entirely within one clock cycle. This means the clock cycle must be stretched out to accommodate the longest path through the processor.
+In a **single-cycle implementation**, every instruction executes within one clock cycle. This means the clock cycle must be stretched out to accommodate the longest path through the processor.
 
 To build the datapath for this scheme, we assemble our components, as mapped out in **textbook Figure 4.11** (the simple datapath):
 1.  **Instruction Memory** and **Program Counter (PC)** for fetching.
@@ -148,7 +150,7 @@ endmodule
 ```
 
 **3. The Arithmetic Logic Unit (ALU):**
-The ALU is strictly combinational logic. We use an `always_comb` block and a `case` statement based on the decoded `alucontrol` signal.
+The ALU is combinational logic. We use an `always_comb` block and a `case` statement based on the decoded `alucontrol` signal.
 ```systemverilog
 module alu(input  logic [31:0] a, b,
            input  logic [2:0]  alucontrol,
@@ -170,7 +172,7 @@ module alu(input  logic [31:0] a, b,
 endmodule
 ```
 
-These modules, alongside array-based Instruction/Data memories, are wired together structurally in a top-level wrapper (e.g., `mips_single_cycle.sv`) strictly following the data flow shown in **textbook Figure 4.11**. A testbench then supplies the `clk` and `reset` signals, computationally driving the entire emulated processor.
+These modules, alongside array-based Instruction/Data memories, are wired together structurally in a top-level wrapper (e.g., `mips_single_cycle.sv`) following the data flow shown in **textbook Figure 4.11**. A testbench then supplies the `clk` and `reset` signals, computationally driving the entire emulated processor.
 
 #### 4.5 Datapath Component Latencies and Critical Paths
 To truly understand the performance limitations of the single-cycle processor architecture, we must quantify the physical timing delays of the hardware components. Every gate, multiplexer, and memory unit takes a fraction of a nanosecond to stabilize its electrical output after its inputs arrive. This delay is the component's **latency**.
@@ -193,11 +195,11 @@ To calculate the total latency of a specific instruction type, we mathematically
 3.  **Branch (`beq`) Instruction**:
     - `PC` (30ps) -> `I-Mem` (250ps) -> `Reg Read` (150ps) -> `ALU subtraction` (200ps) -> `Branch MUX` (25ps) -> `PC Setup` (20ps) = **675 ps** *(Requires small AND gate delay in ISA specific implementations)*
 
-Because the single-cycle machine uses one universal clock to drive all operations, the globally defined **Clock Cycle Time** MUST precisely accommodate the longest possible latency of any instruction in the ISA (`lw` at **950 ps**).
+Because the single-cycle machine uses one universal clock to drive all operations, the globally defined **Clock Cycle Time** MUST accommodate the longest possible latency of any instruction in the ISA (`lw` at **950 ps**).
 
 ### Tracking Processor Components and System Integration
 
-Before looking at complete problem walkthroughs, we should explicitly track the primary individual components needed to physically construct our MIPS processor, as well as what is required to transform this raw processor into a fully functional general-purpose computer.
+Before looking at complete problem walkthroughs, we should track the primary individual components needed to physically construct our MIPS processor, as well as what is required to transform this raw processor into a fully functional general-purpose computer.
 
 #### 1. The Individual Datapath Elements
 The processor datapath is built from discrete digital logic components. By isolating them, we can see exactly what hardware is responsible for what action:
@@ -231,7 +233,7 @@ To solidify your understanding of the datapath and control unit, here are three 
 **Question**: What fraction of all instructions use the **Data Memory**? What fraction use the **Instruction Memory**?
 
 **Walkthrough Details**: 
-1. **Data Memory**: The Data Memory is only accessed when an instruction needs to explicitly read a data word or write a data word. Looking at our instruction set, only `lw` (loads) and `sw` (stores) interact with the Data Memory. R-type, branches, and jumps bypass it entirely.
+1. **Data Memory**: The Data Memory is only accessed when an instruction needs to read a data word or write a data word. Looking at our instruction set, only `lw` (loads) and `sw` (stores) interact with the Data Memory. R-type, branches, and jumps bypass it .
    - *Calculation*: 25% (`lw`) + 10% (`sw`) = **35%**. 
 2. **Instruction Memory**: The very first phase of executing *any* instruction is fetching it from the Instruction Memory. Without fetching the instruction, the processor doesn't know what to do. 
    - *Calculation*: **100%**. Every instruction uses instruction memory.
@@ -245,7 +247,7 @@ To solidify your understanding of the datapath and control unit, here are three 
 An `and` instruction performs a bitwise AND on two source registers and stores the result in a destination register. No data memory access is needed.
 1. `RegWrite = 1 (true)`: The result of the `and` needs to be saved back to a destination register (`rd`).
 2. `ALUSrc = 0 (false)`: The second operand for the ALU must come from the second register (`rt`), *not* the sign-extended immediate field.
-3. `ALUOp = 10` (R-type): The main control unit tells the ALU control unit to look at the instruction's `funct` field to definitively realize it must perform an `and` operation.
+3. `ALUOp = 10` (R-type): The main control unit tells the ALU control unit to look at the instruction's `funct` field to realize it must perform an `and` operation.
 4. `MemWrite = 0 (false)`: We are not storing anything to data memory.
 5. `MemRead = 0 (false)`: We are not fetching anything from data memory. *(While technically a "don't care", leaving this at 0 physically prevents an accidental seg fault or cache miss by the operating system).*
 6. `MemToReg = 0 (false)`: The value to write back to the register file should come directly from the ALU output, not from the data memory output.

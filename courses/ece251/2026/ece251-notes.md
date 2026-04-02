@@ -226,7 +226,17 @@ See [notes_week_09](/courses/ece251/2026/weeks/week_09/notes_week_09.html)
 2. Transitioning to multicycle implementations.
 3. Introduction to Pipelining.
 
+## Topic Deep Dive
+
 See [notes_week_10](/courses/ece251/2026/weeks/week_10/notes_week_10.html)
+
+## Reading Assignment
+
+- Read Chapter 4, Sections 4.4 and 4.5 in *Computer Organization and Design - MIPS Edition*.
+
+## Homework Assignment
+
+See [hw-10](/courses/ece251/2026/assignments/hw-10.html); [solution](/courses/ece251/2026/assignments/hw-10-solution.html)
 
 # <a id="week11">Week 11 &mdash; 4/9 &mdash; The Processor &mdash; Datapath & Control (Part 3 of 3)</a>
 

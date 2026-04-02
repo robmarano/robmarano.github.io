@@ -76,3 +76,19 @@ This document serves to record decisions, architectural structure, and recent de
 *   **`hw-04-solution.md`**: Developed specific solutions covering MIPS Machine code (Hexadecimal translations), Endianness bounds, Procedure Call Stack Prologues (saving `$ra` and `$s0`), and explicitly coded SystemVerilog modules capturing dataflow 2-to-1 Multiplexors and Sequential edge-triggered PC registers.
 *   **Formatting Compliance**: Validated that all generated `.md` documents strongly mirror the structural taxonomy, rubrics, and explicit mathematical typesetting requirements utilized natively within `hw-01-solution.md`.
  
+
+## Recent Updates: Week 09 & 10
+
+### 1. Curriculum Formalization
+*   Completed a rigorous editorial pass over all Week 9 and Week 10 notes, slides, and homework materials to remove subjective descriptions and enforce a formal engineering tone.
+*   Linked the original Patterson & Hennessy Chapter 4 `.ppt` textbook slides directly to the syllabus references.
+
+### 2. Architecture Datapath & Control Units
+*   Developed detailed notes comparing the latency timing implementations of Single-Cycle, Multicycle, and Pipelining designs.
+*   Documented the transition to a Finite State Machine (FSM) Controller via a two-process SystemVerilog template in `notes_week_10.md`.
+*   Integrated textbook Datapath diagrams from the local Image Bank, explicitly rendering the Pipelining "Laundry Analogy" (Figure 4.25).
+*   Explicitly defined Structural, Data, and Control hazards as a bridge topic prep for Week 11.
+
+### 3. Cumulative Review Materials
+*   Constructed a centralized `mips_cheatsheet_ch1_4.md` consolidating Chapter 1-4 mathematical formulae, structural MIPS register conventions, and ALU limits to serve as a high-density reference sheet.
+*   Generated `hw-10.md` and `hw-10-solution.md`, emphasizing standard pointing rubrics and algebraic delay calculations alongside SystemVerilog tracking.
