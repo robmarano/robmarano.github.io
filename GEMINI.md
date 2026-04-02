@@ -68,3 +68,11 @@ This document serves to record decisions, architectural structure, and recent de
 *   Cleaned and extracted topics from the Week 4 transcript (`2026-02-12.txt`) and placed them within `notes_week_04.md`.
 *   Created reusable `module_template.sv` and `testbench_template.sv` files for fast prototyping.
 *   Removed the accidentally staged `2026-02-12.txt` from Git tracking via `.gitignore`.
+
+## Recent Updates: Homework Validation 
+
+### 1. Assignment Solutions Generation
+*   **`hw-02-solution.md`**: Authored rigorous solutions for Textbook Chapter 2. Mapped C-pointer structures natively into MIPS pointer increments (`addi $t0, $s6, 4`), and structurally modeled instruction architecture (Opcodes, `rs`, `rt`, `funct`) cleanly inside markdown tables.
+*   **`hw-04-solution.md`**: Developed specific solutions covering MIPS Machine code (Hexadecimal translations), Endianness bounds, Procedure Call Stack Prologues (saving `$ra` and `$s0`), and explicitly coded SystemVerilog modules capturing dataflow 2-to-1 Multiplexors and Sequential edge-triggered PC registers.
+*   **Formatting Compliance**: Validated that all generated `.md` documents strongly mirror the structural taxonomy, rubrics, and explicit mathematical typesetting requirements utilized natively within `hw-01-solution.md`.
+ 
