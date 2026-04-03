@@ -82,26 +82,26 @@ sequenceDiagram
     participant RF as Register File
     participant ALU as Main ALU
     
-    Clock->>Control: Cycle 1 (State 0: Fetch)
-    Control->>Mem: Assert memread (IorD = PC)
+    Clock->>Control: Cycle 1 (State 0 - Fetch)
+    Control->>Mem: Assert memread (IorD == PC)
     Mem-->>Control: Return Instruction Word
-    Control->>Control: Write to IR (Instruction Register)
+    Control->>Control: Write to IR
     
-    Clock->>Control: Cycle 2 (State 1: Decode)
-    Control->>RF: Read $rs and $rt
-    RF-->>Control: Latch variables into A & B Registers
+    Clock->>Control: Cycle 2 (State 1 - Decode)
+    Control->>RF: Read rs and rt
+    RF-->>Control: Latch variables into A and B Registers
     
-    Clock->>Control: Cycle 3 (State 2: Execute)
-    Control->>ALU: Form Addr (A + SignImm)
+    Clock->>Control: Cycle 3 (State 2 - Execute)
+    Control->>ALU: Form Addr (A plus SignImm)
     ALU-->>Control: Latch Result into ALUOut
     
-    Clock->>Control: Cycle 4 (State 3: Mem Access)
-    Control->>Mem: Assert memread (IorD = ALUOut)
+    Clock->>Control: Cycle 4 (State 3 - Mem Access)
+    Control->>Mem: Assert memread (IorD == ALUOut)
     Mem-->>Control: Return Data Word
-    Control->>Control: Latch into MDR (Mem Data Reg)
+    Control->>Control: Latch into MDR
     
-    Clock->>Control: Cycle 5 (State 4: Writeback)
-    Control->>RF: Write MDR into $rt
+    Clock->>Control: Cycle 5 (State 4 - Writeback)
+    Control->>RF: Write MDR into rt
 ```
 
 #### SystemVerilog FSM Logic
