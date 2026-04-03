@@ -1,0 +1,27 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{module}\PYG{+w}{ }\PYG{n}{controller\PYGZus{}fsm}\PYG{p}{(}\PYG{k}{input}\PYG{+w}{  }\PYG{k+kt}{logic}\PYG{+w}{       }\PYG{n}{clk}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{reset}\PYG{p}{,}
+\PYG{+w}{                      }\PYG{k}{input}\PYG{+w}{  }\PYG{k+kt}{logic}\PYG{+w}{ }\PYG{p}{[}\PYG{l+m+mi}{5}\PYG{o}{:}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{+w}{ }\PYG{n}{opcode}\PYG{p}{,}
+\PYG{+w}{                      }\PYG{k}{output}\PYG{+w}{ }\PYG{k+kt}{logic}\PYG{+w}{       }\PYG{n}{memread}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{memwrite}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{regwrite}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{typedef}\PYG{+w}{ }\PYG{k}{enum}\PYG{+w}{ }\PYG{k+kt}{logic}\PYG{+w}{ }\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{o}{:}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{n}{FETCH}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{DECODE}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{MEM\PYGZus{}ADDR}\PYG{o}{=}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{MEM\PYGZus{}READ}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{,}
+\PYG{+w}{                              }\PYG{n}{MEM\PYGZus{}WRITE}\PYG{o}{=}\PYG{l+m+mi}{4}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{R\PYGZus{}EXEC}\PYG{o}{=}\PYG{l+m+mi}{5}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{R\PYGZus{}WRITEBACK}\PYG{o}{=}\PYG{l+m+mi}{6}\PYG{p}{\PYGZcb{}}\PYG{+w}{ }\PYG{n}{statetype}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n}{statetype}\PYG{+w}{ }\PYG{n}{state}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{next\PYGZus{}state}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c+c1}{// State Management}
+\PYG{+w}{    }\PYG{k}{always\PYGZus{}ff}\PYG{+w}{ }\PYG{p}{@}\PYG{p}{(}\PYG{k}{posedge}\PYG{+w}{ }\PYG{n}{clk}\PYG{p}{,}\PYG{+w}{ }\PYG{k}{posedge}\PYG{+w}{ }\PYG{n}{reset}\PYG{p}{)}
+\PYG{+w}{        }\PYG{k}{if}\PYG{p}{(}\PYG{n}{reset}\PYG{p}{)}\PYG{+w}{ }\PYG{n}{state}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{o}{=}\PYG{+w}{ }\PYG{n}{FETCH}\PYG{p}{;}\PYG{+w}{ }\PYG{k}{else}\PYG{+w}{ }\PYG{n}{state}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{o}{=}\PYG{+w}{ }\PYG{n}{next\PYGZus{}state}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c+c1}{// Combinational Next Logic based on Opcode}
+\PYG{+w}{    }\PYG{k}{always\PYGZus{}comb}\PYG{+w}{ }\PYG{k}{begin}
+\PYG{+w}{        }\PYG{k}{case}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{state}\PYG{p}{)}
+\PYG{+w}{            }\PYG{n+nl}{FETCH:}\PYG{+w}{  }\PYG{n}{next\PYGZus{}state}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{DECODE}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n+nl}{DECODE:}\PYG{+w}{ }\PYG{k}{case}\PYG{p}{(}\PYG{n}{opcode}\PYG{p}{)}
+\PYG{+w}{                       }\PYG{l+m+mb}{6\PYGZsq{}b100011}\PYG{o}{:}\PYG{+w}{ }\PYG{n}{next\PYGZus{}state}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{MEM\PYGZus{}ADDR}\PYG{p}{;}
+\PYG{+w}{                       }\PYG{l+m+mb}{6\PYGZsq{}b000000}\PYG{o}{:}\PYG{+w}{ }\PYG{n}{next\PYGZus{}state}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{R\PYGZus{}EXEC}\PYG{p}{;}
+\PYG{+w}{                       }\PYG{k}{default}\PYG{o}{:}\PYG{+w}{   }\PYG{n}{next\PYGZus{}state}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{FETCH}\PYG{p}{;}
+\PYG{+w}{                    }\PYG{k}{endcase}
+\PYG{+w}{            }\PYG{c+c1}{// ... additional branches}
+\PYG{+w}{        }\PYG{k}{endcase}
+\PYG{+w}{    }\PYG{k}{end}
+\PYG{k}{endmodule}
+\end{MintedVerbatim}
