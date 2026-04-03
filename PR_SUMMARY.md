@@ -18,3 +18,4 @@
 *   **Performance Tracking**: Injected explicit `cycle_count` monitoring into `tb_computer.sv` to scientifically plot execution speeds (e.g. 61 cycles vs 187 cycles for Fib(7)).
 *   **Architectural Analysis**: Mapped hardware paradigms (Harvard vs Von Neumann) comprehensively to Single vs Multi-Cycle designs natively inside `notes_week_10.md`, alongside an explicit Mermaid UML sequence diagram modeling the 5-State Multicycle pipeline.
 *   **Web Embedding Strategy**: Prepared `TODO.md` with implementation options to route `.asm` and `.sv` directly through Monaco IDE, Gists, and Javascript-based GUI Emulators natively on GitHub Pages.
+*   **UML Parser Hotfix**: Repaired the Multi-Cycle Mermaid sequence diagram by purging literal parenthesis `()`, MathJax interceptors `$`, and logic operators `==` to prevent strict-mode `Mermaid v10.9.5` parser failures natively within Jekyll.
