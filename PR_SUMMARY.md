@@ -14,3 +14,7 @@
 *   **Reference Materials**: Consolidated fundamental equations, instruction formats, and hardware logic limits for Chapters 1-4 into `mips_cheatsheet_ch1_4.md` and prominently linked it.
 *   **Textbook Integration**: Embedded absolute links to the original Patterson & Hennessy Chapter 4 PowerPoints (`Patterson6e_MIPS_Ch04_PPT.ppt`) inside Week 9 and 10 notes.
 *   **Development Log**: Explicitly documented all course structure alterations natively inside `GEMINI.md`.
+*   **Single/Multi-Cycle Simulators**: Restored `/single_cycle_cpu` and established `/multi_cycle_cpu` SystemVerilog directories. Wrote unified FSM Logic and memory architectures for the latter.
+*   **Performance Tracking**: Injected explicit `cycle_count` monitoring into `tb_computer.sv` to scientifically plot execution speeds (e.g. 61 cycles vs 187 cycles for Fib(7)).
+*   **Architectural Analysis**: Mapped hardware paradigms (Harvard vs Von Neumann) comprehensively to Single vs Multi-Cycle designs natively inside `notes_week_10.md`, alongside an explicit Mermaid UML sequence diagram modeling the 5-State Multicycle pipeline.
+*   **Web Embedding Strategy**: Prepared `TODO.md` with implementation options to route `.asm` and `.sv` directly through Monaco IDE, Gists, and Javascript-based GUI Emulators natively on GitHub Pages.
