@@ -267,7 +267,14 @@ End:
     sw   $t1, 88($zero)     # mem[88] = Fib(7) = 13 (0x0D) 
 ```
 
-### 2. Execute the Simulator
+### 2. Download the Source Code
+Provide a full offline environment. If you want to experiment locally with the SystemVerilog or modify the MIPS programs in your own IDE, download the packed workstation bundles below:
+*   &darr; [Download Single-Cycle CPU Bundle (`single_cycle_cpu.zip`)](./single_cycle_cpu.zip)
+*   &darr; [Download Multi-Cycle CPU Bundle (`multi_cycle_cpu.zip`)](./multi_cycle_cpu.zip)
+
+---
+
+### 3. Execute the Simulator
 To prove out the math behind the performance metrics above, use your local terminal to compile and stimulate the CPU architecture directly using the provided `Makefile`.
 
 **Run on the Single-Cycle Processor**:
@@ -285,13 +292,6 @@ make compile
 make test-fib
 ```
 *Observe the output: Because each instruction explicitly stretches across the 12-State FSM, it executes roughly ~187 clock cycles (averaging slightly over 3 ticks per instruction).*
-
----
-
-### 3. Download the Source Code
-Provide a full offline environment. If you want to experiment locally with the SystemVerilog or modify the MIPS programs in your own IDE, download the packed workstation bundles below:
-*   &darr; [Download Single-Cycle CPU Bundle (`single_cycle_cpu.zip`)](./single_cycle_cpu.zip)
-*   &darr; [Download Multi-Cycle CPU Bundle (`multi_cycle_cpu.zip`)](./multi_cycle_cpu.zip)
 
 ---
 
