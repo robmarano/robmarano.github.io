@@ -288,6 +288,13 @@ make test-fib
 
 ---
 
+### 3. Download the Source Code
+Provide a full offline environment. If you want to experiment locally with the SystemVerilog or modify the MIPS programs in your own IDE, download the packed workstation bundles below:
+*   &darr; [Download Single-Cycle CPU Bundle (`single_cycle_cpu.zip`)](./single_cycle_cpu.zip)
+*   &darr; [Download Multi-Cycle CPU Bundle (`multi_cycle_cpu.zip`)](./multi_cycle_cpu.zip)
+
+---
+
 ## Resources & Materials
 
 *   **Slide Deck**: [ece251_week_10_slides.pdf](./ece251_week_10_slides.pdf)
