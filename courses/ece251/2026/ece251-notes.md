@@ -236,7 +236,7 @@ See [notes_week_10](/courses/ece251/2026/weeks/week_10/notes_week_10.html)
 
 ## Homework Assignment
 
-See [hw-10](/courses/ece251/2026/assignments/hw-10.html); [solution](/courses/ece251/2026/assignments/hw-10-solution.html)
+See [hw-10](/courses/ece251/2026/assignments/hw-10.html)
 
 # <a id="week11">Week 11 &mdash; 4/9 &mdash; The Processor &mdash; Datapath & Control (Part 3 of 3)</a>
 
