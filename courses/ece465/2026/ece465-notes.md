@@ -67,5 +67,9 @@ Follow the link above to the respective week's materials below.
 *   **Overview**: An exploration of how distributed applications actually pass messages and synchronize state across physical networks without failing.
 *   **Key Concepts**: The nuances of Remote Procedure Calls (RPC) versus socket-level message passing. The theory behind logical Lamport clocks, leader election via the Ring and Bully algorithms, and achieving scalable fault-tolerance. The week culminates with deploying a live, event-driven Homogeneous MapReduce engine backed natively by Apache ZooKeeper and Kubernetes.
 
+## <a id="week10"></a>[Week 10: Consistency & Replication](./weeks/week_10/notes_week_10.md)
+*   **Overview**: An investigation into the inherent tradeoffs between data reliability and latency when deploying active cluster network replicas.
+*   **Key Concepts**: Contrasting Data-Centric consistency models (Strict, Sequential, Causal, Eventual) against Client-Centric session guarantees (Read-Your-Writes). We advance the infrastructure constructed in Week 09 to natively deploy Python ZooKeeper scripts modeling Eventual Convergence, synchronous Primary-Backup replication, and mathematically provable N-W-R Quorum-based transaction partitions.
+
 ---
 [<- back to syllabus](./ece465-ind-study-syllabus-spring-2026.html)
