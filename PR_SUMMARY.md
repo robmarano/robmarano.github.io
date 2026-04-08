@@ -1,2 +1,3 @@
-# AI Session Memory Snapshot
-* Created AI_MEMORY.md capturing all distributed MapReduce design changes, Eventlet integrations, and ZooKeeper architecture notes, including references to the Sequence UML diagrams added to Week 9.
+# ECE 465 Week 10: Consistency & Replication
+* Authored comprehensive chapter notes distilling Data-Centric and Client-Centric consistency models.
+* Implemented three sequential Python examples (Easy, Medium, Hard) relying natively on ZooKeeper and Eventlet to demonstrate architectural alignment with Week 09.
