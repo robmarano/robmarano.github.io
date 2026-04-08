@@ -226,3 +226,82 @@ def quorum_read(object_id):
 ```
 
 In this Quorum protocol, even if 2 workers physically die during the write cycle, the data still completely commits because $W=3$. During ingestion, $R=3$ retrieves an intersecting node safely bypassing the offline replicas, providing **impenetrable Fault Tolerance integrated seamlessly into strong Data Consistency**.
+
+---
+
+## 5. Live Project Code & Download Sandbox
+
+Now that we have covered the theory of message queues and ZooKeeper-orchestrated consistency, you can organically peruse and run the underlying application code supporting these replica models.
+
+### 📥 Project Download Options
+
+We have ported the Week 09 Homogeneous MapReduce architecture directly into Week 10 and augmented it with three runnable Python demonstration scripts spanning our Easy, Medium, and Hard consistency models. 
+
+You have two primary methods to grab the project folder and deploy it locally onto your Minikube cluster:
+
+1. **Option 1: Clone the remote repository & switch into the folder**
+   You can natively clone the entire class repository securely via Git.
+   ```bash
+   git clone https://github.com/robmarano/robmarano.github.io.git
+   cd robmarano.github.io/courses/ece465/2026/weeks/week_10/k8s_zk_template
+   ```
+2. **Option 2: Direct Directory Zip Download (via DownGit)**
+   If you do not have Git installed or you prefer to pull the extracted folder purely in isolation, just click the link below to automatically package the `k8s_zk_template` directory into an isolated `.zip` archive.
+   * [Download the `k8s_zk_template.zip` Project Archive](https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/robmarano/robmarano.github.io/tree/master/courses/ece465/2026/weeks/week_10/k8s_zk_template)
+
+### 🧐 Source Code Exploration
+
+Before deciding to download to your local machine, you can interactively peruse the key architectural code elements operating specifically for these Replica Demonstration scripts:
+
+* 🐍 **[`demo_easy_eventual.py`](./k8s_zk_template/demo_easy_eventual.py)** — Demonstrates passive **Eventual Convergence** across cluster nodes executing purely using `DataWatch` async listeners.
+* 🐍 **[`demo_medium_primary_backup.py`](./k8s_zk_template/demo_medium_primary_backup.py)** — Illustrates robust **Primary-Backup** orchestration via `time.sleep` timeouts and ACK handshake verification between two autonomous daemon Greenlets.
+* 🐍 **[`demo_hard_quorum.py`](./k8s_zk_template/demo_hard_quorum.py)** — The full robust execution of **Gifford's Quorum (N-W-R)** mathematical consistency guaranteeing replica stability upon partition failures.
+
+---
+
+### 🚀 Build & Deploy on Minikube
+
+Once downloaded via the methods above, deploy the base infrastructure to Minikube to interact with the Python Demo scripts!
+
+#### **Step 1: Deploy ZooKeeper & Python App to Kubernetes**
+From inside the `k8s_zk_template` directory, target your Minikube environment:
+```bash
+# Target Minikube's Docker Engine
+eval $(minikube docker-env)
+
+# Build the generic week 10 python worker image
+docker build -t zk-app:latest .
+
+# Deploy the configuration array
+kubectl apply -f k8s/storage.yaml
+kubectl apply -f k8s/zookeeper.yaml
+kubectl apply -f k8s/rbac.yaml
+kubectl apply -f k8s/app.yaml
+
+# Wait for 5 App worker pods to become healthy
+kubectl rollout status deployment/zk-app
+```
+
+#### **Step 2: Engage the Code Demos Natively**
+Because the python backend image automatically ingests all `.py` files inside the `/app/` directory, you can simply attach to *any* of the 5 running worker pods and force them to execute the demo algorithms using Python's standard interpreter!
+
+Find an active Pod name:
+```bash
+kubectl get pods -l app=zk-app
+# Note down an active pod name e.g. zk-app-123456789-abcde
+```
+
+Run the Eventual Consistency Demo inside the cluster:
+```bash
+kubectl exec -it <pod_name> -- python3 demo_easy_eventual.py
+```
+
+Run the Synchronous Primary-Backup Demo:
+```bash
+kubectl exec -it <pod_name> -- python3 demo_medium_primary_backup.py
+```
+
+Run the N-W-R Quorum Protocol Demo:
+```bash
+kubectl exec -it <pod_name> -- python3 demo_hard_quorum.py
+```

@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zk-app
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: zk-app
+  template:
+    metadata:
+      labels:
+        app: zk-app
+        role: worker
+    spec:
+      serviceAccountName: app-service-account
+      containers:
+      - name: zk-app
+        image: zk-app:latest
+        imagePullPolicy: Never
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: shared-data
+          mountPath: /shared
+      volumes:
+      - name: shared-data
+        persistentVolumeClaim:
+          claimName: shared-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: master-service
+spec:
+  selector:
+    app: zk-app
+    role: master
+  ports:
+  - port: 80
+    targetPort: 5000
