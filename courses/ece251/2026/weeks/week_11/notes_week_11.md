@@ -75,25 +75,25 @@ These boundary registers lock in output data on the rising clock edge and provid
 
 #### Step 3: Following the Instruction Execution Trace
 When a pipeline correctly overlaps, different hardware segments service different instructions concurrently. Observe how `lw` and `sw` sequentially inherit the hardware resources across the discrete clock cycles:
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004036.jpg" width="550" alt="Instruction Trace 1"></p>
-
 *   **Figure 4.36 (IF and ID Stages)**: Both `lw` and `sw` structurally share identical hardware pathways through the Instruction Fetch (`IF`) and Instruction Decode (`ID`) blocks. The PC extracts the instruction payload while the Decode unit cleanly parses the Register File.
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004037.jpg" width="550" alt="Instruction Trace 2"></p>
+<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004036.jpg" width="550" alt="Instruction Trace 1"></p>
 
 *   **Figure 4.37 (Load `lw` - Execute EX)**: Highlighting the 3rd pipeline stage of a Load instruction. Notice how the ALUSrc MUX explicitly routes the Sign-Extended immediate through the ALU perfectly to calculate the absolute RAM target address.
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004038.jpg" width="550" alt="Instruction Trace 3"></p>
+<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004037.jpg" width="550" alt="Instruction Trace 2"></p>
 
 *   **Figure 4.38 (Load `lw` - MEM and WB)**: Highlighting the 4th and 5th pipeline stages of a Load instruction. The calculated ALU address hits the physical Memory module. Finally, the WriteBack MUX perfectly routes the extracted RAM data straight back horizontally to the Register File destination.
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004039.jpg" width="550" alt="Instruction Trace 4"></p>
+<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004038.jpg" width="550" alt="Instruction Trace 3"></p>
 
 *   **Figure 4.39 (Store `sw` - Execute EX)**: Highlighting the 3rd pipeline stage of a Store. Similar to `lw`, the `sw` instruction utilizes the ALU to calculate its physical memory target address. Notice, however, that the second register data payload mathematically bypasses the ALU calculation and is natively loaded into the `EX/MEM` boundary register waiting to be pushed into Memory.
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004040.jpg" width="550" alt="Instruction Trace 5"></p>
+<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004039.jpg" width="550" alt="Instruction Trace 4"></p>
 
 *   **Figure 4.40 (Store `sw` - MEM and WB)**: Highlighting the 4th and 5th pipeline stages of a Store. The isolated Memory unit activates strictly in *Write* mode via Control Signals, irrevocably dumping the `sw` payload into RAM. The sequence concludes identically in the WB stage, which is rendered completely inactive (there is no MUX routed mapping back to registers since `sw` natively performs no internal saves).
+
+<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004040.jpg" width="550" alt="Instruction Trace 5"></p>
 
 #### Step 4: The Targeting Bug & Embedded Control Lines
 A critical architectural bug exists in early pipeline maps: the `WriteReg` destination and Control signals cannot just be read from the `ID` stage and wired unconditionally to the `WB` stage. If we do this, the WriteBack stage will apply its data to the **currently decoding** instruction's target register, corrupting the CPU!
