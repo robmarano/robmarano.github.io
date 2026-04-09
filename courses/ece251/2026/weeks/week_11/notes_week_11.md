@@ -183,6 +183,21 @@ add $s0, $t0, $t1   # $s0 is written
 sub $t2, $s0, $t3   # $s0 is read immediately
 ```
 
+#### Formulating the Pairs of Hazard Conditions
+Before we can physically construct the multiplexers to resolve data hazards, we must mathematically identify the exact pairs of bounding logic conditions that trigger a bottleneck. By analyzing the flow of the datapath, Patterson & Hennessy defines exactly **two main pairs of hazard conditions** that the pipeline controls must natively continuously scan for when a given instruction enters the `EX` stage:
+
+**1. The `EX` Hazard Conditions (1-Cycle Delay)**
+This primary hazard pair occurs when the instruction *immediately* preceding our current instruction writes to a register that our current instruction desperately needs to execute. The mathematical pair of states that flag this is:
+*   `1a. EX/MEM.RegisterRd == ID/EX.RegisterRs` (The immediate previous instruction's `Rd` destination directly matches our ALU Input A source register).
+*   `1b. EX/MEM.RegisterRd == ID/EX.RegisterRt` (The immediate previous instruction's `Rd` destination directly matches our ALU Input B source register).
+
+**2. The `MEM` Hazard Conditions (2-Cycle Delay)**
+This secondary hazard pair occurs when the instruction *two cycles ahead* (sitting in the Memory stage) is finalizing a write to a register that our currently executing instruction needs. The mathematical pair of states that flag this is:
+*   `2a. MEM/WB.RegisterRd == ID/EX.RegisterRs` (The older `MEM` instruction's `Rd` destination directly matches our ALU Input A source register).
+*   `2b. MEM/WB.RegisterRd == ID/EX.RegisterRt` (The older `MEM` instruction's `Rd` destination directly matches our ALU Input B source register).
+
+*Critical caveat:* For *any* of the paired conditions above to rightfully trigger a physical bypass, the processor must also simultaneously check that the older instructions even intend to write back (`RegWrite == 1`) and importantly, confirm they aren't blindly overwriting the static zero register (`RegisterRd != 0`).
+
 #### The Solution: Operand Forwarding (Bypassing)
 **Figure 4.53 (Data Hazard Forwarding Logic)** *[Type: Single-clock-cycle pipeline diagram]*: Rather than waiting for `$s0` to be written back to the Register File in stage 5, the physical data is already calculated by the ALU at the end of the `add` instruction's `EX` stage. We can physically wire a pathway from the `EX/MEM` pipeline register directly back into the ALU inputs using a Multiplexer.
 
