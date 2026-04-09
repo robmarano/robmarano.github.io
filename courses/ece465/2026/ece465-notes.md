@@ -67,5 +67,29 @@ Follow the link above to the respective week's materials below.
 *   **Overview**: An exploration of how distributed applications actually pass messages and synchronize state across physical networks without failing.
 *   **Key Concepts**: The nuances of Remote Procedure Calls (RPC) versus socket-level message passing. The theory behind logical Lamport clocks, leader election via the Ring and Bully algorithms, and achieving scalable fault-tolerance. The week culminates with deploying a live, event-driven Homogeneous MapReduce engine backed natively by Apache ZooKeeper and Kubernetes.
 
+## <a id="week10"></a>[Week 10: Consistency & Replication](./weeks/week_10/notes_week_10.md)
+*   **Overview**: An investigation into the inherent tradeoffs between data reliability and latency when deploying active cluster network replicas.
+*   **Key Concepts**: Contrasting Data-Centric consistency models (Strict, Sequential, Causal, Eventual) against Client-Centric session guarantees (Read-Your-Writes). We advance the infrastructure constructed in Week 09 to natively deploy Python ZooKeeper scripts modeling Eventual Convergence, synchronous Primary-Backup replication, and mathematically provable N-W-R Quorum-based transaction partitions.
+
+## <a id="week11"></a>[Week 11: Fault Tolerance](./weeks/week_11/notes_week_11.md)
+*   **Overview**: Designing systems that can withstand failures of individual components.
+*   **Key Concepts**: Analyzing failure models (e.g., crash failures, Byzantine failures) and implementing fault-tolerant mechanisms such as redundancy, checkpointing, and recovery protocols. The week delves into practical techniques for building resilient distributed systems.
+
+## <a id="week12"></a>[Week 12: Security](./weeks/week_12/notes_week_12.md)
+*   **Overview**: Securing distributed systems against various threats.
+*   **Key Concepts**: Exploring security fundamentals including authentication, authorization, and encryption. The week covers secure communication protocols, access control mechanisms, and best practices for securing distributed applications.
+
+## <a id="week13"></a>[Week 13: Deploying on k8s on Cloud-Based Virtual Bare Metal Nodes](./weeks/week_13/notes_week_13.md)
+*   **Overview**: Practical deployment of Kubernetes on bare metal infrastructure.
+*   **Key Concepts**: Hands-on experience with deploying Kubernetes clusters on cloud-based virtual bare metal nodes. The week covers cluster setup, node provisioning, and managing workloads in a bare metal environment.
+
+## <a id="week14"></a>[Week 14: Deploying on k8s on Cloud-Based k8s](./weeks/week_14/notes_week_14.md)
+*   **Overview**: Advanced Kubernetes deployment strategies on managed cloud services.
+*   **Key Concepts**: Deep dive into deploying and managing Kubernetes on cloud-based managed Kubernetes services. The week covers cluster scaling, monitoring, and leveraging cloud-specific features for enhanced performance and reliability.
+
+## <a id="week15"></a>[Week 15: Final Individual Projects Due](./weeks/week_15/notes_week_15.md)
+*   **Overview**: Final project presentations and submission.
+*   **Key Concepts**: Students present their individual projects, demonstrating their understanding of distributed systems concepts and practical implementation skills. This week serves as a capstone for the course, showcasing the culmination of the semester's learning.
+
 ---
 [<- back to syllabus](./ece465-ind-study-syllabus-spring-2026.html)
