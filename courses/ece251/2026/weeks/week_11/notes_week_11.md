@@ -113,7 +113,31 @@ module hazard_unit (input  logic [4:0] RsE, RtE,         // Current Execution So
 endmodule
 ```
 
-If the data isn't available yet (e.g., an `lw` instruction reading from Memory, which happens *after* the ALU), forwarding is physically impossible in time. The processor MUST **Stall** by inserting algorithmic "bubbles" (No-Ops) into the pipeline.
+If the data isn't available yet (e.g., an `lw` instruction reading from Memory, which happens *after* the ALU), forwarding is physically impossible in time. The processor MUST **Stall** by inserting algorithmic "bubbles" into the pipeline.
+
+#### Theory and Mechanism of a "Bubble"
+Theory-wise, a **Bubble** is a dynamically generated `No-Op` (No Operation) state that flows down the pipeline identically to a real instruction, except it is mathematically inert (it writes to register `$0`, disables `MemWrite`, and disables `RegWrite`). It acts to delay the execution stream by 1 physical clock pulse without damaging the CPU's memory or register state.
+
+Technically, in SystemVerilog, generating a bubble requires two simultaneous hardware actions orchestrated by the `hazard_unit`:
+1.  **Freeze the Front End (`Stall`)**: We disable the `Enable` pin on the `PC` register and the `IF/ID` pipeline register. This locks the current instruction address in place so it is not accidentally skipped while the processor waits.
+2.  **Clear the Execution Boundary (`Flush`)**: We trigger the synchronous `Clear` pin on the `ID/EX` register. On the next clock pulse, all the legitimate control signals inside that register drop to `0` (e.g., `RegWrite = 0`), creating the harmless bubble that travels downstream.
+
+```systemverilog
+// SystemVerilog Load-Use Stall Logic inside Hazard Unit
+always_comb begin
+  // If the instruction in Execute stage is an 'lw' (MemReadE == 1) 
+  // AND its target destination matches our current Decode sources:
+  if (MemReadE && ((RtE == RsD) || (RtE == RtD))) begin
+    StallF = 1; // Freeze the Program Counter
+    StallD = 1; // Freeze the IF/ID boundary register
+    FlushE = 1; // Inject the Bubble into the ID/EX boundary register
+  end else begin
+    StallF = 0;
+    StallD = 0;
+    FlushE = 0;
+  end
+end
+```
 
 <p align="center">
   <img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004056.jpg" width="600" alt="Load-Use Hazard Stalling Output">
