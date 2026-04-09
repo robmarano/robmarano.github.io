@@ -13,7 +13,7 @@ if not zk.exists('/config/mapreduce_params'):
 
 global_app_config = {}
 
-@DataWatch('/config/mapreduce_params')
+@DataWatch(zk, '/config/mapreduce_params')
 def watch_global_config(data, stat, event):
     global global_app_config
     if data:

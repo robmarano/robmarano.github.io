@@ -240,6 +240,10 @@ See [hw-10](/courses/ece251/2026/assignments/hw-10.html)
 
 # <a id="week11">Week 11 &mdash; 4/9 &mdash; The Processor &mdash; Datapath & Control (Part 3 of 3)</a>
 
+### High-Level Topics: Pipelined Datapath and Control
+* **Pipelined Datapath and Control** (Section 4.6): Transitioning to a 5-stage concurrent architecture utilizing explicit pipeline registers (`IF/ID`, `ID/EX`, `EX/MEM`, `MEM/WB`).
+* **Data Hazards - Forwarding vs. Stalling** (Section 4.7): Resolving Read-After-Write (RAW) logic overlaps via algorithmic operand forwarding pathways versus forced pipeline stalls.
+* **Control Hazards and Exceptions** (Sections 4.8, 4.9): Coping with branch penalties, target predictions (`beq`), pipeline flush mechanics, and synchronous hardware exceptions.
 
 See [notes_week_11](/courses/ece251/2026/weeks/week_11/notes_week_11.html)
 

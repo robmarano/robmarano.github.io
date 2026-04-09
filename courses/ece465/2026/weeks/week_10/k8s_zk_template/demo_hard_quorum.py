@@ -1,11 +1,14 @@
 import os
+import os
+os.environ["EVENTLET_NO_GREENDNS"] = "yes"
 import eventlet
 from kazoo.client import KazooClient
+from kazoo.handlers.eventlet import SequentialEventletHandler
 
 eventlet.monkey_patch()
 
 ZK_HOSTS = os.getenv('ZK_HOSTS', 'zookeeper:2181')
-zk = KazooClient(hosts=ZK_HOSTS)
+zk = KazooClient(hosts=ZK_HOSTS, handler=SequentialEventletHandler())
 zk.start()
 
 N = 5 # Total Nodes

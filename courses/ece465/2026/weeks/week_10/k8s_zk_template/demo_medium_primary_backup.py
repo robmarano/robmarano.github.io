@@ -1,8 +1,11 @@
 import uuid
 import time
 import os
+import os
+os.environ["EVENTLET_NO_GREENDNS"] = "yes"
 import eventlet
 from kazoo.client import KazooClient
+from kazoo.handlers.eventlet import SequentialEventletHandler
 
 eventlet.monkey_patch()
 
@@ -10,7 +13,7 @@ ZK_HOSTS = os.getenv('ZK_HOSTS', 'zookeeper:2181')
 
 def backup_worker_daemon():
     """ Simulates the Standby Node running on a separate machine watching for Jobs """
-    zk = KazooClient(hosts=ZK_HOSTS)
+    zk = KazooClient(hosts=ZK_HOSTS, handler=SequentialEventletHandler())
     zk.start()
     zk.ensure_path('/jobs')
     
@@ -34,7 +37,7 @@ def backup_worker_daemon():
 
 def master_primary_transaction():
     """ Simulates the Primary Node attempting a strict synchronous write """
-    zk = KazooClient(hosts=ZK_HOSTS)
+    zk = KazooClient(hosts=ZK_HOSTS, handler=SequentialEventletHandler())
     zk.start()
     zk.ensure_path('/jobs')
     
@@ -72,6 +75,6 @@ if __name__ == "__main__":
     daemon.kill()
     
     # Cleanup trailing jobs natively (simulation cleanup)
-    zk = KazooClient(hosts=ZK_HOSTS); zk.start()
+    zk = KazooClient(hosts=ZK_HOSTS, handler=SequentialEventletHandler()); zk.start()
     zk.delete('/jobs', recursive=True)
     zk.stop()
