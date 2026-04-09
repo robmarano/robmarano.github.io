@@ -76,10 +76,24 @@ These boundary registers lock in output data on the rising clock edge and provid
 #### Step 3: Following the Instruction Execution Trace
 When a pipeline correctly overlaps, different hardware segments service different instructions concurrently. Observe how `lw` and `sw` sequentially inherit the hardware resources across the discrete clock cycles:
 <p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004036.jpg" width="550" alt="Instruction Trace 1"></p>
+
+*   **Cycle 1**: The first instruction, a Load Word (`lw`), enters the **Instruction Fetch (IF)** stage. The hardware utilizes the PC to pull the instruction memory payload. The rest of the descending datapath is currently idle.
+
 <p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004037.jpg" width="550" alt="Instruction Trace 2"></p>
+
+*   **Cycle 2**: The `lw` instruction shifts into the **Instruction Decode (ID)** stage to read the Register File. Simultaneously, the pipeline pulls the very next instruction—a Store Word (`sw`)—into the vacant **IF** stage. We now have two instructions overlapping on isolated hardware blocks.
+
 <p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004038.jpg" width="550" alt="Instruction Trace 3"></p>
+
+*   **Cycle 3**: The `lw` instruction crosses over to the **Execute (EX)** stage where the ALU calculates its memory target address. The trailing `sw` drops into the **ID** stage to read its source registers. A third sequential instruction (e.g., an ALU `add`) enters the **IF** stage.
+
 <p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004039.jpg" width="550" alt="Instruction Trace 4"></p>
+
+*   **Cycle 4**: The `lw` hits the **Memory (MEM)** stage to physically extract data from RAM. The `sw` instruction utilizes the active ALU in **EX** to calculate its physical memory target address. The third instruction (`add`) maps the **ID** registry block, and a fourth sequential instruction (`sub`) enters **IF**. All but the WB unit are actively utilized.
+
 <p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004040.jpg" width="550" alt="Instruction Trace 5"></p>
+
+*   **Cycle 5**: True pipeline efficiency is finally achieved! The leading `lw` finally drops into **WriteBack (WB)** to irrevocably save its RAM payload to a registry. The `sw` physically dumps its data payload into the isolated **MEM** unit. The trailing `add`/`sub`/`and` instructions perfectly span the **EX**, **ID**, and **IF** stages identically. All 5 fundamental hardware components are firing simultaneously for 5 discrete instructions.
 
 #### Step 4: The Targeting Bug & Embedded Control Lines
 A critical architectural bug exists in early pipeline maps: the `WriteReg` destination and Control signals cannot just be read from the `ID` stage and wired unconditionally to the `WB` stage. If we do this, the WriteBack stage will apply its data to the **currently decoding** instruction's target register, corrupting the CPU!
