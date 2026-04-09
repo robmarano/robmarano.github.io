@@ -27,6 +27,26 @@ How does Amdahl's Law govern pipelining? Amdahl's formula $\text{Speedup} = \fra
 
 In a $k$-stage pipeline, the parallelizable fraction $p$ represents instructions executing flawlessly without delays. The sequential fraction $1-p$ represents the **Hazards** (pipeline stalls, memory wait states, and branch flushes). Even if we build an infinitely deep super-pipeline ($k \to \infty$), the maximum theoretical hardware speedup perfectly asymptotes at $\frac{1}{1-p}$. Therefore, Hazards form the absolute physical performance ceiling of any processor; you cannot achieve a perfect $CPI = 1.0$ if hazards continuously force the pipeline to stall.
 
+#### Amdahl's Law: Worked Examples
+
+*   **Problem 1 (Easy): Basic Pipeline Speedup**
+    *   **Question**: A processor utilizes a 5-stage pipeline ($k=5$). Analysis shows a program executes 80% of its instructions flawlessly without triggering any hazards ($p=0.8$). Calculate the actual theoretical speedup constrained by Amdahl's Law.
+    *   **Walkthrough**: $\text{Speedup} = \frac{1}{(1-0.8) + \frac{0.8}{5}} = \frac{1}{0.2 + 0.16} = \frac{1}{0.36} \approx 2.77x$. Even with a 5-stage pipeline, the 20% sequential hazard penalty chokes the speedup to nearly half of the ideal $5x$ target.
+
+*   **Problem 2 (Medium): The Infinite Pipeline Asymptote**
+    *   **Question**: Software engineers want to know the absolute maximum physical speedup possible for a program that suffers from a 15% inherent structural stall rate ($1-p = 0.15$). Assume Intel could magically build a processor with *infinite* pipeline stages ($k \to \infty$).
+    *   **Walkthrough**: As $k \to \infty$, the parallel fraction time $\frac{p}{k} \to 0$. The maximum speedup is strictly $\frac{1}{1-p} = \frac{1}{0.15} \approx 6.67x$. Hardware ($k$) cannot mathematically compensate for algorithmic sequential constraints.
+
+*   **Problem 3 (Hard): Resolving Break-Even Parallelization**
+    *   **Question**: A new 8-stage pipeline processor ($k=8$) *must* achieve a strict Speedup of $4.0x$ over a single-cycle implementation to hit its market performance goal. Calculate the exact percentage of instructions ($p$) that must be completely free of pipelining hazards to hit this target.
+    *   **Walkthrough**:
+        $4.0 = \frac{1}{(1-p) + \frac{p}{8}}$
+        $(1-p) + \frac{p}{8} = \frac{1}{4} = 0.25$
+        $1 - \frac{7p}{8} = 0.25$
+        $0.75 = \frac{7p}{8}$
+        $6 = 7p \implies p = \frac{6}{7} \approx 85.71\%$
+        To achieve $4.0x$ speedup across $8$ stages, the compilers and hardware MUST ensure $85.71\%$ of the instructions bypass hazards effortlessly.
+
 ---
 
 ## Topic Deep Dive
