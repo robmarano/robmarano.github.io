@@ -19,6 +19,8 @@ spec:
         image: zk-app:latest
         imagePullPolicy: Never
         env:
+        - name: ZK_HOSTS
+          value: "zookeeper:2181"
         - name: POD_NAME
           valueFrom:
             fieldRef:

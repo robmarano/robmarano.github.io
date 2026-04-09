@@ -254,4 +254,24 @@ Click through the file links below to study the Python backend `kazoo` execution
 * 🌐 **[`templates/index.html` (WebSockets & XSS Grid UI)](./k8s_zk_template/templates/index.html)** — Examines the native DOM element instantiation (`document.createElement`) to build live, secure, asynchronous terminal feeds.
 
 #### **Kubernetes Infrastructure**
-* 🐳 **[`k8s/zookeeper.yaml` & `k8s/app.yaml`](./k8s_zk_template/k8s/)** — Dive into the core manifestation topologies deploying the isolated ZooKeeper proxy node vs the 5 homogeneous MapReduce Python Nodes.
+* 🐳 **[`k8s/zookeeper.yaml` & `k8s/app.yaml`](./k8s_zk_template/k8s/)** — Dive into the core manifestation topologies deploying the highly-available 3-Node ZooKeeper Quorum StatefulSet alongside the 5 homogeneous MapReduce Python Nodes.
+
+---
+
+## 7. Evolutionary High-Availability Architecture
+
+A critical flaw in basic distributed infrastructure is configuring coordination layers uniquely as Single Points of Failure (SPOF). When initially deploying the `k8s_zk_template` sandbox, we leveraged a single-replica ZooKeeper pod governed by a bare Deployment. 
+
+### The Amnesia Vulnerability
+While Kubernetes Deployments guarantee that the pod will automatically restart if the CPU crashes, it does **not** persist memory natively. If our central ZooKeeper node crashes:
+1. The new replacement pod boots up completely blank.
+2. All **Ephemeral Nodes** representing active MapReduce workers instantly evaporate.
+3. The global **Master Lock** drops, forcing a chaotic re-election across all Python instances.
+4. Active image computations (`/jobs/job_XYZ/tasks/`) are entirely forgotten, abandoning gigabytes of partially completed arrays in memory without hope of retrieval!
+
+### Production-Ready Fixes Applied:
+To harden the infrastructure against these faults, we migrated away from basic Deployments into an impenetrable **Quorum StatefulSet**.
+
+1. **3-Node ZK Ensemble (`StatefulSet` + Headless Service)**: We now string 3 independent ZooKeeper pods together over a `zookeeper-hs` headless mesh network. If Node 0 drops, Nodes 1 and 2 maintain a 66% Quorum majority. They seamlessly handle incoming WebSockets, entirely preserving ephemeral locks and `/jobs/` progress indefinitely without dropping the Kazoo Session IDs!
+2. **Persistent Volumes (`volumeClaimTemplates`)**: The new StatefulSet dynamically binds 1GB persistent disks directly to the pods. If a node fails, its reboot explicitly grabs its prior log checkpoints off the hard drive and natively re-syncs state from the surviving peers!
+3. **`SequentialEventletHandler` Integration**: Moving beyond generic TCP sockets, we imported `kazoo.handlers.eventlet` deeply into the Python `KazooClient()`. This natively isolates the immense CPU lag caused by Numpy Image equalizations, actively preventing the Kazoo Heartbeat background thread from getting starved out!

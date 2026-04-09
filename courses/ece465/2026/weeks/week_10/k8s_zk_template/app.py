@@ -10,10 +10,14 @@ from functools import partial
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_socketio import SocketIO
 from kazoo.client import KazooClient
+from kazoo.handlers.eventlet import SequentialEventletHandler
 from kazoo.exceptions import NodeExistsError, NoNodeError
 from kazoo.recipe.election import Election
 from kubernetes import client, config
 from core.image_processing import process_histogram_task, extract_chunks, compute_global_cdf, apply_cdf_task, stitch_image
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins="*")
@@ -25,16 +29,13 @@ NAMESPACE = os.getenv('POD_NAMESPACE', 'default')
 SHARED_DIR = '/shared'
 
 # Kazoo Client setup (Increased timeout to tolerate Numpy computational lag on large datasets)
-zk = KazooClient(hosts=ZK_HOSTS, timeout=60.0)
+zk = KazooClient(hosts=ZK_HOSTS, timeout=60.0, handler=SequentialEventletHandler())
 zk.start()
 
 # Track Global State
 is_master = False
 active_nodes = 0
 tailed_pods = set()
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 # Ensure paths
 zk.ensure_path('/nodes')
@@ -76,8 +77,14 @@ def become_leader():
         time.sleep(10)
 
 def run_election():
-    election = Election(zk, "/election")
-    election.run(become_leader)
+    try:
+        logger.info(f"Starting election on {POD_NAME}...")
+        election = Election(zk, "/election")
+        logger.info(f"Election object created. Running election...")
+        election.run(become_leader)
+        logger.info(f"Election run finished unexpectedly.")
+    except Exception as e:
+        logger.error(f"Election failed with exception: {e}", exc_info=True)
 
 def stream_pod_logs(pod_name):
     # Continuously tail to survive K8s API timeout disconnects
@@ -290,6 +297,8 @@ def download(filename):
 
 if __name__ == '__main__':
     # Start the Election and the Worker polling loop asynchronously
+    logger.info("Initializing background tasks...")
     socketio.start_background_task(run_election)
     socketio.start_background_task(worker_loop)
+    logger.info("Starting SocketIO server on port 5000...")
     socketio.run(app, host='0.0.0.0', port=5000)

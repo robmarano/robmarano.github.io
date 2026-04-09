@@ -1,9 +1,38 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper-hs
+spec:
+  ports:
+  - port: 2181
+    name: client
+  - port: 2888
+    name: server
+  - port: 3888
+    name: leader-election
+  clusterIP: None
+  publishNotReadyAddresses: true
+  selector:
+    app: zookeeper
+---
+apiVersion: v1
+kind: Service
 metadata:
   name: zookeeper
 spec:
-  replicas: 1
+  ports:
+  - port: 2181
+    targetPort: 2181
+  selector:
+    app: zookeeper
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: zookeeper
+spec:
+  serviceName: "zookeeper-hs"
+  replicas: 3
   selector:
     matchLabels:
       app: zookeeper
@@ -17,14 +46,30 @@ spec:
         image: zookeeper:3.8
         ports:
         - containerPort: 2181
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: zookeeper
-spec:
-  selector:
-    app: zookeeper
-  ports:
-  - port: 2181
-    targetPort: 2181
+        - containerPort: 2888
+        - containerPort: 3888
+        env:
+        - name: ZOO_SERVERS
+          value: "server.1=zookeeper-0.zookeeper-hs:2888:3888;2181 server.2=zookeeper-1.zookeeper-hs:2888:3888;2181 server.3=zookeeper-2.zookeeper-hs:2888:3888;2181"
+        - name: ZOO_MY_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        # Use an init container to map the pod name (e.g., zookeeper-0) to the ZOO_MY_ID (1)
+        command:
+        - "/bin/bash"
+        - "-c"
+        - |
+          export ZOO_MY_ID=$((${HOSTNAME##*-} + 1))
+          /docker-entrypoint.sh zkServer.sh start-foreground
+        volumeMounts:
+        - name: data
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
