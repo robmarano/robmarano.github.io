@@ -93,7 +93,12 @@ Rather than waiting for `$s0` to be written back to the Register File in stage 5
 </p>
 
 #### SystemVerilog Implementation: The Hazard Unit
-We design a standalone continuous assignment module (`hazard_unit.sv`) to control the forwarding MUXes. The logic formula calculates: *If the Write Register from an older instruction matches the Read Register of the current instruction, trigger the forwarding MUX.* 
+We design a standalone continuous assignment module (`hazard_unit.sv`) to control the forwarding MUXes. 
+
+*Reference from **Digital Design and Computer Architecture (Harris) - 7.3**:* The logic formula calculates forwarding by evaluating strict boolean conditions. For example, Forwarding from the MEM stage directly into ALU Input A requires:
+`if (RegWriteM AND (WriteRegM != 0) AND (WriteRegM == RsE)) then ForwardAE = 2'b10`
+
+If the mathematically targeted `WriteRegM` from an older instruction matches the `RsE` read register of the current instruction (AND it's not the Read-Only `$0`), trigger the forwarding MUX. 
 
 ```systemverilog
 module hazard_unit (input  logic [4:0] RsE, RtE,         // Current Execution Source Regs
@@ -116,7 +121,9 @@ endmodule
 If the data isn't available yet (e.g., an `lw` instruction reading from Memory, which happens *after* the ALU), forwarding is physically impossible in time. The processor MUST **Stall** by inserting algorithmic "bubbles" into the pipeline.
 
 #### Theory and Mechanism of a "Bubble"
-Theory-wise, a **Bubble** is a dynamically generated `No-Op` (No Operation) state that flows down the pipeline identically to a real instruction, except it is mathematically inert (it writes to register `$0`, disables `MemWrite`, and disables `RegWrite`). It acts to delay the execution stream by 1 physical clock pulse without damaging the CPU's memory or register state.
+Theory-wise, a **Bubble** is a dynamically generated `No-Op` (No Operation) state that flows down the pipeline identically to a real instruction, except it is mathematically inert (it disables `MemWrite` and `RegWrite`). 
+
+*Reference from **MIPS32 Instruction Set Quick Reference**:* The MIPS architecture does not actually have a dedicated silicon `NOP` opcode. A pipeline bubble is synthetically injected by the hardware as the raw machine code `0x00000000`. When decoded, this translates identically to `sll $zero, $zero, 0` (Shift Left Logical `$0` by 0 bits). Because writing any data to registry `$0` is statically discarded by the physical hardware, it safely delays the execution stream by 1 physical clock pulse without damaging the CPU's memory or register state.
 
 Technically, in SystemVerilog, generating a bubble requires two simultaneous hardware actions orchestrated by the `hazard_unit`:
 1.  **Freeze the Front End (`Stall`)**: We disable the `Enable` pin on the `PC` register and the `IF/ID` pipeline register. This locks the current instruction address in place so it is not accidentally skipped while the processor waits.
@@ -148,6 +155,8 @@ end
 **Control Hazards** arise from branch instructions (`beq`). When a branch is fetched, the pipeline does not know the mathematically correct next instruction to fetch until the branch condition is calculated in the `EX` stage.
 
 By default, the processor **predicts** the branch is not taken and fetches sequentially (`PC + 4`). If the branch evaluates as Taken, the instructions already loaded into the `IF` and `ID` stages are completely incorrect.
+
+*Reference from **See MIPS Run - Chapter 2**:* Early MIPS architectures refused to handle hardware flushes due to the massive silicon transistor costs. Instead, they invented the **Branch Delay Slot**. In classic MIPS, the hardware *always* executes the instruction immediately following a branch, regardless of whether the branch is taken or not. It is strictly the C-Compiler's software job to fill this "Delay Slot" with either a safe independent instruction, or explicitly inject a `NOP`. Modern implementations utilize the predictive flush mechanism below, but the Delay Slot remains a legendary bridge between hardware limits and software compiler engineering.
 
 We flush these erroneous instructions by clearing the `IF/ID` and `ID/EX` control signals to `0` using a `Flush` pin on the pipeline registers, effectively converting the instructions into No-Ops (`NOP`s). This clearing mechanism is an unavoidable performance penalty inherent to pipelining.
 
