@@ -77,23 +77,23 @@ These boundary registers lock in output data on the rising clock edge and provid
 When a pipeline correctly overlaps, different hardware segments service different instructions concurrently. Observe how `lw` and `sw` sequentially inherit the hardware resources across the discrete clock cycles:
 <p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004036.jpg" width="550" alt="Instruction Trace 1"></p>
 
-*   **Cycle 1**: The first instruction, a Load Word (`lw`), enters the **Instruction Fetch (IF)** stage. The hardware utilizes the PC to pull the instruction memory payload. The rest of the descending datapath is currently idle.
+*   **Figure 4.36 (IF and ID Stages)**: Both `lw` and `sw` structurally share identical hardware pathways through the Instruction Fetch (`IF`) and Instruction Decode (`ID`) blocks. The PC extracts the instruction payload while the Decode unit cleanly parses the Register File.
 
 <p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004037.jpg" width="550" alt="Instruction Trace 2"></p>
 
-*   **Cycle 2**: The `lw` instruction shifts into the **Instruction Decode (ID)** stage to read the Register File. Simultaneously, the pipeline pulls the very next instruction—a Store Word (`sw`)—into the vacant **IF** stage. We now have two instructions overlapping on isolated hardware blocks.
+*   **Figure 4.37 (Load `lw` - Execute EX)**: Highlighting the 3rd pipeline stage of a Load instruction. Notice how the ALUSrc MUX explicitly routes the Sign-Extended immediate through the ALU perfectly to calculate the absolute RAM target address.
 
 <p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004038.jpg" width="550" alt="Instruction Trace 3"></p>
 
-*   **Cycle 3**: The `lw` instruction crosses over to the **Execute (EX)** stage where the ALU calculates its memory target address. The trailing `sw` drops into the **ID** stage to read its source registers. A third sequential instruction (e.g., an ALU `add`) enters the **IF** stage.
+*   **Figure 4.38 (Load `lw` - MEM and WB)**: Highlighting the 4th and 5th pipeline stages of a Load instruction. The calculated ALU address hits the physical Memory module. Finally, the WriteBack MUX perfectly routes the extracted RAM data straight back horizontally to the Register File destination.
 
 <p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004039.jpg" width="550" alt="Instruction Trace 4"></p>
 
-*   **Cycle 4**: The `lw` hits the **Memory (MEM)** stage to physically extract data from RAM. The `sw` instruction utilizes the active ALU in **EX** to calculate its physical memory target address. The third instruction (`add`) maps the **ID** registry block, and a fourth sequential instruction (`sub`) enters **IF**. All but the WB unit are actively utilized.
+*   **Figure 4.39 (Store `sw` - Execute EX)**: Highlighting the 3rd pipeline stage of a Store. Similar to `lw`, the `sw` instruction utilizes the ALU to calculate its physical memory target address. Notice, however, that the second register data payload mathematically bypasses the ALU calculation and is natively loaded into the `EX/MEM` boundary register waiting to be pushed into Memory.
 
 <p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004040.jpg" width="550" alt="Instruction Trace 5"></p>
 
-*   **Cycle 5**: True pipeline efficiency is finally achieved! The leading `lw` finally drops into **WriteBack (WB)** to irrevocably save its RAM payload to a registry. The `sw` physically dumps its data payload into the isolated **MEM** unit. The trailing `add`/`sub`/`and` instructions perfectly span the **EX**, **ID**, and **IF** stages identically. All 5 fundamental hardware components are firing simultaneously for 5 discrete instructions.
+*   **Figure 4.40 (Store `sw` - MEM and WB)**: Highlighting the 4th and 5th pipeline stages of a Store. The isolated Memory unit activates strictly in *Write* mode via Control Signals, irrevocably dumping the `sw` payload into RAM. The sequence concludes identically in the WB stage, which is rendered completely inactive (there is no MUX routed mapping back to registers since `sw` natively performs no internal saves).
 
 #### Step 4: The Targeting Bug & Embedded Control Lines
 A critical architectural bug exists in early pipeline maps: the `WriteReg` destination and Control signals cannot just be read from the `ID` stage and wired unconditionally to the `WB` stage. If we do this, the WriteBack stage will apply its data to the **currently decoding** instruction's target register, corrupting the CPU!
