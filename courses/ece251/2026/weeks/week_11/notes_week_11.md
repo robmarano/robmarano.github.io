@@ -202,7 +202,10 @@ add $s5, $s4, $s2
 
 ## Resources & Materials
 
-*   **Textbook**: *Computer Organization and Design* (6th Ed.) - Chapter 4 (4.6 - 4.9).
-*   **Textbook**: *Digital Design and Computer Architecture* - Chapter 7.
+*   **Primary Textbook**: *Computer Organization and Design - MIPS Edition* (Patterson & Hennessy) - Chapter 4 (Sections 4.6 - 4.9).
+*   **Hardware / SystemVerilog Reference**: *Digital Design and Computer Architecture* (Harris & Harris) - Section 7.3 (Hazard Logic matrices).
+*   **Conceptual Architecture Reference**: *Computer Organization and Embedded Systems* (Hamacher et al.) - Chapter 6 (Instruction Pipelining).
+*   **Compiler/Architecture Bridge Reference**: *See MIPS Run* (Sweetman) - Chapter 2 (Branch Delay Slots & Hardware optimizations).
+*   **Machine Code Reference**: *MIPS32 Architecture For Programmers, Vol II: The MIPS32 Instruction Set* (Synthesis of Bubble/NOP behaviors).
 
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
