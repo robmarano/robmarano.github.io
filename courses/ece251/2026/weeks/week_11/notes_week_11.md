@@ -25,7 +25,14 @@ However, forcing instructions to overlap introduces physical violations called *
 ### The Amdahl's Law Boundary
 How does Amdahl's Law govern pipelining? Amdahl's formula $\text{Speedup} = \frac{1}{(1 - p) + \frac{p}{k}}$ dictates that system speedup is strictly limited by the sequential fraction of execution ($1-p$) that *cannot* be optimized. 
 
-In a $k$-stage pipeline, the parallelizable fraction $p$ represents instructions executing flawlessly without delays. The sequential fraction $1-p$ represents the **Hazards** (pipeline stalls, memory wait states, and branch flushes). Even if we build an infinitely deep super-pipeline ($k \to \infty$), the maximum theoretical hardware speedup perfectly asymptotes at $\frac{1}{1-p}$. Therefore, Hazards form the absolute physical performance ceiling of any processor; you cannot achieve a perfect $CPI = 1.0$ if hazards continuously force the pipeline to stall.
+In a $k$-stage pipeline, the parallelizable fraction $p$ represents instructions executing flawlessly without delays. 
+
+> **What does $p$ physically mean in MIPS?**
+> If $p = 0.8$, this practically translates to $80\%$ of the compiled MIPS assembly flowing through the physical datapath continuously. This includes standard `add/sub` ALU math, data correctly bypassed via the Forwarding Unit, and correctly predicted branches. 
+> 
+> Conversely, the sequential fraction $1-p = 0.2$ means $20\%$ of the MIPS instructions trigger a hard architectural stop. This $20\%$ penalty directly models the rigid clock cycles lost to **Load-Use Hazards** (stalling the pipeline to wait for an `lw` to pull data from RAM) and **Control Hazards** (flushing the pipeline because a `beq` evaluated as Taken). 
+
+Even if we build an infinitely deep super-pipeline ($k \to \infty$), the maximum theoretical hardware speedup perfectly asymptotes at $\frac{1}{1-p}$. Therefore, Hazards form the absolute physical performance ceiling of any processor; you cannot achieve a perfect $CPI = 1.0$ if hazards continuously force the pipeline to stall.
 
 #### Amdahl's Law: Worked Examples
 
