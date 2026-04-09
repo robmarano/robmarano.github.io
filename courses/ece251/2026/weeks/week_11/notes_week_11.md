@@ -281,6 +281,13 @@ By default, the processor **predicts** the branch is not taken and fetches seque
   <img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004060.jpg" width="600" alt="Branch Hazard Pipeline Flush">
 </p>
 
+### The Architect's Synthesis: Designing a Pipeline
+From a Computer Architect's perspective, transitioning a single-cycle processor into a High-Performance pipelined ecosystem requires attacking the design from three distinct vectors to balance pure clock speed against structural hazards:
+
+1.  **Slicing the Datapath for Clock Speed**: The architect must mathematically divide the monolithic combinatorial logic into distinct stages (`IF`, `ID`, `EX`, `MEM`, `WB`). The cycle time is strictly dictated by the *slowest* single stage (usually Memory or ALU). Massive $D$-Flip-Flop boundary registers are injected between these stages to physically cache voltage state, enabling simultaneous instructions to overlap flawlessly without destroying each other's calculations.
+2.  **Propagating Control Synchronously**: A pipeline is useless if instructions execute the wrong operations. The architect must ensure the initial `ID` stage extracts the Opcode, calculates all control boolean bits up front, and then literally wires those 9 control bits *into* the boundary registers. The control signals "ride the pipe" alongside the payload data, unpacking dynamically precisely when they reach the `EX`, `MEM`, and `WB` hardware.
+3.  **Detecting and Mitigating Hazards**: Overlapping logic guarantees structural collisions. To avoid mathematically halting the system on every collision, the architect designs a dedicated `Hazard Unit` alongside intricate wire **Forwarding** Multiplexers. The `Hazard Unit` constantly compares the source registers of the currently executing component (`Rs`, `Rt`) against the destinations (`Rd`) of older instructions still lingering in the pipe. If a match is flagged, the multiplexer dynamically shortcuts the older ALU/MEM calculation safely directly back into the live Execute stage, averting a stall. If the data physically does not exist yet (a load-use hazard), the architect relies on **Stalls and Flushes**—firing synthetic zeroed-out `bubbles` through the boundary registers to force the hardware to wait.
+
 ---
 
 ## Chapter 4 Problem Walkthroughs (Pipelining)
