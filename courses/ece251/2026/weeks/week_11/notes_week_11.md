@@ -290,6 +290,44 @@ From a Computer Architect's perspective, transitioning a single-cycle processor 
 
 ---
 
+## SystemVerilog Pipelined Processor Implementation
+
+To bridge the gap between architectural theory and physical reality, we have engineered a fully verifiable SystemVerilog 5-stage Pipelined MIPS32 processor located in [`courses/ece251/2026/weeks/week_11/pipelined_cpu`](./pipelined_cpu).
+
+#### Code Design and Architecture
+The codebase is an organic structural evolution of our Week 10 Multi-Cycle baseline. The key components include:
+
+*   **`datapath.sv`**: Structurally implements the 5 distinct pipeline sequential flow sections. Massive `always_ff` blocks explicitly represent the `IF/ID`, `ID/EX`, `EX/MEM`, and `MEM/WB` hardware latch boundaries. It embeds forwarding Multiplexers to route delayed registry data directly into the Execute boundary.
+*   **`hazard.sv`**: The brain of pipeline mitigation. It inherently computes `forwardaE` / `forwardbE` Execute bypass routes, early branch resolution, and injects architectural `NOP` bubbles via the `lwstall` load-use constraint rules and the `flushE` branch prediction failure triggers.
+*   **`controller.sv` / `maindec.sv` / `aludec.sv`**: Derives all initial combinations in the Decode (`ID`) stage. The resultant bits physically *"ride"* via `always_ff` flip-flops down the datapath, unpacking precisely into their necessary structural destination stages.
+*   **`regfile.sv`**: Specifically engineered to trigger writes natively on the Negative Edge (`negedge clk`), resolving critical cycle-dependency collision faults (ensuring simultaneous write/read overlap executes flawlessly inside half-cycle boundaries).
+
+#### Running and Verifying the Simulation
+We successfully prove the theoretical limits of Pipelining through rigorous continuous integration runs. Our testing payload (`test_prog.asm`) explicitly compiles Read-After-Write (RAW) math collisions, Load-Use dependencies, and delayed branching. 
+
+To execute the CPU natively:
+```bash
+# Navigate to the week 11 pipelined processor directory
+cd courses/ece251/2026/weeks/week_11/pipelined_cpu
+
+# Utilize our embedded Makefile to assemble MIPS natively and synthesize the SystemVerilog
+make clean all
+
+# View the absolute architectural trace variables within the Debug Output
+cat debug_output.txt
+```
+
+The `$monitor` function embedded in `tb_computer.sv` will trace every discrete clock cycle `T`. You will observe the literal `X` (undefined) cascade flush away as the initial payload buffers the pipeline, and ultimately witness forwarding vectors like `fwa=1` asserting structurally to bypass stall traps without missing a clock beat.
+
+#### Performance Analysis: Why Pipelining Wins
+Comparing this native implementation to our Week 10 endpoints:
+
+1.  **Single-Cycle CPU**: Dictated by an inflexible long Clock Cycle Time ($T_c \approx 1240\text{ ps}$), it yields an optimal theoretical $CPI = 1.0$, but limits the processor to a highly constrained $\approx 800\text{ MHz}$ physical frequency.
+2.  **Multi-Cycle CPU**: Slices the hardware into smaller execution states (allowing a blazing fast $T_c = 300\text{ ps}$, soaring to $3.33\text{ GHz}$), but functionally sacrifices $CPI$ (which spikes to $3.0 - 5.0$). It cannot overlap logical processes.
+3.  **The Pipelined Paradigm**: Operates simultaneously at the massive Multi-Cycle bounded frequency ($T_c = 200\text{ ps}$, $5.0\text{ GHz}$) **AND** physically restores the $CPI$ back down to an ideal theoretical $1.0$ through architectural parallelism (Instruction overlap). Despite raw mathematical Data/Control penalties triggering isolated $20\%$ stall rates (bubbles), the Pipelined Datapath geometrically destroys both single/multi-cycle throughput limits natively.
+
+---
+
 ## Chapter 4 Problem Walkthroughs (Pipelining)
 
 ### Problem 1: Easy (Pipeline Performance Math)

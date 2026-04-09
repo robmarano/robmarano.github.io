@@ -179,6 +179,16 @@ At the highest computational architecture level, we balance raw clock speed agai
 \end{itemize}
 \end{frame}
 
+\begin{frame}{8c. SystemVerilog 5-Stage Pipelined Synthesis}
+\begin{itemize}
+    \item \textbf{Physical Codebase}: Developed within \texttt{pipelined\_cpu/}, mapping the exact MIPS32 framework against rigorous SystemVerilog execution limitations.
+    \item \textbf{Register Pipeline Boundaries}: The datapath utilizes massive array-bound \texttt{always\_ff} flip-flops to discretely separate \texttt{IF/ID}, \texttt{EX/MEM}, and \texttt{MEM/WB} hardware. 
+    \item \textbf{Active Structural Resolvers}: The \texttt{hazard.sv} module actively scans execution states to natively map \texttt{forwardaE} datapath shortcut overlaps, or directly forces architectural NOP bubbles (\texttt{StallD}, \texttt{FlushE}) against Load-Use collisions.
+    \item \textbf{Performance Conclusion}: Single-cycle maxes at $800\text{ MHz}$ ($CPI=1.0$), Multi-cycle leaps to $3.3\text{ GHz}$ ($CPI=4.0$). Pipelining achieves the massive $5.0\text{ GHz}$ frequency while restoring an optimal theoretical $CPI=1.0$ through parallel overlap.
+    \item \textbf{Run locally}: \texttt{make clean all} tracks complete output cycles automatically.
+\end{itemize}
+\end{frame}
+
 \begin{frame}{9. Week 11 Summary}
 \begin{itemize}
     \item \textbf{Pipeline Strategy}: Divide datapath execution linearly over discrete logical $D$-flip-flop boundary constraints natively driving isolated logic stages concurrently over absolute clock phases.
