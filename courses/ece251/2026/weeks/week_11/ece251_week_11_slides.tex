@@ -1,7 +1,7 @@
 \documentclass[aspectratio=169]{beamer}
 \usepackage{graphicx}
 \usepackage{hyperref}
-\usepackage{minted}
+% \usepackage{minted} % Bypassed for portability, using verbatim
 
 % --- Setup Cooper Union Colors ---
 \definecolor{CooperRed}{HTML}{A51C30}
@@ -71,8 +71,17 @@ Because data must be preserved securely while instructions shift into the next f
 \end{enumerate}
 \end{frame}
 
+\begin{frame}{3b. Pipelined Control Propagation}
+\begin{itemize}
+    \item \textbf{The Reality}: The Decoder calculates all 9 multiplexer bits (e.g. \texttt{RegDst}, \texttt{MemWrite}) inside the \texttt{ID} stage.
+    \item \textbf{The Risk}: We \textbf{cannot} broadcast these control signals globally! Overlapping instructions would instantly cross-corrupt each other.
+    \item \textbf{The Solution}: Control logic natively ''rides the pipe''. The 9 bits are wired into the \texttt{ID/EX} pipeline register boundary explicitly alongside the data.
+    \item \textbf{Asynchronous Unpacking}: As instructions progress, Control pieces correctly split off. 4 bits split locally into the ALU (EX stage), 3 bits buffer down the boundary and split into Memory (MEM stage), and the final 2 bits survive until WriteBack.
+\end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{4. SystemVerilog: The Pipeline Register Stage}
-\begin{minted}[fontsize=\scriptsize,bgcolor=lightgray]{systemverilog}
+\begin{verbatim}
 // SystemVerilog ID/EX Pipeline Register DFF
 module id_ex_reg (input  logic        clk, reset,
                   input  logic        RegWriteD, MemWriteD, // Control
@@ -92,7 +101,7 @@ module id_ex_reg (input  logic        clk, reset,
     end
   end
 endmodule
-\end{minted}
+\end{verbatim}
 \end{frame}
 
 \begin{frame}{5. Data Hazards: RAW (Read-After-Write)}
@@ -108,8 +117,25 @@ endmodule
 \end{itemize}
 \end{frame}
 
+\begin{frame}{5b. Mathematical Pairs of Hazard Conditions}
+Before physically bypassing logic, the CPU must mathematically detect exact execution collisions natively sitting inside the \texttt{EX} hardware stage:
+\begin{itemize}
+    \item \textbf{EX Hazards (1-Cycle Delay)}: The physically preceding instruction modifies a register we demand right now.
+    \begin{itemize}
+        \item \texttt{1a: EX/MEM.Rd == ID/EX.Rs}
+        \item \texttt{1b: EX/MEM.Rd == ID/EX.Rt}
+    \end{itemize}
+    \item \textbf{MEM Hazards (2-Cycle Delay)}: An older instruction sitting securely two boundary registers deep is modifying a register we need.
+    \begin{itemize}
+        \item \texttt{2a: MEM/WB.Rd == ID/EX.Rs}
+        \item \texttt{2b: MEM/WB.Rd == ID/EX.Rt}
+    \end{itemize}
+    \item \textit{Caveat}: The Hardware physically verifies \texttt{RegWrite == 1} and \texttt{Rd != \$0} before forcefully throwing multiplexer routing pins!
+\end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{6. SystemVerilog: The Hazard / Forwarding Unit}
-\begin{minted}[fontsize=\scriptsize,bgcolor=lightgray]{systemverilog}
+\begin{verbatim}
 module hazard_unit (input  logic [4:0] RsE, RtE,   // Current Stage Src Regs
                     input  logic [4:0] WriteRegM,  // Prev Stage Dest Reg
                     input  logic       RegWriteM,  // Validation Flag
@@ -126,7 +152,7 @@ module hazard_unit (input  logic [4:0] RsE, RtE,   // Current Stage Src Regs
     end
   end
 endmodule
-\end{minted}
+\end{verbatim}
 \end{frame}
 
 \begin{frame}{7. Control Hazards: Pipeline Penalties}
@@ -141,6 +167,15 @@ endmodule
 \begin{itemize}
     \item Pipelining inherently disrupts orderly procedural progression. A division-by-zero execution fault or hardware interrupt must freeze standard datapath fetching operations immediately.
     \item The logic traps the specific active \texttt{PC} sequence inside the \texttt{EPC} (Exception Program Counter) tracking register, explicitly squashes pipeline operations locally, and drives processing towards the local OS Exception Handler boot protocol vector mapping mapping.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{8b. The Architect's Synthesis: Designing a Pipeline}
+At the highest computational architecture level, we balance raw clock speed against physical structural constraints using three main techniques:
+\begin{itemize}
+    \item \textbf{Slicing the Datapath}: Physically divide ALU logic using isolating $D$-Flip-Flop boundaries to overlap instruction phases flawlessly.
+    \item \textbf{Propagating Synchronous Control}: Hardware mechanically pushes dynamic Boolean multiplexer routing combinations laterally across boundary boundaries identically alongside corresponding payload execution packets.
+    \item \textbf{Resolving Collisions Natively}: Deploying explicitly wired Hazard Unit blocks running concurrently with live executions to physically throw physical algorithmic bypass overrides or to manually force procedural pipeline ''Bubbles''.
 \end{itemize}
 \end{frame}
 
