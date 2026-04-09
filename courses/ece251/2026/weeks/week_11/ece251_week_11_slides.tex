@@ -38,11 +38,25 @@
 
 \begin{frame}{2. The Amdahl's Law Limit}
 \begin{itemize}
-    \item Pipelining attempts to overlap execution, scaling speedup proportionally by the number of hardware stages $k$.
+    \item Pipelining overlaps execution, scaling speedup proportionally by hardware stages $k$.
     \item \textbf{Amdahl's Formula}: $\text{Speedup} = \frac{1}{(1 - p) + \frac{p}{k}}$
-    \item The parallel fraction $p$ represents seamless overlapped execution flowing continuously.
-    \item The sequential fraction $(1-p)$ represents mandatory \textbf{Hazards} prohibiting overlap (e.g., waiting for Memory outputs, flushing bad Branch predictions).
-    \item \textbf{The Mathematical Ceiling}: Even as pipelining stages approach infinity ($k \to \infty$), the maximum architectural speedup asymptotes directly at $\frac{1}{1-p}$. Hazards physically dictate the ultimate speed limit of the CPU!
+    \item \textbf{MIPS Assembly Mapping ($p$)}: If $p = 0.8$, $80\%$ of instructions execute flawlessly in parallel (e.g. bypassed ALU math, safely predicted branches).
+    \item \textbf{The Penalty Mapping ($1-p$)}: $20\%$ of execution triggers a hard structural stop via \textbf{Hazards} (e.g., \texttt{lw} memory stalls, pipeline flushes).
+    \item \textbf{The Mathematical Ceiling}: Even as pipelining stages approach infinity ($k \to \infty$), the maximum physical speedup strictly caps at $\frac{1}{1-p}$. Hazards physically dictate CPU limits!
+\end{itemize}
+\end{frame}
+
+\begin{frame}{2b. Resolving Break-Even Parallelization}
+\begin{itemize}
+    \item \textbf{Problem}: An 8-stage pipeline ($k=8$) \textit{must} achieve a $4.0\times$ speedup over a single-cycle implementation. Calculate the fraction of instructions ($p$) that must be completely free of hazards to hit this target.
+    \item \textbf{Algebraic Execution}:
+    \begin{align*}
+        4.0 &= \frac{1}{(1-p) + \frac{p}{8}} \\
+        (1-p) + \frac{p}{8} &= 0.25 \\
+        1 - \frac{7p}{8} &= 0.25 \\
+        \frac{7p}{8} &= 0.75 \implies 7p = 6 \implies p \approx 85.71\%
+    \end{align*}
+    \item \textbf{Result}: The compiler and hardware forwarders must orchestrate a flawless bypass environment for $85.71\%$ of executed code.
 \end{itemize}
 \end{frame}
 
@@ -90,6 +104,7 @@ endmodule
         \item \texttt{sub \$t2, \$s0, \$t3} $\to$ Immediately demands \texttt{\$s0} for subtraction input
     \end{itemize}
     \item \textbf{Solution}: We do not wait for the fifth stage (WB). The ALU calculates \texttt{\$s0} locally in stage 3 (EX). We algorithmically \textbf{Forward} (bypass) the data natively backwards utilizing multiplexers.
+    \item \textbf{Physical Stalling (The Bubble)}: If the data isn't algebraically ready (e.g. a memory load \texttt{lw} taking 4 stages), forwarding is physically impossible in time. We must stall the pipeline by synthesizing an inert algorithmic bubble! \textit{Did you know? MIPS architecture natively invokes the raw code} \texttt{0x00000000} \textit{translated identically as} \texttt{sll \$zero, \$zero, 0} \textit{to safely delay execution 1 cycle without corrupting registries!}
 \end{itemize}
 \end{frame}
 
@@ -117,9 +132,8 @@ endmodule
 \begin{frame}{7. Control Hazards: Pipeline Penalties}
 \begin{itemize}
     \item \textbf{The Problem}: The processor blindly fetches sequential code (\texttt{PC + 4}). Upon striking a branch instruction (\texttt{beq}), the true execution path is unknown until the ALU evaluates conditions inside the third EX phase.
-    \item By mathematically predicting \textit{Branch Not Taken}, the fetch stream continues identically safely into subsequent cycle logic.
-    \item If the branch ultimately asserts as \textit{Taken}, the blindly fetched instructions currently mapping the IF and ID pipeline frames must be forcibly annihilated.
-    \item \textbf{The Hardware Hook}: The datapath executes a \textbf{Flush} mechanism triggering the \texttt{reset} lines of the \texttt{IF/ID} and \texttt{ID/EX} pipeline registers, dropping all internal payload logic mathematically to \texttt{0's} (NOP).
+    \item \textbf{Software Fix (See MIPS Run - Branch Delay Slot)}: Early architectures conserved transistor budgets by deliberately exposing pipelines to compilers. The hardware mechanically executed the instruction directly following the branch. Software C-Compilers had to meticulously pack this ``Delay Slot'' with safe, independent execution logic or risk corrupted state vectors.
+    \item \textbf{Hardware Evolution (Predict \& Flush)}: By predicting \textit{Branch Not Taken}, the datapath optimistically marches forward. If evaluated incorrectly as \textit{Taken}, the pipeline physically halts, triggers the \texttt{reset} line on \texttt{IF/ID} bounds, and structurally collapses the rogue payload into harmless \texttt{0's} (NOP bubbles).
 \end{itemize}
 \end{frame}
 
