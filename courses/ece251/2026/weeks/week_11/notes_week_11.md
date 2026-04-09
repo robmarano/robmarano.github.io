@@ -16,6 +16,8 @@
 
 ## High-Level Topic Coverage
 
+### 4.6 An Overview of Pipelining
+
 This week introduces **Pipelining**, an implementation technique whereby multiple instructions are overlapped in execution. Unlike the Single-Cycle architecture (which bottlenecks clock speed) or the Multi-Cycle architecture (which isolates states but processes one instruction at a time), a pipelined processor isolates states *and* processes multiple instructions simultaneously.
 
 The theoretical goal of a pipeline is to execute $N$ instructions in $N$ clock cycles, pulling the Cycles Per Instruction (CPI) down to $1.0$ while maintaining the fastest possible clock frequency.
@@ -58,7 +60,7 @@ Even if we build an infinitely deep super-pipeline ($k \to \infty$), the maximum
 
 ## Topic Deep Dive
 
-### 4.6 Pipelined Datapath and Control: Step-by-Step Evolution
+### 4.7 Pipelined Datapath and Control: Step-by-Step Evolution
 
 The textbook presentation can seem overwhelmingly complex because it jumps straight to the final architecture. To truly understand pipeline registers, we must mathematically evolve the Datapath step-by-step from our existing Single-Cycle foundation.
 
@@ -173,7 +175,7 @@ To solve this, the control signals themselves must be physically broken apart an
 
 By sequentially buffering these signals through the $D$-flip-flops, the hardware natively restricts the correct datapaths to activate at the mathematically perfect clock pulse—preventing data corruption as multiple instructions inherently drift through the pipeline.
 
-### 4.7 Data Hazards: Forwarding vs. Stalling
+### 4.8 Data Hazards: Forwarding versus Stalling
 
 **Data Hazards** occur when the pipeline must be paused because a target instruction depends on the result of a previous instruction that has not yet completed its `Write Back` (WB) phase.
 This is known mathematically as a **Read-After-Write (RAW)** hazard.
@@ -265,7 +267,7 @@ end
   <img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004056.jpg" width="600" alt="Load-Use Hazard Stalling Output">
 </p>
 
-### 4.8 Control Hazards and Exceptions
+### 4.9 Control Hazards
 
 **Control Hazards** arise from branch instructions (`beq`). When a branch is fetched, the pipeline does not know the mathematically correct next instruction to fetch until the branch condition is calculated in the `EX` stage.
 
