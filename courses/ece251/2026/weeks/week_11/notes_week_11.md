@@ -63,15 +63,16 @@ Even if we build an infinitely deep super-pipeline ($k \to \infty$), the maximum
 The textbook presentation can seem overwhelmingly complex because it jumps straight to the final architecture. To truly understand pipeline registers, we must mathematically evolve the Datapath step-by-step from our existing Single-Cycle foundation.
 
 #### Step 1: The Single-Cycle Baseline
-In a single-cycle datapath, an instruction flows through all 5 hardware components (Fetch, Decode, Execute, Memory, WriteBack) in one massive combinatorial wave. The clock cycle must be long enough to accommodate this entire wave.
+**Figure 4.33 (The single-cycle datapath)**: In a single-cycle datapath, an instruction flows through all 5 hardware components (Fetch, Decode, Execute, Memory, WriteBack) in one massive combinatorial wave. The clock cycle must be long enough to accommodate this entire wave.
+
 <p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004033.jpg" width="600" alt="Single-Cycle Baseline"></p>
 
 #### Step 2: Physically Slicing the Datapath
-To pipeline the processor, we mathematically divide the datapath into 5 isolated electrical stages.
+**Figure 4.34 (Instructions being executed using the single-cycle datapath)**: To pipeline the processor, we mathematically divide the datapath into 5 isolated electrical stages.
 
 <p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004034.jpg" width="600" alt="Slicing the datapath"></p>
 
-We insert massive $D$-Flip-Flop boundaries between the isolated stages to physically cache the electrical signals before safely passing them downstream into the next combinatorial unit.
+**Figure 4.35 (The pipelined version of the datapath)**: We insert massive $D$-Flip-Flop boundaries between the isolated stages to physically cache the electrical signals before safely passing them downstream into the next combinatorial unit. 
 These boundary registers unequivocally lock the computational output data on the rising clock edge and route it uniformly as stable electrical input toward the next active stage. They are fundamentally designated by the physical hardware stages they structurally separate: **`IF/ID`**, **`ID/EX`**, **`EX/MEM`**, and **`MEM/WB`**.
 
 <p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004035.jpg" width="600" alt="Pipeline Boundary Registers Insertion"></p>
@@ -99,10 +100,12 @@ When a pipeline correctly overlaps, different hardware segments service differen
 <p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004040.jpg" width="550" alt="Instruction Trace 5"></p>
 
 #### Step 4: The Targeting Bug & Embedded Control Lines
-A critical architectural bug exists in early pipeline maps: the `WriteReg` destination and Control signals cannot just be read from the `ID` stage and wired unconditionally to the `WB` stage. If we do this, the WriteBack stage will apply its data to the **currently decoding** instruction's target register, corrupting the CPU!
+**Figure 4.41 (The corrected pipelined datapath)**: A critical architectural bug exists in early pipeline maps: the `WriteReg` destination and Control signals cannot just be read from the `ID` stage and wired unconditionally to the `WB` stage. If we do this, the WriteBack stage will apply its data to the **currently decoding** instruction's target register, corrupting the CPU!
+
 <p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004041.jpg" width="600" alt="The WriteReg Targeting Bug"></p>
 
-To correct this, the targeted `Write Register` address and all future **Control Lines** natively travel *inside* the pipeline boundary registers, riding along with the instruction data synchronously step-by-step.
+**Figure 4.45 (Full Datapath with Control Lines embedded)**: To correct this, the targeted `Write Register` address and all future **Control Lines** natively travel *inside* the pipeline boundary registers, riding along with the instruction data synchronously step-by-step.
+
 <p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004045.jpg" width="600" alt="Full Datapath with Control Lines embedded"></p>
 
 #### SystemVerilog Physics: Modeling the Pipeline Register
@@ -144,7 +147,7 @@ sub $t2, $s0, $t3   # $s0 is read immediately
 ```
 
 #### The Solution: Operand Forwarding (Bypassing)
-Rather than waiting for `$s0` to be written back to the Register File in stage 5, the physical data is already calculated by the ALU at the end of the `add` instruction's `EX` stage. We can physically wire a pathway from the `EX/MEM` pipeline register directly back into the ALU inputs using a Multiplexer.
+**Figure 4.53 (Data Hazard Forwarding Logic)**: Rather than waiting for `$s0` to be written back to the Register File in stage 5, the physical data is already calculated by the ALU at the end of the `add` instruction's `EX` stage. We can physically wire a pathway from the `EX/MEM` pipeline register directly back into the ALU inputs using a Multiplexer.
 
 <p align="center">
   <img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004053.jpg" width="600" alt="Data Hazard Forwarding Logic">
@@ -204,6 +207,8 @@ always_comb begin
 end
 ```
 
+**Figure 4.56 (Load-Use Hazard Stalling Output)**: To physically resolve a load-use stall mathematically, the Hazard Unit locks the front-side registers and flushes the ID/EX execution path with a bubble.
+
 <p align="center">
   <img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004056.jpg" width="600" alt="Load-Use Hazard Stalling Output">
 </p>
@@ -216,7 +221,7 @@ By default, the processor **predicts** the branch is not taken and fetches seque
 
 *Reference from **See MIPS Run - Chapter 2**:* Early MIPS architectures refused to handle hardware flushes due to the massive silicon transistor costs. Instead, they invented the **Branch Delay Slot**. In classic MIPS, the hardware *always* executes the instruction immediately following a branch, regardless of whether the branch is taken or not. It is strictly the C-Compiler's software job to fill this "Delay Slot" with either a safe independent instruction, or explicitly inject a `NOP`. Modern implementations utilize the predictive flush mechanism below, but the Delay Slot remains a legendary bridge between hardware limits and software compiler engineering.
 
-We flush these erroneous instructions by clearing the `IF/ID` and `ID/EX` control signals to `0` using a `Flush` pin on the pipeline registers, effectively converting the instructions into No-Ops (`NOP`s). This clearing mechanism is an unavoidable performance penalty inherent to pipelining.
+**Figure 4.60 (Branch Hazard Pipeline Flush)**: We flush these erroneous instructions by clearing the `IF/ID` and `ID/EX` control signals to `0` using a `Flush` pin on the pipeline registers, effectively converting the instructions into No-Ops (`NOP`s). This clearing mechanism is an unavoidable performance penalty inherent to pipelining.
 
 <p align="center">
   <img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004060.jpg" width="600" alt="Branch Hazard Pipeline Flush">
