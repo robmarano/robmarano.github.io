@@ -31,30 +31,45 @@ In a $k$-stage pipeline, the parallelizable fraction $p$ represents instructions
 
 ## Topic Deep Dive
 
-### 4.6 Pipelined Datapath and Control
+### 4.6 Pipelined Datapath and Control: Step-by-Step Evolution
 
-To pipeline a processor, we must ensure that no two instructions attempt to use the same physical hardware resource simultaneously. We physically isolate the 5 steps of the MIPS execution cycle by inserting **Pipeline Registers** across the datapath boundaries.
+The textbook presentation can seem overwhelmingly complex because it jumps straight to the final architecture. To truly understand pipeline registers, we must mathematically evolve the Datapath step-by-step from our existing Single-Cycle foundation.
 
-<p align="center">
-  <img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004035.jpg" width="600" alt="Pipelined Datapath with Registers">
-</p>
+#### Step 1: The Single-Cycle Baseline
+In a single-cycle datapath, an instruction flows through all 5 hardware components (Fetch, Decode, Execute, Memory, WriteBack) in one massive combinatorial wave. The clock cycle must be long enough to accommodate this entire wave.
+<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004033.jpg" width="600" alt="Single-Cycle Baseline"></p>
 
-These boundary registers lock in the output data of one stage on the rising clock edge and provide it as stable input to the next stage during the cycle. The pipeline registers are designated by the adjacent stages they separate:
+#### Step 2: Physically Slicing the Datapath
+To pipeline the processor, we mathematically divide the datapath into 5 isolated electrical stages. We insert massive $D$-Flip-Flop boundaries between the stages to lock the electrical signals before passing them to the next unit.
+<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004034.jpg" width="600" alt="Slicing the datapath"></p>
+<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004035.jpg" width="600" alt="Pipeline Boundary Registers Insertion"></p>
 
-1.  **`IF/ID`** (Instruction Fetch / Instruction Decode)
-2.  **`ID/EX`** (Instruction Decode / Execute)
-3.  **`EX/MEM`** (Execute / Memory Access)
-4.  **`MEM/WB`** (Memory Access / Write Back)
+These boundary registers lock in output data on the rising clock edge and provide it as stable input to the next stage. They are designated by the adjacent stages they separate: **`IF/ID`**, **`ID/EX`**, **`EX/MEM`**, and **`MEM/WB`**.
 
-#### SystemVerilog Implementation: Pipeline Registers
-In a local SystemVerilog environment, pipeline stages are instantiated as wide $D$-flip-flop (`dff`) registers. For example, tracking the `Write Register` destination across the `EX/MEM` boundary requires logging the targeted 5-bit address:
+#### Step 3: Following the Instruction Execution Trace
+When a pipeline correctly overlaps, different hardware segments service different instructions concurrently. Observe how `lw` and `sw` sequentially inherit the hardware resources across the discrete clock cycles:
+<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004036.jpg" width="550" alt="Instruction Trace 1"></p>
+<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004037.jpg" width="550" alt="Instruction Trace 2"></p>
+<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004038.jpg" width="550" alt="Instruction Trace 3"></p>
+<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004039.jpg" width="550" alt="Instruction Trace 4"></p>
+<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004040.jpg" width="550" alt="Instruction Trace 5"></p>
+
+#### Step 4: The Targeting Bug & Embedded Control Lines
+A critical architectural bug exists in early pipeline maps: the `WriteReg` destination and Control signals cannot just be read from the `ID` stage and wired unconditionally to the `WB` stage. If we do this, the WriteBack stage will apply its data to the **currently decoding** instruction's target register, corrupting the CPU!
+<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004041.jpg" width="600" alt="The WriteReg Targeting Bug"></p>
+
+To correct this, the targeted `Write Register` address and all future **Control Lines** natively travel *inside* the pipeline boundary registers, riding along with the instruction data synchronously step-by-step.
+<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004045.jpg" width="600" alt="Full Datapath with Control Lines embedded"></p>
+
+#### SystemVerilog Physics: Modeling the Pipeline Register
+In SystemVerilog, pipeline stages are modeled exactly like wide $D$-flip-flop arrays. To fix the targeting bug above, tracking the `Write Register` across the `EX/MEM` boundary requires logging both the datapath result AND the target 5-bit address explicitly on the clock edge:
 
 ```systemverilog
 // EX/MEM Pipeline Register
 module ex_mem_reg (input  logic        clk, reset,
-                   input  logic        RegWriteE, MemWriteE, // Control signals
+                   input  logic        RegWriteE, MemWriteE, // Control signals riding along
                    input  logic [31:0] ALUOutE, WriteDataE,  // Datapath outputs
-                   input  logic [4:0]  WriteRegE,            // Target register
+                   input  logic [4:0]  WriteRegE,            // Target register riding along
                    output logic        RegWriteM, MemWriteM,
                    output logic [31:0] ALUOutM, WriteDataM,
                    output logic [4:0]  WriteRegM);
@@ -63,13 +78,12 @@ module ex_mem_reg (input  logic        clk, reset,
     if (reset) begin
       RegWriteM <= 0;
       MemWriteM <= 0;
-      // Reset remaining signals...
     end else begin
-      RegWriteM <= RegWriteE;
-      MemWriteM <= MemWriteE;
-      ALUOutM   <= ALUOutE;
-      WriteDataM <= WriteDataE;
-      WriteRegM <= WriteRegE; // Passed to the next stage
+      RegWriteM  <= RegWriteE;  // Synchronous Control Pass-through
+      MemWriteM  <= MemWriteE;
+      ALUOutM    <= ALUOutE;    // Synchronous Data Pass-through
+      WriteDataM <= WriteDataE; 
+      WriteRegM  <= WriteRegE;  // The critical WriteTarget fix!
     end
   end
 endmodule
