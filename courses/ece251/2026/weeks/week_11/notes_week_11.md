@@ -67,11 +67,14 @@ In a single-cycle datapath, an instruction flows through all 5 hardware componen
 <p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004033.jpg" width="600" alt="Single-Cycle Baseline"></p>
 
 #### Step 2: Physically Slicing the Datapath
-To pipeline the processor, we mathematically divide the datapath into 5 isolated electrical stages. We insert massive $D$-Flip-Flop boundaries between the stages to lock the electrical signals before passing them to the next unit.
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004034.jpg" width="600" alt="Slicing the datapath"></p>
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004035.jpg" width="600" alt="Pipeline Boundary Registers Insertion"></p>
+To pipeline the processor, we mathematically divide the datapath into 5 isolated electrical stages.
 
-These boundary registers lock in output data on the rising clock edge and provide it as stable input to the next stage. They are designated by the adjacent stages they separate: **`IF/ID`**, **`ID/EX`**, **`EX/MEM`**, and **`MEM/WB`**.
+<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004034.jpg" width="600" alt="Slicing the datapath"></p>
+
+We insert massive $D$-Flip-Flop boundaries between the isolated stages to physically cache the electrical signals before safely passing them downstream into the next combinatorial unit.
+These boundary registers unequivocally lock the computational output data on the rising clock edge and route it uniformly as stable electrical input toward the next active stage. They are fundamentally designated by the physical hardware stages they structurally separate: **`IF/ID`**, **`ID/EX`**, **`EX/MEM`**, and **`MEM/WB`**.
+
+<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004035.jpg" width="600" alt="Pipeline Boundary Registers Insertion"></p>
 
 #### Step 3: Following the Instruction Execution Trace
 When a pipeline correctly overlaps, different hardware segments service different instructions concurrently. Observe how `lw` and `sw` sequentially inherit the hardware resources across the discrete clock cycles:
