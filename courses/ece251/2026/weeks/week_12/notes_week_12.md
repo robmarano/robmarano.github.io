@@ -2096,4 +2096,13 @@ handler:
 3.  Therefore, system-level architecture dictates exception handlers must immediately stream backup variables down cleanly into a protected `Stack` memory structure explicitly using `sw` (Store Word) registers like `$k0` / `$k1` (Kernel OS specific registers), resolving the fault, and finally flawlessly restoring the user registers via `lw` back prior to issuing an `eret` (return from exception) call.
 
 ---
+
+## Final Project Expectations
+
+With our fundamental exploration of digital boundaries completely resolved from combinational logic all the way up through complex OS vectors and interrupt flushes natively running cleanly—you now possess the complete architecture toolset dynamically required to bootstrap complex topologies independently.
+
+Please navigate securely to the official [Final Project Constraints & Guidance Documentation](final_project/GUIDE.md) strictly tracking exactly what the execution limits and deliverables physically demand.
+
+---
 [ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)
+
