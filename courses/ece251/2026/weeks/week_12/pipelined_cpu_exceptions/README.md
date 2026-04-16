@@ -1666,4 +1666,4 @@ To truly understand the asynchronous interrupt pipeline flush, load the followin
 - Pan your view to **Time `105000`** (or 105ns). You will see `intr` go HIGH.
 - On the next clock edge, `Exception_Flag` goes HIGH, causing `flushD` and `flushE` to immediately assert (squashing the instructions trapped in the Decode and Execute stages).
 - Look at `EPC`: It captures the exact PC of the instruction that was squashed in the Decode stage.
-- Look at `pcF`: It abruptly jumps to `0x00000180`, proving the hardware dynamically redirected fetch to the OS Handler.
+- Look at `pcF`: It abruptly jumps to `0x80000180`, proving the hardware dynamically redirected fetch to the OS Handler.
