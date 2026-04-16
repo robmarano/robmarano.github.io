@@ -146,7 +146,7 @@ clean:
 
 ```
 </details>
-
+<br>
 <details><summary><code>adder.sv</code></summary>
 
 ```systemverilog
@@ -181,7 +181,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>alu.sv</code></summary>
 
 ```systemverilog
@@ -206,7 +206,7 @@ module alu
     //
     input  logic        clk,
     input  logic [(n-1):0] a, b,
-    input  logic [2:0]  alucontrol,
+    input  logic [3:0]  alucontrol,
     output logic [(n-1):0] result,
     output logic        zero
 );
@@ -228,15 +228,15 @@ module alu
 
     always @(*) begin
         case (alucontrol)
-            3'b000: result = a & b;             // and
-            3'b001: result = a | b;             // or
-            3'b010: result = a + b;             // add
-            3'b011: result = ~(a | b);           // nor
-            3'b100: result = HiLo[(n-1):0];     // MFLO
-            3'b101: result = HiLo[(2*n-1):n];   // MFHI
-            3'b110: result = sumSlt; // sub
-            // 3'b111: result = sumSlt[(n-1)];     // slt
-            3'b111: begin                       // slt
+            4'b0000: result = a & b;             // and
+            4'b0001: result = a | b;             // or
+            4'b0010: result = a + b;             // add
+            4'b0011: result = ~(a | b);           // nor
+            4'b0100: result = HiLo[(n-1):0];     // MFLO
+            4'b0101: result = HiLo[(2*n-1):n];   // MFHI
+            4'b0110: result = sumSlt; // sub
+            // 4'b0111: result = sumSlt[(n-1)];     // slt
+            4'b0111: begin                       // slt
                 if (a[31] != b[31])
                     if (a[31] > b[31])
                         result = 1;
@@ -248,14 +248,15 @@ module alu
                     else
                         result = 0;
             end
+            default: result = {n{1'b0}};
         endcase
     end
 
     //Multiply and divide results are only stored at clock falling edge.
     always @(negedge clk) begin
         case (alucontrol)
-            3'b011: HiLo = a * b; // mult
-            3'b101: // div
+            4'b1001: HiLo = a * b; // mult
+            4'b1000: // div
             begin
                 HiLo[(n-1):0] = a / b;
                 HiLo[(2*n-1):n] = a % b;
@@ -268,7 +269,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>aludec.sv</code></summary>
 
 ```systemverilog
@@ -293,27 +294,28 @@ module aludec
     //
     input  logic [5:0] funct,
     input  logic [1:0] aluop,
-    output logic [2:0] alucontrol);
+    output logic [3:0] alucontrol);
     //
     // ---------------- MODULE DESIGN IMPLEMENTATION ----------------
     //
     always @*
     begin
         case(aluop)
-        2'b00: alucontrol <= 3'b010;  // add (for lw/sw/addi)
-        2'b01: alucontrol <= 3'b110;  // sub (for beq)
+        2'b00: alucontrol <= 4'b0010;  // add (for lw/sw/addi)
+        2'b01: alucontrol <= 4'b0110;  // sub (for beq)
         default:
             // for R-type instructions
             case(funct)
-                6'b100000: alucontrol <= 3'b010; // add
-                6'b100010: alucontrol <= 3'b110; // sub
-                6'b100100: alucontrol <= 3'b000; // and
-                6'b100101: alucontrol <= 3'b001; // or
-                6'b101010: alucontrol <= 3'b111; // slt
-                6'b011000: alucontrol <= 3'b011; // mult
-                6'b010010: alucontrol <= 3'b100; // mflo
-                6'b010000: alucontrol <= 3'b101; // mfhi
-                default:   alucontrol <= 3'b010; // default to add to prevent X propagation on NOP
+                6'b100000: alucontrol <= 4'b0010; // add
+                6'b100010: alucontrol <= 4'b0110; // sub
+                6'b100100: alucontrol <= 4'b0000; // and
+                6'b100101: alucontrol <= 4'b0001; // or
+                6'b101010: alucontrol <= 4'b0111; // slt
+                6'b011000: alucontrol <= 4'b1001; // mult
+                6'b011010: alucontrol <= 4'b1000; // div
+                6'b010010: alucontrol <= 4'b0100; // mflo
+                6'b010000: alucontrol <= 4'b0101; // mfhi
+                default:   alucontrol <= 4'b0010; // default to add to prevent X propagation on NOP
             endcase
         endcase
     end
@@ -323,7 +325,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>assembler.py</code></summary>
 
 ```python
@@ -433,7 +435,7 @@ if __name__ == '__main__':
 
 ```
 </details>
-
+<br>
 <details><summary><code>clock.sv</code></summary>
 
 ```systemverilog
@@ -494,7 +496,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>computer.sv</code></summary>
 
 ```systemverilog
@@ -530,7 +532,7 @@ module computer(
 
     // Instruction Memory
     imem imem(
-        .addr(pc[7:2]),
+        .addr(pc[9:2]),
         .readdata(instr)
     );
 
@@ -547,7 +549,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>controller.sv</code></summary>
 
 ```systemverilog
@@ -570,7 +572,7 @@ module controller(
     output logic       memtoregD, memwriteD,
     output logic       alusrcD, regdstD, regwriteD,
     output logic       branchD, jumpD,
-    output logic [2:0] alucontrolD
+    output logic [3:0] alucontrolD
 );
     logic [1:0] aluopD;
     
@@ -585,7 +587,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>cpu.sv</code></summary>
 
 ```systemverilog
@@ -615,7 +617,7 @@ module cpu(
     logic [31:0] instrD;
     logic branchD, jumpD;
     logic memtoregD, memwriteD, alusrcD, regdstD, regwriteD;
-    logic [2:0] alucontrolD;
+    logic [3:0] alucontrolD;
     
     logic stallF, stallD, flushD, flushE;
     logic Exception_Flag;
@@ -675,7 +677,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>datapath.sv</code></summary>
 
 ```systemverilog
@@ -709,7 +711,7 @@ module datapath(
     input  logic        memtoregD, memwriteD,
     input  logic        alusrcD, regdstD, regwriteD,
     input  logic        jumpD, branchD,
-    input  logic [2:0]  alucontrolD,
+    input  logic [3:0]  alucontrolD,
 
     output logic [31:0] instrD,
 
@@ -788,7 +790,7 @@ module datapath(
     logic [31:0] srcaE, srcbE, signimmE;
     logic [4:0] rdE;
     logic memwriteE, alusrcE, regdstE;
-    logic [2:0] alucontrolE;
+    logic [3:0] alucontrolE;
     logic [31:0] pcplus4E;
 
 
@@ -841,7 +843,7 @@ module datapath(
         if (reset) begin
             EPC <= 32'b0;
         end else if (Exception_Flag) begin
-            EPC <= pcplus4E - 32'd4;
+            EPC <= pcplus4D - 32'd4;
         end
     end
 
@@ -891,7 +893,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>dff.sv</code></summary>
 
 ```systemverilog
@@ -937,7 +939,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>dmem.sv</code></summary>
 
 ```systemverilog
@@ -957,7 +959,7 @@ endmodule
 
 module dmem
 // n=bit length of register; r=bit length of addr to limit memory and not crash your verilog emulator
-    #(parameter n = 32, parameter r = 6)(
+    #(parameter n = 32, parameter r = 8)(
     //
     // ---------------- PORT DEFINITIONS ----------------
     //
@@ -980,7 +982,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>eqcmp.sv</code></summary>
 
 ```systemverilog
@@ -1008,7 +1010,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>flopenr.sv</code></summary>
 
 ```systemverilog
@@ -1035,7 +1037,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>flopenrc.sv</code></summary>
 
 ```systemverilog
@@ -1075,7 +1077,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>hazard.sv</code></summary>
 
 ```systemverilog
@@ -1148,7 +1150,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>imem.sv</code></summary>
 
 ```systemverilog
@@ -1168,7 +1170,7 @@ endmodule
 
 module imem
 // n=bit length of register; r=bit length of addr to limit memory and not crash your verilog emulator
-    #(parameter n = 32, parameter r = 6)(
+    #(parameter n = 32, parameter r = 8)(
     //
     // ---------------- PORT DEFINITIONS ----------------
     //
@@ -1197,7 +1199,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>maindec.sv</code></summary>
 
 ```systemverilog
@@ -1253,14 +1255,14 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>mem.sv</code></summary>
 
 ```systemverilog
 
 
 module mem
-    #(parameter n = 32, parameter r = 6)(
+    #(parameter n = 32, parameter r = 8)(
     input  logic           clk, we,
     input  logic [(n-1):0] addr, wd,
     output logic [(n-1):0] rd
@@ -1287,7 +1289,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>mux2.sv</code></summary>
 
 ```systemverilog
@@ -1323,7 +1325,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>mux3.sv</code></summary>
 
 ```systemverilog
@@ -1349,7 +1351,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>mux4.sv</code></summary>
 
 ```systemverilog
@@ -1375,7 +1377,204 @@ endmodule
 
 ```
 </details>
+<br>
+<details><summary><code>prog1_simple_hazard.asm</code></summary>
 
+```assembly
+# prog1_simple_hazard.asm
+# RAW Hazard (Read-After-Write) resolved by execution forwarding
+
+main:
+    addi $s0, $zero, 1
+    
+    # Data hazard immediately follows! 
+    # $s0 is written by ADDI (still in pipeline)
+    # Below ADD wants to read $s0 instantly.
+    add $s1, $s0, $s0
+    
+    # Chain dependency on $s1
+    add $s2, $s1, $s1
+    
+    # End of execution
+    j main
+
+```
+</details>
+<br>
+<details><summary><code>prog1_simple_nohazard.asm</code></summary>
+
+```assembly
+# prog1_simple_nohazard.asm
+# Linear sequence with NO overlapping data dependencies
+
+main:
+    addi $s0, $zero, 1
+    addi $s1, $zero, 2
+    addi $s2, $zero, 3
+    
+    # s4, s5, s6 operations are sufficiently spaced
+    add $s4, $s0, $s1
+    sub $s5, $s2, $s0
+    add $s6, $s4, $s5
+    
+    # End of execution
+    j main
+
+```
+</details>
+<br>
+<details><summary><code>prog2_leaf_hazard.asm</code></summary>
+
+```assembly
+# prog2_leaf_hazard.asm
+# Leaf procedure triggering a Branch Hazard (Control Hazard) on BEQ
+
+main:
+    addi $s0, $zero, 1
+    addi $s1, $zero, 1
+    
+    # BEQ causes a control hazard natively since IF/ID must flush predictions
+    beq $s0, $s1, leaf_proc
+    
+    # This should be skipped/flushed dynamically!
+    addi $s2, $zero, 999 
+    
+return_from_leaf:
+    j halt
+    
+leaf_proc:
+    add $s2, $s0, $s1
+    j return_from_leaf
+    
+halt:
+    j halt
+
+```
+</details>
+<br>
+<details><summary><code>prog2_leaf_nohazard.asm</code></summary>
+
+```assembly
+# prog2_leaf_nohazard.asm
+# Leaf procedure execution without hazards using explicit absolute jumps
+
+main:
+    addi $s0, $zero, 10
+    
+    # No hazard bubble needed, immediate jump to simulate subroutine call
+    j leaf_proc
+    
+return_from_leaf:
+    addi $s1, $s0, 5
+    j halt
+    
+leaf_proc:
+    # Independent calculation (no RAW hazard against $s1)
+    addi $s2, $zero, 20
+    add  $s0, $s0, $s2
+    j return_from_leaf
+    
+halt:
+    j halt
+
+```
+</details>
+<br>
+<details><summary><code>prog3_nested_hazard.asm</code></summary>
+
+```assembly
+# prog3_nested_hazard.asm
+# Nested procedure triggering a Load-Use Data Hazard via stack mapping
+
+main:
+    # Initialize stack pointer (using $sp natively)
+    addi $sp, $zero, 60
+    addi $s0, $zero, 10
+    
+    j stack_proc
+    
+return_from_stack:
+    j halt
+    
+stack_proc:
+    # SW writes cleanly
+    sw $s0, 0($sp)
+    
+    # LW pulls from memory
+    lw $s1, 0($sp)
+    
+    # LOAD-USE HAZARD: 
+    # Cannot forward from memory boundary fast enough!
+    # Forces Pipeline inside hazard.sv to STALL natively for 1 clock cycle.
+    add $s2, $s1, $s1
+    
+    j return_from_stack
+    
+halt:
+    j halt
+
+```
+</details>
+<br>
+<details><summary><code>prog3_nested_nohazard.asm</code></summary>
+
+```assembly
+# prog3_nested_nohazard.asm
+# Nested procedure execution cleanly hopping scopes without RAW or control faults
+
+main:
+    addi $s0, $zero, 5
+    
+    # First jump layer (Outer Call)
+    j outer_proc
+    
+return_from_outer:
+    addi $s1, $s0, 5
+    j halt
+    
+outer_proc:
+    addi $s2, $zero, 10
+    # Second jump layer (Inner Call)
+    j inner_proc
+    
+return_from_inner:
+    add $s0, $s0, $s2
+    j return_from_outer
+    
+inner_proc:
+    addi $s3, $zero, 8
+    add  $s2, $s2, $s3
+    j return_from_inner
+    
+halt:
+    j halt
+
+```
+</details>
+<br>
+<details><summary><code>prog4_interrupts.asm</code></summary>
+
+```assembly
+# test_exceptions.asm
+# Tests asynchronous interrupts triggering pipeline flushes and routing to the OS Handler
+
+main:
+    addi $s0, $zero, 0
+loop:
+    addi $s0, $s0, 1
+    addi $s0, $s0, 1
+    addi $s0, $s0, 1
+    j loop
+
+# OS Exception Handler (mapped by PC[7:2] ignoring high bits)
+.org 0x80
+handler:
+    addi $k0, $zero, 999   # arbitrary math proving handler took over
+    j handler
+
+```
+</details>
+<br>
 <details><summary><code>regfile.sv</code></summary>
 
 ```systemverilog
@@ -1424,7 +1623,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>signext.sv</code></summary>
 
 ```systemverilog
@@ -1459,7 +1658,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>sl2.sv</code></summary>
 
 ```systemverilog
@@ -1494,7 +1693,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>tb_computer.sv</code></summary>
 
 ```systemverilog
@@ -1516,17 +1715,19 @@ module tb_computer;
 
     logic        clk;
     logic        reset;
+    logic        intr;
     logic [31:0] writedata, dataadr;
     logic        memwrite;
     
     // Instantiate device under test
-    computer dut(clk, reset, writedata, dataadr, memwrite);
+    computer dut(clk, reset, intr, writedata, dataadr, memwrite);
 
     // clock signal generation
     initial begin
         $dumpfile("tb_computer.vcd");
         $dumpvars(0, tb_computer);
         clk = 0;
+        intr = 0;
     end
 
     always begin
@@ -1563,7 +1764,7 @@ endmodule
 
 ```
 </details>
-
+<br>
 <details><summary><code>tb_exceptions.sv</code></summary>
 
 ```systemverilog
@@ -1622,6 +1823,52 @@ module tb_exceptions();
     always #5 clk = ~clk;
 
 endmodule
+
+```
+</details>
+<br>
+<details><summary><code>test_exceptions.asm</code></summary>
+
+```assembly
+# test_exceptions.asm
+# Tests asynchronous interrupts triggering pipeline flushes and routing to the OS Handler
+
+main:
+    addi $s0, $zero, 0
+loop:
+    addi $s0, $s0, 1
+    addi $s0, $s0, 1
+    addi $s0, $s0, 1
+    j loop
+
+# OS Exception Handler (mapped by PC[7:2] ignoring high bits)
+.org 0x180
+handler:
+    addi $k0, $zero, 999   # arbitrary math proving handler took over
+    j handler
+
+```
+</details>
+<br>
+<details><summary><code>test_prog.asm</code></summary>
+
+```assembly
+# test_prog.asm
+# Verify Pipelined CPU Data Hazards (Forwarding) and Control Hazards (Branch Flushing)
+
+main:
+    addi $t0, $zero, 5   # $t0 = 5
+    addi $t1, $zero, 12  # $t1 = 12
+    add  $t2, $t0, $t1   # $t2 = 17 (RAW EX hazard on $t0 and $t1)
+    sub  $t3, $t2, $t0   # $t3 = 12 (RAW EX hazard on $t2)
+    or   $t4, $t3, $t1   # $t4 = 12 (RAW EX hazard on $t3)
+    sw   $t4, 84($zero)  # MEM hazard on $t4, stores 12 in datamem[84]
+    lw   $t5, 84($zero)  # $t5 = 12
+    add  $t6, $t5, $t1   # $t6 = 24 (Load-Use stall on $t5)
+    beq  $t6, $t6, end   # Branch taken (Wait for $t6 to clear pipeline)
+    addi $t0, $zero, 99  # Should be flushed
+end:
+    sw   $t6, 88($zero)  # Store 24 in datamem[88]
 
 ```
 </details>
