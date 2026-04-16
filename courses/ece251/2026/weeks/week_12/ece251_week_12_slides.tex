@@ -88,7 +88,66 @@ end
 \end{itemize}
 \end{frame}
 
-\begin{frame}{7. Retrospective: The von Neumann Architecture Journey}
+
+egin{frame}{7. Complex Exception Theory: Restartable & Precise Exceptions}
+egin{itemize}
+    \item 	extbf{Precise Exceptions}: The MIPS pipeline explicitly guarantees that the state of the processor is saved precisely at the faulting instruction natively. All preceding instructions must cleanly commit, and instruction following it are entirely purged.
+    \item 	extbf{Restartable Datapaths}: Because we physically track execution limits backwards via the 	exttt{EPC} ($P_C$ - 4), the OS possesses the native mathematical capacity to transparently re-inject the failed program directly into the fetching queues exactly where it stopped.
+    \item 	extbf{Imprecise Exceptions}: Heavily clustered Out-Of-Order CPU architectures mathematically drop pinpoint recovery limitations, isolating faults to a general "vicinity" and drastically ballooning OS handler complexity constraints natively.
+\end{itemize}
+\end{frame}
+
+egin{frame}{8. Complex Exception Theory: Multiple Fault Constraints}
+egin{itemize}
+    \item What natively happens if 	extbf{two isolated instructions} concurrently crash across uniquely decoupled pipeline stages during the exact same $T_c$ clock window? (e.g., A memory fault physically intersecting an arithmetic overflow).
+    \item 	extbf{Hardware Prioritization}: The digital architecture intrinsically favors the 	extit{oldest} structural instruction actively running (residing mathematically furthest down the pipeline tracks, such as EX/MEM bounds).
+    \item Younger instructions trailing backwards across the IF/ID registers simply haven't formally completed their theoretical lifetimes yet, and thus structurally yield their active interrupts until re-execution.
+\end{itemize}
+\end{frame}
+
+egin{frame}[fragile]{9. Global Sandbox: 	exttt{pipelined\_cpu\_exceptions}}
+egin{itemize}
+    \item All the digital concepts actively synthesized are tracked continuously inside our live 	exttt{pipelined\_cpu\_exceptions} hardware namespace.\
+    \item The entire Patterson \& Hennessy theoretical framework natively compiles into executable boolean topologies:
+\end{itemize}
+egin{verbatim}
+├── datapath.sv   # Maps NextPC -> 0x8000_0180 OS boundary
+├── hazard.sv     # Maps asynchronous Exception_Flag -> flush loops
+├── mem.sv        # Bootstraps .org boundary arrays cleanly
+├── controller.sv # Natively tracks Exception bounds
+└── test_prog.asm # Compiles structural exception MIPS sequences
+\end{verbatim}
+\end{frame}
+
+egin{frame}{10. Debugging Resolutions: 4-Bit ALU Decoupling}
+egin{itemize}
+    \item Incorporating complex math vectors natively clashed with native MIPS bounds.
+    \item By natively widening 	exttt{alucontrol} variables from structural 3-Bit 	exttt{[2:0]} to deep 4-Bit 	exttt{[3:0]} limits, we decoupled math logic fundamentally:
+    \item Combinational overlap failures mathematically disappeared because Arithmetic Logic (`4'b0111`) permanently diverged dynamically away from Sequential structural footprints actively isolating 	exttt{MULT} (`4'b1001`) and 	exttt{DIV} (`4'b1000`) execution bounds!
+\end{itemize}
+\end{frame}
+
+egin{frame}{11. Debugging Resolutions: Memory Depth \& Aliasing}
+egin{itemize}
+    \item Exceptions mechanically redirect hardware to absolute vector limit 	exttt{0x8000 0180}.
+    \item A generic Datapath limiting array depth to parameter $r=6$ natively forces Index 	exttt{96} (	exttt{0x180}) to roll back via modulus limits dynamically onto integer 	exttt{32} (	exttt{0x080}).
+    \item Expanding system boundaries natively to $r=8$ establishes a valid OS memory isolation space stretching cleanly to $2^8 = 256$ deep memory frames, granting the OS handler dedicated non-aliasing boundaries natively.
+\end{itemize}
+\end{frame}
+
+egin{frame}{12. Verification Matrix: The 7 Assembly Playbooks}
+egin{itemize}
+    \item We fully assert the architecture logic leveraging extensive workload matrices simulating MIPS bounds:
+    egin{enumerate}
+        \item 	exttt{prog1\_simple}: Linear testing ensuring Forwarding pipelines.
+        \item 	exttt{prog2\_leaf}: Validating Control branches flushing predictions cleanly.
+        \item 	exttt{prog3\_nested}: Nested variables generating Load/Use stalls on stacks.
+        \item 	extbf{	exttt{prog4\_interrupts}}: Structurally overriding datapath sequences internally dumping active limits securely into kernel space.
+    \end{enumerate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{13. Retrospective: The von Neumann Architecture Journey}
 \begin{itemize}
     \item \textbf{Assembly (ISA)}: Human logic bounds mapped natively to binary combinations.
     \item \textbf{Datapath Construction}: ALU calculation grids mapping mathematically mapped alongside immense sequential registry stores.
@@ -97,7 +156,7 @@ end
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{8. Simulating the Processor (Part 1)}
+\begin{frame}[fragile]{14. Simulating the Processor (Part 1)}
 \begin{itemize}
     \item To functionally test the SystemVerilog components, we must generate a binary executable payload for the CPU's memory arrays.
     \item \textbf{Step 1: Compile Assembly} – Translate your MIPS instructions (\texttt{.asm}) down to machine code (\texttt{.exe}):
@@ -113,7 +172,7 @@ $ iverilog -g2012 -o pipelined_cpu.vvp tb_computer.sv
 \end{verbatim}
 \end{frame}
 
-\begin{frame}[fragile]{9. Simulating the Processor (Part 2)}
+\begin{frame}[fragile]{15. Simulating the Processor (Part 2)}
 \begin{itemize}
     \item \textbf{Step 3: Run the Simulation} – Execute the compiled runtime. Pass your customized binary into the CPU memory via the runtime \texttt{+PROG} hook:
 \end{itemize}
@@ -126,7 +185,7 @@ $ vvp pipelined_cpu.vvp +PROG=test_prog.exe
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{10. Reviewing Execution Waves with VS Code "Surfer"}
+\begin{frame}[fragile]{16. Reviewing Execution Waves with VS Code "Surfer"}
 \begin{itemize}
     \item \textbf{Step 4: Inspect the Digital Waveform} – Visually inspect the pipeline delays natively utilizing the VS Code \textbf{Surfer} extension!
     \item Open the generated \texttt{tb\_computer.vcd} waveform file directly inside Visual Studio Code.
@@ -135,13 +194,13 @@ $ vvp pipelined_cpu.vvp +PROG=test_prog.exe
 \end{itemize}
 \end{frame}
 
-\begin{frame}{11. Finding the Exception Event in the Waveform}
+\begin{frame}{17. Finding the Exception Event in the Waveform}
 \begin{center}
     \includegraphics[width=0.95\textwidth]{pipelined_cpu_exceptions/exception.png}
 \end{center}
 \end{frame}
 
-\begin{frame}{12. Conclusion of the Processor Component}
+\begin{frame}{18. Conclusion of the Processor Component}
 \begin{itemize}
     \item You now possess the complete hardware logic sequence validating how generic silicon evaluates and processes procedural logic.
     \item Next steps: Branching beyond the processor logic specifically into Memory Hierarchies and spatial/temporal Caching optimizations spanning across RAM boundaries!
