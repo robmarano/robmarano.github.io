@@ -159,29 +159,27 @@ end
 \begin{frame}[fragile]{14. Simulating the Processor (Part 1)}
 \begin{itemize}
     \item To functionally test the SystemVerilog components, we must generate a binary executable payload for the CPU's memory arrays.
-    \item \textbf{Step 1: Compile Assembly} – Translate your MIPS instructions (\texttt{.asm}) down to machine code (\texttt{.exe}):
+    \item \textbf{Step 1: Run the Automated Makefile} – The \texttt{Makefile} automatically assembles the MIPS instructions, synthesizes the SystemVerilog netlist, and dynamically executes the simulation natively:
 \end{itemize}
 \begin{verbatim}
-$ python3 assembler.py test_prog.asm test_prog.exe
+$ make clean all ASM=test_prog
 \end{verbatim}
 \begin{itemize}
-    \item \textbf{Step 2: Synthesize Netlist} – Bundle your CPU modules and testbench into an \textit{Icarus Verilog} executable runtime:
+    \item The testbench internally hooks the binary payload bounds directly into active memory arrays cleanly.
+    \item The testbench additionally generates a digital execution wave file locally: \texttt{tb\_computer.vcd}.
 \end{itemize}
-\begin{verbatim}
-$ iverilog -g2012 -o pipelined_cpu.vvp tb_computer.sv
-\end{verbatim}
 \end{frame}
 
-\begin{frame}[fragile]{15. Simulating the Processor (Part 2)}
+\begin{frame}[fragile]{15. Simulating the Processor (Part 2: Text Trace)}
 \begin{itemize}
-    \item \textbf{Step 3: Run the Simulation} – Execute the compiled runtime. Pass your customized binary into the CPU memory via the runtime \texttt{+PROG} hook:
+    \item \textbf{Step 2: Trace Cycle-by-Cycle Execution} – The simulation quietly diverts all console outputs directly into a tracked diagnostic file natively!
 \end{itemize}
 \begin{verbatim}
-$ vvp pipelined_cpu.vvp +PROG=test_prog.exe
+$ cat debug_output.txt
 \end{verbatim}
 \begin{itemize}
-    \item The console outputs arithmetic validation metrics confirming Forwarding and Flushing mechanics operated gracefully.
-    \item The testbench drops a digital execution wave file inside your local directory: \texttt{tb\_computer.vcd}.
+    \item The text output mathematically traces the exact hexadecimal state of every boundary stage (\texttt{[IF]}, \texttt{[ID]}, \texttt{[EX]}, \texttt{[MEM]}, \texttt{[WB]}) dynamically!
+    \item We can visually read precisely when \texttt{FlushD/FlushE} sequence pins correctly isolate structural limits directly from the terminal without ever rendering digital logic wave models visually!
 \end{itemize}
 \end{frame}
 

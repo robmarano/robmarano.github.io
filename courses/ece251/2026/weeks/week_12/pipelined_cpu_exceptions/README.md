@@ -1605,41 +1605,46 @@ The functional system explicitly only implements the following opcodes physicall
 
 ## Running the Simulations
 
-Seven comprehensive `.asm` verification scripts are intrinsically maintained to physically prove structural hazards natively resolved vs exceptions dropping.
+Seven comprehensive `.asm` verification scripts are natively maintained to physically prove structural hazards are resolved and exceptions are handled correctly.
 
-Use the native Makefile which transparently executes the assembler payload and synthesizes the digital signals against `tb_exceptions.sv` internally.
-
-```bash
-make clean all
-```
+The provided `Makefile` heavily automates the testing process. It transparently assembles your MIPS `.asm` file into an `.exe`, compiles the SystemVerilog netlist, and runs the `vvp` simulation dynamically.
 
 > [!TIP]
 > Any relative procedural jump testing physically invokes pure `j` targets utilizing standard sequential returns manually without relying strictly independently on `$ra` since `jal`/`jr` syntax is stripped down conceptually natively to ease standard educational pipelining logic overhead intrinsically.
 
 ## Getting Started
 
-To thoroughly test the logic gates across the hazard and exception models manually directly from your terminal, carefully follow these commands from within the `pipelined_cpu_exceptions` directory:
+To thoroughly test the CPU and inspect the pipeline's behavior cycle-by-cycle, run the following command directly from your terminal:
 
-### 1. Compile the Assembly payload
-Translate the human-readable `.asm` file down into the physical binary hexadecimal `.exe` mapping required by the Instruction Memory block:
 ```bash
-python3 assembler.py prog1_simple_nohazard.asm prog1_simple_nohazard.exe
-```
-*(You can swap `prog1_simple_nohazard.asm` with any of the 7 provided test files)*
-
-### 2. Synthesize the SystemVerilog Netlist
-Bundle the `tb_exceptions.sv` or generic `tb_computer.sv` testbench across the datapath bindings generating an Icarus Verilog `.vvp` runtime package:
-```bash
-iverilog -g2012 -o pipelined_cpu.vvp tb_exceptions.sv
+make clean all ASM=<program_name_without_extension>
 ```
 
-### 3. Run the Digital Simulation
-Execute the compiled runtime package. To bypass the default memory injection dynamically, utilize the special `+PROG` argument which routes directly inside the `$value$plusargs` hook programmed natively into `imem.sv`:
+**Examples:**
+* To run the standard forwarding and hazard tests:
+  ```bash
+  make clean all ASM=test_prog
+  ```
+* To run the asynchronous exception interrupt test:
+  ```bash
+  make clean all ASM=test_exceptions
+  ```
+
+### 1. Cycle-by-Cycle Text Tracking
+When you run the `make` command, the output is silently piped into a newly generated `debug_output.txt` file. Open this file to see a highly detailed, cycle-by-cycle breakdown of the entire datapath.
+
 ```bash
-vvp pipelined_cpu.vvp +PROG=prog1_simple_nohazard.exe
+cat debug_output.txt
 ```
 
-### 4. Review Execution Waves (Optional)
+**Inside `debug_output.txt` you will find:**
+* **`[IF]`**: The Program Counter (`PC`) currently being fetched and if the Fetch stage is stalled.
+* **`[ID]`**: The hexadecimal instruction, source registers (`rs`, `rt`), and whether the Hazard unit is asserting `StallD` or `FlushD`.
+* **`[EX]`**: The math output (`ALUOut`), the captured `EPC` during an interrupt, and pipeline `FlushE` triggers.
+* **`[MEM]`**: Data memory interactions (RAM `Addr` and `WriteData`).
+* **`[WB]`**: The target destination register (`RegDst`) and the final `ResultW` being written back.
+
+### 2. Review Execution Waves (Optional)
 The simulation natively drops a `tb_exceptions.vcd` digital wave file. You can open this to visually inspect the pipelined structural variables and see exactly when the interrupt occurs.
 
 > **⚠️ macOS 14+ (Apple Silicon) Note:** The legacy `gtkwave` macOS app is no longer compatible. We highly recommend using modern alternatives.

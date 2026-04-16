@@ -118,24 +118,24 @@ Our journey through ECE 251 successfully mapped this abstract theory down to ver
 PROJECT_NAME=pipelined_cpu
 SRCS=tb_computer.sv
 VVPOPTS=-s tb_computer
-ASM=test_prog
+# Default assembly program if none is specified
+ASM ?= test_prog
 
-all: compile asm run
+all: clean asm compile run
 
 compile:
-	/opt/homebrew/bin/iverilog -g2012 -o $(PROJECT_NAME).vvp $(SRCS)
+	iverilog -g2012 -o $(PROJECT_NAME).vvp $(SRCS)
 
 run:
-	/opt/homebrew/bin/vvp $(PROJECT_NAME).vvp > debug_output.txt
+	vvp $(PROJECT_NAME).vvp +PROG=$(ASM).exe > debug_output.txt
+	@echo "
+Simulation complete! Check debug_output.txt for cycle-by-cycle logs."
 
 asm:
 	python3 assembler.py $(ASM).asm $(ASM).exe
-	# Adjust imem line if differing name
-	# Assuming imem reads 'test_prog.exe'
 	
 clean:
 	rm -f *.vvp *.vcd *.exe debug_output.txt
-
 ```
 </details>
 
@@ -1734,6 +1734,27 @@ module tb_computer;
         #5 clk = ~clk;
     end
 
+    // Cycle-by-cycle logging for educational trace routing
+    integer cycle = 0;
+    always @(posedge clk) begin
+        if (!reset) begin
+            cycle++;
+            $display("-----------------------------------------------------");
+            $display("Cycle %0d (Time: %0t)", cycle, $time);
+            $display("  [IF]   PC: 0x%08h | StallF: %b", 
+                     dut.mips_pipelined.dp.pcF, dut.mips_pipelined.stallF);
+            $display("  [ID]   Instr: 0x%08h | rs: %0d, rt: %0d | StallD: %b | FlushD: %b | Branch: %b", 
+                     dut.mips_pipelined.dp.instrD, dut.mips_pipelined.dp.rsD, dut.mips_pipelined.dp.rtD, 
+                     dut.mips_pipelined.stallD, dut.mips_pipelined.flushD, dut.mips_pipelined.branchD);
+            $display("  [EX]   ALUOut: 0x%08h | FlushE: %b | EPC: 0x%08h", 
+                     dut.mips_pipelined.dp.aluoutE, dut.mips_pipelined.flushE, dut.mips_pipelined.dp.EPC);
+            $display("  [MEM]  MemWrite: %b | Addr: 0x%08h | WriteData: 0x%08h", 
+                     memwrite, dataadr, writedata);
+            $display("  [WB]   RegWrite: %b | RegDst: %0d | ResultW: 0x%08h", 
+                     dut.mips_pipelined.dp.regwriteW, dut.mips_pipelined.dp.writeregW, dut.mips_pipelined.dp.resultW);
+        end
+    end
+
     // initial stimulus
     initial begin
         $display("Initializing testbench simulation...");
@@ -1760,8 +1781,6 @@ module tb_computer;
     end
 
 endmodule
-
-
 ```
 </details>
 <br>
