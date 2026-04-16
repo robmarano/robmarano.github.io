@@ -1816,6 +1816,9 @@ handler:
 ```
 **Cause**: Physical electrical fault drops externally over the structural hardware bounds forcefully overwriting regular mapping bounds electrically globally!
 **Fix**: Pipeline `EPC` latches securely while physically trapping `NextPC = 32'h8000_0180` dynamically safely saving the boundaries actively while scrubbing execution trailing routines globally across `flushE`.
+
+![Surfer Exception Waveform](pipelined_cpu_exceptions/exception.png)
+
 </details>
 
 ---
