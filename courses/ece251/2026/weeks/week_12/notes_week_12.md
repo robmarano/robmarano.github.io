@@ -112,7 +112,7 @@ Our journey through ECE 251 successfully mapped this abstract theory down to ver
 
 ### SystemVerilog Source Code for Pipelined MIPS32 Processor (with Exceptions)
 
-<details><summary><code>Makefile</code></summary>
+<details markdown="1"><summary><code>Makefile</code></summary>
 
 ```makefile
 PROJECT_NAME=pipelined_cpu
@@ -139,7 +139,7 @@ clean:
 ```
 </details>
 
-<details><summary><code>_timescale.sv</code></summary>
+<details markdown="1"><summary><code>_timescale.sv</code></summary>
 
 ```systemverilog
 `timescale 1ns/100ps
@@ -147,7 +147,7 @@ clean:
 ```
 </details>
 <br>
-<details><summary><code>adder.sv</code></summary>
+<details markdown="1"><summary><code>adder.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -182,7 +182,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>alu.sv</code></summary>
+<details markdown="1"><summary><code>alu.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -270,7 +270,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>aludec.sv</code></summary>
+<details markdown="1"><summary><code>aludec.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -326,7 +326,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>assembler.py</code></summary>
+<details markdown="1"><summary><code>assembler.py</code></summary>
 
 ```python
 import sys
@@ -436,7 +436,7 @@ if __name__ == '__main__':
 ```
 </details>
 <br>
-<details><summary><code>clock.sv</code></summary>
+<details markdown="1"><summary><code>clock.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -497,7 +497,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>computer.sv</code></summary>
+<details markdown="1"><summary><code>computer.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -550,7 +550,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>controller.sv</code></summary>
+<details markdown="1"><summary><code>controller.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -588,7 +588,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>cpu.sv</code></summary>
+<details markdown="1"><summary><code>cpu.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -678,7 +678,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>datapath.sv</code></summary>
+<details markdown="1"><summary><code>datapath.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -894,7 +894,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>dff.sv</code></summary>
+<details markdown="1"><summary><code>dff.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -940,7 +940,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>dmem.sv</code></summary>
+<details markdown="1"><summary><code>dmem.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -983,7 +983,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>eqcmp.sv</code></summary>
+<details markdown="1"><summary><code>eqcmp.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -1011,7 +1011,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>flopenr.sv</code></summary>
+<details markdown="1"><summary><code>flopenr.sv</code></summary>
 
 ```systemverilog
 
@@ -1038,7 +1038,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>flopenrc.sv</code></summary>
+<details markdown="1"><summary><code>flopenrc.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -1078,7 +1078,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>hazard.sv</code></summary>
+<details markdown="1"><summary><code>hazard.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -1151,7 +1151,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>imem.sv</code></summary>
+<details markdown="1"><summary><code>imem.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -1200,7 +1200,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>maindec.sv</code></summary>
+<details markdown="1"><summary><code>maindec.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -1256,7 +1256,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>mem.sv</code></summary>
+<details markdown="1"><summary><code>mem.sv</code></summary>
 
 ```systemverilog
 
@@ -1290,7 +1290,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>mux2.sv</code></summary>
+<details markdown="1"><summary><code>mux2.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -1326,7 +1326,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>mux3.sv</code></summary>
+<details markdown="1"><summary><code>mux3.sv</code></summary>
 
 ```systemverilog
 
@@ -1352,7 +1352,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>mux4.sv</code></summary>
+<details markdown="1"><summary><code>mux4.sv</code></summary>
 
 ```systemverilog
 
@@ -1378,7 +1378,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>prog1_simple_hazard.asm</code></summary>
+<details markdown="1"><summary><code>prog1_simple_hazard.asm</code></summary>
 
 ```assembly
 # prog1_simple_hazard.asm
@@ -1401,7 +1401,7 @@ main:
 ```
 </details>
 <br>
-<details><summary><code>prog1_simple_nohazard.asm</code></summary>
+<details markdown="1"><summary><code>prog1_simple_nohazard.asm</code></summary>
 
 ```assembly
 # prog1_simple_nohazard.asm
@@ -1423,7 +1423,7 @@ main:
 ```
 </details>
 <br>
-<details><summary><code>prog2_leaf_hazard.asm</code></summary>
+<details markdown="1"><summary><code>prog2_leaf_hazard.asm</code></summary>
 
 ```assembly
 # prog2_leaf_hazard.asm
@@ -1452,7 +1452,7 @@ halt:
 ```
 </details>
 <br>
-<details><summary><code>prog2_leaf_nohazard.asm</code></summary>
+<details markdown="1"><summary><code>prog2_leaf_nohazard.asm</code></summary>
 
 ```assembly
 # prog2_leaf_nohazard.asm
@@ -1480,7 +1480,7 @@ halt:
 ```
 </details>
 <br>
-<details><summary><code>prog3_nested_hazard.asm</code></summary>
+<details markdown="1"><summary><code>prog3_nested_hazard.asm</code></summary>
 
 ```assembly
 # prog3_nested_hazard.asm
@@ -1516,7 +1516,7 @@ halt:
 ```
 </details>
 <br>
-<details><summary><code>prog3_nested_nohazard.asm</code></summary>
+<details markdown="1"><summary><code>prog3_nested_nohazard.asm</code></summary>
 
 ```assembly
 # prog3_nested_nohazard.asm
@@ -1552,7 +1552,7 @@ halt:
 ```
 </details>
 <br>
-<details><summary><code>prog4_interrupts.asm</code></summary>
+<details markdown="1"><summary><code>prog4_interrupts.asm</code></summary>
 
 ```assembly
 # test_exceptions.asm
@@ -1575,7 +1575,7 @@ handler:
 ```
 </details>
 <br>
-<details><summary><code>regfile.sv</code></summary>
+<details markdown="1"><summary><code>regfile.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -1624,7 +1624,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>signext.sv</code></summary>
+<details markdown="1"><summary><code>signext.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -1659,7 +1659,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>sl2.sv</code></summary>
+<details markdown="1"><summary><code>sl2.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -1694,7 +1694,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>tb_computer.sv</code></summary>
+<details markdown="1"><summary><code>tb_computer.sv</code></summary>
 
 ```systemverilog
 `include "_timescale.sv"
@@ -1765,7 +1765,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>tb_exceptions.sv</code></summary>
+<details markdown="1"><summary><code>tb_exceptions.sv</code></summary>
 
 ```systemverilog
 `timescale 1ns/1ps
@@ -1827,7 +1827,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>test_exceptions.asm</code></summary>
+<details markdown="1"><summary><code>test_exceptions.asm</code></summary>
 
 ```assembly
 # test_exceptions.asm
@@ -1850,7 +1850,7 @@ handler:
 ```
 </details>
 <br>
-<details><summary><code>test_prog.asm</code></summary>
+<details markdown="1"><summary><code>test_prog.asm</code></summary>
 
 ```assembly
 # test_prog.asm
@@ -1875,7 +1875,7 @@ end:
 <br>
 To practically evaluate the pipelined structural bounds, we permanently mapped seven distinct compilation payloads into the local SystemVerilog bounds exploring normal mapping vs. hazard management globally.
 
-<details><summary>1. Simple Execution (No Hazards) [<code>prog1_simple_nohazard.asm</code>]</summary>
+<details markdown="1"><summary>1. Simple Execution (No Hazards) [<code>prog1_simple_nohazard.asm</code>]</summary>
 
 ```mips
 # Linear sequence with NO overlapping data dependencies
@@ -1896,7 +1896,7 @@ main:
 **Fix**: None required natively. Optimal throughput mapping ($CPI = 1.0$).
 </details>
 
-<details><summary>2. Raw Data Hazard [<code>prog1_simple_hazard.asm</code>]</summary>
+<details markdown="1"><summary>2. Raw Data Hazard [<code>prog1_simple_hazard.asm</code>]</summary>
 
 ```mips
 # RAW Hazard (Read-After-Write) resolved by execution forwarding
@@ -1918,7 +1918,7 @@ main:
 **Fix**: The `hazard.sv` multiplexer automatically activates the **Forwarding network**, routing the math outputs directly across the Execution $D$-Flip-flops into the awaiting computational block safely. No cycle stall is required!
 </details>
 
-<details><summary>3. Leaf Procedure Execution [<code>prog2_leaf_nohazard.asm</code>]</summary>
+<details markdown="1"><summary>3. Leaf Procedure Execution [<code>prog2_leaf_nohazard.asm</code>]</summary>
 
 ```mips
 # Leaf procedure execution without hazards using explicit absolute jumps
@@ -1945,7 +1945,7 @@ halt:
 **Fix**: None required.
 </details>
 
-<details><summary>4. Branch Control Hazard [<code>prog2_leaf_hazard.asm</code>]</summary>
+<details markdown="1"><summary>4. Branch Control Hazard [<code>prog2_leaf_hazard.asm</code>]</summary>
 
 ```mips
 # Leaf procedure triggering a Branch Hazard (Control Hazard) on BEQ
@@ -1973,7 +1973,7 @@ halt:
 **Fix**: The pipeline evaluates natively inside the ID phase forcing a structurally synchronized `flushD` safely bubble to overwrite overlapping structural arrays logically buffering correct trajectories smoothly.
 </details>
 
-<details><summary>5. Nested Pointer Logic [<code>prog3_nested_nohazard.asm</code>]</summary>
+<details markdown="1"><summary>5. Nested Pointer Logic [<code>prog3_nested_nohazard.asm</code>]</summary>
 
 ```mips
 # Nested procedure execution cleanly hopping scopes without RAW or control faults
@@ -2008,7 +2008,7 @@ halt:
 **Fix**: No fix needed natively! 
 </details>
 
-<details><summary>6. Load-Use Data Hazard [<code>prog3_nested_hazard.asm</code>]</summary>
+<details markdown="1"><summary>6. Load-Use Data Hazard [<code>prog3_nested_hazard.asm</code>]</summary>
 
 ```mips
 # Nested procedure triggering a Load-Use Data Hazard via stack mapping
@@ -2043,7 +2043,7 @@ halt:
 **Fix**: Since active forwarding from W boundaries is mathematically impossible structurally, `hazard.sv` logically halts the execution structurally dropping `stallD` natively forcing the program entirely safely to queue 1 structural `NOP`!
 </details>
 
-<details><summary>7. Dynamic Exception Handlers [<code>prog4_interrupts.asm</code>]</summary>
+<details markdown="1"><summary>7. Dynamic Exception Handlers [<code>prog4_interrupts.asm</code>]</summary>
 
 ```mips
 # Tests asynchronous interrupts triggering pipeline flushes and routing to the OS Handler

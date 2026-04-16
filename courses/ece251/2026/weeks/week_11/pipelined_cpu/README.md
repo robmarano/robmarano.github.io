@@ -52,7 +52,7 @@ The `tb_computer.sv` invokes a comprehensive sequence monitoring `$monitor` bloc
 
 ## Component Logic Source Code
 
-<details><summary><code>_timescale.sv</code></summary>
+<details markdown="1"><summary><code>_timescale.sv</code></summary>
 
 ```systemverilog
 `timescale 1ns/100ps
@@ -60,7 +60,7 @@ The `tb_computer.sv` invokes a comprehensive sequence monitoring `$monitor` bloc
 ```
 </details>
 <br>
-<details><summary><code>adder.sv</code></summary>
+<details markdown="1"><summary><code>adder.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -95,7 +95,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>alu.sv</code></summary>
+<details markdown="1"><summary><code>alu.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -182,7 +182,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>aludec.sv</code></summary>
+<details markdown="1"><summary><code>aludec.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -237,7 +237,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>assembler.py</code></summary>
+<details markdown="1"><summary><code>assembler.py</code></summary>
 
 ```python
 import sys
@@ -341,7 +341,7 @@ if __name__ == '__main__':
 ```
 </details>
 <br>
-<details><summary><code>clock.sv</code></summary>
+<details markdown="1"><summary><code>clock.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -402,7 +402,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>computer.sv</code></summary>
+<details markdown="1"><summary><code>computer.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -455,7 +455,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>controller.sv</code></summary>
+<details markdown="1"><summary><code>controller.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -493,7 +493,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>cpu.sv</code></summary>
+<details markdown="1"><summary><code>cpu.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -579,7 +579,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>datapath.sv</code></summary>
+<details markdown="1"><summary><code>datapath.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -773,7 +773,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>dff.sv</code></summary>
+<details markdown="1"><summary><code>dff.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -819,7 +819,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>dmem.sv</code></summary>
+<details markdown="1"><summary><code>dmem.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -862,7 +862,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>eqcmp.sv</code></summary>
+<details markdown="1"><summary><code>eqcmp.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -890,7 +890,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>flopenr.sv</code></summary>
+<details markdown="1"><summary><code>flopenr.sv</code></summary>
 
 ```systemverilog
 
@@ -917,7 +917,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>flopenrc.sv</code></summary>
+<details markdown="1"><summary><code>flopenrc.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -957,7 +957,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>hazard.sv</code></summary>
+<details markdown="1"><summary><code>hazard.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -1025,7 +1025,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>imem.sv</code></summary>
+<details markdown="1"><summary><code>imem.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -1074,7 +1074,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>maindec.sv</code></summary>
+<details markdown="1"><summary><code>maindec.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -1130,7 +1130,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>mem.sv</code></summary>
+<details markdown="1"><summary><code>mem.sv</code></summary>
 
 ```systemverilog
 
@@ -1164,7 +1164,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>mux2.sv</code></summary>
+<details markdown="1"><summary><code>mux2.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -1200,7 +1200,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>mux3.sv</code></summary>
+<details markdown="1"><summary><code>mux3.sv</code></summary>
 
 ```systemverilog
 
@@ -1226,7 +1226,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>mux4.sv</code></summary>
+<details markdown="1"><summary><code>mux4.sv</code></summary>
 
 ```systemverilog
 
@@ -1252,7 +1252,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>regfile.sv</code></summary>
+<details markdown="1"><summary><code>regfile.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -1301,7 +1301,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>signext.sv</code></summary>
+<details markdown="1"><summary><code>signext.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -1336,7 +1336,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>sl2.sv</code></summary>
+<details markdown="1"><summary><code>sl2.sv</code></summary>
 
 ```systemverilog
 //////////////////////////////////////////////////////////////////////////////////
@@ -1371,7 +1371,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>tb_computer.sv</code></summary>
+<details markdown="1"><summary><code>tb_computer.sv</code></summary>
 
 ```systemverilog
 `include "_timescale.sv"
@@ -1440,7 +1440,7 @@ endmodule
 ```
 </details>
 <br>
-<details><summary><code>test_prog.asm</code></summary>
+<details markdown="1"><summary><code>test_prog.asm</code></summary>
 
 ```assembly
 # test_prog.asm

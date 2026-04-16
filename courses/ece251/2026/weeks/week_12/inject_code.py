@@ -26,7 +26,7 @@ def generate_markdown(directory):
         with open(filepath, 'r') as fp:
             content = fp.read()
         lang = get_language(f)
-        md_chunks.append(f"<details><summary><code>{f}</code></summary>\n\n```{lang}\n{content}\n```\n</details>\n<br>")
+        md_chunks.append(f"<details markdown="1"><summary><code>{f}</code></summary>\n\n```{lang}\n{content}\n```\n</details>\n<br>")
     
     return "\n".join(md_chunks)
 
@@ -40,7 +40,7 @@ with open(notes_12_path, 'r') as f:
 markdown_12 = generate_markdown(week12_dir)
 
 # Find bounds using regex
-pattern_12 = re.compile(r'(<details><summary><code>_timescale\.sv</code></summary>)(.*?)(To practically evaluate the pipelined structural bounds)', re.DOTALL)
+pattern_12 = re.compile(r'(<details markdown="1"><summary><code>_timescale\.sv</code></summary>)(.*?)(To practically evaluate the pipelined structural bounds)', re.DOTALL)
 
 def repl_12(match):
     return markdown_12 + "\n" + match.group(3)
