@@ -250,9 +250,10 @@ See [notes_week_11](/courses/ece251/2026/weeks/week_11/notes_week_11.html)
 # <a id="week12">Week 12 &mdash; 4/16 &mdash; The Processor &mdash; Exceptions and Interrupts</a>
 
 ### High-Level Topics: Exceptions, Interrupts, and Architecture Synthesis
-* **Handling Hardware Faults** (Section 4.9): Distinguishing Exceptions (internal) from Interrupts (external) and isolating the `EPC` and `Cause` registers.
-* **SystemVerilog Integration**: Synchronizing MIPS trapping mechanisms (`0x80000180`) fundamentally into the SystemVerilog Control and Hazard Units.
-* **The Von Neumann Retrospective**: Bridging the entire computational instruction journey from Assembly down to SystemVerilog structural synthesis.
+* **Handling Hardware Faults** (Section 4.9): Triggering asynchronous interrupts and exceptions via `Exception_Flag`, performing pipeline flushes (`flushD/E`), and precisely capturing failing logic pointers via the `EPC` register.
+* **Comprehensive Assembly Analysis**: Executing fully-simulated MIPS physical workloads mapped across linear bounds, nested logic flows, branch dependencies, and OS Vector limits.
+* **Pipelined Datapath Verification**: Generating executable `.vcd` structural logs tracking signals across time bounds and inspecting exact exception fault latency tracking using the VS Code \*Surfer\* waveform extension.
+* **SystemVerilog Integration**: Fortifying processor matrices globally spanning memory depth scaling mapping arrays cleanly to OS mappings (`0x8000 0180`), decoupling overlapping arithmetic units globally (`MULT`, `DIV`, logic arrays) preventing hardware routing collisions seamlessly natively.
 
 See [notes_week_12](/courses/ece251/2026/weeks/week_12/notes_week_12.html)
 
