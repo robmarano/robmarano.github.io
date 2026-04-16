@@ -247,10 +247,18 @@ See [hw-10](/courses/ece251/2026/assignments/hw-10.html)
 
 See [notes_week_11](/courses/ece251/2026/weeks/week_11/notes_week_11.html)
 
-# <a id="week12">Week 12 &mdash; 4/16 &mdash; The Processor &mdash; Interrupts</a>
+# <a id="week12">Week 12 &mdash; 4/16 &mdash; The Processor &mdash; Exceptions and Interrupts</a>
 
+### High-Level Topics: Exceptions, Interrupts, and Architecture Synthesis
+* **Handling Hardware Faults** (Section 4.9): Distinguishing Exceptions (internal) from Interrupts (external) and isolating the `EPC` and `Cause` registers.
+* **SystemVerilog Integration**: Synchronizing MIPS trapping mechanisms (`0x80000180`) fundamentally into the SystemVerilog Control and Hazard Units.
+* **The Von Neumann Retrospective**: Bridging the entire computational instruction journey from Assembly down to SystemVerilog structural synthesis.
 
 See [notes_week_12](/courses/ece251/2026/weeks/week_12/notes_week_12.html)
+
+## Homework Assignment
+
+See [hw-12](/courses/ece251/2026/assignments/hw-12.html)
 
 # <a id="week13">Week 13 &mdash; 4/23 &mdash; Interrupts; Memory Hierarchies (Caching) Part 1</a>
 

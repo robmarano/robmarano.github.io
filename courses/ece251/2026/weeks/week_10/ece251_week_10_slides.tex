@@ -1,25 +1,27 @@
 \documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{hyperref}
-\usepackage{minted}
 
-% --- Setup Cooper Union Colors ---
-\definecolor{CooperRed}{HTML}{A51C30}
-\definecolor{CooperDark}{HTML}{212121}
+\title{ECE 251: Computer Architecture}
+\subtitle{Week 10: Multicycle Datapath \& Pipelining}
+\author{Prof Rob Marano}
+\date{Spring 2026}
 
+% Cooper Union Brand Identity
+\definecolor{CooperRed}{HTML}{8A1538}
+\definecolor{CooperDark}{HTML}{5C0E25}
+\setbeamercolor{structure}{fg=CooperRed}
 \setbeamercolor{palette primary}{bg=CooperRed,fg=white}
 \setbeamercolor{palette secondary}{bg=CooperRed,fg=white}
 \setbeamercolor{palette tertiary}{bg=CooperDark,fg=white}
 \setbeamercolor{title in head/foot}{bg=CooperDark,fg=white}
-\setbeamercolor{title}{fg=CooperRed}
-\setbeamercolor{frametitle}{bg=CooperDark,fg=white}
-
-% --- Title Info ---
-\title{ECE 251: Computer Architecture}
-\subtitle{Week 10: Multicycle Datapath \& Pipelining}
-\author{Professor Rob Marano}
-\institute{The Cooper Union}
-\date{Spring 2026}
+\logo{\includegraphics[height=1cm]{../../images/cooper_union_logo.png}}
+\titlegraphic{\includegraphics[height=1.5cm,keepaspectratio]{../../images/cooper_union_logo.png}}
 
 \begin{document}
 
@@ -68,7 +70,7 @@ Instructions are routed through the FSM:
 \end{frame}
 
 \begin{frame}[fragile]{5. SystemVerilog Emulation of the FSM}
-\begin{minted}[fontsize=\scriptsize,bgcolor=lightgray]{systemverilog}
+\begin{verbatim}
 module controller_fsm(input  logic       clk, reset,
                       input  logic [5:0] opcode,
                       output logic       memread, memwrite, regwrite);
@@ -94,7 +96,7 @@ module controller_fsm(input  logic       clk, reset,
         endcase
     end
 endmodule
-\end{minted}
+\end{verbatim}
 \end{frame}
 
 \begin{frame}{6. The Multicycle Problem}

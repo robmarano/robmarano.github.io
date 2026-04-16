@@ -1,0 +1,145 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\title{ECE 251: Computer Architecture}
+\subtitle{Week 12: Exceptions, Interrupts, and Architecture Synthesis}
+\author{Prof Rob Marano}
+\date{Spring 2026}
+
+% Cooper Union Brand Identity
+\definecolor{CooperRed}{HTML}{8A1538}
+\definecolor{CooperDark}{HTML}{5C0E25}
+\setbeamercolor{structure}{fg=CooperRed}
+\setbeamercolor{palette primary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette secondary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette tertiary}{bg=CooperDark,fg=white}
+\setbeamercolor{title in head/foot}{bg=CooperDark,fg=white}
+\logo{\includegraphics[height=1cm]{../../images/cooper_union_logo.png}}
+\titlegraphic{\includegraphics[height=1.5cm,keepaspectratio]{../../images/cooper_union_logo.png}}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{1. Chapter 4 Retrospective: Architecture Evolution}
+\begin{itemize}
+    \item \textbf{Single-Cycle}: $CPI=1.0$, bottlenecked incredibly by the absolute longest instruction format ($T_c \approx 800-1000\text{ps}$).
+    \item \textbf{Multi-Cycle}: FSM driven, faster clock boundaries ($T_c \approx 200\text{ps}$), but inflates cycle footprint ($CPI \approx 3-5$) operating sequentially.
+    \item \textbf{Pipelining}: Overlaps instructions concurrently across $D$-Flip-Flops to marry the rapid $T_c$ of the Multicycle with the optimal $CPI = 1.0$ limit natively.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{2. The Cost of Pipelining: Complexity and Faults}
+\begin{itemize}
+    \item Pipelining generates extreme throughput at the cost of structural convolution.
+    \item \textbf{Data Dependencies}: Mandates massive Forwarding loops to bypass Register caching limits.
+    \item \textbf{Control Penalties}: Requires hardware flushing of fetching phases on mispredicted jumps natively.
+    \item Overlapping matrices make stopping instruction tracking incredibly complex when localized sequential constraints fail unexpectedly.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{3. Overview: Handling the Unexpected}
+\begin{itemize}
+    \item Modern processors must systematically handle logic faults or external demands natively without permanently locking up computation.
+    \item \textbf{Exceptions}: Synchronous electrical faults generated internally by the datapath executing instructions (e.g., Undefined Opcodes, Math Overflow).
+    \item \textbf{Interrupts}: Asynchronous external electrical signals generated outside the datapath execution flow (e.g., Network Packets, I/O Hardware).
+    \item Both conditions force the datapath to immediately halt instruction overlap, backup tracking logic, and jump execution explicitly to an OS handler vector.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{4. The Trapping Mechanisms}
+\begin{itemize}
+    \item \textbf{1. Exception Program Counter (EPC)}: A dedicated 32-bit hardware register tasked strictly with capturing the Program Counter memory pointer ($PC$) of the exact instruction generating the localized exception fault.
+    \item \textbf{2. Cause Register}: Records a strict numerical identity classifying exactly *why* the CPU faulted natively, letting the OS run analytical branching routines.
+    \item \textbf{3. Vector Handler Routing}: The hardware forces the multiplexer riding the $PC$ tracking pin to dynamically rewire directly to the OS boundary at \texttt{0x8000 0180}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{5. SystemVerilog Physics: EPC and Routing}
+\begin{verbatim}
+// The EPC Latch inside the datapath
+always_ff @(posedge clk) begin
+  if (Exception_Flag) 
+    EPC <= PC_Plus4_E - 32'd4; // Capture the failing instruction
+end
+
+// The NextPC Multiplexer expansion
+always_comb begin
+  if (Exception_Flag) NextPC = 32'h8000_0180; // Trap to OS
+  else if (PCSrcE)    NextPC = PCBranchE;     // Standard branch
+  else                NextPC = PCPlus4F;      // Sequential logic
+end
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{6. Pipeline Considerations: Flushing Exceptions}
+\begin{itemize}
+    \item The biggest challenge is mapping faults correctly across multiple overlapping instructions.
+    \item If an \texttt{add} in the Execute (EX) stage mathematically overflows, the two innocent instructions trailing directly behind it inside the Fetch (IF) and Decode (ID) stages must die instantly.
+    \item The logic strictly utilizes the exact same \texttt{StallF} and \texttt{FlushD/FlushE} pins engineered for Branch hazards, rewriting the trailing sequence overlapping buffers into inert \texttt{NOP} structural states.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{7. Retrospective: The von Neumann Architecture Journey}
+\begin{itemize}
+    \item \textbf{Assembly (ISA)}: Human logic bounds mapped natively to binary combinations.
+    \item \textbf{Datapath Construction}: ALU calculation grids mapping mathematically mapped alongside immense sequential registry stores.
+    \item \textbf{Pipelining Overlaps}: Expanding Single-Cycle bottlenecks geometrically overlapping hardware to maximize processor frequency constraints whilst preserving idealized $CPI = 1.0$.
+    \item \textbf{SystemVerilog HDL Control}: SystemVerilog formally proves and describes these complex sequential networks to synthesize logic networks matching photolithography silicon fabrication models reliably.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{8. Simulating the Processor (Part 1)}
+\begin{itemize}
+    \item To functionally test the SystemVerilog components, we must generate a binary executable payload for the CPU's memory arrays.
+    \item \textbf{Step 1: Compile Assembly} – Translate your MIPS instructions (\texttt{.asm}) down to machine code (\texttt{.exe}):
+\end{itemize}
+\begin{verbatim}
+$ python3 assembler.py test_prog.asm test_prog.exe
+\end{verbatim}
+\begin{itemize}
+    \item \textbf{Step 2: Synthesize Netlist} – Bundle your CPU modules and testbench into an \textit{Icarus Verilog} executable runtime:
+\end{itemize}
+\begin{verbatim}
+$ iverilog -g2012 -o pipelined_cpu.vvp tb_computer.sv
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{9. Simulating the Processor (Part 2)}
+\begin{itemize}
+    \item \textbf{Step 3: Run the Simulation} – Execute the compiled runtime. Pass your customized binary into the CPU memory via the runtime \texttt{+PROG} hook:
+\end{itemize}
+\begin{verbatim}
+$ vvp pipelined_cpu.vvp +PROG=test_prog.exe
+\end{verbatim}
+\begin{itemize}
+    \item The console outputs arithmetic validation metrics confirming Forwarding and Flushing mechanics operated gracefully.
+    \item The testbench drops a digital execution wave file inside your local directory: \texttt{tb\_computer.vcd}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{10. Reviewing Execution Waves with VS Code "Surfer"}
+\begin{itemize}
+    \item \textbf{Step 4: Inspect the Digital Waveform} – Visually inspect the pipeline delays natively utilizing the VS Code \textbf{Surfer} extension!
+    \item Open the generated \texttt{tb\_computer.vcd} waveform file directly inside Visual Studio Code.
+    \item Track datapath variables across the timeline, heavily inspecting the \texttt{EPC}, \texttt{FlushD/E}, \texttt{StallF/D}, and dynamic ALU Forwarding boundaries.
+    \item \textbf{Action Required:} Take meticulous screenshots of your custom Exception faulting waveforms structurally validating logic behaviors within Surfer!
+\end{itemize}
+\end{frame}
+
+\begin{frame}{11. Conclusion of the Processor Component}
+\begin{itemize}
+    \item You now possess the complete hardware logic sequence validating how generic silicon evaluates and processes procedural logic.
+    \item Next steps: Branching beyond the processor logic specifically into Memory Hierarchies and spatial/temporal Caching optimizations spanning across RAM boundaries!
+\end{itemize}
+\end{frame}
+
+\end{document}
