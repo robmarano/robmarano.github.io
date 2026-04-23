@@ -65,7 +65,10 @@ Harris also emphasizes the foundational metric for measuring this hierarchy:
 ### 5.2 Memory Technologies
 The physical mediums we use dictate the hierarchy:
 1.  **SRAM (Static RAM):** Used for caches. It requires no refreshing to keep data (hence "static"). Extremely fast (nanoseconds) but low density and very expensive. Built using 6 transistors per bit.
-2.  **DRAM (Dynamic RAM):** Used for main memory. Data is stored as a charge on a capacitor. It must be periodically "refreshed" (hence "dynamic") because the charge leaks. High density, cheaper, but slower than SRAM.
+2.  **DRAM (Dynamic RAM):** Used for main memory. To achieve high density and low cost, DRAM relies on the **1T1C architecture** (1 Transistor, 1 Capacitor per bit). Data is stored as an electrical charge on the tiny capacitor.
+    *   **Destructive Reads:** Reading the state of the capacitor drains its charge. The memory controller's sense amplifiers must immediately write the data back after every read.
+    *   **Refresh Cycles:** Capacitors inherently leak charge over time. To prevent data loss, the memory controller must periodically halt the CPU and "refresh" (read and rewrite) every row in the memory bank (typically every 64ms).
+    *   **RAS/CAS Multiplexing:** To save physical pins on the chip package, the Row Address and Column Address are multiplexed over the same pins using Row Address Strobe (RAS) and Column Address Strobe (CAS) signals.
 3.  **Flash Memory:** Non-volatile semiconductor memory (EEPROM). Survives power-off. Reads are fast, but writes are significantly slower and physically wear out the memory cells over time (requiring wear leveling).
 4.  **Magnetic Disk:** Used for massive secondary storage. Relies on moving mechanical parts (platters and read/write heads). Measured in milliseconds (millions of times slower than SRAM).
 
@@ -120,6 +123,89 @@ When the CPU executes a `sw` (Store Word) instruction, the data is written to th
 
 **Memory Interleaving:**
 To reduce the Miss Penalty when fetching a block from slow DRAM, Hamacher introduces Interleaving. Instead of storing sequential blocks on one memory chip, the memory controller distributes consecutive blocks across multiple discrete memory banks. The CPU can send fetch requests to all banks simultaneously, receiving the data in parallel rather than sequentially!
+
+---
+
+## 5.4 SystemVerilog Hardware Implementations
+
+To bridge the gap between abstract computer architecture and physical digital logic, let's look at how we actually build these memory structures in SystemVerilog.
+
+### Level 1: Basic Synchronous Memory (Main Memory)
+At the core, Main Memory is just a massive array of registers. This basic model features asynchronous reads (data is immediately available when the address changes) and synchronous writes (data is written on the clock edge).
+
+```systemverilog
+module main_memory (
+    input  logic        clk,
+    input  logic        we,       // Write Enable
+    input  logic [31:0] addr,
+    input  logic [31:0] wd,       // Write Data
+    output logic [31:0] rd        // Read Data
+);
+
+    // Define an array of 1024 32-bit registers (4KB Memory)
+    // In real hardware, this would be massive DRAM banks.
+    logic [31:0] mem [0:1023]; 
+
+    // Asynchronous Read
+    assign rd = mem[addr[31:2]]; // Word aligned (ignore lower 2 bits)
+
+    // Synchronous Write
+    always_ff @(posedge clk) begin
+        if (we) begin
+            mem[addr[31:2]] <= wd;
+        end
+    end
+endmodule
+```
+
+### Level 2: Direct-Mapped Cache Arrays
+To build a cache that sits in front of that memory, we need three distinct arrays: one for the `Data`, one for the `Tag`, and one for the `Valid` bit.
+
+```systemverilog
+// Parameters for a small 4KB Direct-Mapped Cache
+// Block Size = 1 Word (4 Bytes)
+// Number of Blocks = 1024 
+
+logic [31:0] cache_data  [0:1023]; // The actual data blocks
+logic [19:0] cache_tags  [0:1023]; // The upper 20 bits of the address
+logic        cache_valid [0:1023]; // 1-bit valid flags
+```
+
+### Level 3: Combinational Hit/Miss Logic
+When the CPU requests an address, the Cache Controller must slice the physical address into Tag, Index, and Offset fields, and then determine if a **Hit** has occurred.
+
+```systemverilog
+module cache_controller (
+    input  logic [31:0] cpu_address,
+    output logic        cache_hit
+);
+
+    // Step 1: Slice the 32-bit address based on our topology
+    // Offset (2 bits): cpu_address[1:0]   (Byte offset within a word)
+    // Index (10 bits): cpu_address[11:2]  (Points to 1 of 1024 cache blocks)
+    // Tag (20 bits):   cpu_address[31:12] (The remaining upper bits)
+    
+    logic [9:0]  index;
+    logic [19:0] tag;
+    
+    assign index = cpu_address[11:2];
+    assign tag   = cpu_address[31:12];
+
+    // Step 2: Extract the stored Tag and Valid bit using the Index
+    logic [19:0] stored_tag;
+    logic        is_valid;
+    
+    assign stored_tag = cache_tags[index];
+    assign is_valid   = cache_valid[index];
+
+    // Step 3: Hit Logic (Combinational)
+    // A hit occurs IF the block is valid AND the stored tag matches the requested tag.
+    assign cache_hit = is_valid & (stored_tag == tag);
+    
+    // Note: If (cache_hit == 1), we return cache_data[index] to the CPU.
+    // If (cache_hit == 0), we must stall the CPU and fetch from Main Memory!
+endmodule
+```
 
 ---
 

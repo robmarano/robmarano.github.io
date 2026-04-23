@@ -144,6 +144,18 @@
 \end{itemize}
 \end{frame}
 
+\begin{frame}{2. Deep-Dive: Inside a DRAM Cell}
+\begin{itemize}
+    \item \textbf{1T1C Architecture:} 1 Transistor + 1 Capacitor per bit. Massive density.
+    \vspace{0.3cm}
+    \item \textbf{Destructive Reads:} Reading the capacitor drains its tiny electrical charge. The sense amplifiers must immediately rewrite the data back into the cell.
+    \vspace{0.3cm}
+    \item \textbf{Refresh Cycles:} Capacitors leak! The memory controller must halt the CPU and \textit{refresh} (read and rewrite) every row every $\approx 64$ms to prevent data corruption.
+    \vspace{0.3cm}
+    \item \textbf{Multiplexing:} Row Address Strobe (RAS) and Column Address Strobe (CAS) send the row and column halves of the address over the exact same pins to save space on the physical chip.
+\end{itemize}
+\end{frame}
+
 \begin{frame}{2. Non-Volatile Memory}
 \begin{itemize}
     \item \textbf{Flash Memory:}
@@ -244,6 +256,66 @@
     \vspace{0.3cm}
     \item \textbf{Pros/Cons:} Greatly reduces conflict misses compared to Direct-Mapped, without the insane hardware costs of Fully Associative. Uses LRU replacement.
 \end{itemize}
+\end{frame}
+
+\section{4. SystemVerilog Hardware Implementations}
+
+\begin{frame}[fragile]{4. Level 1: Basic Synchronous Memory}
+\begin{itemize}
+    \item How do we build Main Memory in RTL? As a massive array of registers.
+\end{itemize}
+\begin{verbatim}
+module main_memory (
+    input  logic        clk,
+    input  logic        we,       // Write Enable
+    input  logic [31:0] addr,
+    input  logic [31:0] wd,       // Write Data
+    output logic [31:0] rd        // Read Data
+);
+    logic [31:0] mem [0:1023];    // 4KB Memory Array
+
+    assign rd = mem[addr[31:2]];  // Asynchronous Read (Word aligned)
+
+    always_ff @(posedge clk) begin
+        if (we) mem[addr[31:2]] <= wd; // Synchronous Write
+    end
+endmodule
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{4. Level 2: Direct-Mapped Cache Arrays}
+\begin{itemize}
+    \item A Direct-Mapped Cache requires three distinct physical arrays:
+\end{itemize}
+\begin{verbatim}
+// Parameters for a small 4KB Direct-Mapped Cache
+// Block Size = 1 Word (4 Bytes)
+// Number of Blocks = 1024 
+
+logic [31:0] cache_data  [0:1023]; // The actual data blocks
+logic [19:0] cache_tags  [0:1023]; // The upper 20 bits of the address
+logic        cache_valid [0:1023]; // 1-bit valid flags
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{4. Level 3: Combinational Hit/Miss Logic}
+\begin{itemize}
+    \item The Cache Controller must slice the address and determine a Hit.
+\end{itemize}
+\begin{verbatim}
+    // Step 1: Slice the 32-bit CPU physical address
+    assign index = cpu_address[11:2];  // 10 bits for 1024 blocks
+    assign tag   = cpu_address[31:12]; // Remaining 20 upper bits
+
+    // Step 2: Extract the stored Tag and Valid bit using the Index
+    assign stored_tag = cache_tags[index];
+    assign is_valid   = cache_valid[index];
+
+    // Step 3: Hit Logic (Combinational)
+    assign cache_hit = is_valid & (stored_tag == tag);
+    
+    // If cache_hit == 0, trigger the FSM to stall and fetch from DRAM!
+\end{verbatim}
 \end{frame}
 
 \begin{frame}
