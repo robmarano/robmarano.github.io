@@ -15,9 +15,9 @@
 |                                 [8](#week8) |                                   [3/12](#week8) | Arithmetic and Floating Point Numbers; **Midterm Exam**        |
 |                                 [9](#week9) |                                   [3/26](#week9) | Intro to Data Path & Control                            |
 | [10](#week10), [11](#week11), [12](#week12) |  [4/2](#week10), [4/9](#week11), [4/16](#week12) | The Processor &mdash; Data Path & Control; Interrupts                     |
-|                [13](#week13), [14](#week14) |                 [4/23](#week13), [4/30](#week14) | Memory Hierarchies (Caching)                       |
-|                               [15](#week15) |                                  [5/14](#week15) | **Final Exam**                                                 |
-|                               [15](#week15) |                                  [5/15](#week15) | Group Final Project due no later than 5pm ET this day          |
+|                               [13](#week13) |                                  [4/23](#week13) | Memory Hierarchies (Caching) Part 1                            |
+|                               [14](#week14) |                                  [4/30](#week14) | Memory Hierarchies (Caching) Part 2                            |
+|                               [15](#week15) |                 [5/14](#week15), [5/15](#week15) | **Cumulative Final Exam** & Final Project Submission           |
 
 Follow the link above to the respective week's materials below.
 <br>
@@ -261,14 +261,29 @@ See [notes_week_12](/courses/ece251/2026/weeks/week_12/notes_week_12.html)
 
 See [hw-12](/courses/ece251/2026/assignments/hw-12.html)
 
-# <a id="week13">Week 13 &mdash; 4/23 &mdash; Interrupts; Memory Hierarchies (Caching) Part 1</a>
+# <a id="week13">Week 13 &mdash; 4/23 &mdash; Memory Hierarchies (Caching) Part 1</a>
 
+### High-Level Topics: Memory Technologies and Basics of Caches
+* **Introduction to Memory Hierarchy** (Section 5.1): The principle of locality (temporal and spatial).
+* **Memory Technologies** (Section 5.2): SRAM, DRAM, Flash, and Magnetic Disk.
+* **The Basics of Caches** (Section 5.3): Direct-mapped caches, tags, valid bits, block size, and cache misses.
+* **SystemVerilog Implementation** (Section 5.4): Building Direct-Mapped, Set-Associative, and Fully Associative cache arrays in RTL.
+* **Hardware Simulation** (Section 5.5): Proving the Iron Law of Performance via cache bypass testing and temporal locality benchmarks.
 
 See [notes_week_13](/courses/ece251/2026/weeks/week_13/notes_week_13.html)
 
-# <a id="week14">Week 14 &mdash; 4/30 &mdash;Interrupts; Memory Hierarchies (Caching) Part 2</a>
+# <a id="week14">Week 14 &mdash; 4/30 &mdash; Memory Hierarchies (Caching) Part 2</a>
 
+### High-Level Topics: Measuring and Improving Cache Performance
+* **Measuring and Improving Cache Performance** (Section 5.4): CPU time, miss penalty, average memory access time.
+* **Dependable Memory Hierarchy** (Section 5.5): Reliability, availability, Hamming codes.
+* **Virtual Memory** (Section 5.6): Pages, page faults, TLB, integration of virtual memory and caches.
 
 See [notes_week_14](/courses/ece251/2026/weeks/week_14/notes_week_14.html)
+
+# <a id="week15">Week 15 &mdash; 5/14 & 5/15 &mdash; Cumulative Final Exam & Final Project Submission</a>
+
+* **5/14**: Cumulative Final Exam.
+* **5/15**: Group Final Project due no later than 5pm ET.
 
 [<- back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html)

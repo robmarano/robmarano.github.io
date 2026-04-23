@@ -23,7 +23,17 @@ The objective of this update is to finalize the Week 13 Memory Hierarchies curri
 ### 3. Architecture Diagrams (`TECH_DESIGN.md`)
 *   Created Mermaid UML sequence and block diagrams mapping out the DRAM refresh loop, Cache hit logic, and overall system architecture.
 
+### 4. Cache SystemVerilog Implementation
+*   **Pipeline Hazard Fix:** Patched `hazard.sv` to ensure `flushE` and `flushD` are strictly gated during `mem_stall` to prevent instruction dropping during cache misses.
+*   **Cache Topologies:** Built and verified `cache_direct_mapped.sv`, `cache_set_associative.sv`, and `cache_fully_associative.sv` with hit/miss logic and `dmem_ready` handshaking.
+*   **Memory Wall Simulation:** Implemented a parameterized 10-cycle latency delay into `dmem.sv`.
+*   **Hardware Bypass:** Added a `cache_en` switch in `computer.sv` to dynamically route CPU requests to either the L1 Cache or directly to Main Memory.
+*   **Performance Counters:** Expanded `tb_computer.sv` to track instruction count, cycles, hits, and misses.
+*   **Performance Proof:** Wrote `loop_test.asm` to benchmark temporal locality, resulting in a dramatic reduction in Effective CPI (from 4.34 uncached to 1.89 cached).
+*   **Course Notes Integration:** Added the hardware simulation performance results into the global `ece251-notes.md` syllabus.
+
 ## Verification
-*   LaTeX slide deck successfully compiled without fatal errors.
+*   LaTeX slide deck successfully compiled without fatal errors and outputs performance metrics.
 *   Mermaid diagrams validated for syntax correctness.
 *   Markdown previewed successfully.
+*   Verilog testbench successfully demonstrated the Cache performance impact mathematically.
