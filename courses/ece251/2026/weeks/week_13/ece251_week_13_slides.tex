@@ -29,6 +29,18 @@
   \titlepage
 \end{frame}
 
+\section*{Chapter 4 Retrospective: Architecture Evolution}
+
+\begin{frame}{Chapter 4 Retrospective: Architecture Evolution}
+\begin{itemize}
+    \item \textbf{Single-Cycle Datapath:} One instruction per clock cycle. Cycle time is dictated by the longest path (Load Word). Simple control, but poor clock frequency.
+    \item \textbf{Multi-Cycle Datapath:} Broke instructions into 5 steps (Fetch, Decode, Execute, Memory, Write-Back). Faster clock, but complex FSM control.
+    \item \textbf{Pipelined Processor:} Overlapped the 5 execution stages to achieve an ideal CPI of 1.0. Massive throughput gains but introduced structural, data, and control hazards.
+    \item \textbf{Hazard Resolution:} Implemented Forwarding Units, Hazard Detection Units (stalls/bubbles), and Branch Prediction (flushing).
+    \item \textbf{Exceptions \& Interrupts:} Added EPC and Cause registers, expanding the datapath to handle unpredictable external/internal events.
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Agenda}
   \tableofcontents
 \end{frame}

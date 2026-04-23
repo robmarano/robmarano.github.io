@@ -5,9 +5,15 @@
 
 # Memory Hierarchies (Part 1)
 
-## The Journey So Far: From Processor to Memory
+## Chapter 4 Retrospective: Architecture Evolution
 
-Throughout this course, we have embarked on the monumental journey of designing and building a computer from the ground up. We started with the foundational logic gates, built an Arithmetic Logic Unit (ALU) to crunch numbers, and wired together the datapath and control units to create a fully functioning single-cycle processor. We then pushed the limits of performance by introducing pipelining, transforming our processor into a high-throughput machine capable of handling multiple instructions simultaneously and navigating the treacherous waters of hazards and exceptions.
+Before we dive into Memory Hierarchies, let's take a moment to reflect on our journey through Chapter 4. Over the past few weeks, we have evolved our processor architecture from a simple conceptual model into a high-performance, hazard-resilient machine:
+
+1.  **The Single-Cycle Datapath:** We started by wiring together the ALU, Registers, and Memory to execute one instruction per clock cycle. While conceptually simple, it suffered from a massive performance bottleneck: the clock cycle had to be long enough to accommodate the slowest possible instruction (usually `lw`), wasting time on faster instructions.
+2.  **The Multi-Cycle Datapath:** We broke instructions down into smaller, discrete steps (Fetch, Decode, Execute, Memory, Write-Back). This allowed faster instructions to complete in fewer cycles, but required a complex Finite State Machine (FSM) to control the datapath correctly.
+3.  **The Pipelined Processor:** We overlapped the execution of multiple instructions, keeping all hardware components busy simultaneously. This pushed our theoretical CPI (Cycles Per Instruction) down to an ideal 1.0, achieving massive throughput gains.
+4.  **Hazard Resolution:** Pipelining introduced harsh realities: Structural Hazards (resource conflicts), Data Hazards (dependencies), and Control Hazards (branches). We designed sophisticated **Forwarding Units** to bypass registers, **Hazard Detection Units** to insert pipeline stalls (bubbles), and **Branch Prediction** logic to flush mispredicted branches.
+5.  **Exceptions and Interrupts:** Finally, we expanded the datapath to handle the unpredictable. We added the `EPC` and `Cause` registers to safely save the processor state during illegal instructions or external hardware interrupts, allowing the OS to intervene.
 
 But a blazing-fast processor is useless if it has no data to compute or no place to store its results. This brings us to the final frontier of our journey: **The Memory System**.
 
