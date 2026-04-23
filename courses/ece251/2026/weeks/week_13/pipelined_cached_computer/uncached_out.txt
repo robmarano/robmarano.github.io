@@ -1,0 +1,19 @@
+WARNING: ./imem.sv:33: $readmemh(loop_test.exe): Not enough words in the file for the requested range [0:255].
+VCD info: dumpfile tb_computer.vcd opened for output.
+Starting Simulation: CACHE DISABLED (DIRECT TO MAIN MEMORY)
+Cycle 100...
+Cycle 200...
+Cycle 300...
+
+╭─────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ Program gracefully halted via Memory-Mapped I/O.                                                │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ PERFORMANCE METRICS:                                                                            │
+│ Total Clock Cycles: 347                                                                         │
+│ Instructions Executed: ~80                                                                      │
+│ Effective CPI: 4.34                                                                             │
+│ Cache Hits: 0                                                                                   │
+│ Cache Misses: 0                                                                                 │
+╰─────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+tb_computer.sv:101: $finish called at 34900 (100ps)

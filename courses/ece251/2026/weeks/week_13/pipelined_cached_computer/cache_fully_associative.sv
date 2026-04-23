@@ -55,7 +55,7 @@ module cache_fully_associative (
     logic miss;
     logic [3:0] hit_index; // Which block matched?
 
-    always_comb begin
+    always @(*) begin
         hit = 1'b0;
         hit_index = 4'b0;
         // Parallel search across all 16 blocks
