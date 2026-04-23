@@ -209,6 +209,60 @@ endmodule
 
 ---
 
+## 5.5 Worked Textbook Examples
+
+To bridge the gap between theory and exam-level problems, let's walk through three detailed examples inspired directly by our course textbooks.
+
+### Example 1: Calculating Address Fields (Harris & Harris)
+**Problem:** Suppose a computer has a 32-bit physical address space, and a **Direct-Mapped Cache** that holds **32 KB** of data. Each cache block is **64 Bytes** wide. Calculate the exact bit-widths of the Tag, Index, and Offset fields.
+
+**Step-by-Step Solution:**
+1.  **Offset:** The block size dictates the offset. Since each block is $64$ Bytes, we need enough bits to uniquely address each byte within the block.
+    $$Offset Bits = \log_2(64) = 6 \text{ bits}$$
+2.  **Index:** The index field selects which cache line to look at. First, calculate the total number of blocks (lines) in the cache.
+    $$Total Blocks = \frac{\text{Cache Size}}{\text{Block Size}} = \frac{32,768 \text{ Bytes}}{64 \text{ Bytes}} = 512 \text{ Blocks}$$
+    To uniquely index 512 blocks, we need:
+    $$Index Bits = \log_2(512) = 9 \text{ bits}$$
+3.  **Tag:** The tag field uses whatever bits are left over from the 32-bit address.
+    $$Tag Bits = 32 - Index - Offset = 32 - 9 - 6 = 17 \text{ bits}$$
+
+**Conclusion:** When the CPU requests an address, the top 17 bits are compared against the stored tag, the next 9 bits index into the cache arrays, and the bottom 6 bits select the specific byte within the block.
+
+### Example 2: The Direct-Mapped Mapping Sequence (Patterson & Hennessy)
+**Problem:** Consider a tiny Direct-Mapped cache with only **8 blocks**. The CPU requests the following sequence of memory block addresses: `22, 26, 22, 26, 16, 3, 16, 18`. Assuming the cache is initially empty, trace the hits and misses.
+
+**Step-by-Step Solution:**
+In a Direct-Mapped cache, the cache index is calculated as `(Block Address) modulo (Number of Blocks)`. Here, `Block % 8`.
+
+| Access | Block Address | Cache Index (`Block % 8`) | Hit/Miss? | Cache Content at Index (After Access) |
+| :--- | :--- | :--- | :--- | :--- |
+| 1 | 22 | $22 \pmod 8 = 6$ | **Miss** | Index 6 holds Block 22 |
+| 2 | 26 | $26 \pmod 8 = 2$ | **Miss** | Index 2 holds Block 26 |
+| 3 | 22 | $22 \pmod 8 = 6$ | **Hit** | Index 6 holds Block 22 |
+| 4 | 26 | $26 \pmod 8 = 2$ | **Hit** | Index 2 holds Block 26 |
+| 5 | 16 | $16 \pmod 8 = 0$ | **Miss** | Index 0 holds Block 16 |
+| 6 | 3 | $3 \pmod 8 = 3$ | **Miss** | Index 3 holds Block 3 |
+| 7 | 16 | $16 \pmod 8 = 0$ | **Hit** | Index 0 holds Block 16 |
+| 8 | 18 | $18 \pmod 8 = 2$ | **Miss** (Conflict!) | Index 2 *evicts 26*, holds Block 18 |
+
+**Conclusion:** The sequence results in **5 Misses and 3 Hits**. Notice the conflict at Access 8: Block 18 maps to Index 2, which was previously holding Block 26. Block 26 is evicted and replaced by Block 18.
+
+### Example 3: The Performance Impact of Cache Misses (Hamacher)
+**Problem:** A processor has a base CPI of 1.0 (assuming perfect memory). The L1 Cache has a hit time of 1 cycle, but a **miss penalty of 100 cycles** to fetch from Main Memory (DRAM). If the cache has a **Miss Rate of 5%**, calculate the Average Memory Access Time (AMAT) and the actual effective CPI.
+
+**Step-by-Step Solution:**
+1.  **Calculate AMAT:**
+    $$AMAT = \text{Hit Time} + (\text{Miss Rate} \times \text{Miss Penalty})$$
+    $$AMAT = 1 + (0.05 \times 100) = 1 + 5 = 6 \text{ cycles}$$
+2.  **Calculate Effective CPI:**
+    Assuming every instruction requires exactly 1 memory access (for the instruction fetch), the base CPI of 1.0 is delayed by the memory stall cycles.
+    $$Memory Stall Cycles = \text{Miss Rate} \times \text{Miss Penalty} = 0.05 \times 100 = 5$$
+    $$Effective CPI = \text{Base CPI} + \text{Memory Stall Cycles} = 1.0 + 5.0 = 6.0$$
+
+**Conclusion:** A seemingly small 5% miss rate causes the AMAT to balloon from 1 cycle to 6 cycles, making the entire processor **6 times slower** than its theoretical maximum speed. This proves why caching is the most critical factor in modern computer performance.
+
+---
+
 ## Practice Problem Set: Cache Mechanics
 
 ### Problem 1: Direct Mapping (Easy)

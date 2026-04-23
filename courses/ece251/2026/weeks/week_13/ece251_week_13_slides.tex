@@ -318,6 +318,54 @@ logic        cache_valid [0:1023]; // 1-bit valid flags
 \end{verbatim}
 \end{frame}
 
+\section{5. Worked Textbook Examples}
+
+\begin{frame}{5. Example 1: Address Fields (Harris \& Harris)}
+\textbf{Problem:} 32-bit address, Direct-Mapped Cache, 32 KB capacity, 64-Byte blocks. Calculate bits for Offset, Index, and Tag.
+\begin{itemize}
+    \item \textbf{1. Offset:} Driven by Block Size.
+    \[ \text{Offset Bits} = \log_2(64) = 6 \text{ bits} \]
+    \item \textbf{2. Index:} Driven by Number of Blocks.
+    \[ \text{Blocks} = \frac{32,768 \text{ Bytes}}{64 \text{ Bytes}} = 512 \text{ Blocks} \]
+    \[ \text{Index Bits} = \log_2(512) = 9 \text{ bits} \]
+    \item \textbf{3. Tag:} Driven by the remaining bits.
+    \[ \text{Tag Bits} = 32 - 9 - 6 = 17 \text{ bits} \]
+\end{itemize}
+\end{frame}
+
+\begin{frame}{5. Example 2: Access Trace (Patterson \& Hennessy)}
+\textbf{Problem:} Direct-Mapped Cache with 8 blocks. Access sequence: 22, 26, 22, 26, 16, 3, 16, 18. 
+
+\begin{table}[]
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Access} & \textbf{Block Address} & \textbf{Cache Index (Block \% 8)} & \textbf{Hit/Miss} \\ \hline
+1               & 22                     & $22 \pmod 8 = 6$                    & Miss              \\ \hline
+2               & 26                     & $26 \pmod 8 = 2$                    & Miss              \\ \hline
+3               & 22                     & $22 \pmod 8 = 6$                    & Hit               \\ \hline
+4               & 26                     & $26 \pmod 8 = 2$                    & Hit               \\ \hline
+5               & 16                     & $16 \pmod 8 = 0$                    & Miss              \\ \hline
+6               & 3                      & $3 \pmod 8 = 3$                     & Miss              \\ \hline
+7               & 16                     & $16 \pmod 8 = 0$                    & Hit               \\ \hline
+8               & 18                     & $18 \pmod 8 = 2$                    & Miss (Evicts 26)  \\ \hline
+\end{tabular}
+\end{table}
+\textbf{Result:} 5 Misses, 3 Hits.
+\end{frame}
+
+\begin{frame}{5. Example 3: Performance Impact (Hamacher)}
+\textbf{Problem:} Base CPI = 1.0, Hit Time = 1 cycle, Miss Penalty = 100 cycles, Miss Rate = 5\%.
+\begin{itemize}
+    \item \textbf{1. Calculate Average Memory Access Time (AMAT):}
+    \[ \text{AMAT} = \text{Hit Time} + (\text{Miss Rate} \times \text{Miss Penalty}) \]
+    \[ \text{AMAT} = 1 + (0.05 \times 100) = 1 + 5 = 6 \text{ cycles} \]
+    \item \textbf{2. Calculate Effective CPI:}
+    \[ \text{Memory Stall Cycles} = \text{Miss Rate} \times \text{Miss Penalty} = 5 \]
+    \[ \text{Effective CPI} = \text{Base CPI} + \text{Memory Stall Cycles} = 1.0 + 5.0 = 6.0 \]
+\end{itemize}
+\textbf{Conclusion:} A 5\% miss rate makes the CPU 6 times slower!
+\end{frame}
+
 \begin{frame}
 \begin{center}
     \Huge Questions?
