@@ -19,4 +19,5 @@ leaf_proc:
     j return_from_leaf
     
 halt:
-    j halt
+    # End of execution (Halt via Memory-Mapped I/O)
+    sw $zero, 252($zero)

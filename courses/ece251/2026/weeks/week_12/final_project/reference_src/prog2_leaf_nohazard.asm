@@ -9,7 +9,7 @@ main:
     
 return_from_leaf:
     addi $s1, $s0, 5
-    j halt
+    sw $zero, 252($zero)
     
 leaf_proc:
     # Independent calculation (no RAW hazard against $s1)
@@ -18,4 +18,4 @@ leaf_proc:
     j return_from_leaf
     
 halt:
-    j halt
+    sw $zero, 252($zero)

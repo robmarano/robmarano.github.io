@@ -11,5 +11,5 @@ main:
     sub $s5, $s2, $s0
     add $s6, $s4, $s5
     
-    # End of execution
-    j main
+    # End of execution (Halt via Memory-Mapped I/O)
+    sw $zero, 252($zero)

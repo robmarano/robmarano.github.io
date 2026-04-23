@@ -1,0 +1,5 @@
+# Build and simulation artifacts
+*.vvp
+*.vcd
+*.exe
+debug_output.txt

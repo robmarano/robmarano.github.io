@@ -9,7 +9,7 @@ main:
     j stack_proc
     
 return_from_stack:
-    j halt
+    sw $zero, 252($zero)
     
 stack_proc:
     # SW writes cleanly
@@ -26,4 +26,4 @@ stack_proc:
     j return_from_stack
     
 halt:
-    j halt
+    sw $zero, 252($zero)

@@ -378,6 +378,71 @@ logic        cache_valid [0:1023]; // 1-bit valid flags
 \textbf{Conclusion:} A 5\% miss rate makes the CPU 6 times slower!
 \end{frame}
 
+\begin{frame}{Synthesis: Quantifying Performance (Ch 1-4)}
+\textbf{1. The Baseline: Iron Law (Ch 1)}
+\[ \text{CPU Time} = \text{IC} \times \text{CPI} \times \text{Clock Cycle Time} \]
+\begin{itemize}
+    \item \textbf{Single-Cycle:} Ideal CPI $= 1.0$, but Clock Cycle Time is massive.
+\end{itemize}
+\vspace{0.3cm}
+\textbf{2. The Pipelining Upgrade (Ch 4)}
+\[ \text{CPI}_{\text{pipeline}} = \text{Ideal CPI (1.0)} + \text{Pipeline Stall Cycles / Instr} \]
+\begin{itemize}
+    \item Clock cycle is drastically reduced (split into 5 stages).
+    \item CPI increases slightly due to structural, data, and control hazards.
+    \item \textbf{Proof:} The massive clock speed increase vastly outweighs the minor stall penalty.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Synthesis: The Memory Wall (Ch 5)}
+\textbf{3. The Memory Wall \& AMAT}
+Main memory is slow. If we access it every cycle, the pipeline breaks.
+\[ \text{AMAT} = \text{Hit Time} + (\text{Miss Rate} \times \text{Miss Penalty}) \]
+\vspace{0.3cm}
+\textbf{4. Fully Integrated System Performance}
+We calculate the exact time penalty of cache misses on our pipeline:
+\[ \text{Mem Stalls} = \text{IC} \times \frac{\text{Mem Accesses}}{\text{Instr}} \times \text{Miss Rate} \times \text{Miss Penalty} \]
+\[ \text{CPI}_{\text{actual}} = \text{CPI}_{\text{pipeline}} + \frac{\text{Mem Stall Cycles}}{\text{Instr}} \]
+\textbf{Conclusion:} Caches successfully exploit locality to keep Miss Rates $<5\%$, driving AMAT close to 1 cycle and preserving our pipelined clock rate!
+\end{frame}
+
+\begin{frame}[fragile]{5. Hardware Simulation: The Silicon Proof}
+\textbf{Test Setup: `loop\_test.asm`}
+\begin{itemize}
+    \item Executed a 5-iteration loop summing an array of 4 integers.
+    \item Explicitly tests for \textbf{temporal locality}.
+    \item Simulated with a hardcoded 10-cycle main memory penalty in SystemVerilog.
+\end{itemize}
+\vspace{0.2cm}
+
+\textbf{The Uncached Execution (Direct to Main Memory)}
+\begin{verbatim}
+PERFORMANCE METRICS (UNCACHED):
+Total Clock Cycles: 347
+Instructions Executed: ~80
+Effective CPI: 4.34
+\end{verbatim}
+\textbf{Result:} The CPU spent the vast majority of its execution time frozen, waiting for the Memory Wall.
+\end{frame}
+
+\begin{frame}[fragile]{5. Hardware Simulation: The Silicon Proof (Cont.)}
+\textbf{The Cached Execution (L1 Enabled)}
+\begin{itemize}
+    \item The first iteration incurred the 10-cycle penalty (4 Misses).
+    \item The remaining 4 iterations hit the cache instantly (24 Hits).
+\end{itemize}
+\vspace{0.2cm}
+\begin{verbatim}
+PERFORMANCE METRICS (CACHED):
+Total Clock Cycles: 151
+Instructions Executed: ~80
+Effective CPI: 1.89
+Cache Hits: 24
+Cache Misses: 4
+\end{verbatim}
+\textbf{Conclusion:} By uniting the Iron Law of Performance, Pipelined Datapaths, and the Cache Memory Hierarchy, we successfully dropped the execution time from 347 cycles to \textbf{151 cycles}!
+\end{frame}
+
 \begin{frame}
 \begin{center}
     \Huge Questions?

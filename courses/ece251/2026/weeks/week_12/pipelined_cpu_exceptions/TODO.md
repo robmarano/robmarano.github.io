@@ -72,23 +72,12 @@ Expanding `alucontrol` to 4 bits (as requested in Issue 2) resolves this.
 
 ---
 
-## 4. Exception Vector Memory Aliasing
+## 4. [RESOLVED] Exception Vector Memory Aliasing
 **Severity:** Medium
-**Files:** `imem.sv`, `test_exceptions.asm`
+**Files:** `imem.sv`, `dmem.sv`, `computer.sv`, `test_exceptions.asm`, `prog4_interrupts.asm`
 
 ### Description
-The hardware naturally redirects the Program Counter to the standard OS exception vector `32'h8000_0180` (Word 96). However, the test program `test_exceptions.asm` places the handler at `.org 0x80` (Word 32). 
-* The simulation only succeeds because `imem.sv` declares `parameter r = 6`, meaning the memory is extremely shallow.
-* The 6-bit array bounds silently cause `0x180` (word index 96) to alias exactly onto `0x80` (word index 32) using modulo math `(96 % 64 = 32)`. If memory is ever expanded, exceptions will jump into uninitialized RAM and crash.
-
-### Recommended Solution
-1. Increase the memory depth parameters in `imem.sv` and `dmem.sv` (e.g., `parameter r = 8` or `10`).
-2. Update `test_exceptions.asm` so the handler is correctly located at the true hardware vector:
-   ```assembly
-   # Change from .org 0x80
-   .org 0x180
-   handler:
-   ```
+*Resolved: Memory depths were increased to `r=8` and handler targets updated to `0x180` to prevent bounds aliasing.*
 
 ---
 

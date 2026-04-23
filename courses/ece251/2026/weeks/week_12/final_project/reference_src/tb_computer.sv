@@ -78,6 +78,13 @@ module tb_computer;
                 $display("Extravagant Success: mem[88] evaluates to 24. Pipelined Branch Flushes and Load-Use Stalls executed perfectly!");
                 $finish;
             end
+            
+            // Universal Memory-Mapped I/O Halt
+            if (dataadr === 252) begin
+                $display("-----------------------------------------------------");
+                $display("Program gracefully halted via Memory-Mapped I/O write to address 252.");
+                $finish;
+            end
         end
     end
 
