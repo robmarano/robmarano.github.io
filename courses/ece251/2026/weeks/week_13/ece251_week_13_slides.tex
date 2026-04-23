@@ -130,13 +130,32 @@
 
 \section{3. The Basics of Caches}
 
-\begin{frame}{3. The Cache}
+\begin{frame}{3. Mapping Memory to Cache}
 \begin{itemize}
     \item The \textbf{Cache} is the level of the memory hierarchy closest to the CPU.
-    \item The simplest way to map memory blocks into the cache is a \textbf{Direct-Mapped Cache}.
-    \item \textbf{Direct-Mapped Caching:} Each memory block maps to exactly \textit{one} specific block in the cache.
+    \item How do we map memory blocks from the massive Main Memory into the tiny Cache?
+    \item There are three fundamental topologies, trading off hardware complexity against miss rates:
+    \begin{enumerate}
+        \item \textbf{Direct-Mapped Caches}
+        \item \textbf{Fully Associative Caches}
+        \item \textbf{Set-Associative Caches (N-Way)}
+    \end{enumerate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{3. Direct Mapped Caches}
+\begin{itemize}
+    \item In a direct-mapped cache, each memory block maps to exactly \textit{one} specific block in the cache.
     \item \textbf{Mapping Formula:} \texttt{(Block address) modulo (Number of blocks in the cache)}
-    \item Since the number of cache blocks is usually a power of 2, the modulo operation is just the lower $n$ bits of the block address.
+    \vspace{0.3cm}
+    \item \textbf{Address Bit Breakdown:}
+    \begin{itemize}
+        \item \textbf{Offset:} The lowest bits. Identifies specific byte. Width = $\log_2(\text{Bytes per Block})$.
+        \item \textbf{Index:} The middle bits. Identifies exact cache row. Width = $\log_2(\text{Number of Cache Blocks})$.
+        \item \textbf{Tag:} Leftover upper bits stored alongside data to verify a match.
+    \end{itemize}
+    \vspace{0.3cm}
+    \item \textbf{Pros/Cons:} Extremely fast hit time (only one tag to check). Very cheap. Prone to high \textit{Conflict Misses}.
 \end{itemize}
 \end{frame}
 
@@ -146,36 +165,30 @@
 \end{center}
 \end{frame}
 
-\begin{frame}{3. Tags and Valid Bits}
+\begin{frame}{3. Fully Associative Caches}
 \begin{itemize}
-    \item Because multiple memory blocks map to the same cache index, we need a way to know exactly \textit{which} memory block is currently sitting in the cache.
+    \item To solve conflict misses, a \textbf{Fully Associative} cache allows any memory block to be placed in \textit{any} available cache block.
     \vspace{0.3cm}
-    \item \textbf{Tag:} The upper portion of the address is stored alongside the data. The cache compares the requested address's tag against the stored tag to verify a match.
+    \item \textbf{Mapping:} There is no Index field! The physical address only contains the \textbf{Tag} and \textbf{Offset}.
+    \item \textbf{Hardware Cost:} The cache must compare the requested Tag against \textit{every single Tag in the cache simultaneously}. Requires massive, expensive parallel hardware comparators.
     \vspace{0.3cm}
-    \item \textbf{Valid Bit:} A single bit added to the cache block to indicate whether the block contains valid data (1) or garbage/empty space (0).
+    \item \textbf{Pros/Cons:} Lowest possible miss rate. Incredibly expensive and consumes significant power. Restricted to very small memory structures (like TLBs).
 \end{itemize}
 \end{frame}
 
-\begin{frame}{3. Handling Cache Misses}
+\begin{frame}{3. Set-Associative Caches (N-Way)}
 \begin{itemize}
-    \item When a miss occurs, the control unit must:
-    \begin{enumerate}
-        \item \textbf{Stall} the CPU pipeline (suspend execution).
-        \item \textbf{Fetch} the requested block from the next lower level of the memory hierarchy (Main Memory).
-        \item \textbf{Write} the block into the cache (updating the tag and setting the valid bit).
-        \item \textbf{Restart} the instruction that caused the miss.
-    \end{enumerate}
-\end{itemize}
-\end{frame}
-
-\begin{frame}{3. Block Size Considerations}
-\begin{itemize}
-    \item Increasing the block size takes advantage of spatial locality, reducing the miss rate.
-    \item \textbf{The Trade-off:}
+    \item The ``Goldilocks'' compromise. The cache is divided into ``Sets'', and each set contains $N$ cache blocks (e.g., 2-way, 4-way, 8-way).
+    \item \textbf{Mapping:} A memory block maps to exactly \textit{one} Set (using the Index), but can be placed into \textit{any} of the $N$ blocks within that set.
+    \vspace{0.3cm}
+    \item \textbf{Address Bit Breakdown:}
     \begin{itemize}
-        \item If the block size gets too large compared to the overall cache size, the miss rate can actually \textit{increase} because fewer total blocks can be held in the cache simultaneously (increasing conflict/capacity misses).
-        \item A larger block size increases the \textit{miss penalty} since more data must be fetched from slower memory over the system bus.
+        \item \textbf{Offset:} $\log_2(\text{Bytes per Block})$.
+        \item \textbf{Index:} $\log_2(\text{Number of Sets})$.
+        \item \textbf{Tag:} Leftover bits.
     \end{itemize}
+    \vspace{0.3cm}
+    \item \textbf{Pros/Cons:} Greatly reduces conflict misses compared to Direct-Mapped, without the insane hardware costs of Fully Associative. Uses LRU replacement.
 \end{itemize}
 \end{frame}
 
