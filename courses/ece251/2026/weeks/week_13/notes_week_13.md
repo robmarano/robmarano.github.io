@@ -5,6 +5,20 @@
 
 # Memory Hierarchies (Part 1)
 
+## The Journey So Far: From Processor to Memory
+
+Throughout this course, we have embarked on the monumental journey of designing and building a computer from the ground up. We started with the foundational logic gates, built an Arithmetic Logic Unit (ALU) to crunch numbers, and wired together the datapath and control units to create a fully functioning single-cycle processor. We then pushed the limits of performance by introducing pipelining, transforming our processor into a high-throughput machine capable of handling multiple instructions simultaneously and navigating the treacherous waters of hazards and exceptions.
+
+But a blazing-fast processor is useless if it has no data to compute or no place to store its results. This brings us to the final frontier of our journey: **The Memory System**.
+
+Historically, early computers had very simple, flat memory structures. The CPU communicated directly with a single bank of memory. However, as semiconductor technology advanced, a dramatic rift emerged: processors became exponentially faster, while memory access times lagged behind. The CPU found itself starving for data, waiting hundreds of cycles for a single memory fetch.
+
+To bridge this expanding chasm, computer architects didn't invent one perfect memory technology; instead, they invented a **hierarchy**. They placed tiny, blazing-fast, but expensive SRAM chips (the **Cache**) directly next to the processor to act as a high-speed buffer. They kept the bulk of the data in slower, cheaper, but high-capacity DRAM (the **Main Memory**). Eventually, they extended this concept even further, using massive magnetic disks as the ultimate safety net and inventing **Virtual Memory** to create the illusion of infinite RAM.
+
+In these final weeks, we will explore this elegant solution. We will discover how the processor predicts what data it will need next and how the intricate dance between the Cache, Main Memory, and Virtual Memory keeps our pipelined CPU fed and running at peak performance.
+
+---
+
 ## Reading Assignment
 *   Read Chapter 5, Sections 5.1 through 5.3 in the textbook (*Computer Organization and Design - MIPS Edition*).
 *   **Supplemental**: *Digital Design and Computer Architecture (Harris)* - Chapter 8 (Memory Systems).
