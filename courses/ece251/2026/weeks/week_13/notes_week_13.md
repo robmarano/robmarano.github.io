@@ -33,7 +33,7 @@ Computer architects face a fundamental paradox: processors are incredibly fast, 
 
 We exploit locality by implementing a **Memory Hierarchy**:
 <p align="center">
-  <img src="../../../../Image Bank/ch005-9780128201091/jpg-9780128201091/005001.jpg" width="60%" alt="Memory Hierarchy Pyramid">
+  <img src="../../../../../Image Bank/ch005-9780128201091/jpg-9780128201091/005001.jpg" width="60%" alt="Memory Hierarchy Pyramid">
 </p>
 
 *   **Top of the hierarchy (closest to CPU):** Fast, small, expensive (e.g., L1/L2 Caches).
@@ -81,7 +81,7 @@ In a direct-mapped cache, each memory block maps to exactly *one* specific block
 *   Since the number of cache blocks is usually a power of 2, the modulo operation is just the lower $n$ bits of the block address.
 
 <p align="center">
-  <img src="../../../../Image Bank/ch005-9780128201091/jpg-9780128201091/005007.jpg" width="60%" alt="Direct Mapped Cache Diagram">
+  <img src="../../../../../Image Bank/ch005-9780128201091/jpg-9780128201091/005007.jpg" width="60%" alt="Direct Mapped Cache Diagram">
 </p>
 
 **Address Bit Breakdown:**
