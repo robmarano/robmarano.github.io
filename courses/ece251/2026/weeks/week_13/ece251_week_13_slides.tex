@@ -88,6 +88,28 @@
 \end{itemize}
 \end{frame}
 
+\begin{frame}{1. Harris Perspective: The ``Desk'' Analogy}
+\begin{itemize}
+    \item \textit{Harris \& Harris} provide a highly physical analogy for the memory hierarchy:
+    \vspace{0.3cm}
+    \item \textbf{The CPU}: You, sitting at a desk, actively working on a problem.
+    \item \textbf{The Cache}: The physical surface of your desk. Small, but you can access any paper on it instantly (SRAM).
+    \item \textbf{Main Memory}: A filing cabinet across the room. It holds much more data, but retrieving a folder requires you to stand up and walk over (DRAM Miss Penalty).
+    \item \textbf{Magnetic Disk}: The warehouse down the street. It holds everything, but takes a massive amount of time to fetch.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{1. Average Memory Access Time (AMAT)}
+\begin{itemize}
+    \item How do we mathematically measure the performance of this hierarchy?
+    \vspace{0.3cm}
+    \item \textbf{AMAT Formula:} \texttt{Hit Time + (Miss Rate $\times$ Miss Penalty)}
+    \vspace{0.3cm}
+    \item \textit{Example}: If cache hit time is 1 cycle, miss penalty is 100 cycles, and miss rate is 5\%:
+    \item \texttt{AMAT = 1 + (0.05 $\times$ 100) = 1 + 5 = 6 cycles}
+\end{itemize}
+\end{frame}
+
 \section{2. Memory Technologies}
 
 \begin{frame}{2. Memory Technologies: SRAM vs DRAM}
@@ -125,6 +147,26 @@
         \item Relies on moving mechanical parts (platters and read/write heads).
         \item Measured in milliseconds (millions of times slower than SRAM).
     \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{2. Hamacher Perspective: Write Policies}
+\begin{itemize}
+    \item When the CPU executes a \texttt{sw} (Store Word), data is written to the Cache. But when does it update Main Memory?
+    \vspace{0.3cm}
+    \item \textbf{Write-Through:} Data is written to \textit{both} the cache block and the lower-level memory simultaneously. Perfectly safe, but extremely slow.
+    \vspace{0.3cm}
+    \item \textbf{Write-Back:} Data is written \textit{only} to the cache. The block is marked with a \textbf{Dirty Bit}. It is only written to Main Memory if that block is evicted later. Incredibly fast, but vulnerable to power loss.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{2. Hamacher Perspective: Memory Interleaving}
+\begin{itemize}
+    \item To reduce the \textbf{Miss Penalty} when fetching a block from slow DRAM, \textit{Hamacher} introduces \textbf{Interleaving}.
+    \vspace{0.3cm}
+    \item Instead of storing sequential blocks on one memory chip, the memory controller distributes consecutive blocks across multiple discrete memory banks.
+    \vspace{0.3cm}
+    \item The CPU can send fetch requests to all banks simultaneously, receiving the data in parallel rather than sequentially!
 \end{itemize}
 \end{frame}
 

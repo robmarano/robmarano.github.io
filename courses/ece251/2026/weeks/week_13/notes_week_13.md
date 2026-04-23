@@ -7,6 +7,8 @@
 
 ## Reading Assignment
 *   Read Chapter 5, Sections 5.1 through 5.3 in the textbook (*Computer Organization and Design - MIPS Edition*).
+*   **Supplemental**: *Digital Design and Computer Architecture (Harris)* - Chapter 8 (Memory Systems).
+*   **Supplemental**: *Computer Organization and Embedded Systems (Hamacher)* - Chapter 8 (The Memory System).
 
 ## High-Level Topic Coverage
 
@@ -30,6 +32,21 @@ We exploit locality by implementing a **Memory Hierarchy**:
     *   **Hit Time:** The time required to access data in the upper level.
 *   **Miss:** Data is not found in the upper level.
     *   **Miss Penalty:** The time required to fetch the block from the lower level into the upper level, plus the time to deliver it to the processor.
+
+---
+
+### Alternative Perspective: The "Desk" Analogy (Harris)
+If you are struggling to conceptualize the memory hierarchy, *Harris & Harris* (Chapter 8) introduces an exceptionally clear, physical analogy:
+*   **The CPU** is you, sitting at a desk, actively working on a problem.
+*   **The Cache** is the physical surface of the desk. It is very small, but you can access any paper on it instantly (SRAM).
+*   **Main Memory (DRAM)** is a filing cabinet in the corner of your office. It holds much more data, but retrieving a folder requires you to stand up, walk over, and pull it out (Miss Penalty).
+*   **Magnetic Disk** is the warehouse down the street. It holds everything you've ever owned, but driving there and back takes a massive amount of time.
+
+**Average Memory Access Time (AMAT)**
+Harris also emphasizes the foundational metric for measuring this hierarchy:
+`AMAT = Hit Time + (Miss Rate * Miss Penalty)`
+
+---
 
 ### 5.2 Memory Technologies
 The physical mediums we use dictate the hierarchy:
@@ -76,6 +93,19 @@ The "Goldilocks" compromise. The cache is divided into "Sets", and each set cont
 3.  **Tag:** Leftover bits.
 
 **Pros/Cons:** Greatly reduces conflict misses compared to Direct-Mapped, without the insane hardware costs of Fully Associative (only requires $N$ parallel comparators). Uses a replacement policy (like Least-Recently-Used / LRU) to decide which block to evict when a set is full.
+
+---
+
+### Alternative Perspective: Write Policies & Interleaving (Hamacher)
+While Patterson & Hennessy focus heavily on the *Read* architecture, *Hamacher* (Chapter 8) dives deeply into the complexities of **Writing** to the cache and extracting data from DRAM.
+
+**Cache Write Policies:**
+When the CPU executes a `sw` (Store Word) instruction, the data is written to the Cache. But when does it go to Main Memory?
+*   **Write-Through:** Data is written to *both* the cache block and the lower-level memory simultaneously. This is perfectly safe (memory is never out of sync) but extremely slow.
+*   **Write-Back:** Data is written *only* to the cache. The cache block is marked with a **Dirty Bit**. The data is only written to Main Memory if that specific block is evicted (replaced) later. This is incredibly fast, but if power is lost, the updated data is destroyed before it reaches safety.
+
+**Memory Interleaving:**
+To reduce the Miss Penalty when fetching a block from slow DRAM, Hamacher introduces Interleaving. Instead of storing sequential blocks on one memory chip, the memory controller distributes consecutive blocks across multiple discrete memory banks. The CPU can send fetch requests to all banks simultaneously, receiving the data in parallel rather than sequentially!
 
 ---
 
