@@ -12,5 +12,5 @@ main:
     # Chain dependency on $s1
     add $s2, $s1, $s1
     
-    # End of execution
-    j main
+    # End of execution (Halt via Memory-Mapped I/O)
+    sw $zero, 252($zero)

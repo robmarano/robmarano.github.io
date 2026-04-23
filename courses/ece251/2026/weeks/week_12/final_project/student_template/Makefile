@@ -4,7 +4,15 @@ VVPOPTS=-s tb_computer
 # Default assembly program if none is specified
 ASM ?= test_prog
 
-all: clean asm compile run
+all: clean check_asm asm compile run
+
+check_asm:
+	@if [ ! -f $(ASM).asm ]; then \
+		echo "ERROR: Assembly file '$(ASM).asm' not found!"; \
+		echo "Available test files are:"; \
+		ls -1 *.asm | sed 's/\.asm//'; \
+		exit 1; \
+	fi
 
 compile:
 	iverilog -g2012 -o $(PROJECT_NAME).vvp $(SRCS)

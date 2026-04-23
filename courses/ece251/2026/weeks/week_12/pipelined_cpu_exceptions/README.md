@@ -901,7 +901,7 @@ endmodule
 
 module dmem
 // n=bit length of register; r=bit length of addr to limit memory and not crash your verilog emulator
-    #(parameter n = 32, parameter r = 6)(
+    #(parameter n = 32, parameter r = 8)(
     //
     // ---------------- PORT DEFINITIONS ----------------
     //
@@ -1644,7 +1644,17 @@ cat debug_output.txt
 * **`[MEM]`**: Data memory interactions (RAM `Addr` and `WriteData`).
 * **`[WB]`**: The target destination register (`RegDst`) and the final `ResultW` being written back.
 
-### 2. Review Execution Waves (Optional)
+### 2. Graceful CPU Halting (Memory-Mapped I/O)
+Rather than relying on the simulator to physically time out after 2000 cycles, the MIPS architecture in this project implements a clean **Memory-Mapped I/O Halt**.
+
+To gracefully stop the CPU at the end of execution, target physical address `252` (`0xFC`):
+```assembly
+# End of execution (Halt via Memory-Mapped I/O)
+sw $zero, 252($zero)
+```
+When this `sw` instruction reaches the Memory phase, the testbench catches the write dynamically and cleanly terminates the cycle logging.
+
+### 3. Review Execution Waves (Optional)
 The simulation natively drops a `tb_exceptions.vcd` digital wave file. You can open this to visually inspect the pipelined structural variables and see exactly when the interrupt occurs.
 
 > **⚠️ macOS 14+ (Apple Silicon) Note:** The legacy `gtkwave` macOS app is no longer compatible. We highly recommend using modern alternatives.

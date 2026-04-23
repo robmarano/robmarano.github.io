@@ -9,7 +9,7 @@ main:
     
 return_from_outer:
     addi $s1, $s0, 5
-    j halt
+    sw $zero, 252($zero)
     
 outer_proc:
     addi $s2, $zero, 10
@@ -26,4 +26,4 @@ inner_proc:
     j return_from_inner
     
 halt:
-    j halt
+    sw $zero, 252($zero)

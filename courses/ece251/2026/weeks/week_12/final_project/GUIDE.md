@@ -58,7 +58,7 @@ This guide provides step-by-step instructions on how to build a complete, 5-stag
 2.  **The Computer Wrapper (`computer.sv`):** Connect the CPU's PC to I-Mem and its ALU result/WriteData to D-Mem.
 3.  **I/O Mapping:**
     *   **Input:** The `intr` pin is your primary asynchronous input. When HIGH, it triggers the hardware exception vector.
-    *   **Output:** Monitor memory writes to specific addresses (e.g., `84` and `88`) to verify program success.
+    *   **Output:** Monitor memory writes to specific addresses to verify program success. Implement a universal halt condition that triggers `$finish` when the CPU writes to address `252` (`0xFC`).
 4.  **Hardware Exception Vector:** Hardcode the redirection address to `32'h8000_0180` in the datapath.
 
 ---
@@ -69,7 +69,7 @@ This guide provides step-by-step instructions on how to build a complete, 5-stag
 1.  **Assembler (`assembler.py`):** Use the Python script to translate `.asm` MIPS files into `.exe` hex files.
 2.  **Programming the OS Handler:**
     *   Write a test program with a `.org 0x180` section.
-    *   The handler should perform a recognizable action (e.g., setting `$k0 = 999`) to prove the interrupt worked.
+    *   The handler should perform a recognizable action to prove the interrupt worked. All test programs should gracefully exit via a Memory-Mapped I/O write (`sw $zero, 252($zero)`).
 3.  **Simulation & Verification:**
     *   Use the `Makefile` to compile the SV source with `iverilog`.
     *   Run the simulation with `vvp +PROG=your_program.exe`.
