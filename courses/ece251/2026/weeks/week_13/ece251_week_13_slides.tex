@@ -1,0 +1,188 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\title{ECE 251: Computer Architecture}
+\subtitle{Week 13: Memory Hierarchies (Part 1)}
+\author{Prof Rob Marano}
+\date{Spring 2026}
+
+% Cooper Union Brand Identity
+\definecolor{CooperRed}{HTML}{8A1538}
+\definecolor{CooperDark}{HTML}{5C0E25}
+\setbeamercolor{structure}{fg=CooperRed}
+\setbeamercolor{palette primary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette secondary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette tertiary}{bg=CooperDark,fg=white}
+\setbeamercolor{title in head/foot}{bg=CooperDark,fg=white}
+\logo{\includegraphics[height=1cm]{../../images/cooper_union_logo.png}}
+\titlegraphic{\includegraphics[height=1.5cm,keepaspectratio]{../../images/cooper_union_logo.png}}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+\end{frame}
+
+\section{1. Introduction to Memory Hierarchy}
+
+\begin{frame}{1. The Processor/Memory Paradox}
+\begin{itemize}
+    \item Computer architects face a fundamental physical paradox:
+    \item \textbf{Processors are incredibly fast} (Clock cycles in nanoseconds or picoseconds).
+    \item \textbf{Memory is relatively slow} (Access times in tens of nanoseconds or milliseconds).
+    \item If the CPU has to wait for Main Memory on every instruction fetch and data load, the massive speed gains of pipelining ($CPI \approx 1.0$) are entirely lost!
+\end{itemize}
+\end{frame}
+
+\begin{frame}{1. The Principle of Locality}
+\begin{itemize}
+    \item To keep the processor fed with data without stalling, we rely on the \textbf{Principle of Locality}:
+    \vspace{0.5cm}
+    \item \textbf{Temporal Locality (Locality in Time):}
+    \begin{itemize}
+        \item If an item is referenced, it will tend to be referenced again soon.
+        \item \textit{Example:} Loops iterating over the same variables.
+    \end{itemize}
+    \vspace{0.3cm}
+    \item \textbf{Spatial Locality (Locality in Space):}
+    \begin{itemize}
+        \item If an item is referenced, items whose addresses are close by will tend to be referenced soon.
+        \item \textit{Example:} Sequentially accessing elements in an array.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{1. The Memory Hierarchy Pyramid}
+\begin{center}
+    \includegraphics[height=5.5cm,keepaspectratio]{../../../../Image Bank/ch005-9780128201091/jpg-9780128201091/005001.jpg}
+\end{center}
+\begin{itemize}
+    \item We exploit locality by implementing multiple tiers of memory.
+    \item \textbf{Closer to CPU}: Faster, smaller, more expensive per bit.
+    \item \textbf{Further from CPU}: Slower, larger, cheaper per bit.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{1. Key Terminology}
+\begin{itemize}
+    \item \textbf{Block (or Line):} The minimum unit of information that can be either present or not present in a two-level hierarchy.
+    \item \textbf{Hit:} Data requested by the processor appears in some block in the upper level.
+    \begin{itemize}
+        \item \textbf{Hit Rate:} The fraction of memory accesses found in the upper level.
+        \item \textbf{Hit Time:} The time required to access data in the upper level.
+    \end{itemize}
+    \item \textbf{Miss:} Data is not found in the upper level.
+    \begin{itemize}
+        \item \textbf{Miss Penalty:} The time required to fetch the block from the lower level into the upper level, plus the time to deliver it to the processor.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{2. Memory Technologies}
+
+\begin{frame}{2. Memory Technologies: SRAM vs DRAM}
+\begin{itemize}
+    \item \textbf{SRAM (Static RAM):}
+    \begin{itemize}
+        \item Used for caches (L1, L2, L3).
+        \item Fast (0.5ns - 2.5ns access time).
+        \item Requires no refreshing to keep data (hence ``static'').
+        \item Low density and very expensive (6 transistors per bit).
+    \end{itemize}
+    \vspace{0.3cm}
+    \item \textbf{DRAM (Dynamic RAM):}
+    \begin{itemize}
+        \item Used for Main Memory.
+        \item Slower (50ns - 70ns access time).
+        \item Data stored as a charge on a capacitor; must be periodically ``refreshed'' because charge leaks.
+        \item High density and cheaper (1 transistor per bit).
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{2. Non-Volatile Memory}
+\begin{itemize}
+    \item \textbf{Flash Memory:}
+    \begin{itemize}
+        \item Non-volatile semiconductor memory (EEPROM).
+        \item Survives power-off.
+        \item Reads are fast, but writes are significantly slower and physically wear out the memory cells over time (requires wear leveling).
+    \end{itemize}
+    \vspace{0.3cm}
+    \item \textbf{Magnetic Disk:}
+    \begin{itemize}
+        \item Used for massive secondary storage.
+        \item Relies on moving mechanical parts (platters and read/write heads).
+        \item Measured in milliseconds (millions of times slower than SRAM).
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{3. The Basics of Caches}
+
+\begin{frame}{3. The Cache}
+\begin{itemize}
+    \item The \textbf{Cache} is the level of the memory hierarchy closest to the CPU.
+    \item The simplest way to map memory blocks into the cache is a \textbf{Direct-Mapped Cache}.
+    \item \textbf{Direct-Mapped Caching:} Each memory block maps to exactly \textit{one} specific block in the cache.
+    \item \textbf{Mapping Formula:} \texttt{(Block address) modulo (Number of blocks in the cache)}
+    \item Since the number of cache blocks is usually a power of 2, the modulo operation is just the lower $n$ bits of the block address.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{3. Direct Mapped Cache Architecture}
+\begin{center}
+    \includegraphics[height=6.5cm,keepaspectratio]{../../../../Image Bank/ch005-9780128201091/jpg-9780128201091/005007.jpg}
+\end{center}
+\end{frame}
+
+\begin{frame}{3. Tags and Valid Bits}
+\begin{itemize}
+    \item Because multiple memory blocks map to the same cache index, we need a way to know exactly \textit{which} memory block is currently sitting in the cache.
+    \vspace{0.3cm}
+    \item \textbf{Tag:} The upper portion of the address is stored alongside the data. The cache compares the requested address's tag against the stored tag to verify a match.
+    \vspace{0.3cm}
+    \item \textbf{Valid Bit:} A single bit added to the cache block to indicate whether the block contains valid data (1) or garbage/empty space (0).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{3. Handling Cache Misses}
+\begin{itemize}
+    \item When a miss occurs, the control unit must:
+    \begin{enumerate}
+        \item \textbf{Stall} the CPU pipeline (suspend execution).
+        \item \textbf{Fetch} the requested block from the next lower level of the memory hierarchy (Main Memory).
+        \item \textbf{Write} the block into the cache (updating the tag and setting the valid bit).
+        \item \textbf{Restart} the instruction that caused the miss.
+    \end{enumerate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{3. Block Size Considerations}
+\begin{itemize}
+    \item Increasing the block size takes advantage of spatial locality, reducing the miss rate.
+    \item \textbf{The Trade-off:}
+    \begin{itemize}
+        \item If the block size gets too large compared to the overall cache size, the miss rate can actually \textit{increase} because fewer total blocks can be held in the cache simultaneously (increasing conflict/capacity misses).
+        \item A larger block size increases the \textit{miss penalty} since more data must be fetched from slower memory over the system bus.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+    \Huge Questions?
+\end{center}
+\end{frame}
+
+\end{document}
