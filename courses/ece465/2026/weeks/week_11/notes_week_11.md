@@ -115,3 +115,95 @@ Backward recovery requires **Checkpointing**—saving the entire distributed sys
 ### Message Logging
 Because Coordinated Checkpointing is incredibly expensive to pause the network to execute, modern systems prefer **Message Logging**. 
 The system takes infrequent, uncoordinated checkpoints, but securely logs *every single network message* to disk in order. If a crash occurs, the node restores from the last local checkpoint and literally replays the message log chronologically to deterministically catch back up to the present moment!
+
+---
+
+## 7. Applied Fault Tolerance: The Two-Phase Commit (2PC)
+
+A Coordinated Checkpoint (or any distributed transaction) requires a fault-tolerant agreement protocol. The textbook defines the **Two-Phase Commit (2PC)** as the industry standard for ensuring that either *all* nodes commit the transaction to disk, or *none* do.
+
+### The 2PC Algorithm in Python (Pseudo-Code)
+```python
+# The Coordinator orchestrates the Two-Phase Commit
+def coordinator_2pc(transaction_data, participants):
+    # --- PHASE 1: The Voting Phase ---
+    votes = []
+    for node in participants:
+        # Ask each node to prepare. If they reply "VOTE_COMMIT", they mathematically 
+        # guarantee they have written the intent to their local disk and WILL NOT crash.
+        response = send_rpc(node, "PREPARE", transaction_data)
+        votes.append(response)
+        
+    # --- PHASE 2: The Decision Phase ---
+    if "VOTE_ABORT" in votes or timeout_occurred(votes):
+        # If even one node crashes or aborts, the entire transaction is rolled back globally!
+        for node in participants:
+            send_rpc(node, "GLOBAL_ABORT")
+        return "Transaction Failed safely."
+        
+    else:
+        # Every single node voted to commit. We pass the point of no return.
+        for node in participants:
+            send_rpc(node, "GLOBAL_COMMIT")
+        return "Transaction Succeeded atomically."
+```
+> [!WARNING]
+> **The Blocking Vulnerability:** If the Coordinator physically crashes *after* Phase 1 but *before* broadcasting the Global decision in Phase 2, the Participants are permanently deadlocked. They have locked their local databases and are blocked waiting for the Coordinator to reboot. This is why the much more complex **Three-Phase Commit (3PC)** exists to introduce timeouts.
+
+---
+
+## 8. Live Project: Observability & Kubernetes Crash Masking
+
+We have upgraded our ZooKeeper Sandbox into `k8s_dist_histo` for Week 11. This week, we specifically focus on **Crash Failure Masking**. 
+
+In our Python Eventlet backend, heavy computational tasks (like NumPy calculations) can accidentally starve the asynchronous event loop. If the network thread deadlocks, ZooKeeper will drop the connection. How do we mask this failure?
+
+### The Kubernetes Liveness Probe Architecture
+We injected a `/health` endpoint into the Flask application, and instructed the Kubernetes Control Plane to ping it every 10 seconds.
+
+```mermaid
+sequenceDiagram
+    participant K8s as Kubernetes Control Plane
+    participant Pod as Worker Pod (app.py)
+    participant ZK as ZooKeeper Ensemble
+    
+    K8s->>Pod: HTTP GET /health
+    Pod-->>K8s: 200 OK (Event loop healthy)
+    
+    note over Pod: NumPy Deadlock Occurs! Event loop freezes.
+    Pod-xZK: Heartbeat dropped (Session Timeout)
+    
+    K8s->>Pod: HTTP GET /health
+    note over K8s: Connection Refused!
+    K8s->>Pod: HTTP GET /health (Retry 2)
+    K8s->>Pod: HTTP GET /health (Retry 3)
+    
+    note over K8s: Liveness Probe Failed 3 times.
+    K8s->>Pod: SIGTERM / SIGKILL (Assassinate Pod)
+    K8s->>Pod: Spawn New Pod Replica
+    
+    Pod->>ZK: Re-establish fresh Session (Masked Crash!)
+```
+
+### 📥 Project Download & Exploration
+You can interact with the live Fault Observability Dashboard, which uses WebSockets to broadcast Kazoo TCP disconnections and Leader Elections directly to the UI.
+
+1. **Option 1: Clone the remote repository**
+   ```bash
+   git clone https://github.com/robmarano/robmarano.github.io.git
+   cd robmarano.github.io/courses/ece465/2026/weeks/week_11/k8s_dist_histo
+   ```
+2. **Option 2: Direct Directory Zip Download (via DownGit)**
+   * [Download the `k8s_dist_histo.zip` Project Archive](https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/robmarano/robmarano.github.io/tree/master/courses/ece465/2026/weeks/week_11/k8s_dist_histo)
+
+### 🚀 Deploying and Triggering Failures
+```bash
+eval $(minikube docker-env)
+docker build -t zk-app:latest .
+kubectl apply -f k8s/
+```
+Once deployed, open the Web UI. You can **trigger a Crash Failure** by manually deleting a pod via the terminal:
+```bash
+kubectl delete pod -l role=master
+```
+Watch the UI's **Fault Tolerance Observability** panel instantly detect the crash, renegotiate the ZooKeeper lock, promote a new Leader, and automatically spin up a replacement pod seamlessly!

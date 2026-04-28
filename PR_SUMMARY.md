@@ -1,9 +1,10 @@
-# ECE 465 Week 11 Fault Tolerance Curriculum
+# ECE 465 Week 11 `k8s_dist_histo` Fault Tolerance Sandbox
 
 ## Objective
-Authored the comprehensive lecture notes for Week 11, specifically detailing Chapter 8 from the Van Steen & Tanenbaum textbook.
+Migrated the Week 10 ZooKeeper baseline into a dedicated Week 11 sandbox (`k8s_dist_histo`) to demonstrate Crash Failure masking and provide live UI telemetric observability of fault-tolerant recovery events.
 
 ## Implementation Details
-* Created `notes_week_11.md` outlining Dependability Metrics, Failure Models, TMR (Triple Modular Redundancy), Byzantine Agreement algorithms, RPC semantic fallbacks, and Distributed Recovery via Checkpointing.
-* Integrated Mermaid diagrams to visualize Voter Circuits.
-* Linked theoretical Crash Failures back to the StatefulSet infrastructure constructed in Week 10.
+*   **Kubernetes Crash Masking**: Injected `livenessProbe` (`/health`) and `readinessProbe` (`/ready`) directly into the `app.yaml` deployments. Kubernetes now automatically terminates and respawns any Python pod suffering from an Eventlet deadlock.
+*   **Kazoo State Interceptors**: Wired a `KazooState` listener in `app.py` to detect underlying TCP disconnections (`LOST`, `SUSPENDED`) and broadcast them over WebSockets.
+*   **Fault Observability Dashboard**: Augmented `index.html` with a live, color-coded terminal dashboard that visually prints master node crashes, leader elections, and connection renegotiations in real-time.
+*   **Curriculum Integration**: Augmented `notes_week_11.md` to include explicit Python pseudo-code for the Two-Phase Commit (2PC) algorithm and a Mermaid sequence diagram detailing the Liveness Probe Crash Masking flowchart executed by `k8s_dist_histo`.
