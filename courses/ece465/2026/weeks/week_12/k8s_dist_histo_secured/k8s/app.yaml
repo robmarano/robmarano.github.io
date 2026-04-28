@@ -18,6 +18,9 @@ spec:
       - name: zk-app
         image: zk-app:latest
         imagePullPolicy: Never
+        securityContext:
+          capabilities:
+            add: ["NET_ADMIN"]
         env:
         - name: ZK_HOSTS
           value: "zookeeper:2181"
