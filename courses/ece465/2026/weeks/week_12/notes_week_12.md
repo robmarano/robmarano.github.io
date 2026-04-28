@@ -1,5 +1,6 @@
 # Week 12: Security in Distributed Systems
 
+**Reading Assignment:** Chapter 9 ("Security") in *Distributed Systems* by Maarten van Steen and Andrew S. Tanenbaum.
 ## 1. Introduction: The CIA Triad
 In distributed architectures, fault tolerance ensures the system survives accidental failures (like crashes or network partitions). However, **Security** ensures the system survives *malicious, intentional attacks*. 
 
