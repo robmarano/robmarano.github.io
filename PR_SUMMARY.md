@@ -1,17 +1,14 @@
-# Formalize ECE 251 Week 12 Curriculum (Exceptions, Interrupts, and Architecture Synthesis)
+# ECE 465 Week 11 `k8s_dist_histo` Fault Tolerance Sandbox
 
-## Intended Changes
-* Establish the complete reading assignments, pedagogical breakdown, and SystemVerilog implementation notes for the transition into Exceptions and Interrupts (Section 4.9).
-* Anchor Week 12 inside the root index (`ece251-notes.md`).
-* Draft the comprehensive `notes_week_12.md` integrating SystemVerilog mapping logic, easy/medium/hard problems for `EPC` fault resolution, and the Von Neumann Retrospective.
-* Author and compile `ece251_week_12_slides.tex`.
-* Provide mapping logic for `hw-12.md` and `hw-12-solution.md` covering Exception hardware handling.
+## Objective
+Migrated the Week 10 ZooKeeper baseline into a dedicated Week 11 sandbox (`k8s_dist_histo`) to demonstrate Crash Failure masking and provide live UI telemetric observability of fault-tolerant recovery events.
 
 ## Implementation Details
-* **Pipelined Datapath Exceptions**: Upgraded the Chapter 4 5-Stage Pipelined Architecture to natively support asynchronous external interrupts and trap routing via an inherently wired `Exception_Flag` mapping to flush logic across IF/ID and ID/EX registers.
-* **EPC & Hazard Resolution**: Implemented PC back-tracking via the `EPC` register mapping to precisely trap `pcplus4D - 4` preventing duplicate trace execution. Completely decoupled 4-bit ALU control codes to gracefully allocate independent binary hashes for Multiplication (`MULT`, 4'b1001), Division (`DIV`, 4'b1000), `MFHI` (4'b0101) and native ALU operators to prevent sequential overriding collisions.
-* **Deepened System Memory**: Scaled the Instruction and Data memory boundaries from parameters `r=6` to `r=8` to safely map structural vector limits preventing index aliasing upon mapping physical vectors to OS addresses (`.org 0x180`).
-* **Comprehensive Assembly Tracking**: Injected 7 custom test simulation files spanning standard execution, hazards, control barriers, procedures, and exceptions. Natively loaded the RTL payload block into a robust `README.md` containing dynamic green instruction layouts, sequenced execution Mermaid diagrams organically, and step-by-step CLI simulation startup tests targeting the `iverilog` testbenches.
-* **Slide Decks & Documentation**: Regenerated structured `.tex` slide frameworks mapping out course execution natively via python bounds replacing raw SystemVerilog execution codes seamlessly inside the master notes, sealed testing loops logically, and completely rebuilt `ece251_week_12_slides.tex` incorporating exact textbook formulas mappings (Precise Exceptions, Multiple Fault hierarchies) and structural memory visualization bounds mapping exception constraints.
-* **Visual Tooling Integration**: Bootstrapped the architectural syllabus with detailed screenshot mappings executing natively against the VS Code Surfer Extension, bridging simulation variables logically directly into documentation frameworks.
-* **Final Project Capstone Hook**: Mapped the structural progression of the semester directly into `final_project/GUIDE.md` natively within the `notes_week_12.md` syllabus, signaling the start of independent processor topologies.
+*   **Kubernetes Crash Masking**: Injected `livenessProbe` (`/health`) and `readinessProbe` (`/ready`) directly into the `app.yaml` deployments. Kubernetes now automatically terminates and respawns any Python pod suffering from an Eventlet deadlock.
+*   **Kazoo State Interceptors**: Wired a `KazooState` listener in `app.py` to detect underlying TCP disconnections (`LOST`, `SUSPENDED`) and broadcast them over WebSockets.
+*   **Fault Observability Dashboard**: Augmented `index.html` with a live, color-coded terminal dashboard that visually prints master node crashes, leader elections, and connection renegotiations in real-time.
+*   **Curriculum Integration**: Augmented `notes_week_11.md` to include explicit Python pseudo-code for the Two-Phase Commit (2PC) algorithm and a Mermaid sequence diagram detailing the Liveness Probe Crash Masking flowchart executed by `k8s_dist_histo`.
+
+
+## Update (Chaos Engineering)
+Authored `FAULT_SIMULATION.md` to provide students with explicit terminal commands (`kubectl delete`, `iptables DROP`, `kubectl scale`) to manually inject Crash, Omission, and Quorum-Collapse failures into the cluster. Expanded `notes_week_11.md` to explicitly map theoretical Failure Models to the physical Python/YAML code deployed in `k8s_dist_histo`.
