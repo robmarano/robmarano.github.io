@@ -196,14 +196,59 @@ You can interact with the live Fault Observability Dashboard, which uses WebSock
 2. **Option 2: Direct Directory Zip Download (via DownGit)**
    * [Download the `k8s_dist_histo.zip` Project Archive](https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/robmarano/robmarano.github.io/tree/master/courses/ece465/2026/weeks/week_11/k8s_dist_histo)
 
-### 🚀 Deploying and Triggering Failures
-```bash
-eval $(minikube docker-env)
-docker build -t zk-app:latest .
-kubectl apply -f k8s/
+### 🚀 Chaos Engineering: Breaking the Cluster
+
+We have intentionally designed `k8s_dist_histo` so you can manually inject faults into the cluster and observe how the theoretical concepts execute in real-time.
+
+#### Design-to-Code Mapping 1: Crash Masking
+**Theoretical Spec:** The system must intercept and mask Timing/Crash failures if the primary event loop freezes.
+**Code Implementation:** We define a `livenessProbe` in `k8s/app.yaml` that pings a Flask endpoint. If the Python logic deadlocks, Kubernetes violently terminates the pod and spins up a fresh replica.
+
+```yaml
+# Inside k8s/app.yaml
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 5000
+  initialDelaySeconds: 15
+  failureThreshold: 3
 ```
-Once deployed, open the Web UI. You can **trigger a Crash Failure** by manually deleting a pod via the terminal:
+
+**Simulation:** Assassinate the master pod manually:
 ```bash
 kubectl delete pod -l role=master
 ```
-Watch the UI's **Fault Tolerance Observability** panel instantly detect the crash, renegotiate the ZooKeeper lock, promote a new Leader, and automatically spin up a replacement pod seamlessly!
+*Observation:* The UI detects a heartbeat timeout, the remaining nodes instantly elect a new Leader, and Kubernetes spawns a replacement pod to restore the $N=5$ physical redundancy.
+
+#### Design-to-Code Mapping 2: Network Partitions (Omission Failures)
+**Theoretical Spec:** The system must detect when packets are dropped and safely transition into a holding state to avoid Split-Brain anomalies.
+**Code Implementation:** We wire a `KazooState` listener directly into the Python ZooKeeper client in `app.py`. When TCP frames drop, the client halts execution and emits an observability alert to the UI.
+
+```python
+# Inside app.py
+def zk_state_listener(state):
+    severity = "OK" if state == KazooState.CONNECTED else "WARNING"
+    event_payload = {"event": f"ZooKeeper Connection: {state}", "severity": severity, "pod": POD_NAME}
+    socketio.emit('observability', event_payload)
+
+zk.add_listener(zk_state_listener)
+```
+
+**Simulation:** Sever the TCP connection of a worker pod using `iptables`:
+```bash
+kubectl exec -it <YOUR_WORKER_POD_NAME> -- iptables -A OUTPUT -p tcp --dport 2181 -j DROP
+```
+*Observation:* The UI terminal streams `SUSPENDED` and `LOST` alerts. The isolated pod mathematically cannot execute tasks until you flush the firewall rules (`iptables -F`), at which point it heals seamlessly.
+
+#### Design-to-Code Mapping 3: Overwhelming the Mathematical Bounds (Quorum Loss)
+**Theoretical Spec:** Fault tolerance is mathematically finite. A StatefulSet with $N=3$ replicas has a Quorum of $2$. Therefore, the maximum tolerated failures $F=1$. If $F=2$, the cluster must securely halt rather than corrupting data.
+
+**Simulation:** Simulate a multi-datacenter blackout by destroying 2 of the 3 ZooKeeper replicas:
+```bash
+kubectl scale statefulset zookeeper --replicas=1
+```
+*Observation:* The UI explodes with red `LOST` connection events. The MapReduce engine deadlocks. The single surviving ZooKeeper node enters `READ_ONLY` mode because 1 < Quorum(2). The fault tolerance has failed "safely" by freezing the cluster rather than allowing uncoordinated writes. 
+Restore the cluster by scaling back into spec:
+```bash
+kubectl scale statefulset zookeeper --replicas=3
+```
