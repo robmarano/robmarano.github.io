@@ -1,14 +1,11 @@
-# ECE 465 Week 11 `k8s_dist_histo` Fault Tolerance Sandbox
+# ECE 465 Week 12 `k8s_dist_histo_secured` Security Module
 
 ## Objective
-Migrated the Week 10 ZooKeeper baseline into a dedicated Week 11 sandbox (`k8s_dist_histo`) to demonstrate Crash Failure masking and provide live UI telemetric observability of fault-tolerant recovery events.
+Migrated the Week 11 Fault Tolerance sandbox into a hardened Week 12 module (`k8s_dist_histo_secured`) to demonstrate Confidentiality, Integrity, and Availability. Authored the Week 12 Curriculum Notes based on the textbook's Chapter 9.
 
 ## Implementation Details
-*   **Kubernetes Crash Masking**: Injected `livenessProbe` (`/health`) and `readinessProbe` (`/ready`) directly into the `app.yaml` deployments. Kubernetes now automatically terminates and respawns any Python pod suffering from an Eventlet deadlock.
-*   **Kazoo State Interceptors**: Wired a `KazooState` listener in `app.py` to detect underlying TCP disconnections (`LOST`, `SUSPENDED`) and broadcast them over WebSockets.
-*   **Fault Observability Dashboard**: Augmented `index.html` with a live, color-coded terminal dashboard that visually prints master node crashes, leader elections, and connection renegotiations in real-time.
-*   **Curriculum Integration**: Augmented `notes_week_11.md` to include explicit Python pseudo-code for the Two-Phase Commit (2PC) algorithm and a Mermaid sequence diagram detailing the Liveness Probe Crash Masking flowchart executed by `k8s_dist_histo`.
-
-
-## Update (Chaos Engineering)
-Authored `FAULT_SIMULATION.md` to provide students with explicit terminal commands (`kubectl delete`, `iptables DROP`, `kubectl scale`) to manually inject Crash, Omission, and Quorum-Collapse failures into the cluster. Expanded `notes_week_11.md` to explicitly map theoretical Failure Models to the physical Python/YAML code deployed in `k8s_dist_histo`.
+*   **Secure Channels (TLS)**: Upgraded Flask and SocketIO to serve exclusively over HTTPS via dynamic self-signed adhoc certificates.
+*   **API Authentication**: Injected a mandatory Bearer Token validation layer into the `/upload` endpoint to defend against DoS.
+*   **Access Control Lists (ACL)**: Hardened ZooKeeper by switching Kazoo to Digest Authentication, restricting ZNode creation exclusively to authorized users to prevent MapReduce hijacking.
+*   **SecOps Observability**: Rebranded the UI to a SecOps Dashboard that actively listens for `SECURITY_VIOLATION` websockets, instantly highlighting invalid API requests to the user in bright red.
+*   **Curriculum Mapping**: Authored `notes_week_12.md` detailing the CIA Triad and Cryptography, mapping the textbook theory directly to the Python/YAML code executed in the sandbox.
