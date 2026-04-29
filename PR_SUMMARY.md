@@ -1,12 +1,13 @@
-# ECE 465 Week 13 `k8s_histo_deployed` Bare Metal & GitOps Module
+# ECE 465 Week 13 - Practical Bare Metal Walkthrough
 
 ## Objective
-Migrated the sandbox to `k8s_histo_deployed` and introduced Bare Metal Provisioning, Infrastructure as Code, and GitOps deployments.
+Add a detailed real-world walkthrough (Section 7) to `notes_week_13.md` that bridges the theoretical bare metal concepts (PXE, Terraform, Ansible, GitOps) with the practical deployment and observability of our `k8s_histo_deployed` MapReduce application.
 
 ## Implementation Details
-*   **Infrastructure as Code Sandbox**: Added a `deploy/` folder containing real-world Terraform (Equinix Metal bare metal provisioning), Ansible (Kubeadm OS configuration), and ArgoCD (GitOps synchronization) code examples.
-*   **Deployment Observability Simulator**: Modified the Python backend to intercept new WebSocket connections and stream a simulated infrastructure deployment pipeline (Terraform -> iPXE -> Ansible -> ArgoCD) directly into the UI's SecOps & Infrastructure Observability Dashboard.
-*   **Curriculum Mapping**: Authored `notes_week_13.md` comprehensively covering Bare Metal PXE booting (MAAS, Tinkerbell), IaC (Terraform, Ansible, Chef), and GitOps (ArgoCD).
-*   **Architecture Documentation (UML Diagrams):** Enhanced `notes_week_13.md` with visual Mermaid.js representations of the codebase:
-    *   **System Topology Architecture:** A hierarchical flowchart mapping physical Equinix hardware, OS/Runtime, K8s orchestration, and MapReduce application layers.
-    *   **Sequence Diagram:** A chronological flow detailing the exact WebSocket event exchanges during the infrastructure deployment simulation and MapReduce execution.
+*   **Section 7 Integration:** Appended a comprehensive "Connecting the Dots" tutorial to the Week 13 curriculum.
+*   **Real-World Pipeline Documentation:** Detailed the step-by-step lifecycle:
+    1.  **Hardware Design:** Reserving Equinix Metal physical nodes via Terraform.
+    2.  **OS Installation:** Bootstrapping Ubuntu via iPXE/Tinkerbell.
+    3.  **Cluster Configuration:** Executing Ansible to install Containerd and configure `kubeadm`.
+    4.  **GitOps Deployment:** Binding the cluster to GitHub using ArgoCD to deploy `k8s_histo_deployed`.
+    5.  **Observability & Management:** Utilizing the Flask/SocketIO dashboard to observe the deployment simulator and live ZooKeeper telemetry.
