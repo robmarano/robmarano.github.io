@@ -1,0 +1,26 @@
+# -----------------------------------------------------------------------------
+# ECE 465 Week 13: Continuous Deployment with GitOps (ArgoCD)
+# Description: Once the Kubernetes cluster is running on the bare metal nodes,
+#              ArgoCD watches our Git repository. When we merge a PR into `main`,
+#              ArgoCD automatically syncs the live cluster to match Git.
+# -----------------------------------------------------------------------------
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dist-histo-gitops
+  namespace: argocd
+spec:
+  project: default
+  source:
+    # ArgoCD watches this exact Git Repository
+    repoURL: 'https://github.com/robmarano/robmarano.github.io.git'
+    targetRevision: main
+    # It specifically applies YAML files located in this directory
+    path: courses/ece465/2026/weeks/week_13/k8s_histo_deployed/k8s
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true      # Automatically delete pods if deleted in Git
+      selfHeal: true   # Automatically revert manual `kubectl edit` tampering

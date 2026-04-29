@@ -1,0 +1,43 @@
+---
+# -----------------------------------------------------------------------------
+# ECE 465 Week 13: OS Configuration Management with Ansible
+# Description: Once Terraform provisions the hardware and PXE burns the Ubuntu
+#              OS, Ansible connects via SSH to configure the OS imperatively.
+# -----------------------------------------------------------------------------
+- name: Configure Bare Metal Nodes and Install Kubernetes
+  hosts: k8s_nodes
+  become: yes
+
+  tasks:
+    - name: Disable Swap (Required for Kubelet)
+      command: swapoff -a
+      
+    - name: Remove swap from fstab
+      replace:
+        path: /etc/fstab
+        regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+        replace: '# \1'
+
+    - name: Install Containerd (Container Runtime)
+      apt:
+        name: containerd
+        state: present
+        update_cache: yes
+
+    - name: Add Kubernetes APT repository
+      apt_repository:
+        repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+        state: present
+
+    - name: Install Kubeadm, Kubelet, and Kubectl
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - kubelet
+        - kubeadm
+        - kubectl
+
+    - name: Initialize Kubernetes Master (Only on Node 0)
+      command: kubeadm init --pod-network-cidr=10.244.0.0/16
+      when: inventory_hostname == "k8s-node-0"
