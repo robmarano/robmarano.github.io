@@ -60,3 +60,88 @@ This week, we migrated our sandbox to include a physical `deploy/` directory con
 ### Infrastructure Observability
 We have also upgraded the UI's **SecOps Dashboard** to include **Infrastructure Deployment Observability**. 
 When you deploy the application and open the Web UI, the Python backend will simulate the deployment pipeline sequence, streaming the Terraform, Tinkerbell, Ansible, and ArgoCD rollout events directly to the browser before the cluster accepts MapReduce workloads.
+
+---
+
+## 6. Architecture & Implementation Design
+
+To visualize the complexity of deploying a distributed application onto bare metal, study the following software architecture and sequence diagrams.
+
+### 6.1 System Topology Architecture
+This diagram illustrates the hierarchical layers of our deployment, moving from the physical hardware up to the application logic.
+
+```mermaid
+flowchart TD
+    subgraph "Layer 1: Bare Metal (Equinix Metal)"
+        Node1["Physical Server 1 (c3.small.x86)"]
+        Node2["Physical Server 2 (c3.small.x86)"]
+        Node3["Physical Server 3 (c3.small.x86)"]
+    end
+
+    subgraph "Layer 2: OS & Runtime (Ansible Provisioned)"
+        OS1["Ubuntu 22.04 LTS"]
+        OS2["Ubuntu 22.04 LTS"]
+        OS3["Ubuntu 22.04 LTS"]
+        Containerd["Containerd Engine"]
+        OS1 & OS2 & OS3 --> Containerd
+    end
+
+    subgraph "Layer 3: Orchestration (Kubernetes / Kubeadm)"
+        ControlPlane["K8s Control Plane"]
+        WorkerNodes["K8s Worker Nodes"]
+        ArgoCD["ArgoCD (GitOps Operator)"]
+    end
+
+    subgraph "Layer 4: Application Workload (k8s_histo_deployed)"
+        ZK["ZooKeeper Ensemble (StatefulSet)"]
+        MR["MapReduce Master/Workers (Deployment)"]
+        UI["Web UI Dashboard (NodePort/LoadBalancer)"]
+    end
+
+    %% Flow Relationships
+    Node1 & Node2 & Node3 ==> OS1 & OS2 & OS3
+    Containerd ==> ControlPlane & WorkerNodes
+    ArgoCD -->|Syncs from GitHub| ControlPlane
+    ControlPlane ==> ZK & MR
+    MR <--> ZK
+    UI --> MR
+```
+
+### 6.2 Deployment Pipeline & Observability Sequence
+This sequence diagram shows how the newly implemented Infrastructure Deployment Simulator in `app.py` streams live rollout telemetry to the SecOps Dashboard via WebSockets.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Dev as Infrastructure Engineer
+    participant Git as GitHub Repo
+    participant UI as SecOps Web UI
+    participant Backend as Flask SocketIO (app.py)
+    participant K8s as Kubernetes Cluster
+    participant IaC as Terraform / Ansible
+
+    Dev->>Git: Push Commit (Merge PR)
+    Note over Dev,Git: GitOps Triggered
+    
+    UI->>Backend: WebSocket Connect (Socket.IO)
+    Backend-->>UI: Connected & Listening
+    
+    activate Backend
+    Backend->>UI: emit('deployment_log', "Terraform: Provisioning Bare Metal")
+    Backend->>UI: emit('deployment_log', "iPXE: Booting Ubuntu 22.04")
+    Backend->>UI: emit('deployment_log', "Ansible: Installing Containerd")
+    Backend->>UI: emit('deployment_log', "Kubernetes: Cluster Initialized")
+    Backend->>UI: emit('deployment_log', "ArgoCD: StatefulSet Deployed")
+    deactivate Backend
+    
+    Note right of Backend: Deployment simulation complete
+    
+    K8s->>Backend: ZooKeeper CONNECTED
+    Backend->>UI: emit('observability', "ZooKeeper Connection: OK")
+    
+    Dev->>UI: Upload File / Start MapReduce
+    UI->>Backend: POST /upload (Bearer Token)
+    Backend->>K8s: Distribute Histograms / Equalization
+    K8s-->>Backend: Results Stitched
+    Backend-->>UI: Return Final Image
+```
