@@ -1,3 +1,6 @@
+`ifndef REGFILE_SV
+`define REGFILE_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2026
@@ -40,3 +43,6 @@ module regfile(
 
 endmodule
 
+
+
+`endif // REGFILE_SV

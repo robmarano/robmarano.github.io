@@ -7,22 +7,21 @@ This file serves as the strict historical continuity bridge for AI agent session
 *   **MathJax & Markdown Parsers**: The GitHub Pages Jekyll environment processes MathJax. **Never** include standalone `$` variables (like MIPS registers `$rs`, `$t0`) naked within Mermaid diagrams, or MathJax will intercept them and crash the diagram syntax renderer. 
 *   **Workflow**: Branch creation `feature/...` -> Edit -> Update `PR_SUMMARY.md` -> Commit/Push -> `gh pr create` -> `gh pr merge --squash --delete-branch`.
 
-## 2. Completed Milestones (Week 9 & 10)
+## 2. Completed Milestones (Week 13 & 14)
 ### Documentation & Curriculum
-*   **Homework Solutions**: `hw-02-solution.md` and `hw-04-solution.md` successfully authored, rigorously mirroring the data-table and explicit pointer layouts native to `hw-01-solution.md`.
-*   **Cheatsheet**: Manufactured `mips_cheatsheet_ch1_4.md` integrating math constraints, system components, and MIPS ISA structures as a unified Chapter 1-4 lookup.
-*   **Visual Integration**: Properly seeded textbook diagrams (Patterson & Hennessy) using absolute `/Image Bank/` links including the Pipelining "Laundry Analogy" (Figure 4.25).
-*   **Notes (Week 10)**: Engineered robust justifications defining why Single-Cycle necessitates **Harvard Architecture** and Multi-Cycle safely relies on **Von Neumann Architecture** directly derived from Sections 4.4 and 4.5.
+*   **Textbook Problem Integration**: Injected 9 official COaD problems into `notes_week_14.md` and `ece251_week_14_slides.tex`. Cross-referenced and corrected typos in the official solution manual (e.g., Hamming Code Bit 5 vs Bit 8 syndrome).
+*   **Homework Assignments**: Authored `hw-14.md` and `hw-14-solution.md` covering SEC/DED Parity, Virtual Memory Tracing, and Page Table Overhead logic.
+*   **Lecture Support**: Authored `week_14_speaking_notes.md` providing a timed 165-minute script synchronized to the LaTeX slide deck.
+*   **Primers**: Added a targeted Exam Readiness Guide (Primer) to the end of `notes_week_14.md` synthesizing textbook mechanics for students.
 
 ### Hardware Simulation (`SystemVerilog`)
-*   **Single-Cycle CPU**: Perfected the `single_cycle_cpu/` module directory utilizing pure combinatorial lookup controllers targeting physical Harvard instruction/data splits.
-*   **Multi-Cycle CPU**: Brought `multi_cycle_cpu/` online. Collapsed redundant component logic, merged `dmem` and `imem` into unified `mem.sv`, bound an `IorD` multiplexer, and established the 5-state cycle logic via Moore/Mealy Finite State Machine (`maindec.sv`). Intermediary pipelining logic (`IR`, `MDR`, `A`, `B`, `ALUOut`) operates flawlessly.
-*   **Performance Monitoring**: Hooked a dynamic `cycle_count` parameter into both `tb_computer.sv` environments mathematically logging cycle speeds (e.g., executing iterative `fib_prog.asm` required 61 sequential cycles via Single-Cycle vs 187 isolated micro-cycles on the Multi-Cycle hardware).
+*   **Memory Hierarchy (L1/L2 Caches)**: Implemented cycle-accurate L1/L2 caches (`cache_direct_mapped.sv`, `cache_fully_associative.sv`, `cache_set_associative.sv`).
+*   **Pipeline Integration**: Hooked cache hit/miss logic into the 5-stage MIPS datapath via a `cpu_stall` handshake, successfully dropping Effective CPI from 4.34 to 1.89 during simulations.
 
 ## 3. Current Live State
-*   All Week 10 integration, Verilog codebases, architectural documentation, and UML sequence diagram hotfixes were pushed and successfully merged into the **`master`** branch explicitly tracking on Pull Request #15.
-*   The temporary development branch (`feature/hw-solutions`) was deleted via CI/CD cleanup.
+*   All Week 13/14 integration, SystemVerilog codebases, architectural documentation, LaTeX slide decks, and homework assignments are completed.
+*   Currently pushing changes to the `feature/week-14-memory-hierarchy-2` branch for merging into `master`.
 
 ## 4. Next Session Directives / Roadmap
-*   **Week 11 - Pipelining Hazards**: The immediate next pedagogical push involves building upon the end of Week 10 to resolve **Structural, Data, and Control Hazards** introducing delay blocks, operand forwarding pathways, and explicit branch prediction tracking within the verliog/datapath infrastructure.
-*   **Web Embedding Strategy (`TODO.md`)**: Explore active strategies to convert static markdown blocks into runnable logic natively within the Jekyll `.io` site. Current mitigation includes native `.zip` packaging of the `systemverilog` source environments integrated natively into the `notes_week_10.md` layout. Future tracking targets include injecting **Monaco IDE** CDN instances, linking interactive **EDA Playground** simulators directly, or natively utilizing a JavaScript execution visualizer (e.g., WebMIPS / MARS-JS).
+*   **Final Exam Drafting**: With Week 14 complete, the immediate next pedagogical phase is drafting the Final Exam. Requirements include 15-minute question segments, two-column formatting, and comprehensive coverage of Weeks 1–14.
+*   **Web Embedding Strategy (`TODO.md`)**: Explore active strategies to convert static markdown blocks into runnable logic natively within the Jekyll `.io` site (e.g., Monaco IDE or WebMIPS).

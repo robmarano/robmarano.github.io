@@ -1,3 +1,6 @@
+`ifndef ALU_SV
+`define ALU_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2023
@@ -68,8 +71,8 @@ module alu
     //Multiply and divide results are only stored at clock falling edge.
     always @(negedge clk) begin
         case (alucontrol)
-            4'b1001: HiLo = a * b; // mult
-            4'b1000: // div
+            4'b1000: HiLo = a * b; // mult
+            4'b1001: // div
             begin
                 HiLo[(n-1):0] = a / b;
                 HiLo[(2*n-1):n] = a % b;
@@ -79,3 +82,6 @@ module alu
 
 endmodule
 
+
+
+`endif // ALU_SV

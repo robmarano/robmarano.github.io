@@ -1,3 +1,6 @@
+`ifndef MUX4_SV
+`define MUX4_SV
+
 
 
 module mux4 #(parameter n = 32) (
@@ -17,3 +20,6 @@ module mux4 #(parameter n = 32) (
 
 endmodule
 
+
+
+`endif // MUX4_SV

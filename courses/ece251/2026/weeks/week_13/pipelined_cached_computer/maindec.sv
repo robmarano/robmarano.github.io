@@ -1,3 +1,6 @@
+`ifndef MAINDEC_SV
+`define MAINDEC_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2023
@@ -47,3 +50,6 @@ module maindec
 
 endmodule
 
+
+
+`endif // MAINDEC_SV

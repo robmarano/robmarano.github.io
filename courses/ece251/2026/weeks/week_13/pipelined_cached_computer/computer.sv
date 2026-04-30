@@ -1,3 +1,6 @@
+`ifndef COMPUTER_SV
+`define COMPUTER_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2026
@@ -86,3 +89,6 @@ module computer(
 
 endmodule
 
+
+
+`endif // COMPUTER_SV

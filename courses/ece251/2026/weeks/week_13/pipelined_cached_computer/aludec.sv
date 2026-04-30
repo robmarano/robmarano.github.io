@@ -1,3 +1,6 @@
+`ifndef ALUDEC_SV
+`define ALUDEC_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2023
@@ -36,8 +39,8 @@ module aludec
                 6'b100100: alucontrol <= 4'b0000; // and
                 6'b100101: alucontrol <= 4'b0001; // or
                 6'b101010: alucontrol <= 4'b0111; // slt
-                6'b011000: alucontrol <= 4'b1001; // mult
-                6'b011010: alucontrol <= 4'b1000; // div
+                6'b011000: alucontrol <= 4'b1000; // mult
+                6'b011010: alucontrol <= 4'b1001; // div
                 6'b010010: alucontrol <= 4'b0100; // mflo
                 6'b010000: alucontrol <= 4'b0101; // mfhi
                 default:   alucontrol <= 4'b0010; // default to add to prevent X propagation on NOP
@@ -47,3 +50,6 @@ module aludec
 
 endmodule
 
+
+
+`endif // ALUDEC_SV

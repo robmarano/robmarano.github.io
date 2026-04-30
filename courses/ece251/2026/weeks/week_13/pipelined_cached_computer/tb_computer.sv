@@ -1,3 +1,6 @@
+`ifndef TB_COMPUTER_SV
+`define TB_COMPUTER_SV
+
 `include "_timescale.sv"
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
@@ -135,3 +138,6 @@ module tb_computer;
     end
 
 endmodule
+
+
+`endif // TB_COMPUTER_SV

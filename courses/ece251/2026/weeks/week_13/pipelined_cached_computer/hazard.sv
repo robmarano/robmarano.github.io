@@ -1,3 +1,6 @@
+`ifndef HAZARD_SV
+`define HAZARD_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2026
@@ -68,3 +71,6 @@ module hazard (
     
 endmodule
 
+
+
+`endif // HAZARD_SV

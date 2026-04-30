@@ -1,3 +1,6 @@
+`ifndef ADDER_SV
+`define ADDER_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2023
@@ -26,3 +29,6 @@ module adder
     assign Y = A + B;
 endmodule
 
+
+
+`endif // ADDER_SV

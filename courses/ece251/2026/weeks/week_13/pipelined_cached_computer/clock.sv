@@ -1,3 +1,6 @@
+`ifndef CLOCK_SV
+`define CLOCK_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2023
@@ -52,3 +55,6 @@ module clock
     end
 endmodule
 
+
+
+`endif // CLOCK_SV

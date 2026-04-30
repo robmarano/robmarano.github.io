@@ -1,3 +1,6 @@
+`ifndef TB_EXCEPTIONS_SV
+`define TB_EXCEPTIONS_SV
+
 `timescale 1ns/1ps
 
 `include "computer.sv"
@@ -92,3 +95,6 @@ module tb_exceptions();
     always #5 clk = ~clk;
 
 endmodule
+
+
+`endif // TB_EXCEPTIONS_SV

@@ -1,3 +1,6 @@
+`ifndef MUX2_SV
+`define MUX2_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2023
@@ -27,3 +30,6 @@ module mux2
     assign Y = S ? D1 : D0;
 endmodule
 
+
+
+`endif // MUX2_SV

@@ -1,3 +1,6 @@
+`ifndef FLOPENRC_SV
+`define FLOPENRC_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2026
@@ -31,3 +34,6 @@ module flopenrc
 
 endmodule
 
+
+
+`endif // FLOPENRC_SV

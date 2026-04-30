@@ -415,6 +415,20 @@ We calculate the exact time penalty of cache misses on our pipeline:
 \end{itemize}
 \vspace{0.2cm}
 
+\textbf{1. Build the Project Locally}
+\begin{verbatim}
+$ cd pipelined_cached_computer
+$ make asm ASM=loop_test
+$ make compile
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{5. Hardware Simulation: The Baseline (Uncached)}
+\textbf{Run without Cache (+CACHE\_EN=0):}
+\begin{verbatim}
+$ vvp pipelined_cpu.vvp +PROG=loop_test.exe +CACHE_EN=0
+\end{verbatim}
+
 \textbf{The Uncached Execution (Direct to Main Memory)}
 \begin{verbatim}
 PERFORMANCE METRICS (UNCACHED):
@@ -425,8 +439,12 @@ Effective CPI: 4.34
 \textbf{Result:} The CPU spent the vast majority of its execution time frozen, waiting for the Memory Wall.
 \end{frame}
 
-\begin{frame}[fragile]{5. Hardware Simulation: The Silicon Proof (Cont.)}
-\textbf{The Cached Execution (L1 Enabled)}
+\begin{frame}[fragile]{5. Hardware Simulation: The Upgrade (Cached)}
+\textbf{Run with L1 Cache (+CACHE\_EN=1):}
+\begin{verbatim}
+$ vvp pipelined_cpu.vvp +PROG=loop_test.exe +CACHE_EN=1
+\end{verbatim}
+\textbf{The Cached Execution}
 \begin{itemize}
     \item The first iteration incurred the 10-cycle penalty (4 Misses).
     \item The remaining 4 iterations hit the cache instantly (24 Hits).

@@ -1,3 +1,6 @@
+`ifndef DMEM_SV
+`define DMEM_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2023
@@ -57,3 +60,6 @@ module dmem
 
 endmodule
 
+
+
+`endif // DMEM_SV
