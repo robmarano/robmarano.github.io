@@ -1,21 +1,16 @@
-# Pull Request Summary: Week 13 & 14 Memory Hierarchy Curriculum & SV Implementation
+# Pull Request Summary: Global Broken Image Link Fix
 
 ## Objective
-To finalize the Memory Hierarchy curriculum by implementing a cycle-accurate L1/L2 Multi-Level Cache SystemVerilog simulation for Week 13, and to generate comprehensive educational documentation (LaTeX Slides, Speaking Notes, and Homework Assignments) for Week 14.
+To resolve broken image links in the live GitHub Pages site across multiple weeks of ECE 251 notes.
 
 ## Changes Implemented
-* **Week 13 SystemVerilog Caches:**
-    * Implemented `cache_direct_mapped.sv`, `cache_fully_associative.sv`, and `cache_set_associative.sv` controllers.
-    * Integrated L1 and L2 caches into the existing 5-stage MIPS datapath via a `cpu_stall` handshake protocol to mathematically demonstrate the Effective CPI reduction (4.34 to 1.89).
-    * Validated execution via `iverilog` testbenches.
-* **Week 14 Curriculum (Memory Hierarchy Part 2):**
-    * Injected 9 official textbook problems (from COaD Chapter 5) into `notes_week_14.md` and `ece251_week_14_slides.tex`.
-    * Synthesized the **Homework 14 Primer**, breaking down Hamming Code math, Virtual Memory logic, and Page Table sizing.
-    * Authored `hw-14.md` and the official solution key `hw-14-solution.md` mirroring the formatting of previous weeks.
-    * Generated `week_14_speaking_notes.md` containing a timed, 165-minute lecture script aligned with the LaTeX slide deck.
-* **Documentation Polish:** Recompiled all LaTeX decks and validated the Cooper Union brand identity rendering without overflow errors.
+* Identified that images were previously referenced via relative links to the `Image Bank` directory.
+* Discovered that `Image Bank` is explicitly ignored via the global `.gitignore` due to its massive 1.2 GB size, causing 404 Not Found errors on the live web server.
+* Wrote an automated Python script to crawl all `notes_week_*.md` and `ece251_week_*_slides.tex` files.
+* Dynamically copied all 24 referenced, unique textbook images from the untracked `Image Bank` into a new tracked directory: `courses/ece251/images/textbook/`.
+* Updated all Markdown `<img>` and LaTeX `\includegraphics{}` paths to point to the tracked images directory.
 
 ## Verification
-* SV Simulations run flawlessly with cycle-accurate hazard resolution.
-* Official textbook math (e.g. CPI formulas and Hamming Code Bit 5 Syndrome) was rigorously cross-referenced against the `Solution 5_Secured.pdf` manual to correct existing typos.
-* All LaTeX files compile to PDF securely.
+* A total of 4.41 MB of necessary images were migrated and committed.
+* Local compilation of LaTeX works correctly.
+* GitHub Pages will now successfully serve the tracked images on all live syllabus pages.

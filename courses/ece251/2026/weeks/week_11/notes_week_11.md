@@ -72,48 +72,48 @@ The textbook presentation can seem overwhelmingly complex because it jumps strai
 #### Step 1: The Single-Cycle Baseline
 **Figure 4.33 (The single-cycle datapath)** *[Type: Single-clock-cycle pipeline diagram]*: In a single-cycle datapath, an instruction flows through all 5 hardware components (Fetch, Decode, Execute, Memory, WriteBack) in one massive combinatorial wave. The clock cycle must be long enough to accommodate this entire wave.
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004033.jpg" width="600" alt="Single-Cycle Baseline"></p>
+<p align="center"><img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004033.jpg" width="600" alt="Single-Cycle Baseline"></p>
 
 #### Step 2: Physically Slicing the Datapath
 **Figure 4.34 (Instructions being executed using the single-cycle datapath)** *[Type: Multiple-clock-cycle pipeline diagram]*: To pipeline the processor, we mathematically divide the datapath into 5 isolated electrical stages.
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004034.jpg" width="600" alt="Slicing the datapath"></p>
+<p align="center"><img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004034.jpg" width="600" alt="Slicing the datapath"></p>
 
 **Figure 4.35 (The pipelined version of the datapath)** *[Type: Single-clock-cycle pipeline diagram]*: We insert massive $D$-Flip-Flop boundaries between the isolated stages to physically cache the electrical signals before safely passing them downstream into the next combinatorial unit. 
 These boundary registers unequivocally lock the computational output data on the rising clock edge and route it uniformly as stable electrical input toward the next active stage. They are fundamentally designated by the physical hardware stages they structurally separate: **`IF/ID`**, **`ID/EX`**, **`EX/MEM`**, and **`MEM/WB`**.
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004035.jpg" width="600" alt="Pipeline Boundary Registers Insertion"></p>
+<p align="center"><img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004035.jpg" width="600" alt="Pipeline Boundary Registers Insertion"></p>
 
 #### Step 3: Following the Instruction Execution Trace
 When a pipeline correctly overlaps, different hardware segments service different instructions concurrently. Observe how `lw` and `sw` sequentially inherit the hardware resources across the discrete clock cycles:
 *   **Figure 4.36 (IF and ID Stages)** *[Type: Single-clock-cycle pipeline diagram]*: Both `lw` and `sw` structurally share identical hardware pathways through the Instruction Fetch (`IF`) and Instruction Decode (`ID`) blocks. The PC extracts the instruction payload while the Decode unit cleanly parses the Register File.
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004036.jpg" width="550" alt="Instruction Trace 1"></p>
+<p align="center"><img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004036.jpg" width="550" alt="Instruction Trace 1"></p>
 
 *   **Figure 4.37 (Load `lw` - Execute EX)** *[Type: Single-clock-cycle pipeline diagram]*: Highlighting the 3rd pipeline stage of a Load instruction. Notice how the ALUSrc MUX explicitly routes the Sign-Extended immediate through the ALU perfectly to calculate the absolute RAM target address.
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004037.jpg" width="550" alt="Instruction Trace 2"></p>
+<p align="center"><img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004037.jpg" width="550" alt="Instruction Trace 2"></p>
 
 *   **Figure 4.38 (Load `lw` - MEM and WB)** *[Type: Single-clock-cycle pipeline diagram]*: Highlighting the 4th and 5th pipeline stages of a Load instruction. The calculated ALU address hits the physical Memory module. Finally, the WriteBack MUX perfectly routes the extracted RAM data straight back horizontally to the Register File destination.
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004038.jpg" width="550" alt="Instruction Trace 3"></p>
+<p align="center"><img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004038.jpg" width="550" alt="Instruction Trace 3"></p>
 
 *   **Figure 4.39 (Store `sw` - Execute EX)** *[Type: Single-clock-cycle pipeline diagram]*: Highlighting the 3rd pipeline stage of a Store. Similar to `lw`, the `sw` instruction utilizes the ALU to calculate its physical memory target address. Notice, however, that the second register data payload mathematically bypasses the ALU calculation and is natively loaded into the `EX/MEM` boundary register waiting to be pushed into Memory.
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004039.jpg" width="550" alt="Instruction Trace 4"></p>
+<p align="center"><img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004039.jpg" width="550" alt="Instruction Trace 4"></p>
 
 *   **Figure 4.40 (Store `sw` - MEM and WB)** *[Type: Single-clock-cycle pipeline diagram]*: Highlighting the 4th and 5th pipeline stages of a Store. The isolated Memory unit activates strictly in *Write* mode via Control Signals, irrevocably dumping the `sw` payload into RAM. The sequence concludes identically in the WB stage, which is rendered completely inactive (there is no MUX routed mapping back to registers since `sw` natively performs no internal saves).
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004040.jpg" width="550" alt="Instruction Trace 5"></p>
+<p align="center"><img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004040.jpg" width="550" alt="Instruction Trace 5"></p>
 
 #### Step 4: The Targeting Bug & Embedded Control Lines
 **Figure 4.41 (The corrected pipelined datapath)** *[Type: Single-clock-cycle pipeline diagram]*: A critical architectural bug exists in early pipeline maps: the `WriteReg` destination and Control signals cannot just be read from the `ID` stage and wired unconditionally to the `WB` stage. If we do this, the WriteBack stage will apply its data to the **currently decoding** instruction's target register, corrupting the CPU!
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004041.jpg" width="600" alt="The WriteReg Targeting Bug"></p>
+<p align="center"><img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004041.jpg" width="600" alt="The WriteReg Targeting Bug"></p>
 
 **Figure 4.45 (Full Datapath with Control Lines embedded)** *[Type: Single-clock-cycle pipeline diagram]*: To correct this, the targeted `Write Register` address and all future **Control Lines** natively travel *inside* the pipeline boundary registers, riding along with the instruction data synchronously step-by-step.
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004045.jpg" width="600" alt="Full Datapath with Control Lines embedded"></p>
+<p align="center"><img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004045.jpg" width="600" alt="Full Datapath with Control Lines embedded"></p>
 
 #### SystemVerilog Physics: Modeling the Pipeline Register
 In SystemVerilog, pipeline stages are modeled exactly like wide $D$-flip-flop arrays. To fix the targeting bug above, tracking the `Write Register` across the `EX/MEM` boundary requires logging both the datapath result AND the target 5-bit address explicitly on the clock edge:
@@ -152,26 +152,26 @@ To solve this, the control signals themselves must be physically broken apart an
 
 **Figure 4.46 (The pipelined datapath with control signals identified)** *[Type: Single-clock-cycle pipeline diagram]*: This diagram highlights the nine primary mathematical control lines. Notice how the main Control Unit sits exclusively in the `ID` stage, calculating all nine signals simultaneously during payload decoding.
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004046.jpg" width="600" alt="Pipelined Datapath Control Lines"></p>
+<p align="center"><img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004046.jpg" width="600" alt="Pipelined Datapath Control Lines"></p>
 
 **Figure 4.47 (The control lines for the final three stages)** *[Type: Control Specification Table]* & **Figure 4.48 (ALU control)** *[Type: Control Specification Table]*: These tables specify the EXACT boolean values that the Control Unit derives from the instruction Opcode. The nine signals are structurally grouped by the specific pipeline stage they eventually actuate:
 *   **EX Stage (Execution)**: `RegDst`, `ALUOp1`, `ALUOp0`, `ALUSrc`
 *   **MEM Stage (Memory)**: `Branch`, `MemRead`, `MemWrite`
 *   **WB Stage (WriteBack)**: `RegWrite`, `MemToReg`
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004047.jpg" width="600" alt="Control Lines for Final Stages"></p>
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004048.jpg" width="600" alt="ALU Control Lines"></p>
+<p align="center"><img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004047.jpg" width="600" alt="Control Lines for Final Stages"></p>
+<p align="center"><img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004048.jpg" width="600" alt="ALU Control Lines"></p>
 
 **Figure 4.49 (The values of the control lines)** *[Type: Control Signal Matrix]*: This matrix proves that pipelined control values are mathematically identical to the Single-Cycle logic. The brilliant innovation of pipelining does NOT require us to invent new boolean control logic equations, but rather alters strictly *when* and *where* those exact same signals are electrically applied.
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004049.jpg" width="600" alt="Values of the control lines"></p>
+<p align="center"><img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004049.jpg" width="600" alt="Values of the control lines"></p>
 
 **Figure 4.50 (Control dependencies across pipeline mapping)** *[Type: Single-clock-cycle pipeline diagram]*: To guarantee that a Memory Write (`MemWrite = 1`) happens exactly during the 4th clock cycle for a Store word (`sw`), the boolean `1` generated by the Control Unit in Stage 2 (`ID`) must literally be wired into the `ID/EX` register, held for an entire clock pulse, buffered into the `EX/MEM` register, held again, and finally extruded physically into the Data Memory sub-module. This diagram physically visualizes the architectural "riding along" of those critical control bits:
 *   **Stage 2 to 3**: All 9 bits enter the `ID/EX` boundary. 4 bits split off vertically to serve the ALU (`EX` stage).
 *   **Stage 3 to 4**: The remaining 5 bits enter the `EX/MEM` boundary. 3 bits split off vertically to serve Data Memory (`MEM` stage).
 *   **Stage 4 to 5**: The surviving 2 bits strictly enter the `MEM/WB` boundary to dictate the final extraction to the Register File (`WB` stage).
 
-<p align="center"><img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004050.jpg" width="600" alt="Datapath with Extended Control"></p>
+<p align="center"><img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004050.jpg" width="600" alt="Datapath with Extended Control"></p>
 
 By sequentially buffering these signals through the $D$-flip-flops, the hardware natively restricts the correct datapaths to activate at the mathematically perfect clock pulse—preventing data corruption as multiple instructions inherently drift through the pipeline.
 
@@ -204,7 +204,7 @@ This secondary hazard pair occurs when the instruction *two cycles ahead* (sitti
 **Figure 4.53 (Data Hazard Forwarding Logic)** *[Type: Single-clock-cycle pipeline diagram]*: Rather than waiting for `$s0` to be written back to the Register File in stage 5, the physical data is already calculated by the ALU at the end of the `add` instruction's `EX` stage. We can physically wire a pathway from the `EX/MEM` pipeline register directly back into the ALU inputs using a Multiplexer.
 
 <p align="center">
-  <img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004053.jpg" width="600" alt="Data Hazard Forwarding Logic">
+  <img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004053.jpg" width="600" alt="Data Hazard Forwarding Logic">
 </p>
 
 #### SystemVerilog Implementation: The Hazard Unit
@@ -264,7 +264,7 @@ end
 **Figure 4.56 (Load-Use Hazard Stalling Output)** *[Type: Single-clock-cycle pipeline diagram]*: To physically resolve a load-use stall mathematically, the Hazard Unit locks the front-side registers and flushes the ID/EX execution path with a bubble.
 
 <p align="center">
-  <img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004056.jpg" width="600" alt="Load-Use Hazard Stalling Output">
+  <img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004056.jpg" width="600" alt="Load-Use Hazard Stalling Output">
 </p>
 
 ### 4.9 Control Hazards
@@ -278,7 +278,7 @@ By default, the processor **predicts** the branch is not taken and fetches seque
 **Figure 4.60 (Branch Hazard Pipeline Flush)** *[Type: Single-clock-cycle pipeline diagram]*: We flush these erroneous instructions by clearing the `IF/ID` and `ID/EX` control signals to `0` using a `Flush` pin on the pipeline registers, effectively converting the instructions into No-Ops (`NOP`s). This clearing mechanism is an unavoidable performance penalty inherent to pipelining.
 
 <p align="center">
-  <img src="../../../../../Image Bank/ch004-9780128201091/jpg-9780128201091/004060.jpg" width="600" alt="Branch Hazard Pipeline Flush">
+  <img src="../../../images/textbook/ch004-9780128201091/jpg-9780128201091/004060.jpg" width="600" alt="Branch Hazard Pipeline Flush">
 </p>
 
 ### The Architect's Synthesis: Designing a Pipeline

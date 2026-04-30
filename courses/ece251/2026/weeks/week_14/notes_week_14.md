@@ -29,7 +29,7 @@ This week, we take these fundamentals to the next level. We will explore advance
 ### 5.4 Measuring and Improving Cache Performance
 
 <p align="center">
-  <img src="../../../../../Image Bank/ch005-9780128201091/jpg-9780128201091/005001.jpg" width="60%" alt="Memory Hierarchy Pyramid">
+  <img src="../../../images/textbook/ch005-9780128201091/jpg-9780128201091/005001.jpg" width="60%" alt="Memory Hierarchy Pyramid">
   <br><i>Figure 5.1: The basic structure of a memory hierarchy.</i>
 </p>
 
@@ -45,7 +45,7 @@ Misses are generally categorized into the "Three C's":
 *   **Compulsory Misses:** The very first time a block is accessed. Unavoidable, but increasing block size helps pull in more data at once (Spatial Locality).
 
 <p align="center">
-  <img src="../../../../../Image Bank/ch005-9780128201091/jpg-9780128201091/005011.jpg" width="60%" alt="Miss Rate vs Block Size">
+  <img src="../../../images/textbook/ch005-9780128201091/jpg-9780128201091/005011.jpg" width="60%" alt="Miss Rate vs Block Size">
   <br><i>Figure 5.11: Miss Rate vs. Block Size. Note how overly large blocks eventually cause the miss rate to go back up!</i>
 </p>
 
@@ -233,7 +233,7 @@ As memory gets denser and processors scale to smaller nanometer fabrication node
 *   **Hamming Codes (SEC/DED) (COaD):** By strategically adding multiple parity bits (e.g., 8 check bits for 64 bits of data), the memory controller can mathematically isolate the exact bit that flipped. As detailed in the textbook, Hamming codes work by arranging the data bits into intersecting logical circles (or parity equations). If a specific bit flips, it breaks a unique *combination* of parity equations. The hardware uses that unique combination—called the "syndrome"—to pinpoint the exact location of the flipped bit and invert it back instantly (Single Error Correction).
 
 <p align="center">
-  <img src="../../../../../Image Bank/ch005-9780128201091/jpg-9780128201091/005023.jpg" width="60%" alt="Hamming Code Parity Generation">
+  <img src="../../../images/textbook/ch005-9780128201091/jpg-9780128201091/005023.jpg" width="60%" alt="Hamming Code Parity Generation">
   <br><i>Figure 5.23: Generating parity bits to pinpoint errors mathematically.</i>
 </p>
 
@@ -298,7 +298,7 @@ Since the Page Table is stored in memory, every load/store instruction would the
 *   **Hardware Integration (Harris/COaD):** The true brilliance of the TLB lies in its integration with the L1 Data Cache. In a virtually indexed, physically tagged cache, the hardware splits the virtual address. While the lower bits (the index) are busy looking up the cache block in the L1 SRAM, the upper bits (the virtual page number) are *concurrently* querying the TLB. By the time the cache reads out the physical tag, the TLB has already finished translating it. The comparison happens in parallel, effectively reducing the translation time penalty to zero on a hit.
 
 <p align="center">
-  <img src="../../../../../Image Bank/ch005-9780128201091/jpg-9780128201091/005028.jpg" width="80%" alt="TLB and Cache Integration">
+  <img src="../../../images/textbook/ch005-9780128201091/jpg-9780128201091/005028.jpg" width="80%" alt="TLB and Cache Integration">
   <br><i>Figure 5.28: Concurrently accessing the TLB on every memory reference.</i>
 </p>
 
