@@ -1,3 +1,6 @@
+`ifndef CPU_SV
+`define CPU_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2026
@@ -84,3 +87,6 @@ module cpu(
 
 endmodule
 
+
+
+`endif // CPU_SV

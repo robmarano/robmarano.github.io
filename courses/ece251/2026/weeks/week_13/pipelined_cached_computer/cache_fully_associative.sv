@@ -1,3 +1,6 @@
+`ifndef CACHE_FULLY_ASSOCIATIVE_SV
+`define CACHE_FULLY_ASSOCIATIVE_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2026
@@ -136,3 +139,6 @@ module cache_fully_associative (
     end
 
 endmodule
+
+
+`endif // CACHE_FULLY_ASSOCIATIVE_SV

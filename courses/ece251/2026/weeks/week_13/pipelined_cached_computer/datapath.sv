@@ -1,3 +1,6 @@
+`ifndef DATAPATH_SV
+`define DATAPATH_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2026
@@ -207,3 +210,6 @@ module datapath(
 
 endmodule
 
+
+
+`endif // DATAPATH_SV

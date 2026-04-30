@@ -1,0 +1,979 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\title{ECE 251: Computer Architecture}
+\subtitle{Week 14: Memory Hierarchies (Part 2)}
+\author{Prof Rob Marano}
+\date{Spring 2026}
+
+% Cooper Union Brand Identity
+\definecolor{CooperRed}{HTML}{8A1538}
+\definecolor{CooperDark}{HTML}{5C0E25}
+\setbeamercolor{structure}{fg=CooperRed}
+\setbeamercolor{palette primary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette secondary}{bg=CooperRed,fg=white}
+\setbeamercolor{palette tertiary}{bg=CooperDark,fg=white}
+\setbeamercolor{title in head/foot}{bg=CooperDark,fg=white}
+\logo{\includegraphics[height=1cm]{../../images/cooper_union_logo.png}}
+\titlegraphic{\includegraphics[height=1.5cm,keepaspectratio]{../../images/cooper_union_logo.png}}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section*{Week 13 Retrospective: The Basics of Caches}
+
+\begin{frame}{Week 13 Retrospective: The Basics of Caches}
+Before concluding the memory system, let's review the foundations:
+\begin{itemize}
+    \item \textbf{Principle of Locality:} Caches work due to \textit{Temporal Locality} (re-accessing data) and \textit{Spatial Locality} (accessing nearby data).
+    \item \textbf{Memory Technologies:} Fast, expensive SRAM (caches) vs slower, denser DRAM (main memory).
+    \item \textbf{Cache Mapping Topologies:} 
+    \begin{itemize}
+        \item \textbf{Direct-Mapped:} Fast, simple, prone to conflict misses.
+        \item \textbf{Fully Associative:} Eliminates conflicts, requires massive hardware comparators.
+        \item \textbf{Set-Associative:} The $N$-way compromise to balance conflicts and hardware costs.
+    \end{itemize}
+    \item \textbf{AMAT:} Average Memory Access Time = \texttt{Hit Time + (Miss Rate $\times$ Miss Penalty)}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Agenda}
+\begin{enumerate}
+    \item \textbf{Cache Performance:} The Memory Wall \& Multi-Level Caches
+    \item \textbf{Hardware Realization:} SystemVerilog (SV) Cache Controllers
+    \item \textbf{Mathematical Proof:} Quantifying the Upgrade
+    \item \textbf{Dependable Memory:} Soft Errors \& ECC (Parity/Hamming)
+    \item \textbf{Virtual Memory:} Pages, Faults, and the TLB
+    \item \textbf{Interactive Practice Problems}
+\end{enumerate}
+\end{frame}
+
+\section{5.4 Cache Performance}
+
+\begin{frame}{5.4 The Memory Hierarchy Pyramid}
+\begin{center}
+    \includegraphics[height=4.5cm,width=0.9\textwidth,keepaspectratio]{../../../../../Image Bank/ch005-9780128201091/jpg-9780128201091/005001.jpg}
+    \\ \textit{Figure 5.1: The basic structure of a memory hierarchy.}
+\end{center}
+\end{frame}
+
+\begin{frame}{5.4 The Memory Wall \& Hiding Penalties}
+\begin{itemize}
+    \item \textbf{The Memory Wall (Harris):} Processor execution speeds have scaled exponentially (Moore's Law), but DRAM access times have scaled linearly. A modern CPU accessing DRAM loses \textit{hundreds} of cycles. Multi-core systems exacerbate this bus bandwidth bottleneck.
+    \vspace{0.3cm}
+    \item \textbf{Hiding Miss Penalties (COaD):} Modern superscalar processors ``hide'' penalties. 
+    \begin{itemize}
+        \item \textit{Out-of-order execution:} Looks ahead and executes independent instructions while fetching from DRAM.
+        \item \textit{Non-blocking caches:} Continue to supply hits to the CPU even while processing a miss for a different address.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{5.4 Reducing Miss Rate: The Three C's}
+Misses are generally categorized into three types:
+\begin{itemize}
+    \item \textbf{1. Compulsory Misses:} The first time a block is accessed. Unavoidable, but larger block sizes help pull in more data at once (Spatial Locality).
+    \vspace{0.3cm}
+    \item \textbf{2. Capacity Misses:} The cache isn't big enough to hold the active working set of the program. Solved by increasing cache size (which increases Hit Time and cost).
+    \vspace{0.3cm}
+    \item \textbf{3. Conflict Misses:} Multiple blocks compete for the same cache index. Solved by increasing associativity (moving from Direct-Mapped to $N$-Way Set Associative).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{5.4 Reducing Miss Penalty: Multi-Level Caches}
+If Main Memory is 100 cycles away, a cache miss is catastrophic. We add more levels!
+\begin{itemize}
+    \item \textbf{L1 Cache:} Attached directly to the processor core. Extremely fast (1-2 cycles), but very small (e.g., 32KB). Optimized for the lowest possible \textbf{Hit Time}.
+    \vspace{0.3cm}
+    \item \textbf{L2 Cache:} Larger and slightly slower (e.g., 10-20 cycles, 256KB-1MB). Captures the misses from L1 before they hit DRAM. Optimized for the lowest possible \textbf{Miss Rate}.
+    \vspace{0.3cm}
+    \item \textit{Modern processors often have L3 caches shared across multiple cores.}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{5.4 The Multi-Level AMAT Formula}
+With two levels of cache, the AMAT formula expands drastically:
+\vspace{0.5cm}
+
+\Large
+\[ \text{AMAT} = \text{L1 Hit Time} + (\text{L1 Miss Rate} \times \text{L1 Miss Penalty}) \]
+
+\normalsize
+\vspace{0.3cm}
+\textit{where}
+\vspace{0.3cm}
+
+\Large
+\[ \text{L1 Miss Penalty} = \text{L2 Hit Time} + (\text{L2 Miss Rate} \times \text{L2 Miss Penalty}) \]
+\end{frame}
+
+\section{Hardware Realization (SystemVerilog)}
+
+\begin{frame}[fragile]{SystemVerilog (SV) Review: Direct-Mapped Hit Logic}
+\textit{Review from Week 13: Slicing the physical address for a direct-mapped cache.}
+{\scriptsize
+\begin{verbatim}
+module cache_controller_direct (
+    input  logic [31:0] paddr,
+    input  logic [15:0] cache_tags [0:4095], 
+    input  logic        valid_bits [0:4095],
+    output logic        cache_hit
+);
+    // 1. Physically slice the 32-bit address
+    logic [11:0] index = paddr[15:4];
+    logic [15:0] tag   = paddr[31:16];
+
+    // 2. Lookup the stored tag and valid bit
+    logic [15:0] stored_tag = cache_tags[index];
+    logic        is_valid   = valid_bits[index];
+
+    // 3. Combinational Hit Logic
+    assign cache_hit = is_valid & (tag == stored_tag);
+endmodule
+\end{verbatim}
+}
+\end{frame}
+
+\begin{frame}[fragile]{SV Upgrade: 2-Way Set Associative}
+\textit{Upgrading the Architecture to eliminate Conflict Misses.}
+{\scriptsize
+\begin{verbatim}
+module cache_controller_2way (
+    input  logic [31:0] paddr,       
+    input  logic [16:0] way0_tags [0:2047], input logic way0_valid [0:2047],
+    input  logic [16:0] way1_tags [0:2047], input logic way1_valid [0:2047],
+    output logic        cache_hit, hit_way
+);
+    // Note: 1 fewer index bit, 1 larger tag bit!
+    logic [10:0] index = paddr[14:4];
+    logic [16:0] tag   = paddr[31:15]; 
+
+    // Parallel Hardware Comparators
+    logic hit_way0 = way0_valid[index] & (tag == way0_tags[index]);
+    logic hit_way1 = way1_valid[index] & (tag == way1_tags[index]);
+
+    // Global Hit Logic (OR gate)
+    assign cache_hit = hit_way0 | hit_way1;
+    assign hit_way = hit_way1; // Controls a downstream Data Mux
+endmodule
+\end{verbatim}
+}
+\end{frame}
+
+\begin{frame}[fragile]{SV Upgrade: Multi-Level L1/L2 Handshake}
+\textit{The L1 Cache acts like the "CPU" to the L2 Cache.}
+{\scriptsize
+\begin{verbatim}
+module multi_level_cache_system (
+    input  logic [31:0] paddr,
+    input  logic        cpu_read_req,
+    output logic [31:0] cpu_read_data,
+    output logic        cpu_stall    // Freezes the pipeline!
+);
+    // ... cache instantiations omitted ...
+
+    // The Critical CPU Stall Logic
+    // The CPU is forced to stall if L1 misses AND L2 hasn't resolved yet.
+    // L2 resolves data either by hitting instantly, or waiting 100 cycles for DRAM.
+    assign cpu_stall = cpu_read_req & l1_miss & ~(l2_hit | dram_data_ready);
+
+    // Data Routing Multiplexer
+    assign cpu_read_data = (l1_hit) ? l1_data : l2_data;
+
+endmodule
+\end{verbatim}
+}
+\end{frame}
+
+\section{Mathematical Proof of Performance}
+
+\begin{frame}{The Iron Law \& Effective CPI}
+Why go through the immense hardware complexity of building Multi-Level Caches? Let's prove its worth using the \textbf{Iron Law of Performance}.
+
+\vspace{0.3cm}
+\textbf{The Baseline CPU:}
+\begin{itemize}
+    \item Base CPI = 1.0
+    \item Memory instructions (\texttt{lw}/\texttt{sw}) = 30\% of all instructions.
+    \item L1 Miss Rate = 5\%
+    \item DRAM Miss Penalty = 100 cycles
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Scenario A: L1 Cache Only}
+When L1 misses, we immediately stall for 100 cycles waiting for DRAM.
+
+\vspace{0.5cm}
+\[ \text{Stalls} = \text{Mem Insts} \times \text{L1 Miss Rate} \times \text{DRAM Penalty} \]
+\vspace{0.3cm}
+\[ \text{Stalls} = 0.30 \times 0.05 \times 100 = \mathbf{1.5 \text{ cycles}} \]
+
+\vspace{0.5cm}
+\[ \text{Effective CPI} = \text{Base CPI} + \text{Stalls} \]
+\[ \text{Effective CPI} = 1.0 + 1.5 = \mathbf{2.5} \]
+
+\vspace{0.5cm}
+\textit{The CPU is running 2.5x slower than its theoretical maximum!}
+\end{frame}
+
+\begin{frame}{Scenario B: Adding the L2 Cache}
+We add the L2 Cache from our RTL. L2 Hit Time = 10 cycles (new L1 penalty). Local L2 Miss Rate = 20\%. We only hit DRAM if L2 misses.
+
+\vspace{0.3cm}
+\[ \text{L1 Miss Penalty (Global)} = \text{L2 Hit Time} + (\text{L2 Miss Rate} \times \text{DRAM Penalty}) \]
+\[ \text{L1 Miss Penalty} = 10 + (0.20 \times 100) = \mathbf{30 \text{ cycles}} \]
+
+\vspace{0.3cm}
+\[ \text{New Stalls} = 0.30 \times 0.05 \times 30 = \mathbf{0.45 \text{ cycles}} \]
+
+\vspace{0.3cm}
+\[ \text{Effective CPI} = 1.0 + 0.45 = \mathbf{1.45} \]
+\end{frame}
+
+\begin{frame}{The Conclusion: Performance Speedup}
+\begin{itemize}
+    \item \textbf{Scenario A (L1 Only):} Effective CPI = 2.5
+    \item \textbf{Scenario B (L1 + L2):} Effective CPI = 1.45
+\end{itemize}
+\vspace{0.5cm}
+
+By adding the multi-level cache hardware, the execution time of the program \textbf{drops by 42\%}.
+
+\vspace{0.5cm}
+This results in a processor that is \textbf{72\% faster (1.72x speedup)} without changing the clock speed or the ISA!
+\end{frame}
+
+\section{5.5 Dependable Memory}
+
+\begin{frame}{5.5 The Vulnerability of DRAM}
+\begin{itemize}
+    \item As processors scale to smaller nanometer fabrication nodes, cosmic rays and alpha particles can physically flip bits in RAM, causing \textbf{Soft Errors}.
+    \vspace{0.3cm}
+    \item \textbf{DRAM 1T1C Organization (Hamacher):} To maximize density, a single transistor and a microscopic capacitor represent an entire bit.
+    \vspace{0.3cm}
+    \item These capacitors hold so few electrons that a stray cosmic ray striking the silicon can instantly discharge it, flipping a \texttt{1} to a \texttt{0}. 
+    \vspace{0.3cm}
+    \item A truly dependable system must detect and recover from these microscopic physical phenomena.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{5.5 Measures of Dependability}
+\begin{itemize}
+    \item \textbf{Reliability:} The measure of continuous service accomplishment.
+    \begin{itemize}
+        \item Measured as \textbf{MTTF} (Mean Time To Failure).
+    \end{itemize}
+    \vspace{0.5cm}
+    \item \textbf{Availability:} The measure of the fraction of time a service is functioning.
+    \vspace{0.2cm}
+    \item \[ \text{Availability} = \frac{\text{MTTF}}{\text{MTTF} + \text{MTTR}} \]
+    \vspace{0.2cm}
+    \item \textit{(MTTR = Mean Time To Repair)}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{5.5 Error Detection and Correction (EDC)}
+\begin{itemize}
+    \item \textbf{Parity Bits:} Adding an extra bit to a word to ensure the total number of \texttt{1}s is always even (or odd). Can detect single-bit errors, but cannot correct them.
+    \vspace{0.5cm}
+    \item \textbf{Hamming Codes (SEC/DED) (COaD):} Strategically adding multiple parity bits (e.g., 8 check bits for 64 bits of data). 
+    \vspace{0.3cm}
+    \item Arranges data into intersecting logical circles (parity equations).
+    \vspace{0.3cm}
+    \item If a bit flips, it breaks a unique combination of equations called the ``syndrome'', allowing hardware to pinpoint and correct the flipped bit (\textbf{Single Error Correction}).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{5.5 Hamming Code Generation}
+\begin{center}
+    \includegraphics[height=4.5cm,width=0.9\textwidth,keepaspectratio]{../../../../../Image Bank/ch005-9780128201091/jpg-9780128201091/005023.jpg}
+    \\ \textit{Figure 5.23: Generating parity bits to pinpoint errors mathematically.}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{SV Realization: Even Parity Generator}
+Generating these protective codes in hardware is incredibly fast because it relies on simple parallel XOR gates. SystemVerilog provides a built-in unary reduction operator (\texttt{\^}).
+
+{\scriptsize
+\begin{verbatim}
+module parity_generator (
+    input  logic [7:0] data_in,
+    output logic       even_parity_bit
+);
+    // The unary XOR reduction operator XORs all bits together.
+    // If there is an odd number of 1s, it outputs 1.
+    // If there is an even number of 1s, it outputs 0.
+    
+    assign even_parity_bit = ^data_in; 
+    
+endmodule
+\end{verbatim}
+}
+\end{frame}
+
+\begin{frame}[fragile]{SV Realization: Hamming Syndrome Decoder}
+To pinpoint a flipped bit, the memory controller calculates the syndrome using three overlapping parity equations executing perfectly in parallel.
+
+{\scriptsize
+\begin{verbatim}
+module hamming_syndrome_decoder (
+    input  logic [7:1] read_word, // 7-bit Hamming encoded word
+    output logic [2:0] syndrome   // 3-bit pointer to the error
+);
+    // Synthesizes to three separate XOR trees.
+    logic p1_check, p2_check, p4_check;
+    
+    assign p1_check = read_word[1]^read_word[3]^read_word[5]^read_word[7];
+    assign p2_check = read_word[2]^read_word[3]^read_word[6]^read_word[7];
+    assign p4_check = read_word[4]^read_word[5]^read_word[6]^read_word[7];
+
+    // If syndrome == 101 (5), then bit 5 is corrupted.
+    assign syndrome = {p4_check, p2_check, p1_check};
+endmodule
+\end{verbatim}
+}
+\end{frame}
+
+\section{5.6 Virtual Memory}
+
+\begin{frame}{5.6 Virtual Memory Concepts}
+Caches provide the illusion of \textit{fast} memory. \textbf{Virtual Memory} provides the illusion of \textit{infinite, isolated} memory. Together they create the \textbf{Memory Hierarchy}.
+\begin{itemize}
+    \item \textbf{Pages:} Instead of ``Cache Blocks'', Virtual Memory divides data into ``Pages'' (typically 4KB).
+    \vspace{0.2cm}
+    \item \textbf{Virtual vs. Physical Addresses:} Programs run using Virtual Addresses. The hardware translates these to Physical Addresses in DRAM.
+    \vspace{0.2cm}
+    \item \textbf{Page Table:} A data structure in DRAM that maps Virtual Pages to Physical Pages. Provides strict isolation/security between running applications.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{5.6 Page Faults}
+\begin{itemize}
+    \item Main Memory (DRAM) acts as a ``cache'' for the Magnetic Disk / SSD.
+    \vspace{0.5cm}
+    \item \textbf{Page Faults:} A ``Cache Miss'' in Virtual Memory. The requested Virtual Page is not in DRAM. 
+    \vspace{0.5cm}
+    \item Because the miss penalty to Disk is measured in millions of cycles, the hardware cannot handle misses by stalling the pipeline. 
+    \vspace{0.5cm}
+    \item The CPU throws a hardware exception, context switches to the OS, and the OS fetches the page from Disk into DRAM.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{5.6 The Translation Lookaside Buffer (TLB)}
+\begin{itemize}
+    \item Since the Page Table is stored in memory, every \texttt{lw}/\texttt{sw} would theoretically require \textit{two} memory accesses (halving performance!).
+    \vspace{0.5cm}
+    \item \textbf{Solution: The TLB}
+    \vspace{0.3cm}
+    \item A tiny, incredibly fast Fully Associative cache dedicated entirely to storing recent Virtual-to-Physical address translations.
+    \vspace{0.3cm}
+    \item \textbf{Hardware Integration:} The TLB and L1 Cache are queried \textit{concurrently}. The TLB translates the upper Tag bits in parallel with the L1 SRAM retrieving the data via the Index.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{5.6 Parallel Cache \& TLB Access}
+\begin{center}
+    \includegraphics[height=4.5cm,width=0.9\textwidth,keepaspectratio]{../../../../../Image Bank/ch005-9780128201091/jpg-9780128201091/005028.jpg}
+    \\ \textit{Figure 5.28: Concurrently accessing the TLB on every memory reference.}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{SV Realization: Fully Associative TLB Array}
+A TLB must compare the requested Virtual Page Number against \textit{every single entry simultaneously}. A SystemVerilog \texttt{for} loop unrolls into a massive bank of parallel comparators!
+
+{\scriptsize
+\begin{verbatim}
+module tlb_array #(parameter TLB_ENTRIES = 64) (
+    input  logic [19:0] vpn_in,
+    input  logic [19:0] tlb_vpn_tags [0:TLB_ENTRIES-1],
+    input  logic [19:0] tlb_ppn_data [0:TLB_ENTRIES-1],
+    input  logic        tlb_valid    [0:TLB_ENTRIES-1],
+    output logic [19:0] ppn_out,
+    output logic        tlb_hit
+);
+    always_comb begin
+        tlb_hit = 1'b0; ppn_out = 20'h00000;
+        for (int i = 0; i < TLB_ENTRIES; i++) begin
+            if (tlb_valid[i] && (tlb_vpn_tags[i] == vpn_in)) begin
+                tlb_hit = 1'b1; ppn_out = tlb_ppn_data[i];
+            end
+        end
+    end
+endmodule
+\end{verbatim}
+}
+\end{frame}
+
+\section{Comprehensive Practice Problems}
+
+\begin{frame}{Practice: [EASY] Basic AMAT Calculation}
+\textbf{Context:} Before optimizing a system, an engineer must quantify its baseline performance.
+
+\vspace{0.5cm}
+\textbf{Problem:} 
+A processor has a single L1 data cache. 
+\begin{itemize}
+    \item Hit Time = 1 clock cycle. 
+    \item Miss Rate = 5\%. 
+    \item Miss Penalty to fetch data from DRAM = 100 clock cycles.
+\end{itemize}
+
+\vspace{0.5cm}
+Calculate the AMAT.
+\end{frame}
+
+\begin{frame}{Solution: [EASY] Basic AMAT Calculation}
+\textbf{Step 1: Identify the AMAT formula.}
+\[ \text{AMAT} = \text{Hit Time} + (\text{Miss Rate} \times \text{Miss Penalty}) \]
+
+\vspace{0.5cm}
+\textbf{Step 2: Plug in the values.}
+\[ \text{AMAT} = 1 + (0.05 \times 100) \]
+
+\vspace{0.5cm}
+\textbf{Step 3: Solve.}
+\[ \text{AMAT} = 1 + 5 = \mathbf{6 \text{ cycles}} \]
+
+\vspace{0.5cm}
+\textit{Conclusion: Even with a 95\% hit rate, the system takes an average of 6 cycles per access, making it 6x slower than a "perfect" 1-cycle memory!}
+\end{frame}
+
+\begin{frame}{Practice: [MEDIUM] Effective CPI Impact}
+\textbf{Context:} Hardware engineers care about how memory stalls slow down the \textit{entire} CPU pipeline.
+
+\vspace{0.5cm}
+\textbf{Problem:} 
+A pipelined processor has a base CPI of 1.0 (assuming perfect memory). 
+\begin{itemize}
+    \item 25\% of all instructions executed are memory accesses (\texttt{lw}/\texttt{sw}). 
+    \item The L1 cache has a Miss Rate of 4\%.
+    \item The DRAM Miss Penalty is 80 cycles. 
+\end{itemize}
+
+\vspace{0.5cm}
+Calculate the Effective (Actual) CPI of the processor.
+\end{frame}
+
+\begin{frame}{Solution: [MEDIUM] Effective CPI Impact}
+\textbf{Step 1: Calculate the Memory Stall Cycles per Instruction.}
+\[ \text{Stalls} = \text{Memory Insts} \times \text{Miss Rate} \times \text{Miss Penalty} \]
+\[ \text{Stalls} = 0.25 \times 0.04 \times 80 \]
+\[ \text{Stalls} = \mathbf{0.8 \text{ cycles}} \]
+
+\vspace{0.5cm}
+\textbf{Step 2: Add the stalls to the Base CPI.}
+\[ \text{Effective CPI} = \text{Base CPI} + \text{Stalls} \]
+\[ \text{Effective CPI} = 1.0 + 0.8 = \mathbf{1.8} \]
+
+\vspace{0.5cm}
+\textit{Conclusion: Cache misses almost doubled the execution time of the entire program!}
+\end{frame}
+
+\begin{frame}{Practice: [HARD] Multi-Level Cache Architecture}
+\textbf{Context:} To fix the terrible performance degradation, we add an L2 cache.
+
+\vspace{0.5cm}
+\textbf{Problem:} You upgrade the previous processor with an L2 cache.
+\begin{itemize}
+    \item L1 Hit Time: 1 cycle
+    \item L1 Miss Rate: 4\%
+    \item L2 Hit Time: 10 cycles \textit{(This becomes the L1 Miss Penalty!)}
+    \item L2 Miss Rate: 20\% \textit{(20\% of requests that reach L2 miss and go to DRAM)}
+    \item DRAM Miss Penalty: 80 cycles
+\end{itemize}
+
+\vspace{0.5cm}
+Calculate the new global AMAT.
+\end{frame}
+
+\begin{frame}{Solution: [HARD] Multi-Level Cache Architecture}
+\textbf{Step 1: Calculate the L2 AMAT (which acts as the L1 Miss Penalty).}
+\[ \text{L1 Miss Pen.} = \text{L2 Hit Time} + (\text{L2 Miss Rate} \times \text{DRAM Penalty}) \]
+\[ \text{L1 Miss Pen.} = 10 + (0.20 \times 80) \]
+\[ \text{L1 Miss Pen.} = 10 + 16 = \mathbf{26 \text{ cycles}} \]
+
+\vspace{0.5cm}
+\textbf{Step 2: Calculate the Global System AMAT.}
+\[ \text{AMAT} = \text{L1 Hit Time} + (\text{L1 Miss Rate} \times \text{L1 Miss Penalty}) \]
+\[ \text{AMAT} = 1 + (0.04 \times 26) \]
+\[ \text{AMAT} = 1 + 1.04 = \mathbf{2.04 \text{ cycles}} \]
+
+\vspace{0.5cm}
+\textit{Conclusion: By adding L2, we dropped AMAT from 4.2 cycles down to 2.04 cycles!}
+\end{frame}
+
+\begin{frame}{Practice: [EASY] System Availability}
+\textbf{Context:} Datacenters guarantee service-level agreements (SLAs) based on statistical availability metrics.
+
+\vspace{0.5cm}
+\textbf{Problem:} 
+A database server has a Mean Time To Failure (MTTF) of 3 years (approx 1,095 days). When memory corruption occurs, the OS crashes and the automated Mean Time To Repair (MTTR) reboot sequence takes exactly 1 day. 
+
+\vspace{0.5cm}
+Calculate the Availability of the server as a percentage.
+\end{frame}
+
+\begin{frame}{Solution: [EASY] System Availability}
+\textbf{Step 1: Identify the Availability formula.}
+\[ \text{Availability} = \frac{\text{MTTF}}{\text{MTTF} + \text{MTTR}} \]
+
+\vspace{0.5cm}
+\textbf{Step 2: Plug in the values.}
+\[ \text{Availability} = \frac{1095}{1095 + 1} = \frac{1095}{1096} \]
+
+\vspace{0.5cm}
+\textbf{Step 3: Solve.}
+\[ \text{Availability} \approx \mathbf{0.99908 \text{ (or } 99.9\% \text{ uptime)}} \]
+\end{frame}
+
+\begin{frame}{Practice: [MEDIUM] Even Parity Generation}
+\textbf{Context:} The simplest form of error detection is adding a single parity bit to a word before writing it to memory. 
+\begin{itemize}
+    \item \textbf{Even Parity:} The parity bit is set so the total number of \texttt{1}s (data + parity) is an EVEN number.
+    \item \textbf{Odd Parity:} The parity bit is set so the total number of \texttt{1}s is an ODD number.
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Problem:} 
+The CPU wants to store the 8-bit byte \texttt{1011 0101} in DRAM. The memory controller uses \textbf{Even Parity}. 
+\begin{enumerate}
+    \item What is the value of the parity bit appended to this byte?
+    \item If a cosmic ray flips the lowest bit (\texttt{b0}), what does the byte become, and how does the hardware detect the error during a read?
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Solution: [MEDIUM] Even Parity Generation}
+\textbf{Part 1: Generating the Parity Bit}
+\begin{itemize}
+    \item Count the number of \texttt{1}s in \texttt{1011 0101}. There are five \texttt{1}s.
+    \item For Even Parity, the total number of \texttt{1}s must be even. 
+    \item The parity bit must be \textbf{\texttt{1}}.
+    \item The stored 9-bit word is \texttt{1\_10110101}.
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Part 2: Detecting the Error}
+\begin{itemize}
+    \item The cosmic ray flips the lowest bit (\texttt{0101} becomes \texttt{0100}).
+    \item The corrupted word read from memory is \texttt{1\_10110100}.
+    \item The hardware counts the \texttt{1}s. There are now five \texttt{1}s.
+    \item Because 5 is an \textit{odd} number, the hardware immediately throws a Parity Exception, halting the CPU to prevent data corruption.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Practice: [HARD] Hamming Code Syndrome (SEC)}
+\textbf{Context:} Server-grade ECC memory uses overlapping parity equations to mathematically pinpoint flipped bits.
+
+\vspace{0.5cm}
+\textbf{Problem:} 
+A 4-bit data word \texttt{1011} is encoded into a 7-bit Hamming Code: \texttt{0110011}. 
+
+While stored in DRAM, an alpha particle flips the sequence to \texttt{0110111}. When the CPU reads this corrupted word, how does the hardware mathematically prove that \textbf{Bit 5} was the exact bit that flipped?
+\end{frame}
+
+\begin{frame}{Solution: [HARD] Hamming Code Syndrome (SEC) - Part 1}
+\textbf{Step 1: Understand the bit positions.}
+\begin{itemize}
+    \item Positions 1, 2, and 4 are the Parity Check Bits ($p_1, p_2, p_4$).
+    \item Bit 1 ($p_1$): \texttt{0}
+    \item Bit 2 ($p_2$): \texttt{1}
+    \item Bit 3 ($d_1$): \texttt{1}
+    \item Bit 4 ($p_4$): \texttt{0}
+    \item \textbf{Bit 5 ($d_2$): \texttt{1} (Flipped)}
+    \item Bit 6 ($d_3$): \texttt{1}
+    \item Bit 7 ($d_4$): \texttt{1}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Solution: [HARD] Hamming Code Syndrome (SEC) - Part 2}
+\textbf{Step 2: Recalculate Even Parity Equations.}
+\begin{itemize}
+    \item \textbf{Eq 1 (pos 1,3,5,7):} $0+1+1+1 = 3$ (Odd $\rightarrow$ FAIL $\rightarrow$ \texttt{1})
+    \item \textbf{Eq 2 (pos 2,3,6,7):} $1+1+1+1 = 4$ (Even $\rightarrow$ PASS $\rightarrow$ \texttt{0})
+    \item \textbf{Eq 3 (pos 4,5,6,7):} $0+1+1+1 = 3$ (Odd $\rightarrow$ FAIL $\rightarrow$ \texttt{1})
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Step 3: Construct the Syndrome.}
+Combine results from $p_4$ to $p_1$: \texttt{[Fail 4][Pass 2][Fail 1]} = \textbf{\texttt{101}}
+
+\vspace{0.5cm}
+\textbf{Step 4: Decode the Syndrome.}
+Binary \texttt{101} to decimal equals \textbf{5}. The mathematics prove absolute certainty that \textbf{Bit 5} is the corrupted bit. The hardware automatically flips it back to \texttt{0} (Single Error Correction)!
+\end{frame}
+
+\begin{frame}{Practice: [EASY] Virtual Address Partitioning}
+\textbf{Context:} Virtual memory divides an application's massive address space into manageable chunks called Pages.
+
+\vspace{0.5cm}
+\textbf{Problem:} 
+A 32-bit architecture uses a standard Page Size of 4 KB ($2^{12}$ bytes). 
+
+How many total Virtual Pages exist in the address space?
+\end{frame}
+
+\begin{frame}{Solution: [EASY] Virtual Address Partitioning}
+\textbf{Step 1: Determine total addressable bytes.}
+A 32-bit address space can address $2^{32}$ total bytes (4 GB).
+
+\vspace{0.5cm}
+\textbf{Step 2: Divide by the Page Size.}
+\[ \text{Total Pages} = \frac{2^{32} \text{ bytes}}{2^{12} \text{ bytes/page}} \]
+\[ \text{Total Pages} = 2^{32 - 12} = 2^{20} \]
+
+\vspace{0.5cm}
+\textbf{Step 3: Solve.}
+\[ 2^{20} = \mathbf{1,048,576 \text{ Virtual Pages}} \]
+\end{frame}
+
+\begin{frame}{Practice: [MEDIUM] Virtual to Physical Translation}
+\textbf{Context:} The OS Page Table acts as a dictionary translating fake Virtual Addresses to real Physical Addresses in DRAM.
+
+\vspace{0.5cm}
+\textbf{Problem:} 
+A system uses 16-bit addresses and a 4 KB page size. 
+\begin{itemize}
+    \item The CPU requests a memory read at Virtual Address \texttt{0x2F3A}. 
+    \item The Page Table holds the following mapping: \texttt{Virtual Page 0x2} maps to \texttt{Physical Page 0x8}. 
+\end{itemize}
+
+\vspace{0.5cm}
+What is the exact 16-bit Physical Address generated by the hardware?
+\end{frame}
+
+\begin{frame}{Solution: [MEDIUM] Virtual to Physical Translation}
+\textbf{Step 1: Calculate the Offset width.}
+4 KB ($2^{12}$ bytes) means the lower 12 bits (3 hex digits) represent the byte offset.
+
+\vspace{0.3cm}
+\textbf{Step 2: Split the Virtual Address.}
+Virtual Address = \texttt{0x2F3A}
+\begin{itemize}
+    \item Offset = \texttt{0xF3A}
+    \item Virtual Page Number (VPN) = \texttt{0x2}
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Step 3: Lookup the Physical Page Number (PPN).}
+VPN \texttt{0x2} translates to PPN \texttt{0x8}.
+
+\vspace{0.3cm}
+\textbf{Step 4: Reconstruct the Physical Address.}
+Concatenate the new PPN with the original Offset.
+\[ \text{Physical Address} = \text{\texttt{0x8}} + \text{\texttt{0xF3A}} = \mathbf{\text{\texttt{0x8F3A}}} \]
+\end{frame}
+
+\begin{frame}{Practice: [HARD] TLB and Page Fault Synthesis}
+\textbf{Context:} Combine TLB caching, Main Memory Page Table lookups, and Disk Page Faults into one massive AMAT calculation.
+
+\vspace{0.5cm}
+\textbf{Problem:} 
+\begin{itemize}
+    \item TLB Hit Time: 1 cycle
+    \item TLB Miss Rate: 2\%
+    \item Main Memory (DRAM) Access Time: 100 cycles
+    \item Page Fault Rate: 0.1\% \textit{(Happens during a TLB miss)}
+    \item Disk Access Time (Page Fault Penalty): 10,000,000 cycles
+\end{itemize}
+
+\vspace{0.5cm}
+Calculate the AMAT just for the \textit{translation} phase of the instruction.
+\end{frame}
+
+\begin{frame}{Solution: [HARD] TLB and Page Fault Synthesis}
+\textbf{Step 1: Calculate the Page Fault Penalty.}
+If TLB misses, we check the Page Table in DRAM (100 cycles). 0.1\% of the time, we Page Fault to Disk.
+\[ \text{DRAM AMAT} = \text{DRAM Hit Time} + (\text{Page Fault Rate} \times \text{Disk Penalty}) \]
+\[ \text{DRAM AMAT} = 100 + (0.001 \times 10,000,000) \]
+\[ \text{DRAM AMAT} = 100 + 10,000 = \mathbf{10,100 \text{ cycles}} \]
+
+\vspace{0.5cm}
+\textbf{Step 2: Calculate the TLB AMAT.}
+\[ \text{AMAT} = \text{TLB Hit Time} + (\text{TLB Miss Rate} \times \text{TLB Miss Penalty}) \]
+\[ \text{AMAT} = 1 + (0.02 \times 10,100) \]
+\[ \text{AMAT} = 1 + 202 = \mathbf{203 \text{ cycles}} \]
+\end{frame}
+
+\section{5.8 Official Textbook Practice Problems}
+
+\begin{frame}{[EASY] Problem 5.17.1: Page Table Sizing}
+\textbf{Context:} Virtual memory provides the illusion of infinite memory, but the Page Tables themselves must be physically stored in DRAM, consuming actual memory.
+\vspace{0.5cm}
+
+\textbf{Problem:}
+Given a 32-bit Virtual Address size, an 8 KB page size, and a 4-byte Page Table Entry (PTE) size, calculate the total page table size for a system running 5 applications that utilize half of the memory available.
+\end{frame}
+
+\begin{frame}{Solution: Page Table Sizing}
+\begin{enumerate}
+    \item \textbf{Calculate the number of index bits (Tag):}
+    \begin{itemize}
+        \item Offset = $\log_2(8192) = 13$ bits.
+        \item The remaining bits form the Page Table Index (Tag) = $32 - 13 = 19$ bits.
+        \item Total entries per application = $2^{19}$ entries.
+    \end{itemize}
+    \item \textbf{Calculate the memory for one page table:}
+    \begin{itemize}
+        \item Size = $2^{19} \times 4 \text{ bytes} = 2,097,152 \text{ bytes} = 2 \text{ MB}$.
+    \end{itemize}
+    \item \textbf{Calculate the total system memory overhead:}
+    \begin{itemize}
+        \item Assuming the 5 applications utilize memory linearly, all 5 page tables must exist.
+        \item Total Size = $5 \times 2 \text{ MB} = \mathbf{10 \text{ MB}}$.
+    \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{[EASY] Problem 5.19.1: TLB Lifecycle}
+\textbf{Context:} The Translation Lookaside Buffer (TLB) caches active memory mappings. However, the OS must aggressively manage its validity.
+\vspace{0.5cm}
+
+\textbf{Problem:}
+Under what scenarios would a TLB entry's valid bit be set to zero by the hardware or the Operating System?
+\end{frame}
+
+\begin{frame}{Solution: TLB Lifecycle}
+A TLB entry's valid bit is set to zero (invalidated) in the following scenarios:
+\begin{enumerate}
+    \item \textbf{Context Switches:} When the OS switches execution from Process A to Process B, Process A's virtual addresses are no longer valid for Process B. The entire TLB is flushed (all valid bits set to zero).
+    \item \textbf{Page Replacement:} If the OS evicts a physical page from DRAM to the Disk to free up space, any TLB entry pointing to that physical page must be immediately invalidated.
+    \item \textbf{Process Termination:} When an application crashes or exits, its TLB entries are invalidated.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{[EASY] Problem 5.13.1 \& .2: Datacenter Reliability}
+\textbf{Context:} Cloud providers like AWS and GCP must statistically guarantee uptime using reliability metrics.
+\vspace{0.5cm}
+
+\textbf{Problem:}
+A storage array has a Mean Time To Failure (MTTF) of 3 years and a Mean Time To Repair (MTTR) of 1 day. Calculate the Mean Time Between Failures (MTBF) and the System Availability.
+\end{frame}
+
+\begin{frame}{Solution: Datacenter Reliability}
+\begin{enumerate}
+    \item \textbf{Convert to a common unit (days):}
+    \begin{itemize}
+        \item MTTF = $3 \times 365 = 1095$ days.
+        \item MTTR = $1$ day.
+    \end{itemize}
+    \item \textbf{Calculate MTBF:}
+    \begin{itemize}
+        \item $\text{MTBF} = \text{MTTF} + \text{MTTR}$
+        \item $\text{MTBF} = 1095 + 1 = \mathbf{1096 \text{ days}}$
+    \end{itemize}
+    \item \textbf{Calculate Availability:}
+    \begin{itemize}
+        \item $\text{Availability} = \frac{\text{MTTF}}{\text{MTBF}}$
+        \item $\text{Availability} = \frac{1095}{1096} \approx \mathbf{0.99908 \text{ (99.908\% uptime)}}$
+    \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{[MEDIUM] Problem 5.12.1: Multi-Level CPI}
+\textbf{Context:} Modern processors survive the "Memory Wall" by relying heavily on multi-level caches.
+\vspace{0.5cm}
+
+\textbf{Problem:}
+A 2 GHz processor has a base CPI of 1.5. Instruction/Data misses total 7\% per instruction. Main memory takes 100 ns. Calculate the Effective CPI using: 
+\begin{enumerate}
+    \item Only an L1 cache.
+    \item An L1 + an 8-way Set Associative L2 cache (L2 hit time = 28 cycles, L2 miss rate = 1.5\%).
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Solution: Multi-Level CPI}
+\begin{enumerate}
+    \item \textbf{Convert 100 ns Memory Access to Cycles:}
+    \begin{itemize}
+        \item Clock Cycle Time = $\frac{1}{2 \text{ GHz}} = 0.5 \text{ ns}$.
+        \item DRAM Penalty = $\frac{100 \text{ ns}}{0.5 \text{ ns}} = 200 \text{ cycles}$.
+    \end{itemize}
+    \item \textbf{Calculate CPI for L1 Only:}
+    \begin{itemize}
+        \item $\text{CPI}_{\text{L1}} = 1.5 + (0.07 \times 200) = 1.5 + 14 = \mathbf{15.5}$
+    \end{itemize}
+    \item \textbf{Calculate CPI with L2 (8-Way):}
+    \begin{itemize}
+        \item $\text{Stalls} = \text{L1 Misses} \times (\text{L2 Hit Time} + (\text{L2 Misses}_{\text{local}} \times \text{DRAM Penalty}))$
+        \item $\text{Stalls} = 0.07 \times (28 + (0.015 \times 200))$
+        \item $\text{Stalls} = 0.07 \times (28 + 3) = 0.07 \times 31 = 2.17$
+        \item $\text{CPI}_{\text{L2}} = 1.5 + 2.17 = \mathbf{3.67}$
+    \end{itemize}
+\end{enumerate}
+\textit{Note: The textbook mathematically treats 1.5\% as a Local Miss Rate out of the L1 misses. Adding the L2 drops CPI from 15.5 down to 3.67!}
+\end{frame}
+
+\begin{frame}{[MEDIUM] Problem 5.18.1: Single-Level Page Table}
+\textbf{Context:} Modern 64-bit operating systems use incredibly sparse Virtual Address spaces.
+\vspace{0.5cm}
+
+\textbf{Problem:}
+For a single-level page table on a system with a 43-bit Virtual Address, 16 GB Physical DRAM, 4 KB Pages, and 4-byte PTEs:
+\begin{enumerate}
+    \item How many Page Table Entries (PTEs) are needed? 
+    \item How much physical memory is required for the table?
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Solution: Single-Level Page Table}
+\begin{enumerate}
+    \item \textbf{Calculate the Virtual Page Number (VPN) size:}
+    \begin{itemize}
+        \item Virtual Address = 43 bits.
+        \item Page Size = 4 KB = $2^{12}$ bytes (12 bits for the offset).
+        \item VPN = $43 - 12 = 31$ bits.
+    \end{itemize}
+    \item \textbf{Calculate the number of PTEs:}
+    \begin{itemize}
+        \item A single-level page table must contain an entry for \textit{every} possible Virtual Page.
+        \item Number of PTEs = $2^{31} = \mathbf{2,147,483,648 \text{ entries}}$.
+    \end{itemize}
+    \item \textbf{Calculate the physical memory required:}
+    \begin{itemize}
+        \item Memory = $2^{31} \times 4 \text{ bytes} = 2^{33} \text{ bytes} = \mathbf{8 \text{ GB}}$.
+    \end{itemize}
+\end{enumerate}
+\textit{Conclusion: A single-level table consumes 8 GB (50\%) of the 16 GB DRAM just for metadata! This necessitates Multi-Level Page Tables.}
+\end{frame}
+
+\begin{frame}{[MEDIUM] Problem 5.14.2: ECC Cost vs Performance}
+\textbf{Context:} Enterprise servers must balance the cost of extra parity RAM chips against mathematical protection.
+\vspace{0.5cm}
+
+\textbf{Problem:}
+Modern Server DIMMs employ SEC/DED ECC to protect each 64 bits of data with 8 parity bits. A competitor suggests protecting 128 bits of data with 9 parity bits. Compute the cost/performance ratio of both codes (Cost = overhead \%, Performance = protection rate \%). Which is better?
+\end{frame}
+
+\begin{frame}{Solution: ECC Cost vs Performance}
+\begin{enumerate}
+    \item \textbf{Analyze the standard (72, 64) code:}
+    \begin{itemize}
+        \item Cost (Overhead) = $\frac{8}{64} = 12.5\%$.
+        \item Performance (Protection rate for 1 single error) = $\frac{1}{72} = 1.4\%$.
+        \item Ratio = $\frac{12.5}{1.4} \approx \mathbf{8.9}$.
+    \end{itemize}
+    \item \textbf{Analyze the competitor (137, 128) code:}
+    \begin{itemize}
+        \item Cost (Overhead) = $\frac{9}{128} = 7.0\%$.
+        \item Performance (Protection rate) = $\frac{1}{137} = 0.73\%$.
+        \item Ratio = $\frac{7.0}{0.73} \approx \mathbf{9.6}$.
+    \end{itemize}
+\end{enumerate}
+\textit{Conclusion: The standard (72, 64) code has a lower cost/performance ratio (8.9 vs 9.6), making it the superior mathematical choice for server memory.}
+\end{frame}
+
+\begin{frame}{[HARD] Problem 5.21.1: Virtual Machine Overhead}
+\textbf{Context:} Cloud platforms (AWS EC2) run hypervisors (VMMs) beneath the Guest OS, introducing massive performance penalties.
+\vspace{0.5cm}
+
+\textbf{Problem:}
+A native system has a Base CPI of 1.5. When running inside a VM, the Guest OS triggers a privileged instruction trap 120 times per 10,000 instructions. The trap penalty to the Guest OS is 15 cycles, but the trap to the VMM (Hypervisor) takes 175 cycles. Calculate the Effective CPI of this virtualized system.
+\end{frame}
+
+\begin{frame}{Solution: Virtual Machine Overhead}
+\begin{enumerate}
+    \item \textbf{Identify the trap frequency per instruction:}
+    \begin{itemize}
+        \item Trap Rate = $\frac{120}{10,000} = 0.012$ traps per instruction.
+    \end{itemize}
+    \item \textbf{Calculate the Total Trap Penalty:}
+    \begin{itemize}
+        \item A virtualized OS trap must \textit{first} hit the Hypervisor (VMM), and then the Hypervisor hands it to the Guest OS.
+        \item Total Penalty = $175 \text{ (VMM)} + 15 \text{ (Guest)} = 190 \text{ cycles}$.
+    \end{itemize}
+    \item \textbf{Calculate the Effective CPI:}
+    \begin{itemize}
+        \item $\text{CPI}_{\text{VM}} = \text{Base CPI} + (\text{Trap Rate} \times \text{Total Penalty})$
+        \item $\text{CPI}_{\text{VM}} = 1.5 + (0.012 \times 190)$
+        \item $\text{CPI}_{\text{VM}} = 1.5 + 2.28 = \mathbf{3.78}$
+    \end{itemize}
+\end{enumerate}
+\textit{Conclusion: Running the OS inside a Virtual Machine slows the CPU down by over 2.5x!}
+\end{frame}
+
+\begin{frame}{[HARD] Problem 5.16.1: Full Virtual Memory Trace}
+\textbf{Context:} The Memory Management Unit (MMU) must orchestrate the TLB, the Page Table, and the Disk.
+\vspace{0.5cm}
+
+\textbf{Problem:}
+Assume a system with 4 KB pages. The TLB currently holds: \texttt{[Valid=1, Tag=11]}, \texttt{[Valid=1, Tag=7]}, \texttt{[Valid=1, Tag=3]}, \texttt{[Valid=0]}. The Page Table holds: \texttt{[Idx 0: Valid, PPN 5]}, \texttt{[Idx 1: Disk]}, \texttt{[Idx 3: Valid, PPN 6]}. The CPU requests Virtual Addresses (in decimal): \texttt{4669}, \texttt{2227}, \texttt{13916}. Trace the hits and misses.
+\end{frame}
+
+\begin{frame}{Solution: Full Virtual Memory Trace}
+\begin{enumerate}
+    \item \textbf{Access 1: \texttt{4669}}
+    \begin{itemize}
+        \item \textit{Math:} $4669 / 4096 = 1$ (VPN 1).
+        \item VPN 1 is not in the TLB $\rightarrow$ \textbf{TLB Miss}.
+        \item Look up VPN 1 (Idx 1) in PT. It is marked as \texttt{Disk}! $\rightarrow$ \textbf{Page Fault}.
+    \end{itemize}
+    \item \textbf{Access 2: \texttt{2227}}
+    \begin{itemize}
+        \item \textit{Math:} $2227 / 4096 = 0$ (VPN 0).
+        \item VPN 0 is not in the TLB $\rightarrow$ \textbf{TLB Miss}.
+        \item Look up VPN 0 (Idx 0) in PT. It is Valid (PPN 5) $\rightarrow$ \textbf{PT Hit}.
+    \end{itemize}
+    \item \textbf{Access 3: \texttt{13916}}
+    \begin{itemize}
+        \item \textit{Math:} $13916 / 4096 = 3$ (VPN 3).
+        \item VPN 3 matches the third entry in our TLB (\texttt{Tag=3, Valid=1}) $\rightarrow$ \textbf{TLB Hit!}.
+    \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{[HARD] Problem 5.15.3: Disk Performance and B-Trees}
+\textbf{Context:} Modern databases (like Postgres) align their B-Tree index node sizes with the optimal OS Page Size to minimize disk seeking.
+\vspace{0.5cm}
+
+\textbf{Problem:}
+If using a modern magnetic disk with a 3 ms seek latency and a 100 MB/s transfer rate, what is the optimal page size to minimize the cost of pulling an index off the disk? Explain why future servers are likely to use larger pages.
+\end{frame}
+
+\begin{frame}{Solution: Disk Performance and B-Trees}
+\begin{enumerate}
+    \item \textbf{Understand the tradeoff:}
+    \begin{itemize}
+        \item A larger page takes longer to transfer ($100 \text{ MB/s}$), but pulling in more data amortizes the massive $3 \text{ ms}$ seek latency.
+    \end{itemize}
+    \item \textbf{Compare Latency vs Transfer limits:}
+    \begin{itemize}
+        \item At $100 \text{ MB/s}$, transferring $4 \text{ KB}$ takes $0.04 \text{ ms}$. Total = $3.04 \text{ ms}$.
+        \item Transferring $64 \text{ KB}$ takes $0.64 \text{ ms}$. Total = $3.64 \text{ ms}$.
+        \item Transferring $256 \text{ KB}$ takes $2.56 \text{ ms}$. Total = $5.56 \text{ ms}$.
+    \end{itemize}
+    \item \textbf{Conclusion:}
+    \begin{itemize}
+        \item The mathematical utility curve proves that \textbf{64 KB} is the optimal page size for this specific disk.
+        \item \textit{Why larger pages?} Disk bandwidth is growing exponentially faster than disk seek latency. To hide the physical seek penalty, we must maximize the payload (e.g., 2MB or 1GB Huge Pages).
+    \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Conclusion}
+This concludes our journey through the computer architecture stack!
+\vspace{0.5cm}
+\begin{itemize}
+    \item \textbf{Logic Gates $\rightarrow$ ALU $\rightarrow$ Single-Cycle CPU $\rightarrow$ Pipelined Datapath}
+    \vspace{0.2cm}
+    \item \textbf{SRAM Caches $\rightarrow$ DRAM Main Memory $\rightarrow$ Virtual Memory}
+\end{itemize}
+\vspace{0.5cm}
+We have successfully bridged the gap from boolean logic up to the foundation of modern, high-performance, fault-tolerant microprocessors.
+\end{frame}
+
+\begin{frame}
+\begin{center}
+    \Huge Questions?
+\end{center}
+\end{frame}
+
+\end{document}

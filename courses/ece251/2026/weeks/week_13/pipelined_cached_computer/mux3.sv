@@ -1,3 +1,6 @@
+`ifndef MUX3_SV
+`define MUX3_SV
+
 
 
 module mux3 #(parameter n = 32) (
@@ -17,3 +20,6 @@ module mux3 #(parameter n = 32) (
 
 endmodule
 
+
+
+`endif // MUX3_SV

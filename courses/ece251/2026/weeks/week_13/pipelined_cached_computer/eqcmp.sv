@@ -1,3 +1,6 @@
+`ifndef EQCMP_SV
+`define EQCMP_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2026
@@ -19,3 +22,6 @@ module eqcmp
 
 endmodule
 
+
+
+`endif // EQCMP_SV

@@ -111,5 +111,5 @@ To resolve decoding collisions, the 3-bit `alucontrol` was natively expanded to 
 | MFHI | `0101` | Combinational | Read upper 32-bits of HiLo |
 | SUB | `0110` | Combinational | a - b |
 | SLT | `0111` | Combinational | Set if a < b |
-| DIV | `1000` | Sequential | a / b & a % b (updates HiLo) |
-| MULT | `1001` | Sequential | a * b (updates HiLo) |
+| DIV | `1001` | Sequential | a / b & a % b (updates HiLo) |
+| MULT | `1000` | Sequential | a * b (updates HiLo) |

@@ -1,18 +1,21 @@
-# Pull Request Summary: Retrospective Cooper Union Rebranding (ECE 251 Slides)
+# Pull Request Summary: Week 13 & 14 Memory Hierarchy Curriculum & SV Implementation
 
 ## Objective
-To retroactively generate LaTeX Beamer slide decks for ECE 251 Weeks 01 through 07, ensuring all educational materials align with the Cooper Union institutional branding (colors, logo, and author naming conventions). Additionally, to correct layout issues on the preexisting Week 08 slide deck.
+To finalize the Memory Hierarchy curriculum by implementing a cycle-accurate L1/L2 Multi-Level Cache SystemVerilog simulation for Week 13, and to generate comprehensive educational documentation (LaTeX Slides, Speaking Notes, and Homework Assignments) for Week 14.
 
 ## Changes Implemented
-* **Generated `ece251_week_0X_slides.tex` (Weeks 01-07):** Parsed existing Markdown note files (`notes_week_0X.md`) to dynamically extract lesson structure, bullet points, and code examples.
-* **Injected Cooper Union Preamble:** All generated decks enforce the standardized `\usetheme{Madrid}` format via the customized Beamer preamble.
-    *   **Colors:** Applied the official Matisse (`#137aa3`) and Alizarin Crimson (`#d9222a`) HEX equivalents (historically defined as `CooperRed` and `CooperDark`).
-    *   **Logo Check:** Injected `\includegraphics` commands pointing to the relative asset `../../images/cooper_union_logo.png`.
-    *   **Author Update:** Explicitly updated the author tag on the title frame to `Prof Rob Marano`.
-* **Week 08 Hotfix:** Recompiled `ece251_week_08_slides.tex` enforcing identical brand standards. Successfully resolved previous issues with mathematical graphics and code snippets overflowing the slide layouts by applying responsive `\includegraphics` scaling (`width=\textwidth`, `keepaspectratio`).
-* **PDF Compilation Check:** Successively ran `pdflatex` on all 8 slide decks locally to prove compilation integrity with no fatal errors.
+* **Week 13 SystemVerilog Caches:**
+    * Implemented `cache_direct_mapped.sv`, `cache_fully_associative.sv`, and `cache_set_associative.sv` controllers.
+    * Integrated L1 and L2 caches into the existing 5-stage MIPS datapath via a `cpu_stall` handshake protocol to mathematically demonstrate the Effective CPI reduction (4.34 to 1.89).
+    * Validated execution via `iverilog` testbenches.
+* **Week 14 Curriculum (Memory Hierarchy Part 2):**
+    * Injected 9 official textbook problems (from COaD Chapter 5) into `notes_week_14.md` and `ece251_week_14_slides.tex`.
+    * Synthesized the **Homework 14 Primer**, breaking down Hamming Code math, Virtual Memory logic, and Page Table sizing.
+    * Authored `hw-14.md` and the official solution key `hw-14-solution.md` mirroring the formatting of previous weeks.
+    * Generated `week_14_speaking_notes.md` containing a timed, 165-minute lecture script aligned with the LaTeX slide deck.
+* **Documentation Polish:** Recompiled all LaTeX decks and validated the Cooper Union brand identity rendering without overflow errors.
 
 ## Verification
-* Compilation logs checked thoroughly for LaTeX syntax exceptions.
-* Image references verified physically present at `courses/ece251/images/cooper_union_logo.png`.
-* Content formatting checked to assure slide logic flows clearly.
+* SV Simulations run flawlessly with cycle-accurate hazard resolution.
+* Official textbook math (e.g. CPI formulas and Hamming Code Bit 5 Syndrome) was rigorously cross-referenced against the `Solution 5_Secured.pdf` manual to correct existing typos.
+* All LaTeX files compile to PDF securely.

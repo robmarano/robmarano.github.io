@@ -1,3 +1,6 @@
+`ifndef CONTROLLER_SV
+`define CONTROLLER_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2026
@@ -29,3 +32,6 @@ module controller(
 
 endmodule
 
+
+
+`endif // CONTROLLER_SV

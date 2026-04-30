@@ -1,3 +1,6 @@
+`ifndef SIGNEXT_SV
+`define SIGNEXT_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2023
@@ -26,3 +29,6 @@ module signext
     assign Y = { {n{A[(i-1)]}}, A}; // sign extend (i-1)th bit i bits to the left.
 endmodule
 
+
+
+`endif // SIGNEXT_SV

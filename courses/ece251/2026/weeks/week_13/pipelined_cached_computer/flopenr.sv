@@ -1,3 +1,6 @@
+`ifndef FLOPENR_SV
+`define FLOPENR_SV
+
 
 
 module flopenr #(parameter n = 32) (
@@ -18,3 +21,6 @@ module flopenr #(parameter n = 32) (
 
 endmodule
 
+
+
+`endif // FLOPENR_SV

@@ -1,3 +1,6 @@
+`ifndef MEM_SV
+`define MEM_SV
+
 
 
 module mem
@@ -25,3 +28,6 @@ module mem
 
 endmodule
 
+
+
+`endif // MEM_SV

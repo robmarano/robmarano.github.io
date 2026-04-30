@@ -391,34 +391,40 @@ To mathematically prove to an engineering manager that your architecture is bett
 Because caches successfully exploit **spatial and temporal locality**, the Miss Rate is usually very low (e.g., < 5%). The mathematical proof shows that integrating the L1 cache drops the execution time by orders of magnitude compared to hitting Main Memory every cycle, fully justifying the silicon area cost of the cache arrays.
 
 ### 5. Hardware Simulation: The Silicon Proof
-To quantitatively verify our mathematical models, we tested our pipelined SystemVerilog MIPS CPU under two conditions using a memory-intensive loop benchmark (`loop_test.asm`). The benchmark executes an array sum calculation over 5 loop iterations to explicitly exploit **temporal locality**. A main memory latency of 10 cycles was physically injected into the hardware simulation.
 
-#### The Uncached Execution (Direct to Main Memory)
-When bypassing the L1 Cache hierarchy (`+CACHE_EN=0`), the CPU suffered the 10-cycle memory penalty on *every single load instruction*, completely obliterating pipeline performance:
+To demonstrate the performance of the cache, I compiled your SystemVerilog design and ran the simulation twice against the `loop_test.asm` benchmark—once bypassing the cache and once utilizing it.
 
-```text
-╭──────────────────────────────────────────────────────────────────╮
-│ PERFORMANCE METRICS (UNCACHED):                                  │
-│ Total Clock Cycles: 347                                          │
-│ Instructions Executed: ~80                                       │
-│ Effective CPI: 4.34                                              │
-╰──────────────────────────────────────────────────────────────────╯
+Here is how you can use it locally on your machine and see the quantitative performance increase:
+
+#### 1. Build the Project
+First, navigate to the directory, assemble the test program, and compile the Verilog source:
+
+```bash
+cd /Users/rob/dev/robmarano.github.io/courses/ece251/2026/weeks/week_13/pipelined_cached_computer
+make asm ASM=loop_test
+make compile
 ```
-> **The Result:** The effective CPI ballooned to a massive **4.34**. The CPU spent the vast majority of its execution time frozen, waiting for the Memory Wall.
 
-#### The Cached Execution (L1 Enabled)
-When enabling the cache (`+CACHE_EN=1`), only the very first iteration of the loop incurred the 10-cycle miss penalty (bringing the array into the cache). Because of temporal locality, the remaining 4 loop iterations hit the cache instantly.
+#### 2. The Baseline (Cache Disabled)
+Run the simulation directly to main memory by passing the `+CACHE_EN=0` argument. This forces every single memory instruction (`lw` / `sw`) to take the full 10-cycle latency penalty.
 
-```text
-╭──────────────────────────────────────────────────────────────────╮
-│ PERFORMANCE METRICS (CACHED):                                    │
-│ Total Clock Cycles: 151                                          │
-│ Instructions Executed: ~80                                       │
-│ Effective CPI: 1.89                                              │
-│ Cache Hits: 24                                                   │
-│ Cache Misses: 4                                                  │
-╰──────────────────────────────────────────────────────────────────╯
+```bash
+vvp pipelined_cpu.vvp +PROG=loop_test.exe +CACHE_EN=0
 ```
-> **The Result:** The execution time dropped from 347 cycles down to **151 cycles**, drastically reducing the **Effective CPI to 1.89**. 
 
-By uniting the Iron Law of Performance, Pipelined Datapaths, and the Cache Memory Hierarchy, we have mathematically calculated—and successfully simulated in silicon—the modern computer architecture paradigm.
+**Results:** The CPU takes **347 clock cycles** to execute ~80 instructions. The **Effective CPI skyrockets to 4.34** because the pipeline is constantly stalling and waiting on the memory wall.
+
+#### 3. The Upgrade (Cache Enabled)
+Run the simulation with the L1 cache enabled by passing `+CACHE_EN=1`:
+
+```bash
+vvp pipelined_cpu.vvp +PROG=loop_test.exe +CACHE_EN=1
+```
+
+**Results:** The execution time drops to **151 clock cycles** with an **Effective CPI of 1.89**.
+
+**Why the massive increase?**
+The telemetry shows 24 Cache Hits and only 4 Cache Misses. During the first iteration of the assembly loop, the array variables miss the cache and incur the 10-cycle penalty. However, on the subsequent four loop iterations, the data is served instantly from the cache in 1 cycle, demonstrating the immense power of temporal locality in modern processors!
+
+---
+[ &larr; back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html) [ &larr; back to notes](/courses/ece251/2026/ece251-notes.html)

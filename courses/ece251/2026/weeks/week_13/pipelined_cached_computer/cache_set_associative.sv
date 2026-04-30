@@ -1,3 +1,6 @@
+`ifndef CACHE_SET_ASSOCIATIVE_SV
+`define CACHE_SET_ASSOCIATIVE_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2026
@@ -145,3 +148,6 @@ module cache_set_associative (
     end
 
 endmodule
+
+
+`endif // CACHE_SET_ASSOCIATIVE_SV

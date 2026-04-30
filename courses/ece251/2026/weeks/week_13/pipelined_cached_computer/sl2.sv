@@ -1,3 +1,6 @@
+`ifndef SL2_SV
+`define SL2_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2023
@@ -26,3 +29,6 @@ module sl2
     assign Y = {A[(n-3):0], 2'b00};
 endmodule
 
+
+
+`endif // SL2_SV

@@ -1,3 +1,6 @@
+`ifndef DFF_SV
+`define DFF_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2023
@@ -37,3 +40,6 @@ module dff
     end
 endmodule
 
+
+
+`endif // DFF_SV

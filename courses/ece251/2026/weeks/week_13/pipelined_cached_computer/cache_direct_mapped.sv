@@ -1,3 +1,6 @@
+`ifndef CACHE_DIRECT_MAPPED_SV
+`define CACHE_DIRECT_MAPPED_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2026
@@ -142,3 +145,6 @@ module cache_direct_mapped (
     end
 
 endmodule
+
+
+`endif // CACHE_DIRECT_MAPPED_SV

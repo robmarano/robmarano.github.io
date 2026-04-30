@@ -1,3 +1,6 @@
+`ifndef IMEM_SV
+`define IMEM_SV
+
 //////////////////////////////////////////////////////////////////////////////////
 // The Cooper Union
 // ECE 251 Spring 2023
@@ -40,3 +43,6 @@ module imem
 
 endmodule
 
+
+
+`endif // IMEM_SV
