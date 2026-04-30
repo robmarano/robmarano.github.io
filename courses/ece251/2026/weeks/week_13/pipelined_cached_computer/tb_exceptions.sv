@@ -78,14 +78,14 @@ module tb_exceptions();
             if (dut.mips_pipelined.dp.regwriteW) regwrite_str = {C_GRN, "WRITE", C_RST}; else regwrite_str = "  -  ";
             if (intr) intr_str = {C_RED, "!!! INTERRUPT PIN HIGH !!!", C_RST}; else intr_str = "Normal";
 
-            $display("%s╭─────────────────────────────────────────────────────────────────────────────────────────────────╮%s", C_GRY, C_RST);
-            $display("%s│%s %s%-102s%s %s│%s", C_GRY, C_RST, C_CYN, $sformatf("Cycle %0d (Time: %0t) [%s]", cycle, $time, intr_str), C_RST, C_GRY, C_RST);
-            $display("%s│%s   %s[IF]%s   PC: 0x%08h | Status: %s %s│%s", C_GRY, C_RST, C_BLU, C_RST, dut.mips_pipelined.dp.pcF, stallF_str, C_GRY, C_RST);
-            $display("%s│%s   %s[ID]%s   Instr: 0x%08h | rs: %2d, rt: %2d | Stall: %s | Flush: %s %s│%s", C_GRY, C_RST, C_PUR, C_RST, dut.mips_pipelined.dp.instrD, dut.mips_pipelined.dp.rsD, dut.mips_pipelined.dp.rtD, stallD_str, flushD_str, C_GRY, C_RST);
-            $display("%s│%s   %s[EX]%s   ALUOut: 0x%08h | Flush: %s | EPC: 0x%08h %s│%s", C_GRY, C_RST, C_YEL, C_RST, dut.mips_pipelined.dp.aluoutE, flushE_str, dut.mips_pipelined.dp.EPC, C_GRY, C_RST);
-            $display("%s│%s   %s[MEM]%s  MemWrite: %s | Addr: 0x%08h | WriteData: 0x%08h %s│%s", C_GRY, C_RST, C_GRN, C_RST, memwrite_str, dataadr, writedata, C_GRY, C_RST);
-            $display("%s│%s   %s[WB]%s   RegWrite: %s | RegDst: %2d | ResultW: 0x%08h %s│%s", C_GRY, C_RST, C_CYN, C_RST, regwrite_str, dut.mips_pipelined.dp.writeregW, dut.mips_pipelined.dp.resultW, C_GRY, C_RST);
-            $display("%s╰─────────────────────────────────────────────────────────────────────────────────────────────────╯%s", C_GRY, C_RST);
+            $display("%s=================================================================================================%s", C_GRY, C_RST);
+            $display(" %sCycle %0d%s (Time: %0t) [%s]", C_CYN, cycle, C_RST, $time, intr_str);
+            $display("%s-------------------------------------------------------------------------------------------------%s", C_GRY, C_RST);
+            $display("  %s[IF]%s   PC: 0x%08h | Status: %s", C_BLU, C_RST, dut.mips_pipelined.dp.pcF, stallF_str);
+            $display("  %s[ID]%s   Instr: 0x%08h | rs: %2d, rt: %2d | Stall: %s | Flush: %s", C_PUR, C_RST, dut.mips_pipelined.dp.instrD, dut.mips_pipelined.dp.rsD, dut.mips_pipelined.dp.rtD, stallD_str, flushD_str);
+            $display("  %s[EX]%s   ALUOut: 0x%08h | Flush: %s | EPC: 0x%08h", C_YEL, C_RST, dut.mips_pipelined.dp.aluoutE, flushE_str, dut.mips_pipelined.dp.EPC);
+            $display("  %s[MEM]%s  MemWrite: %s | Addr: 0x%08h | WriteData: 0x%08h", C_GRN, C_RST, memwrite_str, dataadr, writedata);
+            $display("  %s[WB]%s   RegWrite: %s | RegDst: %2d | ResultW: 0x%08h", C_CYN, C_RST, regwrite_str, dut.mips_pipelined.dp.writeregW, dut.mips_pipelined.dp.resultW);
         end
     end
 
