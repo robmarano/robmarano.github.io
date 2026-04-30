@@ -73,12 +73,9 @@ make clean all ASM=prog1_simple_hazard
 ```
 
 ### Running the Exception Testbench
-To test asynchronous interrupts, we use a slightly different testbench (`tb_exceptions.sv`) that forcefully triggers the interrupt pin mid-execution.
+To test asynchronous interrupts, we use a slightly different testbench (`tb_exceptions.sv`) that forcefully triggers the interrupt pin mid-execution. We've made this incredibly easy:
 ```bash
-make clean
-make asm ASM=prog4_interrupts
-iverilog -g2012 -o exceptions.vvp tb_exceptions.sv
-vvp exceptions.vvp +PROG=prog4_interrupts.exe
+make test_exceptions
 ```
 
 ---
@@ -88,12 +85,19 @@ vvp exceptions.vvp +PROG=prog4_interrupts.exe
 Pipelined debugging can be tricky because up to 5 instructions are executing at the exact same time! You have two primary ways to debug your code:
 
 ### Method A: The Cycle-by-Cycle Text Log (Recommended for Logic)
-Every time you run a standard `make all` command, the output is saved to a file called `debug_output.txt`.
+Every time you run a standard `make` command, the output is saved to a file called `debug_output.txt`.
 
-Open it:
+Open it in your terminal:
 ```bash
 cat debug_output.txt
 ```
+
+**🎨 Color Coded Output:**
+To make this *so very easy on the eyes*, the output is heavily formatted using ANSI color codes:
+*   **YELLOW `>> STALLED <<`**: Indicates a pipeline stall (e.g., waiting for a Load instruction to finish).
+*   **RED `>> FLUSHED <<`**: Indicates an instruction was killed due to a bad branch prediction or an interrupt.
+*   **GREEN `WRITE`**: Indicates actual data is being saved to Memory or the Register File.
+
 Read the log from top to bottom. For each clock cycle, it shows exactly what is happening in all 5 stages of the CPU:
 *   **`[IF]`**: Shows the Program Counter (`PC`). If `StallF` is 1, the PC is frozen.
 *   **`[ID]`**: Shows the hex instruction. If `FlushD` is 1, an exception or branch prediction failure just squashed this instruction.

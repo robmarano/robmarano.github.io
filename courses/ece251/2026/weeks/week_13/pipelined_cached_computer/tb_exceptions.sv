@@ -50,6 +50,45 @@ module tb_exceptions();
         $finish;
     end
 
+    // Cycle-by-cycle logging for educational trace routing
+    integer cycle = 0;
+
+    // ANSI Color Codes
+    string C_RST  = "\033[0m";
+    string C_RED  = "\033[1;31m";
+    string C_YEL  = "\033[1;33m";
+    string C_GRN  = "\033[1;32m";
+    string C_CYN  = "\033[1;36m";
+    string C_PUR  = "\033[1;35m";
+    string C_BLU  = "\033[1;34m";
+    string C_GRY  = "\033[1;30m";
+
+    always @(posedge clk) begin
+        // String builders for visual indicators
+        string stallF_str, stallD_str, flushD_str, flushE_str, memwrite_str, regwrite_str, intr_str;
+
+        if (!reset) begin
+            cycle++;
+            
+            if (dut.mips_pipelined.stallF) stallF_str = {C_YEL, ">> STALLED <<", C_RST}; else stallF_str = "      -      ";
+            if (dut.mips_pipelined.stallD) stallD_str = {C_YEL, ">> STALLED <<", C_RST}; else stallD_str = "      -      ";
+            if (dut.mips_pipelined.flushD) flushD_str = {C_RED, ">> FLUSHED <<", C_RST}; else flushD_str = "      -      ";
+            if (dut.mips_pipelined.flushE) flushE_str = {C_RED, ">> FLUSHED <<", C_RST}; else flushE_str = "      -      ";
+            if (memwrite) memwrite_str = {C_GRN, "WRITE", C_RST}; else memwrite_str = "  -  ";
+            if (dut.mips_pipelined.dp.regwriteW) regwrite_str = {C_GRN, "WRITE", C_RST}; else regwrite_str = "  -  ";
+            if (intr) intr_str = {C_RED, "!!! INTERRUPT PIN HIGH !!!", C_RST}; else intr_str = "Normal";
+
+            $display("%s╭─────────────────────────────────────────────────────────────────────────────────────────────────╮%s", C_GRY, C_RST);
+            $display("%s│%s %s%-102s%s %s│%s", C_GRY, C_RST, C_CYN, $sformatf("Cycle %0d (Time: %0t) [%s]", cycle, $time, intr_str), C_RST, C_GRY, C_RST);
+            $display("%s│%s   %s[IF]%s   PC: 0x%08h | Status: %s %s│%s", C_GRY, C_RST, C_BLU, C_RST, dut.mips_pipelined.dp.pcF, stallF_str, C_GRY, C_RST);
+            $display("%s│%s   %s[ID]%s   Instr: 0x%08h | rs: %2d, rt: %2d | Stall: %s | Flush: %s %s│%s", C_GRY, C_RST, C_PUR, C_RST, dut.mips_pipelined.dp.instrD, dut.mips_pipelined.dp.rsD, dut.mips_pipelined.dp.rtD, stallD_str, flushD_str, C_GRY, C_RST);
+            $display("%s│%s   %s[EX]%s   ALUOut: 0x%08h | Flush: %s | EPC: 0x%08h %s│%s", C_GRY, C_RST, C_YEL, C_RST, dut.mips_pipelined.dp.aluoutE, flushE_str, dut.mips_pipelined.dp.EPC, C_GRY, C_RST);
+            $display("%s│%s   %s[MEM]%s  MemWrite: %s | Addr: 0x%08h | WriteData: 0x%08h %s│%s", C_GRY, C_RST, C_GRN, C_RST, memwrite_str, dataadr, writedata, C_GRY, C_RST);
+            $display("%s│%s   %s[WB]%s   RegWrite: %s | RegDst: %2d | ResultW: 0x%08h %s│%s", C_GRY, C_RST, C_CYN, C_RST, regwrite_str, dut.mips_pipelined.dp.writeregW, dut.mips_pipelined.dp.resultW, C_GRY, C_RST);
+            $display("%s╰─────────────────────────────────────────────────────────────────────────────────────────────────╯%s", C_GRY, C_RST);
+        end
+    end
+
     always #5 clk = ~clk;
 
 endmodule
