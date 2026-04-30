@@ -100,6 +100,23 @@ module tb_computer;
     // check results and print performance metrics on halt
     always @(negedge clk) begin
         if (memwrite) begin
+            if (dataadr === 84 && writedata === 12) begin
+                $display("\n%sSuccess: mem[84] evaluates to 12. Arithmetic RAW Forwarding logic mapped correctly.%s", C_GRN, C_RST);
+            end else if (dataadr === 88 && writedata === 24) begin
+                $display("\n%sExtravagant Success: mem[88] evaluates to 24. Pipelined Branch Flushes and Load-Use Stalls executed perfectly!%s", C_GRN, C_RST);
+                $display("\n╭─────────────────────────────────────────────────────────────────────────────────────────────────╮");
+                $display("│ %-95s │", "Program successfully completed all verification steps.");
+                $display("├─────────────────────────────────────────────────────────────────────────────────────────────────┤");
+                $display("│ PERFORMANCE METRICS:                                                                            │");
+                $display("│ %-95s │", $sformatf("Total Clock Cycles: %0d", cycle));
+                $display("│ %-95s │", $sformatf("Instructions Executed: ~%0d", instr_count));
+                $display("│ %-95s │", $sformatf("Effective CPI: %0.2f", real'(cycle) / real'(instr_count)));
+                $display("│ %-95s │", $sformatf("Cache Hits: %0d", cache_hits));
+                $display("│ %-95s │", $sformatf("Cache Misses: %0d", cache_misses));
+                $display("╰─────────────────────────────────────────────────────────────────────────────────────────────────╯\n");
+                $finish;
+            end
+            
             // Universal Memory-Mapped I/O Halt
             if (dataadr === 252) begin
                 $display("\n╭─────────────────────────────────────────────────────────────────────────────────────────────────╮");
