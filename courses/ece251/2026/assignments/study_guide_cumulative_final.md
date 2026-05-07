@@ -22,7 +22,7 @@ You are new to computer architecture, but you have been pushed to analyze proble
 ### Key Concepts to Master:
 *   **The 5 Components of a Computer:** Datapath, Control, Memory, Input, Output.
 *   **The Iron Law of Performance:** The foundational equation stating that CPU execution time is fundamentally limited by three factors: the number of instructions, the architectural efficiency (cycles per instruction), and the physical physics of the clock speed.
-    $$$\text{CPU Time} = \text{Instruction Count (IC)} \times \text{Cycles Per Instruction (CPI)} \times \text{Clock Cycle Time}$$$
+    $$\text{CPU Time} = \text{Instruction Count (IC)} \times \text{Cycles Per Instruction (CPI)} \times \text{Clock Cycle Time}$$
 *   **MIPS Load/Store Architecture:** Memory is only accessed via `lw` and `sw`. All other arithmetic operations happen strictly within the 32 general-purpose registers (`$zero`, `$s0-$s7`, `$t0-$t9`).
 *   **Memory & Endianness:** Endianness dictates byte ordering in memory. **Big-Endian** stores the most significant byte at the lowest address, while **Little-Endian** stores the least significant byte first.
 *   **Procedures and the Stack:** How `jal` saves the return address to `$ra`. How the stack pointer `$sp` moves (grows downward) to save registers for nested/recursive procedure calls, and how to restore them before `jr $ra`.
