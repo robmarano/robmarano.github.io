@@ -19,8 +19,9 @@
 |                               [14](#week14) |                                  [4/30](#week14) | Memory Hierarchies (Caching) Part 2                            |
 |                               [15](#week15) |                 [5/14](#week15), [5/15](#week15) | **Cumulative Final Exam** & Final Project Submission           |
 
-Follow the link above to the respective week's materials below.
-<br>
+Follow the links above to the respective week's materials below.
+
+**Note:** The final exam is cumulative, so make sure to review all lecture notes and assignments. [Here is the study guide](/courses/ece251/2026/assignments/study_guide_cumulative_final.html)
 
 ---
 
@@ -284,6 +285,7 @@ See [notes_week_14](/courses/ece251/2026/weeks/week_14/notes_week_14.html)
 # <a id="week15">Week 15 &mdash; 5/14 & 5/15 &mdash; Cumulative Final Exam & Final Project Submission</a>
 
 * **5/14**: Cumulative Final Exam.
+    * [READ the Cumulative Final Exam Study Guide](/courses/ece251/2026/assignments/study_guide_cumulative_final.html)
 * **5/15**: Group Final Project due no later than 5pm ET.
 
 [<- back to syllabus](/courses/ece251/2026/ece251-syllabus-spring-2026.html)

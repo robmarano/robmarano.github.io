@@ -1,16 +1,18 @@
-# Pull Request Summary: Global Broken Image Link Fix
+# Pull Request Summary: Cumulative Final Exam Study Guide
 
 ## Objective
-To resolve broken image links in the live GitHub Pages site across multiple weeks of ECE 251 notes.
+To synthesize a comprehensive, 14-week Final Exam Study Guide that explicitly aligns with the actual ECE 251 syllabus (excluding SystemVerilog/Hardware Math) and guides students through the exam topics.
 
 ## Changes Implemented
-* Identified that images were previously referenced via relative links to the `Image Bank` directory.
-* Discovered that `Image Bank` is explicitly ignored via the global `.gitignore` due to its massive 1.2 GB size, causing 404 Not Found errors on the live web server.
-* Wrote an automated Python script to crawl all `notes_week_*.md` and `ece251_week_*_slides.tex` files.
-* Dynamically copied all 24 referenced, unique textbook images from the untracked `Image Bank` into a new tracked directory: `courses/ece251/images/textbook/`.
-* Updated all Markdown `<img>` and LaTeX `\includegraphics{}` paths to point to the tracked images directory.
+* **Final Exam Study Guide (`assignments/study_guide_cumulative_final.md`):**
+    * Created an extensive, multi-tiered study guide for Chapters 1-5.
+    * Mapped explicit concepts actually taught in class (e.g., IEEE 754, Pipelining, Caches, AMAT, Virtual Memory) to the textbook.
+    * Stripped out un-taught material (e.g., Booth's algorithm, hardware division).
+    * Integrated targeted definition callouts for foundational terms (Iron Law, Harvard Architecture, Endianness, Locality, etc.).
+    * Emphasized an "in-class, closed-book" exam environment format.
+* **Syllabus Integration (`ece251-notes.md`):**
+    * Added dynamic HTML links to the generated study guide directly within the "Week 15" exam schedule section and at the top of the notes.
 
 ## Verification
-* A total of 4.41 MB of necessary images were migrated and committed.
-* Local compilation of LaTeX works correctly.
-* GitHub Pages will now successfully serve the tracked images on all live syllabus pages.
+* Verified alignment of the study guide content strictly against the 14 individual `notes_week_*.md` lecture logs.
+* Formatting complies with standard Jekyll/Markdown markdown parsing.
