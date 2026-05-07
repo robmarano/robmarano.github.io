@@ -17,6 +17,7 @@ This file serves as the strict historical continuity bridge for AI agent session
 ### Hardware Simulation (`SystemVerilog`)
 *   **Memory Hierarchy (L1/L2 Caches)**: Implemented cycle-accurate L1/L2 caches (`cache_direct_mapped.sv`, `cache_fully_associative.sv`, `cache_set_associative.sv`).
 *   **Pipeline Integration**: Hooked cache hit/miss logic into the 5-stage MIPS datapath via a `cpu_stall` handshake, successfully dropping Effective CPI from 4.34 to 1.89 during simulations.
+*   **Final Exam Preparation**: Generated `assignments/study_guide_cumulative_final.md`, a heavily synthesized study guide charting Chapters 1-5 (specifically mapped to the taught syllabus, excluding SV/Hardware math, and establishing closed-book in-class constraints).
 
 ## 3. Current Live State
 *   All Week 13/14 integration, SystemVerilog codebases, architectural documentation, LaTeX slide decks, and homework assignments are completed.
